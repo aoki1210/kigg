@@ -1,0 +1,267 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="SiteTemplate.Master.cs" Inherits="Kigg.SiteTemplate" %>
+<%@ Import Namespace="System.Linq" %>
+<%@ Import Namespace="System.Text" %>
+<%@ Import Namespace="Kigg" %>
+<script runat="server">
+
+    string GetTagCloudHtml()
+    {
+        if ((ViewData.Tags == null) || (ViewData.Tags.Length == 0))
+        {
+            return "No Tag exists.";
+        }
+
+        decimal minWeight = decimal.MaxValue;
+        decimal maxWeight = decimal.MinValue;
+
+        TagItem[] tagItems = ViewData.Tags.OrderBy(t => t.Name).ToArray();
+
+        foreach (TagItem tag in tagItems)
+        {
+            if (tag.Count < minWeight)
+            {
+                minWeight = tag.Count;
+            }
+
+            if (tag.Count > maxWeight)
+            {
+                maxWeight = tag.Count;
+            }
+        }
+
+        string[] fontSizes = new string[] { "12px", "14px", "16px", "18px", "20px", "22px", "24px" };
+        decimal scaleUnitLength = (maxWeight - minWeight + 1) / Convert.ToDecimal(fontSizes.Length);
+
+        StringBuilder tagCloudHtml = new StringBuilder();
+
+        foreach (TagItem tagItem in tagItems)
+        {
+            int fontSizeIndex = Convert.ToInt32(Math.Truncate((tagItem.Count - minWeight) / scaleUnitLength));
+
+            tagCloudHtml.AppendFormat("<span><a href=\"{0}\" style=\"font-size:{1}\">{2}</a></span> ", Url.Action(new { action = "Tag", controller = "Story", name = tagItem.Name, page = 1 }), fontSizes[fontSizeIndex], Server.HtmlEncode(tagItem.Name));
+        }
+
+        return tagCloudHtml.ToString();
+    }
+</script>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head runat="server">
+    <title>ASP.NET MVC Demo</title>
+    <script type="text/javascript" src="<%= Page.ResolveClientUrl("~/Scripts.ashx")%>?v=<%= Kigg.ScriptHandler.VersionNo %>"></script>
+    <link href="Stylesheet.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div id="pageContainer">
+        <div id="header">
+            <div class="title">
+                <a href="<%= Page.ResolveClientUrl("~/Default.aspx")%>">Kigg.com</a>
+            </div>
+            <div class="links">
+                <a id="lnkLogin" href="javascript:void(0)" style="display:<%= ((ViewData.IsAuthenticated) ? "none" : "''") %>" onclick="javascript:Membership.showLogin()">Login</a>
+                <a id="lnkSignUp" href="javascript:void(0)" style="display:<%= ((ViewData.IsAuthenticated) ? "none" : "''") %>" onclick="javascript:Membership.showSignUp()">Sign up</a>
+                <a href="javascript:void(0)" onclick="javascript:Story.showSubmit()">Submit</a>
+                <a href="<%= Url.Action(new { controller = "Story", action = "Upcoming", page = 1})%>">Upcoming</a>
+                <a id="lnkLogout" href="javascript:void(0)" style="display:<%= ((ViewData.IsAuthenticated) ? "''" : "none") %>" onclick="javascript:Membership.logout()">Logout</a>
+            </div>
+        </div>
+        <div id="menu">
+            <div>
+                <ul>
+                    <li>
+                        <a href="<%= Page.ResolveClientUrl("~/Default.aspx")%>">All</a>
+                    </li>
+                    <% foreach (Category category in ViewData.Categories) %>
+                    <% { %>
+                        <li>
+                            <%= Html.ActionLink(Server.HtmlEncode(category.Name), new { controller = "Story", action = "Category", name = category.Name, page = 1 })%>
+                        </li>
+                    <% } %>
+                </ul>
+            </div>
+        </div>
+        <div id="sidebar">
+            <div class="form">
+                <h2>Search</h2>
+                <form id="frmSearch" action="<%= Url.Action(new { controller = "Story", action = "Search" })%>" onsubmit="return onSearch()">
+                    <input id="txtQuery" name="q" type="text" class="searchTextbox" value="<%= Server.HtmlEncode(ViewData.SearchQuery) %>"/>
+                    <input type="submit" class="button" value="Go" />
+                </form>
+            </div>
+            <div class="divider"></div>
+            <div id="tagCloud" class="form">
+                <h2>Popular Tags</h2>
+                <%= GetTagCloudHtml()%>
+            </div>
+        </div>
+        <div id="content">
+            <asp:ContentPlaceHolder ID="MainContentPlaceHolder" runat="server"></asp:ContentPlaceHolder>
+        </div>
+        <div id="divDimBackground" class="dimBackground" style="display:none"></div>
+        <div id="divMembershipBox" class="modalBox" style="width:440px;display:none">
+            <div class="titleContainer">
+                <div class="title">Kigg.com</div>
+                <div id="divMembershipClose" class="closeButton" title="Close"></div>
+            </div>
+            <div class="contentContainer">
+                <div id="divLogin">
+                    <div class="form">
+                        <h2>Login</h2>
+                        <p>
+                            <label for="txtLoginUserName" class="label">User Name:</label>
+                            <input id="txtLoginUserName" type="text" class="textbox" />
+                            <span id="valLoginUserName" class="validator" style="display:none"></span>
+                        </p>
+                        <p>
+                            <label for="txtLoginPassword" class="label">Password:</label>
+                            <input id="txtLoginPassword" type="password" class="textbox" />
+                            <span id="valLoginPassword" class="validator" style="display:none"></span>
+                        </p>
+                        <p>
+                            <label class="label"></label>
+                            <label><input id="chkLoginRememberMe" type="checkbox"/>Remember me on this computer</label>
+                        </p>
+                        <span id="loginMessage" class="message" style="display:none"></span>
+                        <p>
+                            <label class="label"></label>
+                            <input id="btnLogin" type="button" class="button" value="Login" onclick="javascript:Membership.login()"/>
+                        </p>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="form">
+                        <h2>Lost Password?</h2>
+                        <p>
+                            <label for="txtForgotEmail" class="label">Email:</label>
+                            <input id="txtForgotEmail" type="text" class="textbox" />
+                            <span id="valForgotEmail"  class="validator" style="display:none"></span>
+                        </p>
+                        <span id="passwordMessage" class="message" style="display:none"></span>
+                        <p>
+                            <label class="label"></label>
+                            <input id="btnPassword" type="button" class="button" value="Send Password" onclick="javascript:Membership.sendPassword()" />
+                        </p>
+                    </div>
+                </div>
+                <div id="divSignup">
+                    <div class="form">
+                        <h2>Sign up</h2>
+                        <p>
+                            <label for="txtSignupUserName" class="label">User Name:</label>
+                            <input id="txtSignupUserName" type="text" class="textbox" />
+                            <span id="valSignupUserName" class="validator" style="display:none"></span>
+                        </p>
+                        <p>
+                            <label for="txtSignupPassword" class="label">Password:</label>
+                            <input id="txtSignupPassword" type="password" class="textbox" />
+                            <span id="valSignupPassword" class="validator" style="display:none"></span>
+                        </p>
+                        <p>
+                            <label for="txtSignupConfirm" class="label">Retype:</label>
+                            <input id="txtSignupConfirm" type="password" class="textbox" />
+                            <span id="valSignupConfirm" class="validator" style="display:none"></span>
+                        </p>
+                        <p>
+                            <label for="txtSignupEmail" class="label">Email:</label>
+                            <input id="txtSignupEmail" type="text" class="textbox" />
+                            <span id="valSignupEmail" class="validator" style="display:none"></span>
+                        </p>
+                        <span id="signupMessage" class="message" style="display:none"></span>
+                        <p>
+                            <label class="label"></label>
+                            <input id="btnSignup" type="button" class="button" value="Sign up" onclick="javascript:Membership.signUp()"/>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="divSubmitStoryBox" class="modalBox" style="width:640px;display:none">
+            <div class="titleContainer">
+                <div class="title">Kigg.com</div>
+                <div id="divSubmitStoryClose" class="closeButton" title="Close"></div>
+            </div>
+            <div class="contentContainer">
+                <div class="form">
+                    <h2>Submit Story</h2>
+                    <p>
+                        <label for="txtStoryUrl" class="label">Url:</label>
+                        <input id="txtStoryUrl" type="text" class="largeTextbox"/>
+                        <span id="valStoryUrl" class="validator" style="display:none"></span>
+                    </p>
+                    <p>
+                        <label for="txtStoryTitle" class="label">Title:</label>
+                        <input id="txtStoryTitle" type="text" class="largeTextbox"/>
+                        <span id="valStoryTitle" class="validator" style="display:none"></span>
+                    </p>
+                    <p>
+                        <label for="ddlStoryCategory" class="label">Category:</label>
+                        <select id="ddlStoryCategory" class="largeTextbox">
+                            <option value="-1">[Select Category]</option>
+                            <% foreach (Category category in ViewData.Categories.OrderBy(c => c.Name)) %>
+                            <% { %>
+                                <option value="<%= category.ID %>"><%= category.Name%></option>
+                            <% } %>
+                        </select>
+                        <span id="valStoryCategory" class="validator" style="display:none"></span>
+                    </p>
+                    <p>
+                        <label for="txtStoryTags" class="label">Tags:</label>
+                        <input id="txtStoryTags" type="text" class="largeTextbox"/>
+                    </p>
+                    <p>
+                        <label for="txtStoryDescription" class="label">Description:</label>
+                        <textarea id="txtStoryDescription" cols="20" rows="8" class="largeTextarea"></textarea>
+                        <span id="valfStoryDescription" class="validator" style="display:none"></span>
+                    </p>
+                    <span id="storyMessage" class="message" style="display:none"></span>
+                    <p>
+                        <label class="label"></label>
+                        <input id="btnSubmitStory" type="button" class="button" value="Submit Story" onclick="javascript:Story.submit()"/>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div> 
+    <script type="text/javascript">
+
+        Sys.Application.initialize();
+
+        function pageLoad(sender, e)
+        {
+            Membership.init();
+            Story.init();
+
+            Membership.set_logoutUrl('<%= Url.Action("Logout", "User")%>');
+            Membership.set_loginUrl('<%= Url.Action("Login", "User")%>');
+            Membership.set_sendPasswordUrl('<%= Url.Action("SendPassword", "User")%>');
+            Membership.set_signUpUrl('<%= Url.Action("Signup", "User")%>');
+
+            Story.set_submitStoryUrl('<%= Url.Action("Create", "Story")%>');
+            Story.set_kiggStoryUrl('<%= Url.Action("Kigg", "Story")%>');
+            Story.set_commentStoryUrl('<%= Url.Action("Comment", "Story")%>');
+
+            Membership.set_isLoggedIn(Boolean.parse('<%= ViewData.IsAuthenticated.ToString().ToLowerInvariant() %>'));
+        }
+
+        function pageUnload(sender, e)
+        {
+            Story.dispose();
+            Membership.dispose();
+        }
+
+        function onSearch()
+        {
+            var txt = $get('txtQuery');
+            var q = txt.value.trim();
+
+            if (q.length == 0)
+            {
+                txt.focus();
+                return false;
+            }
+
+            return true;
+        }
+
+    </script>
+</body>
+</html>
