@@ -1,0 +1,372 @@
+﻿namespace Kigg.NUnitTest
+{
+    using System.Web;
+    using System.Web.Mvc;
+
+    using NUnit.Framework;
+    using Rhino.Mocks;
+
+    using Kigg;
+
+    [TestFixture]
+    public class RouteTest
+    {
+        private RouteCollection routes = null;
+        private MockRepository mocks = null;
+
+        [SetUp()]
+        public void Init()
+        {
+            routes = new RouteCollection();
+            Global.RegisterRoutes(routes);
+
+            mocks = new MockRepository();
+        }
+
+        [Test]
+        public void VerifyDefault()
+        {
+            IHttpContext httpContext;
+
+            using (mocks.Record())
+            {
+                httpContext = GetHttpContext(mocks, "~/Default.aspx");
+            }
+
+            using (mocks.Playback())
+            {
+                RouteData routeData = routes.GetRouteData(httpContext);
+
+                Assert.IsNotNull(routeData);
+                Assert.AreEqual("Story", routeData.Values["Controller"]);
+                Assert.AreEqual("Category", routeData.Values["action"]);
+            }
+        }
+
+        [Test]
+        public void VerifyAllCategory()
+        {
+            IHttpContext httpContext;
+
+            using (mocks.Record())
+            {
+                httpContext = GetHttpContext(mocks, "~/Story/Category/20");
+            }
+
+            using (mocks.Playback())
+            {
+                RouteData routeData = routes.GetRouteData(httpContext);
+
+                Assert.IsNotNull(routeData);
+                Assert.AreEqual("Story", routeData.Values["Controller"]);
+                Assert.AreEqual("Category", routeData.Values["action"]);
+                Assert.IsNull(routeData.Values["name"]);
+                Assert.AreEqual("20", routeData.Values["page"]);
+            }
+        }
+
+        [Test]
+        public void VerifySpecificCategory()
+        {
+            IHttpContext httpContext;
+
+            using (mocks.Record())
+            {
+                httpContext = GetHttpContext(mocks, "~/Story/Category/Technology/1");
+            }
+
+            using (mocks.Playback())
+            {
+                RouteData routeData = routes.GetRouteData(httpContext);
+
+                Assert.IsNotNull(routeData);
+                Assert.AreEqual("Story", routeData.Values["Controller"]);
+                Assert.AreEqual("Category", routeData.Values["action"]);
+                Assert.AreEqual("Technology", routeData.Values["name"]);
+                Assert.AreEqual("1", routeData.Values["page"]);
+            }
+        }
+
+        [Test]
+        public void VerifyUpcoming()
+        {
+            IHttpContext httpContext;
+
+            using (mocks.Record())
+            {
+                httpContext = GetHttpContext(mocks, "~/Story/Upcoming");
+            }
+
+            using (mocks.Playback())
+            {
+                RouteData routeData = routes.GetRouteData(httpContext);
+
+                Assert.IsNotNull(routeData);
+                Assert.AreEqual("Story", routeData.Values["Controller"]);
+                Assert.AreEqual("Upcoming", routeData.Values["action"]);
+            }
+        }
+
+        [Test]
+        public void VerifyTag()
+        {
+            IHttpContext httpContext;
+
+            using (mocks.Record())
+            {
+                httpContext = GetHttpContext(mocks, "~/Story/Tag/Apple/2");
+            }
+
+            using (mocks.Playback())
+            {
+                RouteData routeData = routes.GetRouteData(httpContext);
+
+                Assert.IsNotNull(routeData);
+                Assert.AreEqual("Story", routeData.Values["Controller"]);
+                Assert.AreEqual("Tag", routeData.Values["action"]);
+                Assert.AreEqual("Apple", routeData.Values["name"]);
+                Assert.AreEqual("2", routeData.Values["page"]);
+            }
+        }
+
+        [Test]
+        public void VerifyPostedBy()
+        {
+            IHttpContext httpContext;
+
+            using (mocks.Record())
+            {
+                httpContext = GetHttpContext(mocks, "~/Story/PostedBy/Admin/1");
+            }
+
+            using (mocks.Playback())
+            {
+                RouteData routeData = routes.GetRouteData(httpContext);
+
+                Assert.IsNotNull(routeData);
+                Assert.AreEqual("Story", routeData.Values["Controller"]);
+                Assert.AreEqual("PostedBy", routeData.Values["action"]);
+                Assert.AreEqual("Admin", routeData.Values["name"]);
+                Assert.AreEqual("1", routeData.Values["page"]);
+            }
+        }
+
+        [Test]
+        public void VerifySearch()
+        {
+            IHttpContext httpContext;
+
+            using (mocks.Record())
+            {
+                httpContext = GetHttpContext(mocks, "~/Story/Search/apple/5");
+            }
+
+            using (mocks.Playback())
+            {
+                RouteData routeData = routes.GetRouteData(httpContext);
+
+                Assert.IsNotNull(routeData);
+                Assert.AreEqual("Story", routeData.Values["Controller"]);
+                Assert.AreEqual("Search", routeData.Values["action"]);
+                Assert.AreEqual("apple", routeData.Values["q"]);
+                Assert.AreEqual("5", routeData.Values["page"]);
+            }
+        }
+
+        [Test]
+        public void VerifyDetail()
+        {
+            IHttpContext httpContext;
+
+            using (mocks.Record())
+            {
+                httpContext = GetHttpContext(mocks, "~/Story/Detail/1000");
+            }
+
+            using (mocks.Playback())
+            {
+                RouteData routeData = routes.GetRouteData(httpContext);
+
+                Assert.IsNotNull(routeData);
+                Assert.AreEqual("Story", routeData.Values["Controller"]);
+                Assert.AreEqual("Detail", routeData.Values["action"]);
+                Assert.AreEqual("1000", routeData.Values["id"]);
+            }
+        }
+
+        [Test]
+        public void VerifyCreate()
+        {
+            IHttpContext httpContext;
+
+            using (mocks.Record())
+            {
+                httpContext = GetHttpContext(mocks, "~/Story/Create");
+            }
+
+            using (mocks.Playback())
+            {
+                RouteData routeData = routes.GetRouteData(httpContext);
+
+                Assert.IsNotNull(routeData);
+                Assert.AreEqual("Story", routeData.Values["Controller"]);
+                Assert.AreEqual("Create", routeData.Values["action"]);
+            }
+        }
+
+        [Test]
+        public void VerifyKigg()
+        {
+            IHttpContext httpContext;
+
+            using (mocks.Record())
+            {
+                httpContext = GetHttpContext(mocks, "~/Story/Kigg");
+            }
+
+            using (mocks.Playback())
+            {
+                RouteData routeData = routes.GetRouteData(httpContext);
+
+                Assert.IsNotNull(routeData);
+                Assert.AreEqual("Story", routeData.Values["Controller"]);
+                Assert.AreEqual("Kigg", routeData.Values["action"]);
+            }
+        }
+
+        [Test]
+        public void VerifyComment()
+        {
+            IHttpContext httpContext;
+
+            using (mocks.Record())
+            {
+                httpContext = GetHttpContext(mocks, "~/Story/Comment");
+            }
+
+            using (mocks.Playback())
+            {
+                RouteData routeData = routes.GetRouteData(httpContext);
+
+                Assert.IsNotNull(routeData);
+                Assert.AreEqual("Story", routeData.Values["Controller"]);
+                Assert.AreEqual("Comment", routeData.Values["action"]);
+            }
+        }
+
+        [Test]
+        public void VerifyLogin()
+        {
+            IHttpContext httpContext;
+
+            using (mocks.Record())
+            {
+                httpContext = GetHttpContext(mocks, "~/User/Login");
+            }
+
+            using (mocks.Playback())
+            {
+                RouteData routeData = routes.GetRouteData(httpContext);
+
+                Assert.IsNotNull(routeData);
+                Assert.AreEqual("User", routeData.Values["Controller"]);
+                Assert.AreEqual("Login", routeData.Values["action"]);
+            }
+        }
+
+        [Test]
+        public void VerifySendPassword()
+        {
+            IHttpContext httpContext;
+
+            using (mocks.Record())
+            {
+                httpContext = GetHttpContext(mocks, "~/User/SendPassword");
+            }
+
+            using (mocks.Playback())
+            {
+                RouteData routeData = routes.GetRouteData(httpContext);
+
+                Assert.IsNotNull(routeData);
+                Assert.AreEqual("User", routeData.Values["Controller"]);
+                Assert.AreEqual("SendPassword", routeData.Values["action"]);
+            }
+        }
+
+        [Test]
+        public void VerifySignup()
+        {
+            IHttpContext httpContext;
+
+            using (mocks.Record())
+            {
+                httpContext = GetHttpContext(mocks, "~/User/Signup");
+            }
+
+            using (mocks.Playback())
+            {
+                RouteData routeData = routes.GetRouteData(httpContext);
+
+                Assert.IsNotNull(routeData);
+                Assert.AreEqual("User", routeData.Values["Controller"]);
+                Assert.AreEqual("Signup", routeData.Values["action"]);
+            }
+        }
+
+        [Test]
+        public void VerifyLogout()
+        {
+            IHttpContext httpContext;
+
+            using (mocks.Record())
+            {
+                httpContext = GetHttpContext(mocks, "~/User/Logout");
+            }
+
+            using (mocks.Playback())
+            {
+                RouteData routeData = routes.GetRouteData(httpContext);
+
+                Assert.IsNotNull(routeData);
+                Assert.AreEqual("User", routeData.Values["Controller"]);
+                Assert.AreEqual("Logout", routeData.Values["action"]);
+            }
+        }
+
+        private static IHttpContext GetHttpContext(MockRepository mocks, string url)
+        {
+            IHttpContext httpContext = mocks.DynamicMock<IHttpContext>();
+            IHttpRequest httpRequest = mocks.DynamicMock<IHttpRequest>();
+            IHttpResponse httpResponse = mocks.DynamicMock<IHttpResponse>();
+            IHttpSessionState httpSession = mocks.DynamicMock<IHttpSessionState>();
+            IHttpServerUtility httpServer = mocks.DynamicMock<IHttpServerUtility>();
+
+            SetupResult.For(httpContext.Request).Return(httpRequest);
+            SetupResult.For(httpContext.Response).Return(httpResponse);
+            SetupResult.For(httpContext.Session).Return(httpSession);
+            SetupResult.For(httpContext.Server).Return(httpServer);
+
+            mocks.Replay(httpContext);
+
+            if (!string.IsNullOrEmpty(url))
+            {
+                string appRelativePath;
+                int indexOfQuestionMark = url.IndexOf("?");
+
+                if (indexOfQuestionMark > -1)
+                {
+                    appRelativePath = url.Substring(0, indexOfQuestionMark);
+                }
+                else
+                {
+                    appRelativePath = url;
+                }
+
+                SetupResult.For(httpContext.Request.AppRelativeCurrentExecutionFilePath).Return(appRelativePath);
+            }
+
+            return httpContext;
+        }
+    }
+}
