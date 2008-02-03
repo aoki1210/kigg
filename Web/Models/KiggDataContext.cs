@@ -8,24 +8,46 @@
     using System.Data.Linq;
     using System.Transactions;
 
+    /// <summary>
+    /// Linq to Sql implementation of <see cref="IDataContext"/>.
+    /// </summary>
     public partial class KiggDataContext : IDataContext
     {
-        Category IDataContext.GetCategoryByName(string categoryName)
-        {
-            return Categories.FirstOrDefault(c => c.Name == categoryName);
-        }
-
-        Category[] IDataContext.GetCategories()
+        /// <summary>
+        /// Gets the categories.
+        /// </summary>
+        /// <returns></returns>
+        public Category[] GetCategories()
         {
             return Categories.OrderBy(c => c.ID).ToArray();
         }
 
-        Tag IDataContext.GetTagByName(string tagName)
+        /// <summary>
+        /// Gets the category for the specified name.
+        /// </summary>
+        /// <param name="categoryName">Name of the category.</param>
+        /// <returns></returns>
+        public Category GetCategoryByName(string categoryName)
+        {
+            return Categories.FirstOrDefault(c => c.Name == categoryName);
+        }
+
+        /// <summary>
+        /// Gets the tag for the specified name.
+        /// </summary>
+        /// <param name="tagName">Name of the tag.</param>
+        /// <returns></returns>
+        public Tag GetTagByName(string tagName)
         {
             return Tags.FirstOrDefault(t => t.Name == tagName);
         }
 
-        TagItem[] IDataContext.GetTags(int top)
+        /// <summary>
+        /// Gets the top tags.
+        /// </summary>
+        /// <param name="top">The number of top tags.</param>
+        /// <returns></returns>
+        public TagItem[] GetTags(int top)
         {
             return Tags
                         .Select
@@ -44,7 +66,13 @@
                         .ToArray();
         }
 
-        StoryDetailItem IDataContext.GetStoryDetailById(Guid userId, int storyId)
+        /// <summary>
+        /// Gets the story detail by id.
+        /// </summary>
+        /// <param name="userId">The currently visiting user id.</param>
+        /// <param name="storyId">The story id.</param>
+        /// <returns></returns>
+        public StoryDetailItem GetStoryDetailById(Guid userId, int storyId)
         {
             return Stories
                             .Where(s => s.ID == storyId)
@@ -87,7 +115,15 @@
                             .FirstOrDefault();
         }
 
-        StoryListItem[] IDataContext.GetPublishedStoriesForAllCategory(Guid userId, int start, int max, out int total)
+        /// <summary>
+        /// Gets the published stories for all category.
+        /// </summary>
+        /// <param name="userId">The currently visiting user id.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="max">The max.</param>
+        /// <param name="total">The total.</param>
+        /// <returns></returns>
+        public StoryListItem[] GetPublishedStoriesForAllCategory(Guid userId, int start, int max, out int total)
         {
             var stories = Stories.Where(s => s.PublishedOn != null);
 
@@ -102,7 +138,16 @@
                                     );
         }
 
-        StoryListItem[] IDataContext.GetPublishedStoriesForCategory(Guid userId, int categoryId, int start, int max, out int total)
+        /// <summary>
+        /// Gets the published stories for the specified category.
+        /// </summary>
+        /// <param name="userId">The currently visiting user id.</param>
+        /// <param name="categoryId">The category id.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="max">The max.</param>
+        /// <param name="total">The total.</param>
+        /// <returns></returns>
+        public StoryListItem[] GetPublishedStoriesForCategory(Guid userId, int categoryId, int start, int max, out int total)
         {
             var stories = Stories.Where(s => (s.PublishedOn != null) && (s.CategoryID == categoryId));
             total = stories.Count();
@@ -116,7 +161,16 @@
                                     );
         }
 
-        StoryListItem[] IDataContext.GetStoriesForTag(Guid userId, int tagId, int start, int max, out int total)
+        /// <summary>
+        /// Gets the stories for the specified tag.
+        /// </summary>
+        /// <param name="userId">The currently visiting user id.</param>
+        /// <param name="tagId">The tag id.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="max">The max.</param>
+        /// <param name="total">The total.</param>
+        /// <returns></returns>
+        public StoryListItem[] GetStoriesForTag(Guid userId, int tagId, int start, int max, out int total)
         {
             var stories = Stories.Where(s => s.StoryTags.Count(st => st.TagID == tagId) > 0);
 
@@ -133,7 +187,15 @@
                                 );
         }
 
-        StoryListItem[] IDataContext.GetUpcomingStories(Guid userId, int start, int max, out int total)
+        /// <summary>
+        /// Gets the upcoming stories.
+        /// </summary>
+        /// <param name="userId">The currently visiting user id.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="max">The max.</param>
+        /// <param name="total">The total.</param>
+        /// <returns></returns>
+        public StoryListItem[] GetUpcomingStories(Guid userId, int start, int max, out int total)
         {
             var stories = Stories.Where(s => s.PublishedOn == null);
 
@@ -147,7 +209,16 @@
                                 );
         }
 
-        StoryListItem[] IDataContext.GetStoriesPostedByUser(Guid userId, Guid postedByUserId, int start, int max, out int total)
+        /// <summary>
+        /// Gets the stories posted by the specified user.
+        /// </summary>
+        /// <param name="userId">The currently visiting user id.</param>
+        /// <param name="postedByUserId">The posted by user id.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="max">The max.</param>
+        /// <param name="total">The total.</param>
+        /// <returns></returns>
+        public StoryListItem[] GetStoriesPostedByUser(Guid userId, Guid postedByUserId, int start, int max, out int total)
         {
             var stories = Stories.Where(s => s.PostedBy == postedByUserId);
 
@@ -162,7 +233,16 @@
                                 );
         }
 
-        StoryListItem[] IDataContext.SearchStories(Guid userId, string query, int start, int max, out int total)
+        /// <summary>
+        /// Searches the stories.
+        /// </summary>
+        /// <param name="userId">The currently visiting user id.</param>
+        /// <param name="query">The query.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="max">The max.</param>
+        /// <param name="total">The total.</param>
+        /// <returns></returns>
+        public StoryListItem[] SearchStories(Guid userId, string query, int start, int max, out int total)
         {
             var stories = Stories
                                 .Where(
@@ -183,7 +263,7 @@
                                 );
         }
 
-        StoryListItem[] PrepareStories(IQueryable<Story> stories, Guid userId, int start, int max)
+        private StoryListItem[] PrepareStories(IQueryable<Story> stories, Guid userId, int start, int max)
         {
             return  stories
                             .Select
@@ -210,7 +290,17 @@
                             .ToArray();
         }
 
-        void IDataContext.SubmitStory(string url, string title, int categoryId, string description, string tags, Guid userId)
+        /// <summary>
+        /// Submit the story.
+        /// </summary>
+        /// <param name="url">The URL.</param>
+        /// <param name="title">The title.</param>
+        /// <param name="categoryId">The category id.</param>
+        /// <param name="description">The description.</param>
+        /// <param name="tags">The tags.</param>
+        /// <param name="userId">The user id who is submitting the stroy.</param>
+        /// <returns>Returns the id of the new story</returns>
+        public int SubmitStory(string url, string title, int categoryId, string description, string tags, Guid userId)
         {
             using (TransactionScope ts = new TransactionScope())
             {
@@ -308,10 +398,18 @@
                 SubmitChanges();
 
                 ts.Complete();
+
+                return story.ID;
             }
         }
 
-        void IDataContext.KiggStory(int storyId, Guid userId, int qualifyingKigg)
+        /// <summary>
+        /// Kiggs the specified story.
+        /// </summary>
+        /// <param name="storyId">The story id.</param>
+        /// <param name="userId">The user id who is kigging the story.</param>
+        /// <param name="qualifyingKigg">The qualifying kigg which is considered to mark a story as published.</param>
+        public void KiggStory(int storyId, Guid userId, int qualifyingKigg)
         {
             using (TransactionScope ts = new TransactionScope())
             {
@@ -346,7 +444,14 @@
             }
         }
 
-        void IDataContext.PostComment(int storyId, Guid userId, string content)
+        /// <summary>
+        /// Post comments for the specified story.
+        /// </summary>
+        /// <param name="storyId">The story id.</param>
+        /// <param name="userId">The user id who is posting the comment.</param>
+        /// <param name="content">The content.</param>
+        /// <returns>Returns the id of the new comment</returns>
+        public int PostComment(int storyId, Guid userId, string content)
         {
             using (TransactionScope ts = new TransactionScope())
             {
@@ -368,6 +473,8 @@
                 SubmitChanges();
 
                 ts.Complete();
+
+                return comment.ID;
             }
         }
     }

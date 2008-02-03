@@ -235,7 +235,7 @@
             Membership.set_sendPasswordUrl('<%= Url.Action("SendPassword", "User")%>');
             Membership.set_signUpUrl('<%= Url.Action("Signup", "User")%>');
 
-            Story.set_submitStoryUrl('<%= Url.Action("Create", "Story")%>');
+            Story.set_submitStoryUrl('<%= Url.Action("Submit", "Story")%>');
             Story.set_kiggStoryUrl('<%= Url.Action("Kigg", "Story")%>');
             Story.set_commentStoryUrl('<%= Url.Action("Comment", "Story")%>');
 

@@ -1,6 +1,7 @@
 ﻿namespace Kigg
 {
     using System;
+    using System.Web.Security;
     using System.Web.Mvc;
 
     public class Global : System.Web.HttpApplication
@@ -8,6 +9,7 @@
         protected void Application_Start(object sender, EventArgs e)
         {
             RegisterRoutes(RouteTable.Routes);
+            CreateDefaultUserIfNotExists();
         }
 
         public static void RegisterRoutes(RouteCollection routes)
@@ -263,6 +265,18 @@
                                 Defaults = defaults
                             }
                         );
+        }
+
+        private static void CreateDefaultUserIfNotExists()
+        {
+            const string DefaultUser = "admin";
+            const string DefaultPassword = "admin";
+            const string DefaultEmail = "admin@kigg.com";
+
+            if (Membership.GetUser(DefaultUser) == null)
+            {
+                Membership.CreateUser(DefaultUser, DefaultPassword, DefaultEmail);
+            }
         }
     }
 }

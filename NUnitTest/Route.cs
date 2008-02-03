@@ -195,13 +195,13 @@
         }
 
         [Test]
-        public void VerifyCreate()
+        public void VerifySubmit()
         {
             IHttpContext httpContext;
 
             using (mocks.Record())
             {
-                httpContext = GetHttpContext(mocks, "~/Story/Create");
+                httpContext = GetHttpContext(mocks, "~/Story/Submit");
             }
 
             using (mocks.Playback())
@@ -210,7 +210,7 @@
 
                 Assert.IsNotNull(routeData);
                 Assert.AreEqual("Story", routeData.Values["Controller"]);
-                Assert.AreEqual("Create", routeData.Values["action"]);
+                Assert.AreEqual("Submit", routeData.Values["action"]);
             }
         }
 
@@ -275,6 +275,26 @@
         }
 
         [Test]
+        public void VerifyLogout()
+        {
+            IHttpContext httpContext;
+
+            using (mocks.Record())
+            {
+                httpContext = GetHttpContext(mocks, "~/User/Logout");
+            }
+
+            using (mocks.Playback())
+            {
+                RouteData routeData = routes.GetRouteData(httpContext);
+
+                Assert.IsNotNull(routeData);
+                Assert.AreEqual("User", routeData.Values["Controller"]);
+                Assert.AreEqual("Logout", routeData.Values["action"]);
+            }
+        }
+
+        [Test]
         public void VerifySendPassword()
         {
             IHttpContext httpContext;
@@ -311,26 +331,6 @@
                 Assert.IsNotNull(routeData);
                 Assert.AreEqual("User", routeData.Values["Controller"]);
                 Assert.AreEqual("Signup", routeData.Values["action"]);
-            }
-        }
-
-        [Test]
-        public void VerifyLogout()
-        {
-            IHttpContext httpContext;
-
-            using (mocks.Record())
-            {
-                httpContext = GetHttpContext(mocks, "~/User/Logout");
-            }
-
-            using (mocks.Playback())
-            {
-                RouteData routeData = routes.GetRouteData(httpContext);
-
-                Assert.IsNotNull(routeData);
-                Assert.AreEqual("User", routeData.Values["Controller"]);
-                Assert.AreEqual("Logout", routeData.Values["action"]);
             }
         }
 
