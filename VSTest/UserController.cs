@@ -10,9 +10,9 @@
     [TestClass]
     public class UserControllerTest
     {
-        private const string DefaultUserName = "admin";
+        private const string DefaultUserName = "foobar";
         private const string DefaultEmail = "foo@bar.com";
-        private const string DefaultPassword = "wxyz";
+        private const string DefaultPassword = "foobar";
         private const int DefaultPasswordLength = 4;
 
         private MockRepository mocks = null;

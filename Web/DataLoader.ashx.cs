@@ -36,9 +36,11 @@
             }
             else
             {
-                //The Following loads 2000 Latest Story from Digg.com
-                using (IDataContext db = new KiggDataContext())
+                using (new CodeBenchmark())
                 {
+                    //The Following loads 2000 Latest Story from Digg.com
+                    IDataContext db = new KiggDataContext();
+
                     _categories = db.GetCategories();
 
                     int count = 0;
@@ -61,9 +63,9 @@
 
                         count += 1;
                     }
-                }
 
-                context.Response.Write("Done");
+                    context.Response.Write("Done");
+                }
             }
         }
 

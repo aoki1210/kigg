@@ -5,18 +5,34 @@
     using System.Web.Security;
     using System.Web.Mvc;
 
+    /// <summary>
+    /// Handles all Membership related operations.
+    /// </summary>
     public class UserController : BaseController
     {
         private static readonly Regex EmailExpression = new Regex(@"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$", RegexOptions.Compiled | RegexOptions.Singleline);
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="System.Web.Security.MembershipProvider"/> class.
+        /// </summary>
+        /// <param name="userManager">The membership provider.</param>
         public UserController(MembershipProvider userManager): base(userManager)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UserController"/> class.
+        /// </summary>
         public UserController():base()
         {
         }
 
+        /// <summary>
+        /// Logins the user. This is an Ajax Operation.
+        /// </summary>
+        /// <param name="userName">Name of the user (Mandatory).</param>
+        /// <param name="password">The password (Mandatory).</param>
+        /// <param name="rememberMe">If <c>true</c> a persistent cookie is generated.</param>
         [ControllerAction()]
         public void Login(string userName, string password, bool rememberMe)
         {
@@ -28,42 +44,32 @@
                 {
                     result.errorMessage = "User name cannot be blank.";
                 }
+                else if (string.IsNullOrEmpty(password))
+                {
+                    result.errorMessage = "Password cannot be blank.";
+                }
+                else if (!UserManager.ValidateUser(userName, password))
+                {
+                    result.errorMessage = "Invalid login credentials.";
+                }
                 else
                 {
-                    if (string.IsNullOrEmpty(password))
+                    //The following check is required for TDD 
+                    if (HttpContext != null)
                     {
-                        result.errorMessage = "Password cannot be blank.";
+                        FormsAuthentication.SetAuthCookie(userName, rememberMe);
                     }
-                    else
-                    {
-                        try
-                        {
-                            if (UserManager.ValidateUser(userName, password))
-                            {
-                                //The following check is required for TDD 
-                                if (HttpContext != null)
-                                {
-                                    FormsAuthentication.SetAuthCookie(userName, rememberMe);
-                                }
 
-                                result.isSuccessful = true;
-                            }
-                            else
-                            {
-                                result.errorMessage = "Invalid login credentials.";
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            result.errorMessage = e.Message;
-                        }
-                    }
+                    result.isSuccessful = true;
                 }
 
                 RenderView("Json", result);
             }
         }
 
+        /// <summary>
+        /// Logouts the currently logged in user. This is an Ajax Operation.
+        /// </summary>
         [ControllerAction()]
         public void Logout()
         {
@@ -73,18 +79,27 @@
 
                 if (IsUserAuthenticated)
                 {
-                    FormsAuthentication.SignOut();
+                    //The following check is required for TDD 
+                    if (HttpContext != null)
+                    {
+                        FormsAuthentication.SignOut();
+                    }
+
                     result.isSuccessful = true;
                 }
                 else
                 {
-                    result.errorMessage = "You are not logged in";
+                    result.errorMessage = "You are not logged in.";
                 }
 
                 RenderView("Json", result);
             }
         }
 
+        /// <summary>
+        /// Sends the newly generated random password. This is an Ajax Operation.
+        /// </summary>
+        /// <param name="email">The email (Mandatory).</param>
         [ControllerAction()]
         public void SendPassword(string email)
         {
@@ -96,30 +111,27 @@
                 {
                     result.errorMessage = "Email cannot be blank.";
                 }
+                else if (!IsValidEmail(email))
+                {
+                    result.errorMessage = "Invalid email address.";
+                }
                 else
                 {
-                    if (!IsValidEmail(email))
+                    string userName = UserManager.GetUserNameByEmail(email);
+
+                    if (string.IsNullOrEmpty(userName))
                     {
-                        result.errorMessage = "Invalid email address.";
+                        result.errorMessage = "Did not find any user for specified email.";
                     }
                     else
                     {
-                        string userName = UserManager.GetUserNameByEmail(email);
+                        MembershipUser user = UserManager.GetUser(userName, false);
 
-                        if (string.IsNullOrEmpty(userName))
-                        {
-                            result.errorMessage = "Did not find any user for specified email.";
-                        }
-                        else
-                        {
-                            MembershipUser user = UserManager.GetUser(userName, false);
+                        string password = user.ResetPassword();
 
-                            string password = user.ResetPassword();
+                        SendPasswordMail(user.Email, password);
 
-                            SendPasswordMail(user.Email, password);
-
-                            result.isSuccessful = true;
-                        }
+                        result.isSuccessful = true;
                     }
                 }
 
@@ -127,6 +139,12 @@
             }
         }
 
+        /// <summary>
+        /// Creates a New User. This is an Ajax Operation.
+        /// </summary>
+        /// <param name="userName">Name of the user (Mandatory and must be unique).</param>
+        /// <param name="password">The password.</param>
+        /// <param name="email">The email (Mandatory and must be unique).</param>
         [ControllerAction()]
         public void Signup(string userName, string password, string email)
         {
@@ -138,62 +156,50 @@
                 {
                     result.errorMessage = "User name cannot be blank.";
                 }
+                else if (string.IsNullOrEmpty(password))
+                {
+                    result.errorMessage = "Password cannot be blank.";
+                }
+                else if (password.Length < UserManager.MinRequiredPasswordLength)
+                {
+                    result.errorMessage = string.Format("Password must be {0} character long.", UserManager.MinRequiredPasswordLength);
+                }
+                else if (string.IsNullOrEmpty(email))
+                {
+                    result.errorMessage = "Email cannot be blank.";
+                }
+                else if (!IsValidEmail(email))
+                {
+                    result.errorMessage = "Invalid email address.";
+                }
                 else
                 {
-                    if (string.IsNullOrEmpty(password))
+                    try
                     {
-                        result.errorMessage = "Password cannot be blank.";
-                    }
-                    else
-                    {
-                        if (password.Length < UserManager.MinRequiredPasswordLength)
+                        MembershipCreateStatus status;
+
+                        MembershipUser user = UserManager.CreateUser(userName, password, email, null, null, true, null, out status);
+
+                        if (user == null)
                         {
-                            result.errorMessage = string.Format("Password must be {0} character long.", UserManager.MinRequiredPasswordLength);
+                            throw new MembershipCreateUserException(status);
                         }
                         else
                         {
-                            if (string.IsNullOrEmpty(email))
+                            //The following check is required for TDD 
+                            if (HttpContext != null)
                             {
-                                result.errorMessage = "Email cannot be blank.";
+                                FormsAuthentication.SetAuthCookie(userName, false);
                             }
-                            else
-                            {
-                                if (!IsValidEmail(email))
-                                {
-                                    result.errorMessage = "Invalid email address.";
-                                }
-                                else
-                                {
-                                    try
-                                    {
-                                        MembershipCreateStatus status;
 
-                                        MembershipUser user = UserManager.CreateUser(userName, password, email, null, null, true, null, out status);
+                            SendSignupMail(userName, password, email);
 
-                                        if (user == null)
-                                        {
-                                            throw new MembershipCreateUserException(status);
-                                        }
-                                        else
-                                        {
-                                            //The following check is required for TDD 
-                                            if (HttpContext != null)
-                                            {
-                                                FormsAuthentication.SetAuthCookie(userName, false);
-                                            }
-
-                                            SendSignupMail(userName, password, email);
-
-                                            result.isSuccessful = true;
-                                        }
-                                    }
-                                    catch (MembershipCreateUserException e)
-                                    {
-                                        result.errorMessage = e.Message;
-                                    }
-                                }
-                            }
+                            result.isSuccessful = true;
                         }
+                    }
+                    catch (MembershipCreateUserException e)
+                    {
+                        result.errorMessage = e.Message;
                     }
                 }
 

@@ -14,7 +14,7 @@
     [TestClass]
     public class StoryControllerTest
     {
-        private const string DefaultUserName = "admin";
+        private const string DefaultUserName = "foobar";
         private static readonly Guid DefaultUserID = Guid.NewGuid();
 
         private MockRepository mocks = null;
@@ -304,6 +304,7 @@
         [TestMethod]
         public void ShouldSubmitForAuthenticatedUser()
         {
+            const int id = -1;
             const string url = "http://www.foo.com";
             const string title = "Foo";
             const string description = "Foo";
@@ -319,7 +320,7 @@
                 MembershipProvider userManager = GetMembershipProvider(mocks);
                 controller = new StoryControllerForTest(dataContext, userManager);
 
-                Expect.Call(delegate { dataContext.SubmitStory(url, title, -1, description, tags, DefaultUserID); }).IgnoreArguments();
+                Expect.Call(dataContext.SubmitStory(url, title, categoryId, description, tags, DefaultUserID)).IgnoreArguments().Return(id);
 
                 IHttpContext httpContext = GetHttpContext(mocks, true);
                 controllerContext = new ControllerContext(httpContext, new RouteData(), controller);
@@ -328,7 +329,7 @@
             using (mocks.Playback())
             {
                 controller.ControllerContext = controllerContext;
-                controller.Create(url, title, categoryId, description, tags);
+                controller.Submit(url, title, categoryId, description, tags);
             }
 
             Assert.AreEqual(controller.SelectedView, "Json");
@@ -362,7 +363,7 @@
             using (mocks.Playback())
             {
                 controller.ControllerContext = controllerContext;
-                controller.Create(url, title, categoryId, description, tags);
+                controller.Submit(url, title, categoryId, description, tags);
             }
 
             Assert.AreEqual(controller.SelectedView, "Json");
@@ -396,7 +397,7 @@
             using (mocks.Playback())
             {
                 controller.ControllerContext = controllerContext;
-                controller.Create(url, title, categoryId, description, tags);
+                controller.Submit(url, title, categoryId, description, tags);
             }
 
             Assert.AreEqual(controller.SelectedView, "Json");
@@ -430,7 +431,7 @@
             using (mocks.Playback())
             {
                 controller.ControllerContext = controllerContext;
-                controller.Create(url, title, categoryId, description, tags);
+                controller.Submit(url, title, categoryId, description, tags);
             }
 
             Assert.AreEqual(controller.SelectedView, "Json");
@@ -457,7 +458,7 @@
                 MembershipProvider userManager = GetMembershipProvider(mocks);
                 controller = new StoryControllerForTest(dataContext, userManager);
 
-                Expect.Call(delegate { dataContext.SubmitStory(url, title, -1, description, tags, DefaultUserID); }).IgnoreArguments().Throw(new InvalidOperationException("Specified category does not exist."));
+                Expect.Call(dataContext.SubmitStory(url, title, categoryId, description, tags, DefaultUserID)).IgnoreArguments().Throw(new InvalidOperationException("Specified category does not exist."));
 
                 IHttpContext httpContext = GetHttpContext(mocks, true);
                 controllerContext = new ControllerContext(httpContext, new RouteData(), controller);
@@ -466,7 +467,7 @@
             using (mocks.Playback())
             {
                 controller.ControllerContext = controllerContext;
-                controller.Create(url, title, categoryId, description, tags);
+                controller.Submit(url, title, categoryId, description, tags);
             }
 
             Assert.AreEqual(controller.SelectedView, "Json");
@@ -493,7 +494,7 @@
                 MembershipProvider userManager = GetMembershipProvider(mocks);
                 controller = new StoryControllerForTest(dataContext, userManager);
 
-                Expect.Call(delegate { dataContext.SubmitStory(url, title, -1, description, tags, DefaultUserID); }).IgnoreArguments().Throw(new InvalidOperationException("Specified story already exists."));
+                Expect.Call(dataContext.SubmitStory(url, title, categoryId, description, tags, DefaultUserID)).IgnoreArguments().Throw(new InvalidOperationException("Specified story already exists."));
 
                 IHttpContext httpContext = GetHttpContext(mocks, true);
                 controllerContext = new ControllerContext(httpContext, new RouteData(), controller);
@@ -502,7 +503,7 @@
             using (mocks.Playback())
             {
                 controller.ControllerContext = controllerContext;
-                controller.Create(url, title, categoryId, description, tags);
+                controller.Submit(url, title, categoryId, description, tags);
             }
 
             Assert.AreEqual(controller.SelectedView, "Json");
@@ -620,7 +621,7 @@
                 MembershipProvider userManager = GetMembershipProvider(mocks);
                 controller = new StoryControllerForTest(dataContext, userManager);
 
-                Expect.Call(delegate { dataContext.PostComment(storyId, DefaultUserID, content); }).IgnoreArguments();
+                Expect.Call(dataContext.PostComment(storyId, DefaultUserID, content)).IgnoreArguments().Return(-1);
 
                 IHttpContext httpContext = GetHttpContext(mocks, true);
                 controllerContext = new ControllerContext(httpContext, new RouteData(), controller);
@@ -715,7 +716,7 @@
                 MembershipProvider userManager = GetMembershipProvider(mocks);
                 controller = new StoryControllerForTest(dataContext, userManager);
 
-                Expect.Call(delegate { dataContext.PostComment(storyId, DefaultUserID, content); }).IgnoreArguments().Throw(new InvalidOperationException("Specified story does not exist."));
+                Expect.Call(dataContext.PostComment(storyId, DefaultUserID, content)).IgnoreArguments().Throw(new InvalidOperationException("Specified story does not exist."));
 
                 IHttpContext httpContext = GetHttpContext(mocks, true);
                 controllerContext = new ControllerContext(httpContext, new RouteData(), controller);

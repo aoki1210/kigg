@@ -5,10 +5,17 @@
     using System.Web.Security;
     using System.Web.Mvc;
 
+    /// <summary>
+    /// Base class which contains common stuffs.
+    /// </summary>
     public abstract class BaseController : Controller
     {
-        private MembershipProvider _userManager;
+        private readonly MembershipProvider _userManager;
 
+        /// <summary>
+        /// Gets the MembershipProvider.
+        /// </summary>
+        /// <value>The user manager.</value>
         protected MembershipProvider UserManager
         {
             [DebuggerStepThrough()]
@@ -18,6 +25,12 @@
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the currently visiting user is authenticated.
+        /// </summary>
+        /// <value>
+        /// if user authenticated returns <c>true</c>; otherwise, <c>false</c>.
+        /// </value>
         protected bool IsUserAuthenticated
         {
             [DebuggerStepThrough()]
@@ -27,6 +40,10 @@
             }
         }
 
+        /// <summary>
+        /// Gets the name of the current user. If the user is not authenticated it returns "Anonymous"
+        /// </summary>
+        /// <value>The name of the current user.</value>
         protected string CurrentUserName
         {
             [DebuggerStepThrough()]
@@ -36,6 +53,10 @@
             }
         }
 
+        /// <summary>
+        /// Gets the current user id. if the user is not authenticated it returns empty guid.
+        /// </summary>
+        /// <value>The current user id.</value>
         protected Guid CurrentUserId
         {
             [DebuggerStepThrough()]
@@ -52,11 +73,18 @@
             }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseController"/> class.
+        /// </summary>
+        /// <param name="userManager">The membership provider.</param>
         protected BaseController(MembershipProvider userManager)
         {
             _userManager = userManager;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseController"/> class.
+        /// </summary>
         protected BaseController() : this(Membership.Provider)
         {
         }
