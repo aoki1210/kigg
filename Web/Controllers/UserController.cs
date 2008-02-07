@@ -1,9 +1,8 @@
 ﻿namespace Kigg
 {
-    using System;
     using System.Text.RegularExpressions;
-    using System.Web.Security;
     using System.Web.Mvc;
+    using System.Web.Security;
 
     /// <summary>
     /// Handles all Membership related operations.
@@ -23,7 +22,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="UserController"/> class.
         /// </summary>
-        public UserController():base()
+        public UserController()
         {
         }
 
@@ -33,7 +32,7 @@
         /// <param name="userName">Name of the user (Mandatory).</param>
         /// <param name="password">The password (Mandatory).</param>
         /// <param name="rememberMe">If <c>true</c> a persistent cookie is generated.</param>
-        [ControllerAction()]
+        [ControllerAction]
         public void Login(string userName, string password, bool rememberMe)
         {
             using (new CodeBenchmark())
@@ -70,7 +69,7 @@
         /// <summary>
         /// Logouts the currently logged in user. This is an Ajax Operation.
         /// </summary>
-        [ControllerAction()]
+        [ControllerAction]
         public void Logout()
         {
             using (new CodeBenchmark())
@@ -100,7 +99,7 @@
         /// Sends the newly generated random password. This is an Ajax Operation.
         /// </summary>
         /// <param name="email">The email (Mandatory).</param>
-        [ControllerAction()]
+        [ControllerAction]
         public void SendPassword(string email)
         {
             using (new CodeBenchmark())
@@ -129,7 +128,11 @@
 
                         string password = user.ResetPassword();
 
-                        SendPasswordMail(user.Email, password);
+                        //Only send mail when we are not running the unit test.
+                        if (HttpContext != null)
+                        {
+                            SendPasswordMail(user.Email, password);
+                        }
 
                         result.isSuccessful = true;
                     }
@@ -145,7 +148,7 @@
         /// <param name="userName">Name of the user (Mandatory and must be unique).</param>
         /// <param name="password">The password.</param>
         /// <param name="email">The email (Mandatory and must be unique).</param>
-        [ControllerAction()]
+        [ControllerAction]
         public void Signup(string userName, string password, string email)
         {
             using (new CodeBenchmark())
@@ -190,9 +193,10 @@
                             if (HttpContext != null)
                             {
                                 FormsAuthentication.SetAuthCookie(userName, false);
-                            }
 
-                            SendSignupMail(userName, password, email);
+                                //Only send mail when we are not running the unit test.
+                                SendSignupMail(userName, password, email);
+                            }
 
                             result.isSuccessful = true;
                         }

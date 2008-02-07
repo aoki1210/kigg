@@ -273,10 +273,9 @@
             const string DefaultPassword = "admin";
             const string DefaultEmail = "admin@kigg.com";
 
-            if (Membership.GetUser(DefaultUser) == null)
-            {
-                Membership.CreateUser(DefaultUser, DefaultPassword, DefaultEmail);
-            }
+            if (Membership.GetUser(DefaultUser) != null) return;
+
+            Membership.CreateUser(DefaultUser, DefaultPassword, DefaultEmail);
         }
     }
 }

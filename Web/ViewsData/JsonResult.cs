@@ -5,17 +5,17 @@
     using System.Runtime.Serialization;
     using System.Runtime.Serialization.Json;
 
-    [DataContract()]
+    [DataContract]
     public class JsonResult
     {
-        [DataMember()]
+        [DataMember]
         public bool isSuccessful
         {
             get;
             set;
         }
 
-        [DataMember()]
+        [DataMember]
         public string errorMessage
         {
             get;
@@ -26,7 +26,7 @@
         {
             using (MemoryStream ms = new MemoryStream())
             {
-                DataContractJsonSerializer s = new DataContractJsonSerializer(this.GetType());
+                DataContractJsonSerializer s = new DataContractJsonSerializer(GetType());
                 s.WriteObject(ms, this);
 
                 ms.Seek(0, SeekOrigin.Begin);

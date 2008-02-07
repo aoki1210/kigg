@@ -22,7 +22,7 @@
 
         private IDataContext DataContext
         {
-            [System.Diagnostics.DebuggerStepThrough()]
+            [System.Diagnostics.DebuggerStepThrough]
             get
             {
                 return _dataContext;
@@ -107,7 +107,7 @@
             using (new CodeBenchmark())
             {
                 StoryListByCategoryData viewData = GetStoryListViewData<StoryListByCategoryData>(page);
-                int total = 0;
+                int total;
 
                 viewData.Stories = DataContext.GetUpcomingStories(CurrentUserId, CalculateStartIndex(page), _storyPerPage, out total);
                 viewData.StoryCount = total;
@@ -200,7 +200,7 @@
             using (new CodeBenchmark())
             {
                 StoryListBySearchData viewData = GetStoryListViewData<StoryListBySearchData>(page);
-                int total = 0;
+                int total;
 
                 viewData.Stories = DataContext.SearchStories(CurrentUserId, q, CalculateStartIndex(page), _storyPerPage, out total);
                 viewData.StoryCount = total;

@@ -19,7 +19,7 @@
 
         private MockRepository mocks = null;
 
-        [TestInitialize()]
+        [TestInitialize]
         public void Init()
         {
             mocks = new MockRepository();
@@ -38,8 +38,8 @@
 
                 controller = new StoryControllerForTest(dataContext, userManager);
 
-                int total = 0;
-                Expect.Call(dataContext.GetPublishedStoriesForAllCategory(DefaultUserID, 0, 0, out total)).IgnoreArguments().OutRef(2000).Return(new StoryListItem[] { new StoryListItem() });
+                int total;
+                Expect.Call(dataContext.GetPublishedStoriesForAllCategory(DefaultUserID, 0, 0, out total)).IgnoreArguments().OutRef(2000).Return(new StoryListItem[] { new StoryListItem(), new StoryListItem() });
 
                 IHttpContext httpContext = GetHttpContext(mocks, true);
                 controllerContext = new ControllerContext(httpContext, new RouteData(), controller);
@@ -77,7 +77,7 @@
                 Expect.Call(dataContext.GetCategoryByName(categoryName)).IgnoreArguments().Return(new Category { ID = categoryId, Name = categoryName });
 
                 int total = 0;
-                Expect.Call(dataContext.GetPublishedStoriesForCategory(DefaultUserID, categoryId, 0, 0, out total)).IgnoreArguments().OutRef(100).Return(new StoryListItem[] { new StoryListItem() });
+                Expect.Call(dataContext.GetPublishedStoriesForCategory(DefaultUserID, categoryId, 0, 0, out total)).IgnoreArguments().OutRef(99).Return(new StoryListItem[] { new StoryListItem() });
 
                 IHttpContext httpContext = GetHttpContext(mocks, true);
                 controllerContext = new ControllerContext(httpContext, new RouteData(), controller);
@@ -109,7 +109,7 @@
 
                 controller = new StoryControllerForTest(dataContext, userManager);
 
-                int total = 0;
+                int total;
                 Expect.Call(dataContext.GetUpcomingStories(DefaultUserID, 0, 0, out total)).IgnoreArguments().OutRef(500).Return(new StoryListItem[] { new StoryListItem() });
 
                 IHttpContext httpContext = GetHttpContext(mocks, true);
@@ -192,7 +192,7 @@
                 MembershipProvider userManager = GetMembershipProvider(mocks);
                 controller = new StoryControllerForTest(dataContext, userManager);
 
-                int total = 0;
+                int total;
                 Expect.Call(dataContext.GetStoriesPostedByUser(DefaultUserID, DefaultUserID, 0, 0, out total)).IgnoreArguments().Return(new StoryListItem[] { new StoryListItem() });
 
                 IHttpContext httpContext = GetHttpContext(mocks, true);
@@ -238,7 +238,7 @@
                 MembershipProvider userManager = GetMembershipProvider(mocks);
                 controller = new StoryControllerForTest(dataContext, userManager);
 
-                int total = 0;
+                int total;
                 Expect.Call(dataContext.SearchStories(DefaultUserID, searchQuery, 0, 0, out total)).IgnoreArguments().Return(new StoryListItem[] { new StoryListItem() });
 
                 IHttpContext httpContext = GetHttpContext(mocks, true);
@@ -373,6 +373,40 @@
         }
 
         [TestMethod]
+        public void ShouldNotSubmitForEmptyUrl()
+        {
+            const string url = "";
+            const string title = "";
+            const string description = "Foo";
+            const int categoryId = -1;
+            const string tags = "Foo";
+
+            StoryControllerForTest controller;
+            ControllerContext controllerContext;
+
+            using (mocks.Record())
+            {
+                IDataContext dataContext = GetDataContext(mocks, false);
+                MembershipProvider userManager = GetMembershipProvider(mocks);
+                controller = new StoryControllerForTest(dataContext, userManager);
+
+                IHttpContext httpContext = GetHttpContext(mocks, true);
+                controllerContext = new ControllerContext(httpContext, new RouteData(), controller);
+            }
+
+            using (mocks.Playback())
+            {
+                controller.ControllerContext = controllerContext;
+                controller.Submit(url, title, categoryId, description, tags);
+            }
+
+            Assert.AreEqual(controller.SelectedView, "Json");
+            Assert.IsInstanceOfType(controller.SelectedViewData, typeof(JsonResult));
+            Assert.IsFalse(((JsonResult)controller.SelectedViewData).isSuccessful);
+            Assert.AreEqual(((JsonResult)controller.SelectedViewData).errorMessage, "Story url cannot be blank.");
+        }
+
+        [TestMethod]
         public void ShouldNotSubmitForInvalidUrl()
         {
             const string url = "foo";
@@ -438,6 +472,40 @@
             Assert.IsInstanceOfType(controller.SelectedViewData, typeof(JsonResult));
             Assert.IsFalse(((JsonResult)controller.SelectedViewData).isSuccessful);
             Assert.AreEqual(((JsonResult)controller.SelectedViewData).errorMessage, "Story title cannot be blank.");
+        }
+
+        [TestMethod]
+        public void ShouldNotSubmitForEmptyDescription()
+        {
+            const string url = "http://www.foo.com";
+            const string title = "Foo";
+            const string description = "";
+            const int categoryId = -1;
+            const string tags = "Foo";
+
+            StoryControllerForTest controller;
+            ControllerContext controllerContext;
+
+            using (mocks.Record())
+            {
+                IDataContext dataContext = GetDataContext(mocks, false);
+                MembershipProvider userManager = GetMembershipProvider(mocks);
+                controller = new StoryControllerForTest(dataContext, userManager);
+
+                IHttpContext httpContext = GetHttpContext(mocks, true);
+                controllerContext = new ControllerContext(httpContext, new RouteData(), controller);
+            }
+
+            using (mocks.Playback())
+            {
+                controller.ControllerContext = controllerContext;
+                controller.Submit(url, title, categoryId, description, tags);
+            }
+
+            Assert.AreEqual(controller.SelectedView, "Json");
+            Assert.IsInstanceOfType(controller.SelectedViewData, typeof(JsonResult));
+            Assert.IsFalse(((JsonResult)controller.SelectedViewData).isSuccessful);
+            Assert.AreEqual(((JsonResult)controller.SelectedViewData).errorMessage, "Story description cannot be blank.");
         }
 
         [TestMethod]
