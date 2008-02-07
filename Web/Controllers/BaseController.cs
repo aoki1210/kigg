@@ -18,7 +18,7 @@
         /// <value>The user manager.</value>
         protected MembershipProvider UserManager
         {
-            [DebuggerStepThrough()]
+            [DebuggerStepThrough]
             get
             {
                 return _userManager;
@@ -33,7 +33,7 @@
         /// </value>
         protected bool IsUserAuthenticated
         {
-            [DebuggerStepThrough()]
+            [DebuggerStepThrough]
             get
             {
                 return HttpContext.User.Identity.IsAuthenticated;
@@ -46,7 +46,7 @@
         /// <value>The name of the current user.</value>
         protected string CurrentUserName
         {
-            [DebuggerStepThrough()]
+            [DebuggerStepThrough]
             get
             {
                 return IsUserAuthenticated ? HttpContext.User.Identity.Name : "Anonymous";
@@ -59,7 +59,7 @@
         /// <value>The current user id.</value>
         protected Guid CurrentUserId
         {
-            [DebuggerStepThrough()]
+            [DebuggerStepThrough]
             get
             {
                 if (!IsUserAuthenticated)

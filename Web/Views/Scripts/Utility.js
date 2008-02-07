@@ -237,7 +237,7 @@
         return 0;
     },
 
-    _getViewPortScrollX : function()
+    getViewPortScrollX : function()
     {
         var scrollX = 0;
 

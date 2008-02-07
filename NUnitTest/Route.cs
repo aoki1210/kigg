@@ -14,7 +14,7 @@
         private RouteCollection routes = null;
         private MockRepository mocks = null;
 
-        [SetUp()]
+        [SetUp]
         public void Init()
         {
             routes = new RouteCollection();
@@ -349,22 +349,7 @@
 
             mocks.Replay(httpContext);
 
-            if (!string.IsNullOrEmpty(url))
-            {
-                string appRelativePath;
-                int indexOfQuestionMark = url.IndexOf("?");
-
-                if (indexOfQuestionMark > -1)
-                {
-                    appRelativePath = url.Substring(0, indexOfQuestionMark);
-                }
-                else
-                {
-                    appRelativePath = url;
-                }
-
-                SetupResult.For(httpContext.Request.AppRelativeCurrentExecutionFilePath).Return(appRelativePath);
-            }
+            SetupResult.For(httpContext.Request.AppRelativeCurrentExecutionFilePath).Return(url);
 
             return httpContext;
         }

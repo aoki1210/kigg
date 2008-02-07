@@ -19,7 +19,7 @@
         private MembershipProvider userManager = null;
         private UserControllerForTest controller = null;
 
-        [TestInitialize()]
+        [TestInitialize]
         public void Init()
         {
             mocks = new MockRepository();
@@ -125,6 +125,25 @@
 
         [TestMethod]
         public void ShoudNotSendPasswordForInvalidEmail()
+        {
+            using (mocks.Record())
+            {
+                Expect.Call(userManager.GetUserNameByEmail(DefaultEmail)).IgnoreArguments().Return(null);
+            }
+
+            using (mocks.Playback())
+            {
+                controller.SendPassword(DefaultEmail);
+            }
+
+            Assert.AreEqual(controller.SelectedView, "Json");
+            Assert.IsInstanceOfType(controller.SelectedViewData, typeof(JsonResult));
+            Assert.IsFalse(((JsonResult)controller.SelectedViewData).isSuccessful);
+            Assert.AreEqual(((JsonResult)controller.SelectedViewData).errorMessage, "Did not find any user for specified email.");
+        }
+
+        [TestMethod]
+        public void ShoudNotSendPasswordForInvalidEmailFormat()
         {
             controller.SendPassword("foo");
 

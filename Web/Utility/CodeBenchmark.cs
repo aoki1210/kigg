@@ -15,7 +15,7 @@ namespace Kigg
         private static readonly string _logFile = string.Empty;
         private static readonly bool _includeParameters = false;
 
-        private Stopwatch _watch;
+        private readonly Stopwatch _watch;
 
         static CodeBenchmark()
         {
@@ -29,7 +29,7 @@ namespace Kigg
             }
         }
 
-        [DebuggerStepThrough()]
+        [DebuggerStepThrough]
         public CodeBenchmark()
         {
             if (_enabled)
@@ -39,7 +39,7 @@ namespace Kigg
             }
         }
 
-        [DebuggerStepThrough()]
+        [DebuggerStepThrough]
         public void Dispose()
         {
             if (_enabled)
@@ -104,7 +104,7 @@ namespace Kigg
                     {
                         for (int j = 1; j < paramInfos.Length; j++)
                         {
-                            output.AppendFormat(", {0} {1}", paramInfos[j].ParameterType.ToString(), paramInfos[j].Name);
+                            output.AppendFormat(", {0} {1}", paramInfos[j].ParameterType, paramInfos[j].Name);
                         }
                     }
                 }
