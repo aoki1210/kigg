@@ -154,7 +154,8 @@
     <Content Include="App_Data\KiggLog.ldf">
     </Content>
     <Content Include="DataLoader.ashx" />
-    <None Include="CodeBenchmark.csv" />
+    <None Include="CodeBenchmark.csv">
+    </None>
     <None Include="Models\Kigg.dbml.layout">
       <DependentUpon>Kigg.dbml</DependentUpon>
     </None>

@@ -17,7 +17,7 @@
             set;
         }
 
-        public string GravatarId
+        public string GravatarID
         {
             get
             {

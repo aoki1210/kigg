@@ -82,6 +82,8 @@
                 }
                 else
                 {
+                    name = name.UrlDecode();
+
                     Category category = DataContext.GetCategoryByName(name);
 
                     if (category != null)
@@ -131,6 +133,8 @@
                 return;
             }
 
+            name = name.UrlDecode();
+
             using (new CodeBenchmark())
             {
                 StoryListByTagData viewData = GetStoryListViewData<StoryListByTagData>(page);
@@ -164,6 +168,8 @@
                 return;
             }
 
+            name = name.UrlDecode();
+
             using (new CodeBenchmark())
             {
                 StoryListByUserData viewData = GetStoryListViewData<StoryListByUserData>(page);
@@ -196,6 +202,8 @@
                 RedirectToAction("Category");
                 return;
             }
+
+            q = q.UrlDecode();
 
             using (new CodeBenchmark())
             {

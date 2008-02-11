@@ -38,7 +38,7 @@
         {
             int fontSizeIndex = Convert.ToInt32(Math.Truncate((tagItem.Count - minWeight) / scaleUnitLength));
 
-            tagCloudHtml.AppendFormat("<span><a href=\"{0}\" style=\"font-size:{1}\">{2}</a></span> ", Url.Action(new { action = "Tag", controller = "Story", name = tagItem.Name, page = 1 }), fontSizes[fontSizeIndex], Server.HtmlEncode(tagItem.Name));
+            tagCloudHtml.AppendFormat("<span><a href=\"{0}\" style=\"font-size:{1}\">{2}</a></span> ", Url.Action(new { action = "Tag", controller = "Story", name = tagItem.Name.UrlEncode(), page = 1 }), fontSizes[fontSizeIndex], Server.HtmlEncode(tagItem.Name));
         }
 
         return tagCloudHtml.ToString();
@@ -74,7 +74,7 @@
                     <% foreach (Category category in ViewData.Categories) %>
                     <% { %>
                         <li>
-                            <%= Html.ActionLink(Server.HtmlEncode(category.Name), new { controller = "Story", action = "Category", name = category.Name, page = 1 })%>
+                            <%= Html.ActionLink(Server.HtmlEncode(category.Name), new { controller = "Story", action = "Category", name = category.Name.UrlEncode(), page = 1 })%>
                         </li>
                     <% } %>
                 </ul>
@@ -222,8 +222,6 @@
         </div>
     </div> 
     <script type="text/javascript">
-
-        Sys.Application.initialize();
 
         function pageLoad(sender, e)
         {

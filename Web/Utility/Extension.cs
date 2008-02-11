@@ -1,6 +1,7 @@
 ﻿namespace Kigg
 {
     using System;
+    using System.Web;
     using System.Text;
 
     public static class DataTimeExtension
@@ -41,6 +42,73 @@
             }
 
             return result.ToString();
+        }
+    }
+
+    public static class StringExtension
+    {
+        public static string UrlEncode(this string target)
+        {
+            if (target.IndexOf(" ") > -1)
+            {
+                target = target.Replace(" ", "_");
+            }
+
+            if (target.IndexOf("&") > -1)
+            {
+                target = target.Replace("&", "amp");
+            }
+
+            if (target.IndexOf(".") > -1)
+            {
+                target = target.Replace(".", "dot");
+            }
+
+            if (target.IndexOf("/") > -1)
+            {
+                target = target.Replace("/", "fws");
+            }
+
+            if (target.IndexOf("\\") > -1)
+            {
+                target = target.Replace("\\", "bks");
+            }
+
+            target = HttpUtility.UrlEncode(target);
+
+            return target;
+        }
+
+        public static string UrlDecode(this string target)
+        {
+            target = HttpUtility.UrlDecode(target);
+
+            if (target.IndexOf("_") > -1)
+            {
+                target = target.Replace("_", " ");
+            }
+
+            if (target.IndexOf("amp") > -1)
+            {
+                target = target.Replace("amp", "&");
+            }
+
+            if (target.IndexOf("dot") > -1)
+            {
+                target = target.Replace("dot", ".");
+            }
+
+            if (target.IndexOf("fws") > -1)
+            {
+                target = target.Replace("fws", "/");
+            }
+
+            if (target.IndexOf("bks") > -1)
+            {
+                target = target.Replace("bks", "\\");
+            }
+
+            return target;
         }
     }
 }
