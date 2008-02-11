@@ -46,8 +46,8 @@
                                         <span class="time"><%= story.PublishedAgo%></span> ago,
                                         <% }%>
                                         posted by
-                                        <a href="<%= Url.Action(new { controller = "Story", action = "PostedBy", name = story.PostedBy.Name, page = 1 })%>">
-                                        <img alt="" src="http://www.gravatar.com/avatar.php?gravatar_id=<%= story.PostedBy.GravatarId %>&size=15" class="gravatar" />
+                                        <a href="<%= Url.Action(new { controller = "Story", action = "PostedBy", name = story.PostedBy.Name.UrlEncode(), page = 1 })%>">
+                                        <img alt="" src="http://www.gravatar.com/avatar.php?gravatar_id=<%= story.PostedBy.GravatarID %>&size=15" class="gravatar" />
                                         <%= Server.HtmlEncode(story.PostedBy.Name) %>
                                         </a>
                                         <span class="time"><%= story.PostedAgo%></span> ago
@@ -57,7 +57,7 @@
                                         <%= Html.ActionLink("(more)", new { controller = "Story", action = "Detail", id = story.ID })%>
                                     </div>
                                     <div class="summary">
-                                        <span class="category">category:</span> <%= Html.ActionLink(Server.HtmlEncode(story.Category), new { controller = "Story", action = "Category", name = story.Category, page = 1 })%> |
+                                        <span class="category">category:</span> <%= Html.ActionLink(Server.HtmlEncode(story.Category), new { controller = "Story", action = "Category", name = story.Category.UrlEncode(), page = 1 })%> |
                                         <% string commentText = string.Empty; %>
                                         <% if (story.CommentCount == 0) %>
                                         <% { %>
@@ -82,7 +82,7 @@
                         <%     { %>
                         <%=         ", "%>
                         <%     } %>
-                        <%=     Html.ActionLink(Server.HtmlEncode(tag), new { controller = "Story", action = "Tag", name = tag, page = 1 })%>
+                        <%=     Html.ActionLink(Server.HtmlEncode(tag), new { controller = "Story", action = "Tag", name = tag.UrlEncode(), page = 1 })%>
                         <% } %>
                     </span>
                 </td>

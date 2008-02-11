@@ -75,7 +75,6 @@
                 controller = new StoryControllerForTest(dataContext, userManager);
 
                 Expect.Call(dataContext.GetCategoryByName(categoryName)).IgnoreArguments().Return(new Category { ID = categoryId, Name = categoryName });
-
                 int total = 0;
                 Expect.Call(dataContext.GetPublishedStoriesForCategory(DefaultUserID, categoryId, 0, 0, out total)).IgnoreArguments().OutRef(99).Return(new StoryListItem[] { new StoryListItem() });
 

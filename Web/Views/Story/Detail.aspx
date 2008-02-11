@@ -42,8 +42,8 @@
                                             <span class="time"><%= story.PublishedAgo %></span> ago,
                                             <% }%>
                                             posted by
-                                            <a href="<%= Url.Action(new { controller = "Story", action = "PostedBy", name = story.PostedBy.Name, page = 1 })%>">
-                                            <img alt="" src="http://www.gravatar.com/avatar.php?gravatar_id=<%= story.PostedBy.GravatarId %>&size=15" class="gravatar" />
+                                            <a href="<%= Url.Action(new { controller = "Story", action = "PostedBy", name = story.PostedBy.Name.UrlEncode(), page = 1 })%>">
+                                            <img alt="" src="http://www.gravatar.com/avatar.php?gravatar_id=<%= story.PostedBy.GravatarID %>&size=15" class="gravatar" />
                                             <%= Server.HtmlEncode(story.PostedBy.Name) %>
                                             </a>
                                             <span class="time"><%= story.PostedAgo %></span> ago
@@ -52,7 +52,7 @@
                                             <%= Server.HtmlEncode(story.Description) %>
                                         </div>
                                         <div class="summary">
-                                            <span class="category">category:</span> <%= Html.ActionLink(Server.HtmlEncode(story.Category), new { controller = "Story", action = "Category", name = story.Category, page = 1 })%>
+                                            <span class="category">category:</span> <%= Html.ActionLink(Server.HtmlEncode(story.Category), new { controller = "Story", action = "Category", name = story.Category.UrlEncode(), page = 1 })%>
                                         </div>
                                     </td>
                                 </tr>
@@ -67,7 +67,7 @@
                             <%     { %>
                             <%=         ", " %>
                             <%     } %>
-                            <%=     Html.ActionLink(Server.HtmlEncode(tag), new { controller = "Story", action = "Tag", name = tag, page = 1 })%>
+                            <%=     Html.ActionLink(Server.HtmlEncode(tag), new { controller = "Story", action = "Tag", name = tag.UrlEncode(), page = 1 })%>
                             <% } %>
                         </span>
                     </td>
@@ -83,8 +83,8 @@
                     <%  foreach(UserItem votedBy in story.VotedBy) %>
                     <%  { %>
                             <span class="user">
-                                <a href="<%= Url.Action(new { controller = "Story", action = "PostedBy", name = votedBy.Name, page = 1 })%>">
-                                    <img alt="" src="http://www.gravatar.com/avatar.php?gravatar_id=<%= votedBy.GravatarId %>&size=15" class="gravatar" />
+                                <a href="<%= Url.Action(new { controller = "Story", action = "PostedBy", name = votedBy.Name.UrlEncode(), page = 1 })%>">
+                                    <img alt="" src="http://www.gravatar.com/avatar.php?gravatar_id=<%= votedBy.GravatarID %>&size=15" class="gravatar" />
                                     <%= Server.HtmlEncode(votedBy.Name) %>
                                 </a>
                             </span>
@@ -117,8 +117,8 @@
                             <div class="postedBy">
                                 posted by
                                 <span class="user">
-                                    <a href="<%= Url.Action(new { controller = "Story", action = "PostedBy", name = comment.PostedBy.Name, page = 1 })%>">
-                                        <img alt="" src="http://www.gravatar.com/avatar.php?gravatar_id=<%= comment.PostedBy.GravatarId %>&size=15" class="gravatar" />
+                                    <a href="<%= Url.Action(new { controller = "Story", action = "PostedBy", name = comment.PostedBy.Name.UrlEncode(), page = 1 })%>">
+                                        <img alt="" src="http://www.gravatar.com/avatar.php?gravatar_id=<%= comment.PostedBy.GravatarID %>&size=15" class="gravatar" />
                                         <%= Server.HtmlEncode(comment.PostedBy.Name) %>
                                     </a>
                                 </span>
