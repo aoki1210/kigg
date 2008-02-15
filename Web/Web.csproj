@@ -159,6 +159,8 @@
     <None Include="Models\Kigg.dbml.layout">
       <DependentUpon>Kigg.dbml</DependentUpon>
     </None>
+    <Content Include="MailTemplates\Signup.txt" />
+    <Content Include="MailTemplates\Password.txt" />
     <Content Include="Views\Images\buttonBG.gif" />
     <Content Include="Views\Images\category.gif" />
     <Content Include="Views\Images\comment.gif" />

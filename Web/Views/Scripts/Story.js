@@ -128,7 +128,7 @@
         }
 
         var txtTitle = $get('txtStoryTitle');
-        var title = txtStoryTitle.value.trim();
+        var title = txtTitle.value.trim();
 
         if (title.length == 0)
         {

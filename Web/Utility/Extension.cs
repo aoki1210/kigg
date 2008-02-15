@@ -54,6 +54,11 @@
                 target = target.Replace(" ", "_");
             }
 
+            if (target.IndexOf("#") > -1)
+            {
+                target = target.Replace("#", "sharp");
+            }
+
             if (target.IndexOf("&") > -1)
             {
                 target = target.Replace("&", "amp");
@@ -86,6 +91,11 @@
             if (target.IndexOf("_") > -1)
             {
                 target = target.Replace("_", " ");
+            }
+
+            if (target.IndexOf("sharp") > -1)
+            {
+                target = target.Replace("sharp", "#");
             }
 
             if (target.IndexOf("amp") > -1)

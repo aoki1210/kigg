@@ -110,7 +110,7 @@
             {
                 Assert.IsTrue(stories.Length <= DefaultPageSize);
                 Assert.IsNotNull(stories[0].PublishedOn);
-                Assert.AreEqual(total, dataContext.Stories.Select(s => s.PublishedOn != null).Count());
+                Assert.AreEqual(total, dataContext.Stories.Where(s => s.PublishedOn != null).Count());
             }
         }
 
@@ -138,7 +138,7 @@
                         Assert.AreEqual(stories[i].Category, category.Name);
                     }
 
-                    Assert.AreEqual(total, dataContext.Stories.Select(s => s.PublishedOn != null && s.CategoryID == category.ID).Count());
+                    Assert.AreEqual(total, dataContext.Stories.Where(s => s.PublishedOn != null && s.CategoryID == category.ID).Count());
                 }
             }
         }
@@ -190,7 +190,7 @@
                     Assert.IsNull(stories[i].PublishedOn);
                 }
 
-                Assert.AreEqual(total, dataContext.Stories.Select(s => s.PublishedOn == null).Count());
+                Assert.AreEqual(total, dataContext.Stories.Where(s => s.PublishedOn == null).Count());
             }
         }
 
@@ -212,7 +212,7 @@
                     Assert.AreEqual(stories[i].PostedBy.Name, tempStory.User.UserName);
                 }
 
-                Assert.AreEqual(total, dataContext.Stories.Select(s => s.PostedBy == tempStory.PostedBy).Count());
+                Assert.AreEqual(total, dataContext.Stories.Where(s => s.PostedBy == tempStory.PostedBy).Count());
             }
         }
 

@@ -21,7 +21,9 @@
         {
             get
             {
-                byte[] hash = null;
+                if (string.IsNullOrEmpty(Email)) return string.Empty;
+
+                byte[] hash;
 
                 using (MD5 md5 = MD5.Create())
                 {
@@ -30,7 +32,7 @@
                     hash = md5.ComputeHash(data);
                 }
 
-                StringBuilder result = new StringBuilder(hash.Length);
+                StringBuilder result = new StringBuilder();
 
                 for (int i = 0; i < hash.Length; i++)
                 {

@@ -58,7 +58,7 @@
                                     </div>
                                     <div class="summary">
                                         <span class="category">category:</span> <%= Html.ActionLink(Server.HtmlEncode(story.Category), new { controller = "Story", action = "Category", name = story.Category.UrlEncode(), page = 1 })%> |
-                                        <% string commentText = string.Empty; %>
+                                        <% string commentText; %>
                                         <% if (story.CommentCount == 0) %>
                                         <% { %>
                                         <%    commentText = "add a comment";%>
@@ -119,7 +119,7 @@ object GetActionLinkArguments(int page)
     return values;
 }
 
-void CalculateStartAndEnd(BaseStoryListData viewData, out int start, out int end)
+static void CalculateStartAndEnd(BaseStoryListData viewData, out int start, out int end)
 {
     int pageCount = viewData.PageCount;
 
@@ -162,8 +162,8 @@ void CalculateStartAndEnd(BaseStoryListData viewData, out int start, out int end
             <span class="disabled">Previous</span>
         <% } %>
 
-        <% int start = 0; %>
-        <% int end = 0; %>
+        <% int start; %>
+        <% int end; %>
         <% CalculateStartAndEnd(viewData, out start, out end); %>
 
         <% if (start > 3) %>
