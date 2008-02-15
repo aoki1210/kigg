@@ -1,5 +1,9 @@
 ﻿namespace Kigg
 {
+    using System;
+    using System.Configuration;
+    using System.IO;
+    using System.Net.Mail;
     using System.Text.RegularExpressions;
     using System.Web.Mvc;
     using System.Web.Security;
@@ -10,6 +14,7 @@
     public class UserController : BaseController
     {
         private static readonly Regex EmailExpression = new Regex(@"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$", RegexOptions.Compiled | RegexOptions.Singleline);
+        private static readonly string AdminEmail = ConfigurationManager.AppSettings["adminEmail"];
 
         /// <summary>
         /// Initializes a new instance of the <see cref="System.Web.Security.MembershipProvider"/> class.
@@ -131,10 +136,20 @@
                         //Only send mail when we are not running the unit test.
                         if (HttpContext != null)
                         {
-                            SendPasswordMail(user.Email, password);
+                            try
+                            {
+                                SendPasswordMail(user.Email, password);
+                                result.isSuccessful = true;
+                            }
+                            catch(Exception e)
+                            {
+                                result.errorMessage = e.Message;
+                            }
                         }
-
-                        result.isSuccessful = true;
+                        else
+                        {
+                            result.isSuccessful = true;
+                        }
                     }
                 }
 
@@ -194,11 +209,21 @@
                             {
                                 FormsAuthentication.SetAuthCookie(userName, false);
 
-                                //Only send mail when we are not running the unit test.
-                                SendSignupMail(userName, password, email);
+                                try
+                                {
+                                    //Only send mail when we are not running the unit test.
+                                    SendSignupMail(userName, password, email);
+                                    result.isSuccessful = true;
+                                }
+                                catch(Exception e)
+                                {
+                                    result.errorMessage = e.Message;
+                                }
                             }
-
-                            result.isSuccessful = true;
+                            else
+                            {
+                                result.isSuccessful = true;
+                            }
                         }
                     }
                     catch (MembershipCreateUserException e)
@@ -213,12 +238,62 @@
 
         private void SendPasswordMail(string email, string password)
         {
-            // TODO SendNewPassword mail
+            const string CacheKey = "passwordRecoveryMailTemplate";
+
+            string body = HttpContext.Cache[CacheKey] as string;
+
+            if (body == null)
+            {
+                string file = System.Web.HttpContext.Current.Server.MapPath("~/MailTemplates/Password.txt");
+                body = File.ReadAllText(file);
+
+                if (HttpContext.Cache[CacheKey] == null)
+                {
+                    HttpContext.Cache[CacheKey] = body;
+                }
+            }
+
+            body = body.Replace("<%Password%>", password);
+
+            SendMail(email, "Kigg.com: New Password", body);
         }
 
         private void SendSignupMail(string userName, string password, string email)
         {
-            // TODO Send Signup mail
+            const string CacheKey = "signupMailTemplate";
+
+            string body = HttpContext.Cache[CacheKey] as string;
+
+            if (body == null)
+            {
+                string file = System.Web.HttpContext.Current.Server.MapPath("~/MailTemplates/Signup.txt");
+                body = File.ReadAllText(file);
+
+                if (HttpContext.Cache[CacheKey] == null)
+                {
+                    HttpContext.Cache[CacheKey] = body;
+                }
+            }
+
+            body = body.Replace("<%UserName%>", userName);
+            body = body.Replace("<%Password%>", password);
+
+            SendMail(email, "Kigg.com: Signup", body);
+        }
+
+        private static void SendMail(string to, string subject, string body)
+        {
+            using(MailMessage message = new MailMessage())
+            {
+                message.From = new MailAddress(AdminEmail);
+                message.To.Add(new MailAddress(to));
+                message.Subject = subject;
+                message.Body = body;
+                message.IsBodyHtml = false;
+
+                SmtpClient mailClient = new SmtpClient();
+                mailClient.Send(message);
+            }
         }
 
         private static bool IsValidEmail(string email)
