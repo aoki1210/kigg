@@ -105,16 +105,7 @@
                 //Write each files in the response
                 foreach(string file in _files)
                 {
-                    string content;
-
-                    using (Stream s = new FileStream(file, FileMode.Open, FileAccess.Read))
-                    {
-                        using (StreamReader sr = new StreamReader(s))
-                        {
-                            content = sr.ReadToEnd();
-                        }
-                    }
-
+                    string content = File.ReadAllText(file);
                     sw.WriteLine(content);
                 }
 

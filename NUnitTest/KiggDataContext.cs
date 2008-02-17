@@ -270,6 +270,27 @@
         }
 
         [Test]
+        public void VerifyKiggStory()
+        {
+            Story tempStory1 = dataContext.Stories.FirstOrDefault();
+
+            if (tempStory1 != null)
+            {
+                Story tempStory2 = dataContext.Stories.SingleOrDefault(s => s.PostedBy != tempStory1.PostedBy);
+
+                if (tempStory2 != null)
+                {
+                    using (TransactionScope ts = new TransactionScope(TransactionScopeOption.RequiresNew))
+                    {
+                        dataContext.KiggStory(tempStory2.ID, tempStory1.PostedBy, 3);
+
+                        Assert.IsNotNull(dataContext.Votes.SingleOrDefault(v => v.StoryID == tempStory2.ID && v.UserID == tempStory1.PostedBy));
+                    }
+                }
+            }
+        }
+
+        [Test]
         public void VerifyPostComment()
         {
             const string commentContent = "This is a Test Comment.";
