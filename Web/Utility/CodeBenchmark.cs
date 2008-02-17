@@ -9,7 +9,7 @@ namespace Kigg
     using System.Configuration;
     using System.Web;
 
-    public class CodeBenchmark : IDisposable
+    public sealed class CodeBenchmark : IDisposable
     {
         private static readonly bool _enabled = false;
         private static readonly string _logFile = string.Empty;

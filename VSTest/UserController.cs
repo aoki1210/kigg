@@ -15,9 +15,9 @@
         private const string DefaultPassword = "foobar";
         private const int DefaultPasswordLength = 4;
 
-        private MockRepository mocks = null;
-        private MembershipProvider userManager = null;
-        private UserControllerForTest controller = null;
+        private MockRepository mocks;
+        private MembershipProvider userManager;
+        private UserControllerForTest controller;
 
         [TestInitialize]
         public void Init()
@@ -47,7 +47,7 @@
         }
 
         [TestMethod]
-        public void ShoudNotLoginForEmptyUserName()
+        public void ShouldNotLoginForEmptyUserName()
         {
             controller.Login(string.Empty, DefaultPassword, false);
 
@@ -58,7 +58,7 @@
         }
 
         [TestMethod]
-        public void ShoudNotLoginForEmptyPassword()
+        public void ShouldNotLoginForEmptyPassword()
         {
             controller.Login(DefaultUserName, string.Empty, false);
 
@@ -113,7 +113,7 @@
         }
 
         [TestMethod]
-        public void ShoudNotSendPasswordForEmptyEmail()
+        public void ShouldNotSendPasswordForEmptyEmail()
         {
             controller.SendPassword(string.Empty);
 
@@ -124,7 +124,7 @@
         }
 
         [TestMethod]
-        public void ShoudNotSendPasswordForInvalidEmail()
+        public void ShouldNotSendPasswordForInvalidEmail()
         {
             using (mocks.Record())
             {
@@ -143,7 +143,7 @@
         }
 
         [TestMethod]
-        public void ShoudNotSendPasswordForInvalidEmailFormat()
+        public void ShouldNotSendPasswordForInvalidEmailFormat()
         {
             controller.SendPassword("foo");
 
@@ -179,7 +179,7 @@
         }
 
         [TestMethod]
-        public void ShoudNotSignupForEmptyUserName()
+        public void ShouldNotSignupForEmptyUserName()
         {
             controller.Signup(string.Empty, DefaultPassword, DefaultEmail);
 
@@ -190,7 +190,7 @@
         }
 
         [TestMethod]
-        public void ShoudNotSignupForEmptyPassword()
+        public void ShouldNotSignupForEmptyPassword()
         {
             controller.Signup(DefaultUserName, string.Empty, DefaultEmail);
 
@@ -201,7 +201,7 @@
         }
 
         [TestMethod]
-        public void ShoudNotSignupForInvalidPasswordLength()
+        public void ShouldNotSignupForInvalidPasswordLength()
         {
             using (mocks.Record())
             {
@@ -220,7 +220,7 @@
         }
 
         [TestMethod]
-        public void ShoudNotSignupForEmptyEmail()
+        public void ShouldNotSignupForEmptyEmail()
         {
             using (mocks.Record())
             {
@@ -239,7 +239,7 @@
         }
 
         [TestMethod]
-        public void ShoudNotSignupForInvalidEmail()
+        public void ShouldNotSignupForInvalidEmail()
         {
             using (mocks.Record())
             {

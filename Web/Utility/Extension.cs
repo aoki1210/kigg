@@ -49,32 +49,32 @@
     {
         public static string UrlEncode(this string target)
         {
-            if (target.IndexOf(" ") > -1)
+            if (target.IndexOf(" ", StringComparison.Ordinal) > -1)
             {
                 target = target.Replace(" ", "_");
             }
 
-            if (target.IndexOf("#") > -1)
+            if (target.IndexOf("#", StringComparison.Ordinal) > -1)
             {
                 target = target.Replace("#", "sharp");
             }
 
-            if (target.IndexOf("&") > -1)
+            if (target.IndexOf("&", StringComparison.Ordinal) > -1)
             {
                 target = target.Replace("&", "amp");
             }
 
-            if (target.IndexOf(".") > -1)
+            if (target.IndexOf(".", StringComparison.Ordinal) > -1)
             {
                 target = target.Replace(".", "dot");
             }
 
-            if (target.IndexOf("/") > -1)
+            if (target.IndexOf("/", StringComparison.Ordinal) > -1)
             {
                 target = target.Replace("/", "fws");
             }
 
-            if (target.IndexOf("\\") > -1)
+            if (target.IndexOf("\\", StringComparison.Ordinal) > -1)
             {
                 target = target.Replace("\\", "bks");
             }
@@ -88,32 +88,32 @@
         {
             target = HttpUtility.UrlDecode(target);
 
-            if (target.IndexOf("_") > -1)
+            if (target.IndexOf("_", StringComparison.Ordinal) > -1)
             {
                 target = target.Replace("_", " ");
             }
 
-            if (target.IndexOf("sharp") > -1)
+            if (target.IndexOf("sharp", StringComparison.Ordinal) > -1)
             {
                 target = target.Replace("sharp", "#");
             }
 
-            if (target.IndexOf("amp") > -1)
+            if (target.IndexOf("amp", StringComparison.Ordinal) > -1)
             {
                 target = target.Replace("amp", "&");
             }
 
-            if (target.IndexOf("dot") > -1)
+            if (target.IndexOf("dot", StringComparison.Ordinal) > -1)
             {
                 target = target.Replace("dot", ".");
             }
 
-            if (target.IndexOf("fws") > -1)
+            if (target.IndexOf("fws", StringComparison.Ordinal) > -1)
             {
                 target = target.Replace("fws", "/");
             }
 
-            if (target.IndexOf("bks") > -1)
+            if (target.IndexOf("bks", StringComparison.Ordinal) > -1)
             {
                 target = target.Replace("bks", "\\");
             }

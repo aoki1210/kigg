@@ -267,7 +267,7 @@
                                 );
         }
 
-        private StoryListItem[] PrepareStories(IQueryable<Story> stories, Guid userId, int start, int max)
+        private static StoryListItem[] PrepareStories(IQueryable<Story> stories, Guid userId, int start, int max)
         {
             return  stories
                             .Select
@@ -323,7 +323,7 @@
 
                 using (MD5 md5 = MD5.Create())
                 {
-                    byte[] data = Encoding.Default.GetBytes(url.ToLowerInvariant());
+                    byte[] data = Encoding.Default.GetBytes(url.ToUpperInvariant());
                     byte[] hash = md5.ComputeHash(data);
 
                     urlHash = Convert.ToBase64String(hash);
