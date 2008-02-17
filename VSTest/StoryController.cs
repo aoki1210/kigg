@@ -17,7 +17,7 @@
         private const string DefaultUserName = "foobar";
         private static readonly Guid DefaultUserID = Guid.NewGuid();
 
-        private MockRepository mocks = null;
+        private MockRepository mocks;
 
         [TestInitialize]
         public void Init()

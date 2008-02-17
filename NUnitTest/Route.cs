@@ -11,8 +11,8 @@
     [TestFixture]
     public class RouteTest
     {
-        private RouteCollection routes = null;
-        private MockRepository mocks = null;
+        private RouteCollection routes;
+        private MockRepository mocks;
 
         [SetUp]
         public void Init()

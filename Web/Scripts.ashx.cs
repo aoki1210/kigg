@@ -25,7 +25,7 @@
             }
         }
 
-        bool IHttpHandler.IsReusable
+        public bool IsReusable
         {
             get
             {
@@ -62,7 +62,7 @@
             }
         }
 
-        void IHttpHandler.ProcessRequest(HttpContext context)
+        public void ProcessRequest(HttpContext context)
         {
             HttpResponse response = context.Response;
 
@@ -84,14 +84,14 @@
 
                 if (!string.IsNullOrEmpty(acceptEncoding))
                 {
-                    acceptEncoding = acceptEncoding.ToLowerInvariant();
+                    acceptEncoding = acceptEncoding.ToUpperInvariant();
 
-                    if (acceptEncoding.Contains("gzip"))
+                    if (acceptEncoding.Contains("GZIP"))
                     {
                         response.AddHeader("Content-encoding", "gzip");
                         output = new GZipStream(output, CompressionMode.Compress);
                     }
-                    else if (acceptEncoding.Contains("deflate"))
+                    else if (acceptEncoding.Contains("DEFLATE"))
                     {
                         response.AddHeader("Content-encoding", "deflate");
                         output = new DeflateStream(output, CompressionMode.Compress);

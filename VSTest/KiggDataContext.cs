@@ -18,7 +18,7 @@
         private const string TagName = "Microsoft";
         private static readonly Guid DefaultUserID = Guid.NewGuid();
 
-        private KiggDataContext dataContext = null;
+        private KiggDataContext dataContext;
 
         [TestInitialize]
         public void Init()
@@ -220,7 +220,7 @@
         public void VerifySearchStories()
         {
             int total;
-            const string query = "xbox";
+            const string query = "XBOX";
 
             StoryListItem[] stories = dataContext.SearchStories(DefaultUserID, query, 0, DefaultPageSize, out total);
 
@@ -234,7 +234,7 @@
 
                 for (int i = 0; i < stories.Length; i++)
                 {
-                    Assert.IsTrue(stories[i].Title.ToLowerInvariant().Contains(query) || stories[i].Description.ToLowerInvariant().Contains(query) || stories[i].Category.ToLowerInvariant().Contains(query) || (stories[i].Tags.Where(t => t.ToLowerInvariant().Contains(query)).Count() == 1));
+                    Assert.IsTrue(stories[i].Title.ToUpperInvariant().Contains(query) || stories[i].Description.ToUpperInvariant().Contains(query) || stories[i].Category.ToUpperInvariant().Contains(query) || (stories[i].Tags.Where(t => t.ToUpperInvariant().Contains(query)).Count() == 1));
                 }
 
                 Assert.AreEqual(total, dataContext.Stories.Where(s => (s.Title.Contains(query)) || (s.Description.Contains(query)) || (s.Category.Name.Contains(query)) || (s.StoryTags.Count(st => st.Tag.Name.Contains(query)) > 0)).Count());

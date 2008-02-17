@@ -11,8 +11,8 @@
     [TestClass]
     public class RouteTest
     {
-        private RouteCollection routes = null;
-        private MockRepository mocks = null;
+        private RouteCollection routes;
+        private MockRepository mocks;
 
         [TestInitialize]
         public void Init()

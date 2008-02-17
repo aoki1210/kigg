@@ -13,7 +13,7 @@
         private Guid _currentUserID;
         private Category[] _categories;
 
-        bool IHttpHandler.IsReusable
+        public bool IsReusable
         {
             get
             {
@@ -21,7 +21,7 @@
             }
         }
 
-        void IHttpHandler.ProcessRequest(HttpContext context)
+        public void ProcessRequest(HttpContext context)
         {
             _currentUserID = (Guid) Membership.GetUser().ProviderUserKey;
 
