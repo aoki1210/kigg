@@ -85,7 +85,11 @@
                                             Url = s.Url,
                                             Category = s.Category.Name,
                                             Tags = s.StoryTags.Select(st => st.Tag.Name).ToArray(),
-                                            PostedBy = new UserItem { Name = s.User.UserName, Email = s.User.UserDetail.Email },
+                                            PostedBy =  new UserItem
+                                                        {
+                                                            Name = s.User.UserName,
+                                                            Email = s.User.UserDetail.Email
+                                                        },
                                             PostedOn = s.PostedOn,
                                             PublishedOn = s.PublishedOn,
                                             VoteCount = s.Votes.Count(),
@@ -277,7 +281,11 @@
                                    Url = s.Url,
                                    Category = s.Category.Name,
                                    Tags = s.StoryTags.Select(st => st.Tag.Name).ToArray(),
-                                   PostedBy = new UserItem { Name = s.User.UserName, Email = s.User.UserDetail.Email },
+                                   PostedBy = new UserItem
+                                              {
+                                                  Name = s.User.UserName,
+                                                  Email = s.User.UserDetail.Email
+                                              },
                                    PostedOn = s.PostedOn,
                                    PublishedOn = s.PublishedOn,
                                    VoteCount = s.Votes.Count(),
