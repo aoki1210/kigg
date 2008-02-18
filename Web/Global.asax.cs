@@ -4,8 +4,8 @@ namespace Kigg
 {
     using System;
     using System.Configuration;
-    using System.Web.Security;
     using System.Web.Mvc;
+    using System.Web.Security;
 
     public class Global : System.Web.HttpApplication
     {
@@ -17,7 +17,7 @@ namespace Kigg
 
         public static void RegisterRoutes(RouteCollection routes)
         {
-            int iisVersion = Convert.ToInt32(ConfigurationManager.AppSettings["IISVersion"]);
+            int iisVersion = Convert.ToInt32(ConfigurationManager.AppSettings["IISVersion"], System.Globalization.CultureInfo.InvariantCulture);
 
             if (iisVersion >= 7)
             {

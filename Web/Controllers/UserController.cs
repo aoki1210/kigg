@@ -2,6 +2,7 @@
 {
     using System;
     using System.Configuration;
+    using System.Globalization;
     using System.IO;
     using System.Net.Mail;
     using System.Text.RegularExpressions;
@@ -180,7 +181,7 @@
                 }
                 else if (password.Length < UserManager.MinRequiredPasswordLength)
                 {
-                    result.errorMessage = string.Format("Password must be {0} character long.", UserManager.MinRequiredPasswordLength);
+                    result.errorMessage = string.Format(CultureInfo.InvariantCulture, "Password must be {0} character long.", UserManager.MinRequiredPasswordLength);
                 }
                 else if (string.IsNullOrEmpty(email))
                 {

@@ -1,8 +1,8 @@
 ﻿namespace Kigg
 {
     using System;
-    using System.Linq;
     using System.IO;
+    using System.Linq;
     using System.Net;
     using System.Web;
     using System.Web.Security;
@@ -48,13 +48,15 @@
                     {
                         int offset = (count * 100);
 
-                        string responseXml;
-                        HttpWebRequest request = (HttpWebRequest)WebRequest.Create(string.Format(URL, offset));
+                        string requestUrl = string.Format(System.Globalization.CultureInfo.InvariantCulture, URL, offset);
+                        HttpWebRequest request = (HttpWebRequest)WebRequest.Create(new Uri(requestUrl));
 
                         request.Method = "GET";
                         request.AllowAutoRedirect = true;
                         request.UserAgent = "Asp.net MVC Demo";
                         request.ContentType = "application/x-www-form-urlencoded";
+
+                        string responseXml;
 
                         using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                         {
@@ -109,7 +111,7 @@
                     }
                 }
             }
-            catch (Exception e)
+            catch (XmlException e)
             {
                 Console.WriteLine(e.Message);
             }
