@@ -1,19 +1,20 @@
 namespace Kigg
 {
     using System;
-    using System.IO;
-    using System.Text;
-    using System.Reflection;
     using System.Collections;
-    using System.Diagnostics;
     using System.Configuration;
+    using System.Diagnostics;
+    using System.Globalization;
+    using System.IO;
+    using System.Reflection;
+    using System.Text;
     using System.Web;
 
     public sealed class CodeBenchmark : IDisposable
     {
-        private static readonly bool _enabled = false;
-        private static readonly string _logFile = string.Empty;
-        private static readonly bool _includeParameters = false;
+        private static readonly bool _enabled;
+        private static readonly string _logFile;
+        private static readonly bool _includeParameters;
 
         private readonly Stopwatch _watch;
 
@@ -23,8 +24,8 @@ namespace Kigg
 
             if (settings != null)
             {
-                _enabled = Convert.ToBoolean(settings["enabled"]);
-                _includeParameters = Convert.ToBoolean(settings["includeParameters"]);
+                _enabled = Convert.ToBoolean(settings["enabled"], CultureInfo.InvariantCulture);
+                _includeParameters = Convert.ToBoolean(settings["includeParameters"], CultureInfo.InvariantCulture);
                 _logFile = AppDomain.CurrentDomain.BaseDirectory + (settings["logFile"] as string);
             }
         }
@@ -69,7 +70,7 @@ namespace Kigg
                     {
                         using (StreamWriter sw = new StreamWriter(fs))
                         {
-                            sw.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\"", userName, ipAddress, url, methodInfo, start, end, _watch.Elapsed));
+                            sw.WriteLine(string.Format(CultureInfo.InvariantCulture,"\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\"", userName, ipAddress, url, methodInfo, start, end, _watch.Elapsed));
                         }
                     }
                 }

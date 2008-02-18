@@ -1,7 +1,7 @@
 ﻿namespace Kigg
 {
-    using System.Text;
     using System.Security.Cryptography;
+    using System.Text;
 
     public class UserItem
     {
@@ -36,7 +36,7 @@
 
                 for (int i = 0; i < hash.Length; i++)
                 {
-                    result.Append(hash[i].ToString("x2"));
+                    result.Append(hash[i].ToString("x2", System.Globalization.CultureInfo.InvariantCulture));
                 }
 
                 return result.ToString();

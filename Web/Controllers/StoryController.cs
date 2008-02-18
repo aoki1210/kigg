@@ -1,11 +1,12 @@
 ﻿namespace Kigg
 {
     using System;
-    using System.Text.RegularExpressions;
-    using System.Configuration;
     using System.Collections;
-    using System.Web.Security;
+    using System.Configuration;
+    using System.Globalization;
+    using System.Text.RegularExpressions;
     using System.Web.Mvc;
+    using System.Web.Security;
 
     /// <summary>
     /// Handles all story related operation.
@@ -38,9 +39,9 @@
 
             if (settings != null)
             {
-                _storyPerPage = Convert.ToInt32(settings["storyPerPage"]);
-                _topTags = Convert.ToInt32(settings["topTags"]);
-                _qualifyingKigg = Convert.ToInt32(settings["qualifyingKigg"]);
+                _storyPerPage = Convert.ToInt32(settings["storyPerPage"], CultureInfo.InvariantCulture);
+                _topTags = Convert.ToInt32(settings["topTags"], CultureInfo.InvariantCulture);
+                _qualifyingKigg = Convert.ToInt32(settings["qualifyingKigg"], CultureInfo.InvariantCulture);
             }
         }
 

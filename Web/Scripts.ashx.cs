@@ -1,19 +1,20 @@
 ﻿namespace Kigg
 {
     using System;
-    using System.IO;
-    using System.IO.Compression;
     using System.Collections;
     using System.Collections.Generic;
     using System.Configuration;
+    using System.Globalization;
+    using System.IO;
+    using System.IO.Compression;
     using System.Reflection;
     using System.Web;
 
     public class ScriptHandler : IHttpHandler
     {
-        private static readonly string _versionNo = string.Empty;
-        private static readonly bool _compress = true;
-        private static readonly int _cacheDurationInDays = 0;
+        private static readonly string _versionNo;
+        private static readonly bool _compress;
+        private static readonly int _cacheDurationInDays;
 
         private static readonly List<string> _files = new List<string>();
 
@@ -40,8 +41,8 @@
             if (settings != null)
             {
                 _versionNo = settings["versionNo"].ToString();
-                _compress = Convert.ToBoolean(settings["compress"]);
-                _cacheDurationInDays = Convert.ToInt32(settings["cacheDurationInDays"]);
+                _compress = Convert.ToBoolean(settings["compress"], CultureInfo.InvariantCulture);
+                _cacheDurationInDays = Convert.ToInt32(settings["cacheDurationInDays"], CultureInfo.InvariantCulture);
 
                 string fileList = settings["files"].ToString();
 

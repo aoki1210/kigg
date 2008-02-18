@@ -216,7 +216,7 @@
             Assert.AreEqual(controller.SelectedView, "Json");
             Assert.IsInstanceOfType(controller.SelectedViewData, typeof(JsonResult));
             Assert.IsFalse(((JsonResult)controller.SelectedViewData).isSuccessful);
-            Assert.AreEqual(((JsonResult)controller.SelectedViewData).errorMessage, string.Format("Password must be {0} character long.", DefaultPasswordLength));
+            Assert.AreEqual(((JsonResult)controller.SelectedViewData).errorMessage, string.Format(System.Globalization.CultureInfo.InvariantCulture, "Password must be {0} character long.", DefaultPasswordLength));
         }
 
         [TestMethod]
