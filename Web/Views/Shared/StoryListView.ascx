@@ -8,10 +8,10 @@
 <% { %>
 <%   string className = (isOdd) ? "odd" : "even"; %>
 <%   isOdd = !isOdd;%>
-<%   string kiggCountId = "kiggCount" + story.ID.ToString();%>
-<%   string kiggItId = "kiggIt" + story.ID.ToString();%>
-<%   string kiggedId = "kigged" + story.ID.ToString();%>
-<%   string kiggingId = "kigging" + story.ID.ToString();%>
+<%   string kiggCountId = "kiggCount" + story.ID;%>
+<%   string kiggItId = "kiggIt" + story.ID;%>
+<%   string kiggedId = "kigged" + story.ID;%>
+<%   string kiggingId = "kigging" + story.ID;%>
     <table class="story <%= className %>">
         <tbody>
             <tr>
@@ -21,10 +21,10 @@
                         <br />
                         kiggs
                     </div>
-                    <div id="<%=kiggItId %>" class="it" style="display:<%= ((story.HasVoted) ? "none" : "''") %>">
+                    <div id="<%=kiggItId %>" class="it" style="display:<%= ((story.HasVoted) ? "none" : string.Empty) %>">
                         <a href="javascript:void(0)" onclick="javascript:Story.kigg(<%=story.ID %>, <%=story.VoteCount %>, '<%=kiggCountId %>', '<%=kiggItId%>', '<%=kiggedId%>', '<%=kiggingId%>')">kigg it</a>
                     </div>
-                    <div id="<%=kiggedId%>" class="ed" style="display:<%= ((story.HasVoted) ? "''" : "none") %>">
+                    <div id="<%=kiggedId%>" class="ed" style="display:<%= ((story.HasVoted) ? string.Empty : "none") %>">
                         kigged
                     </div>
                     <div id="<%=kiggingId%>" class="ing" style="display:none">
@@ -46,7 +46,7 @@
                                         <span class="time"><%= story.PublishedAgo%></span> ago,
                                         <% }%>
                                         posted by
-                                        <a href="<%= Url.Action(new { controller = "Story", action = "PostedBy", name = story.PostedBy.Name.UrlEncode(), page = 1 })%>">
+                                        <a href="<%= Url.Action("PostedBy", "Story", new {name = story.PostedBy.Name.UrlEncode(), page = 1 })%>">
                                         <img alt="" src="http://www.gravatar.com/avatar.php?gravatar_id=<%= story.PostedBy.GravatarID %>&size=15" class="gravatar" />
                                         <%= Server.HtmlEncode(story.PostedBy.Name) %>
                                         </a>
@@ -54,10 +54,12 @@
                                     </div>
                                     <div class="description">
                                         <%= Server.HtmlEncode(story.StrippedDescription)%>
-                                        <%= Html.ActionLink("(more)", new { controller = "Story", action = "Detail", id = story.ID })%>
+                                        <% int storyId = story.ID; %>
+                                        <%= Html.ActionLink<StoryController>(c => c.Detail(storyId), "(more)")%>
                                     </div>
                                     <div class="summary">
-                                        <span class="category">category:</span> <%= Html.ActionLink(Server.HtmlEncode(story.Category), new { controller = "Story", action = "Category", name = story.Category.UrlEncode(), page = 1 })%> |
+                                        <% string encodedCategory = story.Category.UrlEncode(); %>
+                                        <span class="category">category:</span> <%= Html.ActionLink<StoryController>(c => c.Category(encodedCategory, 1), story.Category) %>
                                         <% string commentText; %>
                                         <% if (story.CommentCount == 0) %>
                                         <% { %>
@@ -65,9 +67,9 @@
                                         <% } %>
                                         <% else %>
                                         <% { %>
-                                        <%    commentText = story.CommentCount.ToString() + ((story.CommentCount == 1) ? " comment" : " comments");%>
+                                        <%    commentText = story.CommentCount + ((story.CommentCount == 1) ? " comment" : " comments");%>
                                         <% } %>
-                                        <a href="<%= Url.Action(new { controller = "Story", action = "Detail", id = story.ID })%>#comments" class="addComment"><%= commentText%></a>
+                                        <a href="<%= Url.Action("Detail", "Story", new {id = story.ID })%>#comments" class="addComment"><%= commentText%></a>
                                     </div>
                                 </td>
                             </tr>
@@ -82,7 +84,7 @@
                         <%     { %>
                         <%=         ", "%>
                         <%     } %>
-                        <%=     Html.ActionLink(Server.HtmlEncode(tag), new { controller = "Story", action = "Tag", name = tag.UrlEncode(), page = 1 })%>
+                        <%=     Html.ActionLink<StoryController>(c => c.Tag(tag.UrlEncode(), 1), Server.HtmlEncode(tag))%>
                         <% } %>
                     </span>
                 </td>
@@ -95,28 +97,39 @@
 
 const int SliderSize = 7;
 
-object GetActionLinkArguments(int page)
+string GetPagerLink(string text, int page)
 {
-    IDictionary<string, object> values = ViewContext.RouteData.Values;
+    var values = new RouteValueDictionary();
+
+    foreach(KeyValuePair<string, object> item in ViewContext.RouteData.Values)
+    {
+        if ((string.Compare(item.Key, "controller", true) != 0) && (string.Compare(item.Key, "action", true) != 0))
+        {
+            if (ViewContext.RouteData.Values[item.Key] != null)
+            {
+                values[item.Key] = item.Value;
+            }
+        }
+    }
 
     values["page"] = page;
-
-    //By Default we allow the top right search form to post
-    foreach (string key in Request.Form)
-    {
-        values[key] = Request.Form[key];
-    }
 
     //The user might also navigate by specifying the searchText in querystring
     foreach (string key in Request.QueryString)
     {
         if (!values.ContainsKey(key))
         {
-            values[key] = Request.QueryString[key];
+            if (!string.IsNullOrEmpty(Request.QueryString[key]))
+            {
+                values[key] = Request.QueryString[key];
+            }
         }
     }
 
-    return values;
+    string actionName = ViewContext.RouteData.Values["action"].ToString();
+    string url = Html.ActionLink(text, actionName, values);
+
+    return url;
 }
 
 static void CalculateStartAndEnd(BaseStoryListData viewData, out int start, out int end)
@@ -149,13 +162,14 @@ static void CalculateStartAndEnd(BaseStoryListData viewData, out int start, out 
         end = above;
     }
 }
+
 </script>
 
     <% if (viewData.StoryCount > viewData.StoryPerPage) %>
     <%{%>
         <% if (viewData.CurrentPage > 1) %>
         <% { %>
-            <%= Html.ActionLink("Previous", GetActionLinkArguments(viewData.CurrentPage - 1))%>
+            <%= GetPagerLink("Previous", (viewData.CurrentPage - 1))%>
         <% } %>
         <% else %>
         <% { %>
@@ -168,8 +182,8 @@ static void CalculateStartAndEnd(BaseStoryListData viewData, out int start, out 
 
         <% if (start > 3) %>
         <% { %>
-            <%= Html.ActionLink("1", GetActionLinkArguments(1))%>
-            <%= Html.ActionLink("2", GetActionLinkArguments(2))%>
+            <%= GetPagerLink("1", 1)%>
+            <%= GetPagerLink("2", 2)%>
             ...
         <% } %>
 
@@ -181,20 +195,20 @@ static void CalculateStartAndEnd(BaseStoryListData viewData, out int start, out 
         <%  } %>
         <%  else %>
         <%  { %>
-                <%= Html.ActionLink(i.ToString(), GetActionLinkArguments(i))%>
+                <%= GetPagerLink(i.ToString(), i)%>
         <%  } %>
         <% } %>
 
         <% if (end < (viewData.PageCount - 3)) %>
         <% { %>
                 ...
-                <%= Html.ActionLink((viewData.PageCount - 1).ToString(), GetActionLinkArguments((viewData.PageCount - 1)))%>
-                <%= Html.ActionLink(viewData.PageCount.ToString(), GetActionLinkArguments((viewData.PageCount)))%>
+                <%= GetPagerLink((viewData.PageCount - 1).ToString(), (viewData.PageCount - 1))%>
+                <%= GetPagerLink(viewData.PageCount.ToString(), viewData.PageCount)%>
         <% } %>
 
         <% if (viewData.CurrentPage < viewData.PageCount) %>
         <% { %>
-            <%= Html.ActionLink("Next", GetActionLinkArguments((viewData.CurrentPage + 1)))%>
+            <%= GetPagerLink("Next", (viewData.CurrentPage + 1))%>
         <% } %>
         <% else %>
         <% { %>

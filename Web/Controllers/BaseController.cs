@@ -67,7 +67,7 @@
                     return Guid.Empty;
                 }
 
-                MembershipUser user = UserManager.GetUser(CurrentUserName, true);
+                var user = UserManager.GetUser(CurrentUserName, true);
 
                 return (Guid) user.ProviderUserKey;
             }

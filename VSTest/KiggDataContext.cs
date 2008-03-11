@@ -2,7 +2,6 @@
 {
     using System;
     using System.Linq;
-    using System.Data.Linq;
     using System.Transactions;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -38,7 +37,7 @@
         [TestMethod]
         public void VerifyGetCategories()
         {
-            Category[] categories = dataContext.GetCategories();
+            var categories = dataContext.GetCategories();
 
             Assert.AreEqual(categories.Length, dataContext.Categories.Count());
         }
@@ -46,7 +45,7 @@
         [TestMethod]
         public void VerifyGetCategoryByName()
         {
-            Category category = dataContext.GetCategoryByName(CategoryName);
+            var category = dataContext.GetCategoryByName(CategoryName);
 
             if (category != null)
             {
@@ -57,7 +56,7 @@
         [TestMethod]
         public void VerifyGetTagByName()
         {
-            Tag tag = dataContext.GetTagByName(TagName);
+            var tag = dataContext.GetTagByName(TagName);
 
             if (tag != null)
             {
@@ -70,7 +69,7 @@
         {
             const int tagCount = 10;
 
-            TagItem[] tags = dataContext.GetTags(tagCount);
+            var tags = dataContext.GetTags(tagCount);
 
             Assert.AreEqual(tags.Length, tagCount);
         }
@@ -78,11 +77,11 @@
         [TestMethod]
         public void VerifyGetStoryDetailById()
         {
-            Story story = dataContext.Stories.FirstOrDefault();
+            var story = dataContext.Stories.FirstOrDefault();
             
             if (story != null)
             {
-                StoryDetailItem storyItem = dataContext.GetStoryDetailById(DefaultUserID, story.ID);
+                var storyItem = dataContext.GetStoryDetailById(DefaultUserID, story.ID);
 
                 Assert.IsNotNull(storyItem);
                 Assert.AreEqual(story.ID, storyItem.ID);
@@ -100,7 +99,7 @@
         public void VerifyGetPublishedStoriesForAllCategory()
         {
             int total;
-            StoryListItem[] stories = dataContext.GetPublishedStoriesForAllCategory(DefaultUserID, 0, DefaultPageSize, out total);
+            var stories = dataContext.GetPublishedStoriesForAllCategory(DefaultUserID, 0, DefaultPageSize, out total);
 
             if (stories.Length == 0)
             {
@@ -117,12 +116,12 @@
         [TestMethod]
         public void VerifyGetPublishedStoriesForCategory()
         {
-            Category category = dataContext.GetCategoryByName(CategoryName);
+            var category = dataContext.GetCategoryByName(CategoryName);
 
             if (category != null)
             {
                 int total;
-                StoryListItem[] stories = dataContext.GetPublishedStoriesForCategory(DefaultUserID, category.ID, 0, DefaultPageSize, out total);
+                var stories = dataContext.GetPublishedStoriesForCategory(DefaultUserID, category.ID, 0, DefaultPageSize, out total);
 
                 if (stories.Length == 0)
                 {
@@ -132,7 +131,7 @@
                 {
                     Assert.IsTrue(stories.Length <= DefaultPageSize);
 
-                    for (int i = 0; i < stories.Length; i++ )
+                    for (var i = 0; i < stories.Length; i++ )
                     {
                         Assert.IsNotNull(stories[i].PublishedOn);
                         Assert.AreEqual(stories[i].Category, category.Name);
@@ -146,12 +145,12 @@
         [TestMethod]
         public void VerifyGetStoriesForTag()
         {
-            Tag tag = dataContext.Tags.SingleOrDefault(t => t.Name == TagName);
+            var tag = dataContext.Tags.SingleOrDefault(t => t.Name == TagName);
 
             if (tag != null)
             {
                 int total;
-                StoryListItem[] stories = dataContext.GetStoriesForTag(DefaultUserID, tag.ID, 0, DefaultPageSize, out total);
+                var stories = dataContext.GetStoriesForTag(DefaultUserID, tag.ID, 0, DefaultPageSize, out total);
 
                 if (stories.Length == 0)
                 {
@@ -161,7 +160,7 @@
                 {
                     Assert.IsTrue(stories.Length <= DefaultPageSize);
 
-                    for (int i = 0; i < stories.Length; i++)
+                    for (var i = 0; i < stories.Length; i++)
                     {
                         Assert.IsTrue(stories[i].Tags.Where(t => tag.Name == t).Count() == 1);
                     }
@@ -175,7 +174,7 @@
         public void VerifyGetUpcomingStories()
         {
             int total;
-            StoryListItem[] stories = dataContext.GetUpcomingStories(DefaultUserID, 0, DefaultPageSize, out total);
+            var stories = dataContext.GetUpcomingStories(DefaultUserID, 0, DefaultPageSize, out total);
 
             if (stories.Length == 0)
             {
@@ -185,7 +184,7 @@
             {
                 Assert.IsTrue(stories.Length <= DefaultPageSize);
 
-                for (int i = 0; i < stories.Length; i++)
+                for (var i = 0; i < stories.Length; i++)
                 {
                     Assert.IsNull(stories[i].PublishedOn);
                 }
@@ -197,17 +196,17 @@
         [TestMethod]
         public void VerifyGetStoriesPostedByUser()
         {
-            Story tempStory = dataContext.Stories.FirstOrDefault();
+            var tempStory = dataContext.Stories.FirstOrDefault();
 
             if (tempStory != null)
             {
                 int total;
 
-                StoryListItem[] stories = dataContext.GetStoriesPostedByUser(DefaultUserID, tempStory.PostedBy, 0, DefaultPageSize, out total);
+                var stories = dataContext.GetStoriesPostedByUser(DefaultUserID, tempStory.PostedBy, 0, DefaultPageSize, out total);
 
                 Assert.IsTrue(stories.Length <= DefaultPageSize);
 
-                for (int i = 0; i < stories.Length; i++)
+                for (var i = 0; i < stories.Length; i++)
                 {
                     Assert.AreEqual(stories[i].PostedBy.Name, tempStory.User.UserName);
                 }
@@ -222,7 +221,7 @@
             int total;
             const string query = "XBOX";
 
-            StoryListItem[] stories = dataContext.SearchStories(DefaultUserID, query, 0, DefaultPageSize, out total);
+            var stories = dataContext.SearchStories(DefaultUserID, query, 0, DefaultPageSize, out total);
 
             if (stories.Length == 0)
             {
@@ -232,7 +231,7 @@
             {
                 Assert.IsTrue(stories.Length <= DefaultPageSize);
 
-                for (int i = 0; i < stories.Length; i++)
+                for (var i = 0; i < stories.Length; i++)
                 {
                     Assert.IsTrue(stories[i].Title.ToUpperInvariant().Contains(query) || stories[i].Description.ToUpperInvariant().Contains(query) || stories[i].Category.ToUpperInvariant().Contains(query) || (stories[i].Tags.Where(t => t.ToUpperInvariant().Contains(query)).Count() == 1));
                 }
@@ -244,20 +243,20 @@
         [TestMethod]
         public void VerifySubmitStory()
         {
-            const string url = "http://www.xxx.com";
-            const string title = "Test Story";
-            const string description = "Test Description";
+            const string url = "http://www.foobar.com";
+            const string title = "Foo Bar";
+            const string description = "Foo Bar";
             const string tags = "foo, bar";
 
-            Story tempStory = dataContext.Stories.FirstOrDefault();
+            var tempStory = dataContext.Stories.FirstOrDefault();
 
             if (tempStory != null)
             {
-                using (TransactionScope ts = new TransactionScope(TransactionScopeOption.RequiresNew))
+                using (new TransactionScope(TransactionScopeOption.RequiresNew))
                 {
-                    int id = dataContext.SubmitStory(url, title, 1, description, tags, tempStory.PostedBy);
+                    var id = dataContext.SubmitStory(url, title, 1, description, tags, tempStory.PostedBy);
 
-                    Story story = dataContext.Stories.First(s => s.ID == id);
+                    var story = dataContext.Stories.First(s => s.ID == id);
 
                     Assert.IsNotNull(story);
                     Assert.AreEqual(story.ID, id);
@@ -272,15 +271,15 @@
         [TestMethod]
         public void VerifyKiggStory()
         {
-            Story tempStory1 = dataContext.Stories.FirstOrDefault();
+            var tempStory1 = dataContext.Stories.FirstOrDefault();
 
             if (tempStory1 != null)
             {
-                Story tempStory2 = dataContext.Stories.SingleOrDefault(s => s.PostedBy != tempStory1.PostedBy);
+                var tempStory2 = dataContext.Stories.FirstOrDefault(s => s.PostedBy != tempStory1.PostedBy);
 
                 if (tempStory2 != null)
                 {
-                    using (TransactionScope ts = new TransactionScope(TransactionScopeOption.RequiresNew))
+                    using (new TransactionScope(TransactionScopeOption.RequiresNew))
                     {
                         dataContext.KiggStory(tempStory2.ID, tempStory1.PostedBy, 3);
 
@@ -293,17 +292,17 @@
         [TestMethod]
         public void VerifyPostComment()
         {
-            const string commentContent = "This is a Test Comment.";
+            const string commentContent = "Comment Foo Bar.";
 
-            Story tempStory = dataContext.Stories.FirstOrDefault();
+            var tempStory = dataContext.Stories.FirstOrDefault();
 
             if (tempStory != null)
             {
-                using (TransactionScope ts = new TransactionScope(TransactionScopeOption.RequiresNew))
+                using (new TransactionScope(TransactionScopeOption.RequiresNew))
                 {
-                    int id = dataContext.PostComment(tempStory.ID, tempStory.PostedBy, commentContent);
+                    var id = dataContext.PostComment(tempStory.ID, tempStory.PostedBy, commentContent);
 
-                    Comment comment = dataContext.Comments.Single(c => c.ID == id);
+                    var comment = dataContext.Comments.Single(c => c.ID == id);
 
                     Assert.IsNotNull(comment);
                     Assert.AreEqual(comment.ID, id);

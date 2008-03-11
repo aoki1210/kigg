@@ -1,6 +1,7 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Json.aspx.cs" Inherits="Kigg.JsonView" %>
 <%
-    Response.Clear();
-    Response.ContentType = "application/json";
-    Response.Write(ViewData.ToJson());
+    var response = Context.Response;
+    response.Clear();
+    response.ContentType = "application/json";
+    response.Write(ViewData.ToJson());
 %>

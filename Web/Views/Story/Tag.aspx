@@ -2,7 +2,7 @@
 <%@ Register src="../Shared/StoryListView.ascx" tagname="StoryListView" tagprefix="uc" %>
 <%@ Import Namespace="Kigg" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
-    <% StoryListByTagData viewData = (StoryListByTagData)ViewData; %>
+    <% var viewData = (StoryListByTagData)ViewData; %>
     <div class="pageTitle">
         Browse by Tag : <%= Server.HtmlEncode(viewData.Tag) %>
     </div>

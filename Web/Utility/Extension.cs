@@ -8,7 +8,7 @@
     {
         public static string Ago(this DateTime target)
         {
-            StringBuilder result = new StringBuilder();
+            var result = new StringBuilder();
             TimeSpan diff = (DateTime.Now - target.ToLocalTime());
 
             if (diff.Days > 0)

@@ -41,14 +41,12 @@
                 {
                     return (StoryCount / StoryPerPage);
                 }
-                else
-                {
-                    double result = (StoryCount / StoryPerPage);
 
-                    result = Math.Ceiling(result);
+                double result = (StoryCount / StoryPerPage);
 
-                    return (Convert.ToInt32(result) + 1);
-                }
+                result = Math.Ceiling(result);
+
+                return (Convert.ToInt32(result) + 1);
             }
         }
     }

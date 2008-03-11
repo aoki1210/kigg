@@ -296,8 +296,10 @@
 
     _isValidUrl : function(url)
     {
-        var regExp = /^(http|https)\:\/\/\w+([\.\-]\w+)*\.\w{2,4}(\:\d+)*([\/\.\-\?\&\%\#]\w+)*\/?$/i;
-        return regExp.test(url);
+        var ex = new RegExp('http(s)?://([\\w-]+\\.)+[\\w-]+(/[\\w- ./?%&=]*)?');
+        var matches = ex.exec(url);
+
+        return ((matches != null) && (url == matches[0]));
     },
 
     _keyDown : function(e)

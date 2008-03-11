@@ -18,9 +18,18 @@ namespace Kigg
 
         private readonly Stopwatch _watch;
 
+        public static CodeBenchmark Start
+        {
+            [DebuggerStepThrough]
+            get
+            {
+                return new CodeBenchmark();
+            }
+        }
+
         static CodeBenchmark()
         {
-            Hashtable settings = ConfigurationManager.GetSection("codeBenchmark") as Hashtable;
+            var settings = ConfigurationManager.GetSection("codeBenchmark") as Hashtable;
 
             if (settings != null)
             {
@@ -31,7 +40,7 @@ namespace Kigg
         }
 
         [DebuggerStepThrough]
-        public CodeBenchmark()
+        private CodeBenchmark()
         {
             if (_enabled)
             {
@@ -46,45 +55,49 @@ namespace Kigg
             if (_enabled)
             {
                 _watch.Stop();
+                Flush();
+            }
+        }
 
-                DateTime end = DateTime.Now;
-                DateTime start = end.AddMilliseconds(-_watch.ElapsedMilliseconds);
+        private void Flush()
+        {
+            DateTime end = DateTime.Now;
+            DateTime start = end.AddMilliseconds(-_watch.ElapsedMilliseconds);
 
-                HttpContext context = HttpContext.Current;
+            HttpContext context = HttpContext.Current;
 
-                if (context != null)
+            if (context != null)
+            {
+                var userName = "Anonymous";
+
+                var ipAddress = context.Request.UserHostAddress;
+                var url = context.Request.RawUrl;
+
+                if (context.User.Identity.IsAuthenticated)
                 {
-                    string userName = "Anonymous";
-
-                    string ipAddress = context.Request.UserHostAddress;
-                    string url = context.Request.RawUrl;
-
-                    if (context.User.Identity.IsAuthenticated)
-                    {
-                        userName = context.User.Identity.Name;
-                    }
-
-                    string methodInfo = GetCallingMethodDetails(_includeParameters);
-
-                    using (FileStream fs = new FileStream(_logFile, FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
-                    {
-                        using (StreamWriter sw = new StreamWriter(fs))
-                        {
-                            sw.WriteLine(string.Format(CultureInfo.InvariantCulture,"\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\"", userName, ipAddress, url, methodInfo, start, end, _watch.Elapsed));
-                        }
-                    }
+                    userName = context.User.Identity.Name;
                 }
+
+                var methodInfo = GetCallingMethodDetails(_includeParameters);
+
+                File.AppendAllText  (  _logFile,
+                                       string.Format(
+                                                        CultureInfo.InvariantCulture,
+                                                        "\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\"",
+                                                        userName, ipAddress, url, methodInfo, start, end, _watch.Elapsed
+                                                    )
+                                    );
             }
         }
 
         private static string GetCallingMethodDetails(bool includeParameters)
         {
-            StringBuilder output = new StringBuilder();
-            //Skipping two Frame, First one is the current method and second one is the dispose method.
-            StackTrace stackTrace = new StackTrace(2, false);
+            var output = new StringBuilder();
+            //Skipping three Frame, First one is the current method and second one is the dispose method and third is the flush.
+            var stackTrace = new StackTrace(3, false);
 
-            StackFrame stackFrame = stackTrace.GetFrame(0);
-            MethodBase method = stackFrame.GetMethod();
+            var stackFrame = stackTrace.GetFrame(0);
+            var method = stackFrame.GetMethod();
 
             output.Append(method.DeclaringType.FullName);
             output.Append(".");
