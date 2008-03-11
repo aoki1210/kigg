@@ -11,8 +11,8 @@
             return "No Tag exists.";
         }
 
-        decimal minWeight = decimal.MaxValue;
-        decimal maxWeight = decimal.MinValue;
+        var minWeight = decimal.MaxValue;
+        var maxWeight = decimal.MinValue;
 
         var tagItems = ViewData.Tags.OrderBy(t => t.Name).ToArray();
 
@@ -73,7 +73,7 @@
                     <li>
                         <a href="<%= Page.ResolveClientUrl("~/Default.aspx")%>">All</a>
                     </li>
-                    <% foreach (Category category in ViewData.Categories) %>
+                    <% foreach (var category in ViewData.Categories) %>
                     <% { %>
                         <li>
                             <% string encodedCategory = category.Name.UrlEncode(); %>
@@ -199,7 +199,7 @@
                         <label for="ddlStoryCategory" class="label">Category:</label>
                         <select id="ddlStoryCategory" class="largeTextbox">
                             <option value="-1">[Select Category]</option>
-                            <% foreach (Category category in ViewData.Categories.OrderBy(c => c.Name)) %>
+                            <% foreach (var category in ViewData.Categories.OrderBy(c => c.Name)) %>
                             <% { %>
                                 <option value="<%= category.ID %>"><%= Server.HtmlEncode(category.Name) %></option>
                             <% } %>
