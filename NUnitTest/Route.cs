@@ -1,7 +1,7 @@
 ﻿namespace Kigg.NUnitTest
 {
     using System.Web;
-    using System.Web.Mvc;
+    using System.Web.Routing;
 
     using NUnit.Framework;
     using Rhino.Mocks;
@@ -26,11 +26,11 @@
         [Test]
         public void VerifyDefault()
         {
-            IHttpContext httpContext;
+            HttpContextBase httpContext;
 
             using (mocks.Record())
             {
-                httpContext = GetHttpContext(mocks, "~/Default.aspx");
+                httpContext = mocks.MockHttpContext("~/Default.aspx");
             }
 
             using (mocks.Playback())
@@ -46,11 +46,11 @@
         [Test]
         public void VerifyAllCategory()
         {
-            IHttpContext httpContext;
+            HttpContextBase httpContext;
 
             using (mocks.Record())
             {
-                httpContext = GetHttpContext(mocks, "~/Story/Category/20");
+                httpContext = mocks.MockHttpContext("~/Story/Category/20");
             }
 
             using (mocks.Playback())
@@ -68,11 +68,11 @@
         [Test]
         public void VerifySpecificCategory()
         {
-            IHttpContext httpContext;
+            HttpContextBase httpContext;
 
             using (mocks.Record())
             {
-                httpContext = GetHttpContext(mocks, "~/Story/Category/Technology/1");
+                httpContext = mocks.MockHttpContext("~/Story/Category/Technology/1");
             }
 
             using (mocks.Playback())
@@ -90,11 +90,11 @@
         [Test]
         public void VerifyUpcoming()
         {
-            IHttpContext httpContext;
+            HttpContextBase httpContext;
 
             using (mocks.Record())
             {
-                httpContext = GetHttpContext(mocks, "~/Story/Upcoming");
+                httpContext = mocks.MockHttpContext("~/Story/Upcoming");
             }
 
             using (mocks.Playback())
@@ -110,11 +110,11 @@
         [Test]
         public void VerifyTag()
         {
-            IHttpContext httpContext;
+            HttpContextBase httpContext;
 
             using (mocks.Record())
             {
-                httpContext = GetHttpContext(mocks, "~/Story/Tag/Apple/2");
+                httpContext = mocks.MockHttpContext("~/Story/Tag/Apple/2");
             }
 
             using (mocks.Playback())
@@ -132,11 +132,11 @@
         [Test]
         public void VerifyPostedBy()
         {
-            IHttpContext httpContext;
+            HttpContextBase httpContext;
 
             using (mocks.Record())
             {
-                httpContext = GetHttpContext(mocks, "~/Story/PostedBy/Admin/1");
+                httpContext = mocks.MockHttpContext("~/Story/PostedBy/Admin/1");
             }
 
             using (mocks.Playback())
@@ -154,11 +154,11 @@
         [Test]
         public void VerifySearch()
         {
-            IHttpContext httpContext;
+            HttpContextBase httpContext;
 
             using (mocks.Record())
             {
-                httpContext = GetHttpContext(mocks, "~/Story/Search/apple/5");
+                httpContext = mocks.MockHttpContext("~/Story/Search/apple/5");
             }
 
             using (mocks.Playback())
@@ -176,11 +176,11 @@
         [Test]
         public void VerifyDetail()
         {
-            IHttpContext httpContext;
+            HttpContextBase httpContext;
 
             using (mocks.Record())
             {
-                httpContext = GetHttpContext(mocks, "~/Story/Detail/1000");
+                httpContext = mocks.MockHttpContext("~/Story/Detail/1000");
             }
 
             using (mocks.Playback())
@@ -197,11 +197,11 @@
         [Test]
         public void VerifySubmit()
         {
-            IHttpContext httpContext;
+            HttpContextBase httpContext;
 
             using (mocks.Record())
             {
-                httpContext = GetHttpContext(mocks, "~/Story/Submit");
+                httpContext = mocks.MockHttpContext("~/Story/Submit");
             }
 
             using (mocks.Playback())
@@ -217,11 +217,11 @@
         [Test]
         public void VerifyKigg()
         {
-            IHttpContext httpContext;
+            HttpContextBase httpContext;
 
             using (mocks.Record())
             {
-                httpContext = GetHttpContext(mocks, "~/Story/Kigg");
+                httpContext = mocks.MockHttpContext("~/Story/Kigg");
             }
 
             using (mocks.Playback())
@@ -237,11 +237,11 @@
         [Test]
         public void VerifyComment()
         {
-            IHttpContext httpContext;
+            HttpContextBase httpContext;
 
             using (mocks.Record())
             {
-                httpContext = GetHttpContext(mocks, "~/Story/Comment");
+                httpContext = mocks.MockHttpContext("~/Story/Comment");
             }
 
             using (mocks.Playback())
@@ -257,11 +257,11 @@
         [Test]
         public void VerifyLogin()
         {
-            IHttpContext httpContext;
+            HttpContextBase httpContext;
 
             using (mocks.Record())
             {
-                httpContext = GetHttpContext(mocks, "~/User/Login");
+                httpContext = mocks.MockHttpContext("~/User/Login");
             }
 
             using (mocks.Playback())
@@ -277,11 +277,11 @@
         [Test]
         public void VerifyLogout()
         {
-            IHttpContext httpContext;
+            HttpContextBase httpContext;
 
             using (mocks.Record())
             {
-                httpContext = GetHttpContext(mocks, "~/User/Logout");
+                httpContext = mocks.MockHttpContext("~/User/Logout");
             }
 
             using (mocks.Playback())
@@ -297,11 +297,11 @@
         [Test]
         public void VerifySendPassword()
         {
-            IHttpContext httpContext;
+            HttpContextBase httpContext;
 
             using (mocks.Record())
             {
-                httpContext = GetHttpContext(mocks, "~/User/SendPassword");
+                httpContext = mocks.MockHttpContext("~/User/SendPassword");
             }
 
             using (mocks.Playback())
@@ -317,11 +317,11 @@
         [Test]
         public void VerifySignup()
         {
-            IHttpContext httpContext;
+            HttpContextBase httpContext;
 
             using (mocks.Record())
             {
-                httpContext = GetHttpContext(mocks, "~/User/Signup");
+                httpContext = mocks.MockHttpContext("~/User/Signup");
             }
 
             using (mocks.Playback())
@@ -332,26 +332,6 @@
                 Assert.AreEqual("User", routeData.Values["Controller"]);
                 Assert.AreEqual("Signup", routeData.Values["action"]);
             }
-        }
-
-        private static IHttpContext GetHttpContext(MockRepository mocks, string url)
-        {
-            IHttpContext httpContext = mocks.DynamicMock<IHttpContext>();
-            IHttpRequest httpRequest = mocks.DynamicMock<IHttpRequest>();
-            IHttpResponse httpResponse = mocks.DynamicMock<IHttpResponse>();
-            IHttpSessionState httpSession = mocks.DynamicMock<IHttpSessionState>();
-            IHttpServerUtility httpServer = mocks.DynamicMock<IHttpServerUtility>();
-
-            SetupResult.For(httpContext.Request).Return(httpRequest);
-            SetupResult.For(httpContext.Response).Return(httpResponse);
-            SetupResult.For(httpContext.Session).Return(httpSession);
-            SetupResult.For(httpContext.Server).Return(httpServer);
-
-            mocks.Replay(httpContext);
-
-            SetupResult.For(httpContext.Request.AppRelativeCurrentExecutionFilePath).Return(url);
-
-            return httpContext;
         }
     }
 }

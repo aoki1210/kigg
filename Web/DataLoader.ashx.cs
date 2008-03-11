@@ -33,7 +33,7 @@
             }
             else
             {
-                using (new CodeBenchmark())
+                using (CodeBenchmark.Start)
                 {
                     //The Following loads 2000 Latest Story from Digg.com
                     IDataContext db = new KiggDataContext();
@@ -49,7 +49,7 @@
                         int offset = (count * 100);
 
                         string requestUrl = string.Format(System.Globalization.CultureInfo.InvariantCulture, URL, offset);
-                        HttpWebRequest request = (HttpWebRequest)WebRequest.Create(new Uri(requestUrl));
+                        var request = (HttpWebRequest)WebRequest.Create(new Uri(requestUrl));
 
                         request.Method = "GET";
                         request.AllowAutoRedirect = true;
@@ -58,9 +58,9 @@
 
                         string responseXml;
 
-                        using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                        using (var response = (HttpWebResponse)request.GetResponse())
                         {
-                            using (StreamReader sr = new StreamReader(response.GetResponseStream()))
+                            using (var sr = new StreamReader(response.GetResponseStream()))
                             {
                                 responseXml = sr.ReadToEnd();
                             }
@@ -83,30 +83,33 @@
         {
             try
             {
-                XmlDocument xmlDoc = new XmlDocument();
+                var xmlDoc = new XmlDocument();
                 xmlDoc.LoadXml(xml);
 
-                XmlNodeList xnlStories = xmlDoc.DocumentElement.SelectNodes("story");
-
-                if (xnlStories.Count > 0)
+                if (xmlDoc.DocumentElement != null)
                 {
-                    foreach (XmlNode xndStory in xnlStories)
-                    {
-                        try
-                        {
-                            string url = xndStory.Attributes["link"].Value;
-                            string title = xndStory.SelectSingleNode("title").InnerText;
-                            string description = xndStory.SelectSingleNode("description").InnerText;
-                            string categoryName = xndStory.SelectSingleNode("container").Attributes["name"].Value;
-                            int categoryId = _categories.First(c => c.Name == categoryName).ID;
-                            string tag = xndStory.SelectSingleNode("topic").Attributes["name"].Value;
+                    XmlNodeList xnlStories = xmlDoc.DocumentElement.SelectNodes("story");
 
-                            db.SubmitStory(url, title, categoryId, description, tag, _currentUserID);
-                        }
-                        catch (InvalidOperationException e)
+                    if ((xnlStories != null) && (xnlStories.Count > 0))
+                    {
+                        foreach (XmlNode xndStory in xnlStories)
                         {
-                            //Skip Duplicate Story
-                            Console.WriteLine(e.Message);
+                            try
+                            {
+                                string url = xndStory.Attributes["link"].Value;
+                                string title = xndStory.SelectSingleNode("title").InnerText;
+                                string description = xndStory.SelectSingleNode("description").InnerText;
+                                string categoryName = xndStory.SelectSingleNode("container").Attributes["name"].Value;
+                                int categoryId = _categories.First(c => c.Name == categoryName).ID;
+                                string tag = xndStory.SelectSingleNode("topic").Attributes["name"].Value;
+
+                                db.SubmitStory(url, title, categoryId, description, tag, _currentUserID);
+                            }
+                            catch (InvalidOperationException e)
+                            {
+                                //Skip Duplicate Story
+                                Console.WriteLine(e.Message);
+                            }
                         }
                     }
                 }

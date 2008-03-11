@@ -6,7 +6,6 @@
     using System.IO;
     using System.Net.Mail;
     using System.Text.RegularExpressions;
-    using System.Web.Mvc;
     using System.Web.Security;
 
     /// <summary>
@@ -38,12 +37,11 @@
         /// <param name="userName">Name of the user (Mandatory).</param>
         /// <param name="password">The password (Mandatory).</param>
         /// <param name="rememberMe">If <c>true</c> a persistent cookie is generated.</param>
-        [ControllerAction]
         public void Login(string userName, string password, bool rememberMe)
         {
-            using (new CodeBenchmark())
+            using (CodeBenchmark.Start)
             {
-                JsonResult result = new JsonResult();
+                var result = new JsonResult();
 
                 if (string.IsNullOrEmpty(userName))
                 {
@@ -59,10 +57,13 @@
                 }
                 else
                 {
-                    //The following check is required for TDD 
-                    if (HttpContext != null)
+                    //The following try block is required for TDD 
+                    try
                     {
                         FormsAuthentication.SetAuthCookie(userName, rememberMe);
+                    }
+                    catch(NullReferenceException)
+                    {
                     }
 
                     result.isSuccessful = true;
@@ -75,19 +76,21 @@
         /// <summary>
         /// Logouts the currently logged in user. This is an Ajax Operation.
         /// </summary>
-        [ControllerAction]
         public void Logout()
         {
-            using (new CodeBenchmark())
+            using (CodeBenchmark.Start)
             {
-                JsonResult result = new JsonResult();
+                var result = new JsonResult();
 
                 if (IsUserAuthenticated)
                 {
-                    //The following check is required for TDD 
-                    if (HttpContext != null)
+                    //The following try block is required for TDD 
+                    try
                     {
                         FormsAuthentication.SignOut();
+                    }
+                    catch (NullReferenceException)
+                    {
                     }
 
                     result.isSuccessful = true;
@@ -105,12 +108,11 @@
         /// Sends the newly generated random password. This is an Ajax Operation.
         /// </summary>
         /// <param name="email">The email (Mandatory).</param>
-        [ControllerAction]
         public void SendPassword(string email)
         {
-            using (new CodeBenchmark())
+            using (CodeBenchmark.Start)
             {
-                JsonResult result = new JsonResult();
+                var result = new JsonResult();
 
                 if (string.IsNullOrEmpty(email))
                 {
@@ -134,22 +136,19 @@
 
                         string password = user.ResetPassword();
 
-                        //Only send mail when we are not running the unit test.
-                        if (HttpContext != null)
+                        //The following try block is required for TDD 
+                        try
                         {
-                            try
-                            {
-                                SendPasswordMail(user.Email, password);
-                                result.isSuccessful = true;
-                            }
-                            catch(Exception e)
-                            {
-                                result.errorMessage = e.Message;
-                            }
+                            SendPasswordMail(user.Email, password);
+                            result.isSuccessful = true;
                         }
-                        else
+                        catch (NotImplementedException)
                         {
                             result.isSuccessful = true;
+                        }
+                        catch(Exception e)
+                        {
+                            result.errorMessage = e.Message;
                         }
                     }
                 }
@@ -164,12 +163,11 @@
         /// <param name="userName">Name of the user (Mandatory and must be unique).</param>
         /// <param name="password">The password.</param>
         /// <param name="email">The email (Mandatory and must be unique).</param>
-        [ControllerAction]
         public void Signup(string userName, string password, string email)
         {
-            using (new CodeBenchmark())
+            using (CodeBenchmark.Start)
             {
-                JsonResult result = new JsonResult();
+                var result = new JsonResult();
 
                 if (string.IsNullOrEmpty(userName))
                 {
@@ -203,28 +201,30 @@
                         {
                             throw new MembershipCreateUserException(status);
                         }
-                        else
-                        {
-                            //The following check is required for TDD 
-                            if (HttpContext != null)
-                            {
-                                FormsAuthentication.SetAuthCookie(userName, false);
 
-                                try
-                                {
-                                    //Only send mail when we are not running the unit test.
-                                    SendSignupMail(userName, password, email);
-                                    result.isSuccessful = true;
-                                }
-                                catch(Exception e)
-                                {
-                                    result.errorMessage = e.Message;
-                                }
-                            }
-                            else
-                            {
-                                result.isSuccessful = true;
-                            }
+                        //The following try block is required for TDD 
+                        try
+                        {
+                            FormsAuthentication.SetAuthCookie(userName, false);
+                        }
+                        catch (NullReferenceException)
+                        {
+                        }
+
+                        //Also the following try block is required for TDD 
+                        try
+                        {
+                            //Only send mail when we are not running the unit test.
+                            SendSignupMail(userName, password, email);
+                            result.isSuccessful = true;
+                        }
+                        catch(NotImplementedException)
+                        {
+                            result.isSuccessful = true;
+                        }
+                        catch(Exception e)
+                        {
+                            result.errorMessage = e.Message;
                         }
                     }
                     catch (MembershipCreateUserException e)
@@ -241,17 +241,14 @@
         {
             const string CacheKey = "passwordRecoveryMailTemplate";
 
-            string body = HttpContext.Cache[CacheKey] as string;
+            var body = HttpContext.Cache[CacheKey] as string;
 
-            if (body == null)
+            if (string.IsNullOrEmpty(body))
             {
                 string file = System.Web.HttpContext.Current.Server.MapPath("~/MailTemplates/Password.txt");
                 body = File.ReadAllText(file);
 
-                if (HttpContext.Cache[CacheKey] == null)
-                {
-                    HttpContext.Cache[CacheKey] = body;
-                }
+                HttpContext.Cache[CacheKey] = body;
             }
 
             body = body.Replace("<%Password%>", password);
@@ -263,17 +260,14 @@
         {
             const string CacheKey = "signupMailTemplate";
 
-            string body = HttpContext.Cache[CacheKey] as string;
+            var body = HttpContext.Cache[CacheKey] as string;
 
             if (body == null)
             {
                 string file = System.Web.HttpContext.Current.Server.MapPath("~/MailTemplates/Signup.txt");
                 body = File.ReadAllText(file);
 
-                if (HttpContext.Cache[CacheKey] == null)
-                {
-                    HttpContext.Cache[CacheKey] = body;
-                }
+                HttpContext.Cache[CacheKey] = body;
             }
 
             body = body.Replace("<%UserName%>", userName);
@@ -284,7 +278,7 @@
 
         private static void SendMail(string to, string subject, string body)
         {
-            using(MailMessage message = new MailMessage())
+            using(var message = new MailMessage())
             {
                 message.From = new MailAddress(AdminEmail);
                 message.To.Add(new MailAddress(to));
@@ -292,7 +286,7 @@
                 message.Body = body;
                 message.IsBodyHtml = false;
 
-                SmtpClient mailClient = new SmtpClient();
+                var mailClient = new SmtpClient();
                 mailClient.Send(message);
             }
         }

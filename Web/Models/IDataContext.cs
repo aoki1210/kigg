@@ -5,7 +5,7 @@
     /// <summary>
     /// Data Acess Interface.
     /// </summary>
-    public interface IDataContext
+    public interface IDataContext : IDisposable
     {
         /// <summary>
         /// Gets the categories.

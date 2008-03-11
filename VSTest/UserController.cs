@@ -17,14 +17,16 @@
 
         private MockRepository mocks;
         private MembershipProvider userManager;
-        private UserControllerForTest controller;
+        private UserController controller;
+        private MockViewEngine viewEngine;
 
         [TestInitialize]
         public void Init()
         {
             mocks = new MockRepository();
-            userManager = mocks.PartialMock<MembershipProvider>();
-            controller = new UserControllerForTest(userManager);
+            userManager = mocks.MockMembershipProvider(false);
+            viewEngine = new MockViewEngine();
+            controller = new UserController(userManager) {ViewEngine = viewEngine};
         }
 
         [TestMethod]
@@ -32,40 +34,57 @@
         {
             using(mocks.Record())
             {
+                mocks.MockControllerContext(controller);
                 Expect.Call(userManager.ValidateUser(DefaultUserName, DefaultPassword)).IgnoreArguments().Return(true);
             }
 
             using(mocks.Playback())
             {
                 controller.Login(DefaultUserName, DefaultPassword, true);
-            }
 
-            Assert.AreEqual(controller.SelectedView, "Json");
-            Assert.IsInstanceOfType(controller.SelectedViewData, typeof(JsonResult));
-            Assert.IsTrue(((JsonResult)controller.SelectedViewData).isSuccessful);
-            Assert.IsNull(((JsonResult)controller.SelectedViewData).errorMessage);
+                Assert.AreEqual(viewEngine.ViewContext.ViewName, "Json");
+                Assert.IsInstanceOfType(viewEngine.ViewContext.ViewData, typeof(JsonResult));
+                Assert.IsTrue(((JsonResult)viewEngine.ViewContext.ViewData).isSuccessful);
+                Assert.IsNull(((JsonResult)viewEngine.ViewContext.ViewData).errorMessage);
+            }
         }
 
         [TestMethod]
         public void ShouldNotLoginForEmptyUserName()
         {
-            controller.Login(string.Empty, DefaultPassword, false);
+            using (mocks.Record())
+            {
+                mocks.MockControllerContext(controller);
+            }
 
-            Assert.AreEqual(controller.SelectedView, "Json");
-            Assert.IsInstanceOfType(controller.SelectedViewData, typeof(JsonResult));
-            Assert.IsFalse(((JsonResult)controller.SelectedViewData).isSuccessful);
-            Assert.AreEqual(((JsonResult)controller.SelectedViewData).errorMessage, "User name cannot be blank.");
+            using (mocks.Playback())
+            {
+                controller.Login(string.Empty, DefaultPassword, false);
+
+                Assert.AreEqual(viewEngine.ViewContext.ViewName, "Json");
+                Assert.IsInstanceOfType(viewEngine.ViewContext.ViewData, typeof(JsonResult));
+                Assert.IsFalse(((JsonResult)viewEngine.ViewContext.ViewData).isSuccessful);
+                Assert.AreEqual(((JsonResult)viewEngine.ViewContext.ViewData).errorMessage, "User name cannot be blank.");
+            }
         }
 
         [TestMethod]
         public void ShouldNotLoginForEmptyPassword()
         {
-            controller.Login(DefaultUserName, string.Empty, false);
+            using (mocks.Record())
+            {
+                mocks.MockControllerContext(controller);
+            }
 
-            Assert.AreEqual(controller.SelectedView, "Json");
-            Assert.IsInstanceOfType(controller.SelectedViewData, typeof(JsonResult));
-            Assert.IsFalse(((JsonResult)controller.SelectedViewData).isSuccessful);
-            Assert.AreEqual(((JsonResult)controller.SelectedViewData).errorMessage, "Password cannot be blank.");
+            using (mocks.Playback())
+            {
+                controller.Login(DefaultUserName, string.Empty, false);
+
+                Assert.AreEqual(viewEngine.ViewContext.ViewName, "Json");
+                Assert.IsInstanceOfType(viewEngine.ViewContext.ViewData, typeof(JsonResult));
+                Assert.IsFalse(((JsonResult)viewEngine.ViewContext.ViewData).isSuccessful);
+                Assert.AreEqual(((JsonResult)viewEngine.ViewContext.ViewData).errorMessage, "Password cannot be blank.");
+            }
         }
 
         [TestMethod]
@@ -73,18 +92,57 @@
         {
             using (mocks.Record())
             {
+                mocks.MockControllerContext(controller);
                 Expect.Call(userManager.ValidateUser(DefaultUserName, DefaultPassword)).IgnoreArguments().Return(false);
             }
 
             using (mocks.Playback())
             {
                 controller.Login(DefaultUserName, DefaultPassword, false);
+
+                Assert.AreEqual(viewEngine.ViewContext.ViewName, "Json");
+                Assert.IsInstanceOfType(viewEngine.ViewContext.ViewData, typeof(JsonResult));
+                Assert.IsFalse(((JsonResult)viewEngine.ViewContext.ViewData).isSuccessful);
+                Assert.AreEqual(((JsonResult)viewEngine.ViewContext.ViewData).errorMessage, "Invalid login credentials.");
+            }
+        }
+
+        [TestMethod]
+        public void ShouldLogoutForLoggedInUser()
+        {
+            using (mocks.Record())
+            {
+                mocks.MockControllerContext(controller, true);
             }
 
-            Assert.AreEqual(controller.SelectedView, "Json");
-            Assert.IsInstanceOfType(controller.SelectedViewData, typeof(JsonResult));
-            Assert.IsFalse(((JsonResult)controller.SelectedViewData).isSuccessful);
-            Assert.AreEqual(((JsonResult)controller.SelectedViewData).errorMessage, "Invalid login credentials.");
+            using (mocks.Playback())
+            {
+                controller.Logout();
+
+                Assert.AreEqual(viewEngine.ViewContext.ViewName, "Json");
+                Assert.IsInstanceOfType(viewEngine.ViewContext.ViewData, typeof(JsonResult));
+                Assert.IsTrue(((JsonResult)viewEngine.ViewContext.ViewData).isSuccessful);
+                Assert.IsNull(((JsonResult)viewEngine.ViewContext.ViewData).errorMessage);
+            }
+        }
+
+        [TestMethod]
+        public void ShouldNotLogoutForNonLoggedInUser()
+        {
+            using (mocks.Record())
+            {
+                mocks.MockControllerContext(controller, false);
+            }
+
+            using (mocks.Playback())
+            {
+                controller.Logout();
+
+                Assert.AreEqual(viewEngine.ViewContext.ViewName, "Json");
+                Assert.IsInstanceOfType(viewEngine.ViewContext.ViewData, typeof(JsonResult));
+                Assert.IsFalse(((JsonResult)viewEngine.ViewContext.ViewData).isSuccessful);
+                Assert.AreEqual(((JsonResult)viewEngine.ViewContext.ViewData).errorMessage, "You are not logged in.");
+            }
         }
 
         [TestMethod]
@@ -92,7 +150,9 @@
         {
             using (mocks.Record())
             {
-                MembershipUser user = mocks.Stub<MembershipUser>();
+                mocks.MockControllerContext(controller);
+
+                var user = mocks.Stub<MembershipUser>();
                 SetupResult.For(user.UserName).Return(DefaultUserName);
 
                 Expect.Call(user.ResetPassword()).IgnoreArguments().Return(DefaultPassword);
@@ -104,23 +164,31 @@
             using (mocks.Playback())
             {
                 controller.SendPassword(DefaultEmail);
-            }
 
-            Assert.AreEqual(controller.SelectedView, "Json");
-            Assert.IsInstanceOfType(controller.SelectedViewData, typeof(JsonResult));
-            Assert.IsTrue(((JsonResult)controller.SelectedViewData).isSuccessful);
-            Assert.IsNull(((JsonResult)controller.SelectedViewData).errorMessage);
+                Assert.AreEqual(viewEngine.ViewContext.ViewName, "Json");
+                Assert.IsInstanceOfType(viewEngine.ViewContext.ViewData, typeof(JsonResult));
+                Assert.IsTrue(((JsonResult)viewEngine.ViewContext.ViewData).isSuccessful);
+                Assert.IsNull(((JsonResult)viewEngine.ViewContext.ViewData).errorMessage);
+            }
         }
 
         [TestMethod]
         public void ShouldNotSendPasswordForEmptyEmail()
         {
-            controller.SendPassword(string.Empty);
+            using (mocks.Record())
+            {
+                mocks.MockControllerContext(controller);
+            }
 
-            Assert.AreEqual(controller.SelectedView, "Json");
-            Assert.IsInstanceOfType(controller.SelectedViewData, typeof(JsonResult));
-            Assert.IsFalse(((JsonResult)controller.SelectedViewData).isSuccessful);
-            Assert.AreEqual(((JsonResult)controller.SelectedViewData).errorMessage, "Email cannot be blank.");
+            using (mocks.Playback())
+            {
+                controller.SendPassword(string.Empty);
+
+                Assert.AreEqual(viewEngine.ViewContext.ViewName, "Json");
+                Assert.IsInstanceOfType(viewEngine.ViewContext.ViewData, typeof(JsonResult));
+                Assert.IsFalse(((JsonResult)viewEngine.ViewContext.ViewData).isSuccessful);
+                Assert.AreEqual(((JsonResult)viewEngine.ViewContext.ViewData).errorMessage, "Email cannot be blank.");
+            }
         }
 
         [TestMethod]
@@ -128,29 +196,38 @@
         {
             using (mocks.Record())
             {
+                mocks.MockControllerContext(controller);
                 Expect.Call(userManager.GetUserNameByEmail(DefaultEmail)).IgnoreArguments().Return(null);
             }
 
             using (mocks.Playback())
             {
                 controller.SendPassword(DefaultEmail);
-            }
 
-            Assert.AreEqual(controller.SelectedView, "Json");
-            Assert.IsInstanceOfType(controller.SelectedViewData, typeof(JsonResult));
-            Assert.IsFalse(((JsonResult)controller.SelectedViewData).isSuccessful);
-            Assert.AreEqual(((JsonResult)controller.SelectedViewData).errorMessage, "Did not find any user for specified email.");
+                Assert.AreEqual(viewEngine.ViewContext.ViewName, "Json");
+                Assert.IsInstanceOfType(viewEngine.ViewContext.ViewData, typeof(JsonResult));
+                Assert.IsFalse(((JsonResult)viewEngine.ViewContext.ViewData).isSuccessful);
+                Assert.AreEqual(((JsonResult)viewEngine.ViewContext.ViewData).errorMessage, "Did not find any user for specified email.");
+            }
         }
 
         [TestMethod]
         public void ShouldNotSendPasswordForInvalidEmailFormat()
         {
-            controller.SendPassword("foo");
+            using (mocks.Record())
+            {
+                mocks.MockControllerContext(controller);
+            }
 
-            Assert.AreEqual(controller.SelectedView, "Json");
-            Assert.IsInstanceOfType(controller.SelectedViewData, typeof(JsonResult));
-            Assert.IsFalse(((JsonResult)controller.SelectedViewData).isSuccessful);
-            Assert.AreEqual(((JsonResult)controller.SelectedViewData).errorMessage, "Invalid email address.");
+            using (mocks.Playback())
+            {
+                controller.SendPassword("foo");
+
+                Assert.AreEqual(viewEngine.ViewContext.ViewName, "Json");
+                Assert.IsInstanceOfType(viewEngine.ViewContext.ViewData, typeof(JsonResult));
+                Assert.IsFalse(((JsonResult)viewEngine.ViewContext.ViewData).isSuccessful);
+                Assert.AreEqual(((JsonResult)viewEngine.ViewContext.ViewData).errorMessage, "Invalid email address.");
+            }
         }
 
         [TestMethod]
@@ -158,7 +235,9 @@
         {
             using (mocks.Record())
             {
-                MembershipUser user = mocks.Stub<MembershipUser>();
+                mocks.MockControllerContext(controller);
+
+                var user = mocks.Stub<MembershipUser>();
                 SetupResult.For(user.UserName).Return(DefaultUserName);
                 SetupResult.For(userManager.MinRequiredPasswordLength).Return(DefaultPasswordLength);
 
@@ -170,34 +249,50 @@
             using (mocks.Playback())
             {
                 controller.Signup(DefaultUserName, DefaultPassword, DefaultEmail);
-            }
 
-            Assert.AreEqual(controller.SelectedView, "Json");
-            Assert.IsInstanceOfType(controller.SelectedViewData, typeof(JsonResult));
-            Assert.IsTrue(((JsonResult)controller.SelectedViewData).isSuccessful);
-            Assert.IsNull(((JsonResult)controller.SelectedViewData).errorMessage);
+                Assert.AreEqual(viewEngine.ViewContext.ViewName, "Json");
+                Assert.IsInstanceOfType(viewEngine.ViewContext.ViewData, typeof(JsonResult));
+                Assert.IsTrue(((JsonResult)viewEngine.ViewContext.ViewData).isSuccessful);
+                Assert.IsNull(((JsonResult)viewEngine.ViewContext.ViewData).errorMessage);
+            }
         }
 
         [TestMethod]
         public void ShouldNotSignupForEmptyUserName()
         {
-            controller.Signup(string.Empty, DefaultPassword, DefaultEmail);
+            using (mocks.Record())
+            {
+                mocks.MockControllerContext(controller);
+            }
 
-            Assert.AreEqual(controller.SelectedView, "Json");
-            Assert.IsInstanceOfType(controller.SelectedViewData, typeof(JsonResult));
-            Assert.IsFalse(((JsonResult)controller.SelectedViewData).isSuccessful);
-            Assert.AreEqual(((JsonResult)controller.SelectedViewData).errorMessage, "User name cannot be blank.");
+            using (mocks.Playback())
+            {
+                controller.Signup(string.Empty, DefaultPassword, DefaultEmail);
+
+                Assert.AreEqual(viewEngine.ViewContext.ViewName, "Json");
+                Assert.IsInstanceOfType(viewEngine.ViewContext.ViewData, typeof(JsonResult));
+                Assert.IsFalse(((JsonResult)viewEngine.ViewContext.ViewData).isSuccessful);
+                Assert.AreEqual(((JsonResult)viewEngine.ViewContext.ViewData).errorMessage, "User name cannot be blank.");
+            }
         }
 
         [TestMethod]
         public void ShouldNotSignupForEmptyPassword()
         {
-            controller.Signup(DefaultUserName, string.Empty, DefaultEmail);
+            using (mocks.Record())
+            {
+                mocks.MockControllerContext(controller);
+            }
 
-            Assert.AreEqual(controller.SelectedView, "Json");
-            Assert.IsInstanceOfType(controller.SelectedViewData, typeof(JsonResult));
-            Assert.IsFalse(((JsonResult)controller.SelectedViewData).isSuccessful);
-            Assert.AreEqual(((JsonResult)controller.SelectedViewData).errorMessage, "Password cannot be blank.");
+            using (mocks.Playback())
+            {
+                controller.Signup(DefaultUserName, string.Empty, DefaultEmail);
+
+                Assert.AreEqual(viewEngine.ViewContext.ViewName, "Json");
+                Assert.IsInstanceOfType(viewEngine.ViewContext.ViewData, typeof(JsonResult));
+                Assert.IsFalse(((JsonResult)viewEngine.ViewContext.ViewData).isSuccessful);
+                Assert.AreEqual(((JsonResult)viewEngine.ViewContext.ViewData).errorMessage, "Password cannot be blank.");
+            }
         }
 
         [TestMethod]
@@ -205,18 +300,19 @@
         {
             using (mocks.Record())
             {
+                mocks.MockControllerContext(controller);
                 SetupResult.For(userManager.MinRequiredPasswordLength).Return(DefaultPasswordLength);
             }
 
             using (mocks.Playback())
             {
                 controller.Signup(DefaultUserName, "foo", DefaultEmail);
-            }
 
-            Assert.AreEqual(controller.SelectedView, "Json");
-            Assert.IsInstanceOfType(controller.SelectedViewData, typeof(JsonResult));
-            Assert.IsFalse(((JsonResult)controller.SelectedViewData).isSuccessful);
-            Assert.AreEqual(((JsonResult)controller.SelectedViewData).errorMessage, string.Format(System.Globalization.CultureInfo.InvariantCulture, "Password must be {0} character long.", DefaultPasswordLength));
+                Assert.AreEqual(viewEngine.ViewContext.ViewName, "Json");
+                Assert.IsInstanceOfType(viewEngine.ViewContext.ViewData, typeof(JsonResult));
+                Assert.IsFalse(((JsonResult)viewEngine.ViewContext.ViewData).isSuccessful);
+                Assert.AreEqual(((JsonResult)viewEngine.ViewContext.ViewData).errorMessage, string.Format(System.Globalization.CultureInfo.InvariantCulture, "Password must be {0} character long.", DefaultPasswordLength));
+            }
         }
 
         [TestMethod]
@@ -224,18 +320,19 @@
         {
             using (mocks.Record())
             {
+                mocks.MockControllerContext(controller);
                 SetupResult.For(userManager.MinRequiredPasswordLength).Return(DefaultPasswordLength);
             }
 
             using (mocks.Playback())
             {
                 controller.Signup(DefaultUserName, DefaultPassword, string.Empty);
-            }
 
-            Assert.AreEqual(controller.SelectedView, "Json");
-            Assert.IsInstanceOfType(controller.SelectedViewData, typeof(JsonResult));
-            Assert.IsFalse(((JsonResult)controller.SelectedViewData).isSuccessful);
-            Assert.AreEqual(((JsonResult)controller.SelectedViewData).errorMessage, "Email cannot be blank.");
+                Assert.AreEqual(viewEngine.ViewContext.ViewName, "Json");
+                Assert.IsInstanceOfType(viewEngine.ViewContext.ViewData, typeof(JsonResult));
+                Assert.IsFalse(((JsonResult)viewEngine.ViewContext.ViewData).isSuccessful);
+                Assert.AreEqual(((JsonResult)viewEngine.ViewContext.ViewData).errorMessage, "Email cannot be blank.");
+            }
         }
 
         [TestMethod]
@@ -243,18 +340,19 @@
         {
             using (mocks.Record())
             {
+                mocks.MockControllerContext(controller);
                 SetupResult.For(userManager.MinRequiredPasswordLength).Return(DefaultPasswordLength);
             }
 
             using (mocks.Playback())
             {
                 controller.Signup(DefaultUserName, DefaultPassword, "foo");
-            }
 
-            Assert.AreEqual(controller.SelectedView, "Json");
-            Assert.IsInstanceOfType(controller.SelectedViewData, typeof(JsonResult));
-            Assert.IsFalse(((JsonResult)controller.SelectedViewData).isSuccessful);
-            Assert.AreEqual(((JsonResult)controller.SelectedViewData).errorMessage, "Invalid email address.");
+                Assert.AreEqual(viewEngine.ViewContext.ViewName, "Json");
+                Assert.IsInstanceOfType(viewEngine.ViewContext.ViewData, typeof(JsonResult));
+                Assert.IsFalse(((JsonResult)viewEngine.ViewContext.ViewData).isSuccessful);
+                Assert.AreEqual(((JsonResult)viewEngine.ViewContext.ViewData).errorMessage, "Invalid email address.");
+            }
         }
 
         [TestMethod]
@@ -262,6 +360,8 @@
         {
             using (mocks.Record())
             {
+                mocks.MockControllerContext(controller);
+
                 SetupResult.For(userManager.MinRequiredPasswordLength).Return(DefaultPasswordLength);
 
                 MembershipCreateStatus status;
@@ -272,12 +372,12 @@
             using (mocks.Playback())
             {
                 controller.Signup(DefaultUserName, DefaultPassword, DefaultEmail);
-            }
 
-            Assert.AreEqual(controller.SelectedView, "Json");
-            Assert.IsInstanceOfType(controller.SelectedViewData, typeof(JsonResult));
-            Assert.IsFalse(((JsonResult)controller.SelectedViewData).isSuccessful);
-            Assert.AreEqual(((JsonResult)controller.SelectedViewData).errorMessage, "The username is already in use.");
+                Assert.AreEqual(viewEngine.ViewContext.ViewName, "Json");
+                Assert.IsInstanceOfType(viewEngine.ViewContext.ViewData, typeof(JsonResult));
+                Assert.IsFalse(((JsonResult)viewEngine.ViewContext.ViewData).isSuccessful);
+                Assert.AreEqual(((JsonResult)viewEngine.ViewContext.ViewData).errorMessage, "The username is already in use.");
+            }
         }
 
         [TestMethod]
@@ -285,6 +385,7 @@
         {
             using (mocks.Record())
             {
+                mocks.MockControllerContext(controller);
                 SetupResult.For(userManager.MinRequiredPasswordLength).Return(DefaultPasswordLength);
 
                 MembershipCreateStatus status;
@@ -295,36 +396,11 @@
             using (mocks.Playback())
             {
                 controller.Signup(DefaultUserName, DefaultPassword, DefaultEmail);
-            }
 
-            Assert.AreEqual(controller.SelectedView, "Json");
-            Assert.IsInstanceOfType(controller.SelectedViewData, typeof(JsonResult));
-            Assert.IsFalse(((JsonResult)controller.SelectedViewData).isSuccessful);
-            Assert.AreEqual(((JsonResult)controller.SelectedViewData).errorMessage, "The E-mail address is already in use.");
-        }
-
-        private class UserControllerForTest : UserController
-        {
-            public string SelectedView
-            {
-                get;
-                private set;
-            }
-
-            public object SelectedViewData
-            {
-                get;
-                private set;
-            }
-
-            public UserControllerForTest(MembershipProvider userManager): base(userManager)
-            {
-            }
-
-            protected override void RenderView(string viewName, string masterName, object viewData)
-            {
-                SelectedView = viewName;
-                SelectedViewData = viewData;
+                Assert.AreEqual(viewEngine.ViewContext.ViewName, "Json");
+                Assert.IsInstanceOfType(viewEngine.ViewContext.ViewData, typeof(JsonResult));
+                Assert.IsFalse(((JsonResult)viewEngine.ViewContext.ViewData).isSuccessful);
+                Assert.AreEqual(((JsonResult)viewEngine.ViewContext.ViewData).errorMessage, "The E-mail address is already in use.");
             }
         }
     }

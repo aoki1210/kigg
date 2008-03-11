@@ -24,9 +24,9 @@
 
         public string ToJson()
         {
-            using (MemoryStream ms = new MemoryStream())
+            using (var ms = new MemoryStream())
             {
-                DataContractJsonSerializer s = new DataContractJsonSerializer(GetType());
+                var s = new DataContractJsonSerializer(GetType());
                 s.WriteObject(ms, this);
 
                 ms.Seek(0, SeekOrigin.Begin);

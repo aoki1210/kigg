@@ -36,7 +36,7 @@
 
         static ScriptHandler()
         {
-            Hashtable settings = ConfigurationManager.GetSection("scriptSettings") as Hashtable;
+            var settings = ConfigurationManager.GetSection("scriptSettings") as Hashtable;
 
             if (settings != null)
             {
@@ -44,19 +44,22 @@
                 _compress = Convert.ToBoolean(settings["compress"], CultureInfo.InvariantCulture);
                 _cacheDurationInDays = Convert.ToInt32(settings["cacheDurationInDays"], CultureInfo.InvariantCulture);
 
-                string fileList = settings["files"].ToString();
+                var fileList = settings["files"].ToString();
 
                 if (!string.IsNullOrEmpty(fileList))
                 {
-                    string[] files = fileList.Split(new char[] {';', ','});
+                    var files = fileList.Split(new[] {';', ','});
 
                     if (files.Length > 0)
                     {
-                        HttpContext context = HttpContext.Current;
+                        var context = HttpContext.Current;
 
-                        foreach (string file in files)
+                        if (context != null)
                         {
-                            _files.Add(context.Server.MapPath(file));
+                            foreach (var file in files)
+                            {
+                                _files.Add(context.Server.MapPath(file));
+                            }
                         }
                     }
                 }
@@ -65,7 +68,7 @@
 
         public void ProcessRequest(HttpContext context)
         {
-            HttpResponse response = context.Response;
+            var response = context.Response;
 
             if (_files.Count == 0)
             {
@@ -76,12 +79,12 @@
             }
 
             response.ContentType = "application/x-javascript";
-            Stream output = response.OutputStream;
+            var output = response.OutputStream;
 
             //Compress
             if (_compress)
             {
-                string acceptEncoding = context.Request.Headers["Accept-Encoding"];
+                var acceptEncoding = context.Request.Headers["Accept-Encoding"];
 
                 if (!string.IsNullOrEmpty(acceptEncoding))
                 {
@@ -101,12 +104,12 @@
             }
 
             //Combine
-            using (StreamWriter sw = new StreamWriter(output))
+            using (var sw = new StreamWriter(output))
             {
                 //Write each files in the response
-                foreach(string file in _files)
+                foreach(var file in _files)
                 {
-                    string content = File.ReadAllText(file);
+                    var content = File.ReadAllText(file);
                     sw.WriteLine(content);
                 }
 
@@ -116,16 +119,16 @@
             //Cache
             if (_cacheDurationInDays > 0)
             {
-                TimeSpan duration = TimeSpan.FromDays(_cacheDurationInDays);
+                var duration = TimeSpan.FromDays(_cacheDurationInDays);
 
-                HttpCachePolicy cache = response.Cache;
+                var cache = response.Cache;
 
                 cache.SetCacheability(HttpCacheability.Public);
                 cache.SetExpires(DateTime.Now.Add(duration));
                 cache.SetMaxAge(duration);
                 cache.AppendCacheExtension("must-revalidate, proxy-revalidate");
 
-                FieldInfo maxAgeField = cache.GetType().GetField("_maxAge", BindingFlags.Instance | BindingFlags.NonPublic);
+                var maxAgeField = cache.GetType().GetField("_maxAge", BindingFlags.Instance | BindingFlags.NonPublic);
                 maxAgeField.SetValue(cache, duration);
             }
         }

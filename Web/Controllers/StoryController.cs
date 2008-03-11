@@ -5,13 +5,12 @@
     using System.Configuration;
     using System.Globalization;
     using System.Text.RegularExpressions;
-    using System.Web.Mvc;
     using System.Web.Security;
 
     /// <summary>
     /// Handles all story related operation.
     /// </summary>
-    public class StoryController : BaseController
+    public class StoryController : BaseController, IDisposable
     {
         private static readonly Regex UrlExpression = new Regex(@"http(s)?://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?", RegexOptions.Compiled | RegexOptions.Singleline);
 
@@ -35,7 +34,7 @@
         /// </summary>
         static StoryController()
         {
-            Hashtable settings = ConfigurationManager.GetSection("storySettings") as Hashtable;
+            var settings = ConfigurationManager.GetSection("storySettings") as Hashtable;
 
             if (settings != null)
             {
@@ -63,18 +62,28 @@
         }
 
         /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            if (_dataContext != null)
+            {
+                _dataContext.Dispose();
+            }
+        }
+
+        /// <summary>
         /// List published stories of both all category and specific category
         /// </summary>
         /// <param name="name">The category name. If the parameter is blank it shows all the stories regarless the category.</param>
         /// <param name="page">The page number (1 based). If not specifed then shows the first page.</param>
-        [ControllerAction]
         public void Category(string name, int? page)
         {
-            using (new CodeBenchmark())
+            using (CodeBenchmark.Start)
             {
-                StoryListByCategoryData viewData = GetStoryListViewData<StoryListByCategoryData>(page);
+                var viewData = GetStoryListViewData<StoryListByCategoryData>(page);
 
-                int total = 0;
+                var total = 0;
 
                 if (string.IsNullOrEmpty(name))
                 {
@@ -85,7 +94,7 @@
                 {
                     name = name.UrlDecode();
 
-                    Category category = DataContext.GetCategoryByName(name);
+                    var category = DataContext.GetCategoryByName(name);
 
                     if (category != null)
                     {
@@ -104,12 +113,11 @@
         /// List all upcoming stories regardless the category
         /// </summary>
         /// <param name="page">The page number (1 based). If not specifed then shows the first page.</param>
-        [ControllerAction]
         public void Upcoming(int? page)
         {
-            using (new CodeBenchmark())
+            using (CodeBenchmark.Start)
             {
-                StoryListByCategoryData viewData = GetStoryListViewData<StoryListByCategoryData>(page);
+                var viewData = GetStoryListViewData<StoryListByCategoryData>(page);
                 int total;
 
                 viewData.Stories = DataContext.GetUpcomingStories(CurrentUserId, CalculateStartIndex(page), _storyPerPage, out total);
@@ -125,7 +133,6 @@
         /// </summary>
         /// <param name="name">The tag name. If the parameter is blank it redirect to category action.</param>
         /// <param name="page">The page number (1 based). If not specifed then shows the first page.</param>
-        [ControllerAction]
         public void Tag(string name, int? page)
         {
             if (string.IsNullOrEmpty(name))
@@ -136,9 +143,9 @@
 
             name = name.UrlDecode();
 
-            using (new CodeBenchmark())
+            using (CodeBenchmark.Start)
             {
-                StoryListByTagData viewData = GetStoryListViewData<StoryListByTagData>(page);
+                var viewData = GetStoryListViewData<StoryListByTagData>(page);
 
                 Tag tag = DataContext.GetTagByName(name);
                 int total = 0;
@@ -160,7 +167,6 @@
         /// </summary>
         /// <param name="name">The name of the user. If the parameter is blank it redirect to category action.</param>
         /// <param name="page">The page number (1 based). If not specifed then shows the first page.</param>
-        [ControllerAction]
         public void PostedBy(string name, int? page)
         {
             if (string.IsNullOrEmpty(name))
@@ -171,9 +177,9 @@
 
             name = name.UrlDecode();
 
-            using (new CodeBenchmark())
+            using (CodeBenchmark.Start)
             {
-                StoryListByUserData viewData = GetStoryListViewData<StoryListByUserData>(page);
+                var viewData = GetStoryListViewData<StoryListByUserData>(page);
                 int total = 0;
 
                 MembershipUser user = UserManager.GetUser(name, false);
@@ -195,7 +201,6 @@
         /// </summary>
         /// <param name="q">The Search Query</param>
         /// <param name="page">The page number (1 based). If not specifed then shows the first page.</param>
-        [ControllerAction]
         public void Search(string q, int? page)
         {
             if (string.IsNullOrEmpty(q))
@@ -206,9 +211,9 @@
 
             q = q.UrlDecode();
 
-            using (new CodeBenchmark())
+            using (CodeBenchmark.Start)
             {
-                StoryListBySearchData viewData = GetStoryListViewData<StoryListBySearchData>(page);
+                var viewData = GetStoryListViewData<StoryListBySearchData>(page);
                 int total;
 
                 viewData.Stories = DataContext.SearchStories(CurrentUserId, q, CalculateStartIndex(page), _storyPerPage, out total);
@@ -223,12 +228,11 @@
         /// View the detail of the specified story.
         /// </summary>
         /// <param name="id">The story id (Mandatory).</param>
-        [ControllerAction]
         public void Detail(int id)
         {
-            using (new CodeBenchmark())
+            using (CodeBenchmark.Start)
             {
-                StoryDetailData viewData = GetViewData<StoryDetailData>();
+                var viewData = GetViewData<StoryDetailData>();
 
                 viewData.Story = DataContext.GetStoryDetailById(CurrentUserId, id);
 
@@ -245,12 +249,11 @@
         /// <param name="storyCategoryId">The story category id (Mandatory).</param>
         /// <param name="storyDescription">The story description (Mandatory).</param>
         /// <param name="storyTags">The story tags (Optional).</param>
-        [ControllerAction]
         public void Submit(string storyUrl, string storyTitle, int storyCategoryId, string storyDescription, string storyTags)
         {
-            using (new CodeBenchmark())
+            using (CodeBenchmark.Start)
             {
-                JsonResult result = new JsonResult();
+                var result = new JsonResult();
 
                 if (!IsUserAuthenticated)
                 {
@@ -294,12 +297,11 @@
         /// This is an Ajax Operation.
         /// </summary>
         /// <param name="storyId">The story id(Mandatory).</param>
-        [ControllerAction]
         public void Kigg(int storyId)
         {
-            using (new CodeBenchmark())
+            using (CodeBenchmark.Start)
             {
-                JsonResult result = new JsonResult();
+                var result = new JsonResult();
 
                 if (!IsUserAuthenticated)
                 {
@@ -328,12 +330,11 @@
         /// </summary>
         /// <param name="storyId">The story id (Mandatory).</param>
         /// <param name="commentContent">Content of the comment (Mandatory).</param>
-        [ControllerAction]
         public void Comment(int storyId, string commentContent)
         {
-            using (new CodeBenchmark())
+            using (CodeBenchmark.Start)
             {
-                JsonResult result = new JsonResult();
+                var result = new JsonResult();
 
                 if (!IsUserAuthenticated)
                 {
@@ -362,7 +363,7 @@
 
         private T GetStoryListViewData<T>(int? page) where T : BaseStoryListData, new()
         {
-            T viewData = GetViewData<T>();
+            var viewData = GetViewData<T>();
             viewData.CurrentPage = page.HasValue ? page.Value : 1;
             viewData.StoryPerPage = _storyPerPage;
 
@@ -371,12 +372,12 @@
 
         private T GetViewData<T>() where T : BaseViewData, new()
         {
-            T viewData = new T();
-
-            viewData.IsAuthenticated = IsUserAuthenticated;
-            viewData.UserName = CurrentUserName;
-            viewData.Categories = DataContext.GetCategories();
-            viewData.Tags = DataContext.GetTags(_topTags);
+            var viewData = new T{
+                                   IsAuthenticated = IsUserAuthenticated,
+                                   UserName = CurrentUserName,
+                                   Categories = DataContext.GetCategories(),
+                                   Tags = DataContext.GetTags(_topTags)
+                               };
 
             return viewData;
         }

@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-
-namespace Kigg
+﻿namespace Kigg
 {
     using System;
+    using System.Collections.Generic;
     using System.Configuration;
+    using System.Web.Routing;
     using System.Web.Mvc;
     using System.Web.Security;
 
@@ -29,280 +29,58 @@ namespace Kigg
             }
         }
 
-        private static void RegisterRoutesForNewIIS(ICollection<Route> routes)
+        private static void RegisterRoutesForNewIIS(ICollection<RouteBase> routes)
         {
-            var defaults = new
-            {
-                controller = "Story",
-                action = "Category",
-                name = (string)null,
-                page = (int?)null
-            };
+            routes.Add(new Route("User/Login", new RouteValueDictionary(new { controller = "User", action = "Login" }), new MvcRouteHandler()));
+            routes.Add(new Route("User/Logout", new RouteValueDictionary(new { controller = "User", action = "Logout" }), new MvcRouteHandler()));
+            routes.Add(new Route("User/Signup", new RouteValueDictionary(new { controller = "User", action = "Signup" }), new MvcRouteHandler()));
+            routes.Add(new Route("User/SendPassword", new RouteValueDictionary(new { controller = "User", action = "SendPassword" }), new MvcRouteHandler()));
 
-            routes.Add(
-                            new Route
-                            {
-                                Url = "User/Login",
-                                RouteHandler = typeof(MvcRouteHandler),
-                                Defaults = new
-                                {
-                                    controller = "User",
-                                    action = "Login"
-                                }
-                            }
-                        );
+            routes.Add(new Route("Story/Detail/{id}", new RouteValueDictionary(new { controller = "Story", action = "Detail" }), new MvcRouteHandler()));
+            routes.Add(new Route("Story/Upcoming/{page}", new RouteValueDictionary(new { controller = "Story", action = "Upcoming" }), new MvcRouteHandler()));
+            routes.Add(new Route("Story/Search/{q}/{page}", new RouteValueDictionary(new { controller = "Story", action = "Search" }), new MvcRouteHandler()));
 
-            routes.Add(
-                            new Route
-                            {
-                                Url = "User/Logout",
-                                RouteHandler = typeof(MvcRouteHandler),
-                                Defaults = new
-                                {
-                                    controller = "User",
-                                    action = "Logout"
-                                }
-                            }
-                        );
+            var defaults = new RouteValueDictionary (
+                                                        new
+                                                        {
+                                                            controller = "Story",
+                                                            action = "Category",
+                                                            name = (string)null,
+                                                            page = (int?)null
+                                                        }
+                                                    );
 
-            routes.Add(
-                            new Route
-                            {
-                                Url = "User/Signup",
-                                RouteHandler = typeof(MvcRouteHandler),
-                                Defaults = new
-                                {
-                                    controller = "User",
-                                    action = "Signup"
-                                }
-                            }
-                        );
-
-            routes.Add(
-                            new Route
-                            {
-                                Url = "User/SendPassword",
-                                RouteHandler = typeof(MvcRouteHandler),
-                                Defaults = new
-                                {
-                                    controller = "User",
-                                    action = "SendPassword"
-                                }
-                            }
-                        );
-
-            routes.Add(
-                            new Route
-                            {
-                                Url = "Story/Detail/[id]",
-                                RouteHandler = typeof(MvcRouteHandler),
-                                Defaults = new
-                                {
-                                    controller = "Story",
-                                    action = "Detail"
-                                }
-                            }
-                        );
-
-            routes.Add(
-                            new Route
-                            {
-                                Url = "Story/Upcoming/[page]",
-                                RouteHandler = typeof(MvcRouteHandler),
-                                Defaults = new
-                                {
-                                    controller = "Story",
-                                    action = "Upcoming"
-                                }
-                            }
-                        );
-
-            routes.Add(
-                            new Route
-                            {
-                                Url = "Story/Search/[q]/[page]",
-                                RouteHandler = typeof(MvcRouteHandler),
-                                Defaults = new
-                                {
-                                    controller = "Story",
-                                    action = "Search"
-                                }
-                            }
-                        );
-
-            routes.Add(
-                            new Route
-                            {
-                                Url = "Story/Category/[page]",
-                                RouteHandler = typeof(MvcRouteHandler),
-                                Defaults = defaults
-                            }
-                        );
-
-            routes.Add(
-                            new Route
-                            {
-                                Url = "Story/[action]/[name]/[page]",
-                                RouteHandler = typeof(MvcRouteHandler),
-                                Defaults = defaults
-                            }
-                        );
-
-            routes.Add(
-                            new Route
-                            {
-                                Url = "[controller]/[action]/[id]",
-                                RouteHandler = typeof(MvcRouteHandler),
-                                Defaults = defaults
-                            }
-                        );
-
-            routes.Add(
-                            new Route
-                            {
-                                Url = "Default.aspx",
-                                RouteHandler = typeof(MvcRouteHandler),
-                                Defaults = defaults
-                            }
-                        );
+            routes.Add(new Route("Story/Category/{page}", defaults, new MvcRouteHandler()));
+            routes.Add(new Route("Story/{action}/{name}/{page}", defaults, new MvcRouteHandler()));
+            routes.Add(new Route("{controller}/{action}/{id}", defaults, new MvcRouteHandler()));
+            routes.Add(new Route("Default.aspx", defaults, new MvcRouteHandler()));
         }
 
-        private static void RegisterRoutesForOldIIS(ICollection<Route> routes)
+        private static void RegisterRoutesForOldIIS(ICollection<RouteBase> routes)
         {
-            var defaults = new
-            {
-                controller = "Story",
-                action = "Category",
-                name = (string)null,
-                page = (int?)null
-            };
+            routes.Add(new Route("User.mvc/Login", new RouteValueDictionary(new { controller = "User", action = "Login" }), new MvcRouteHandler()));
+            routes.Add(new Route("User.mvc/Logout", new RouteValueDictionary(new { controller = "User", action = "Logout" }), new MvcRouteHandler()));
+            routes.Add(new Route("User.mvc/Signup", new RouteValueDictionary(new { controller = "User", action = "Signup" }), new MvcRouteHandler()));
+            routes.Add(new Route("User.mvc/SendPassword", new RouteValueDictionary(new { controller = "User", action = "SendPassword" }), new MvcRouteHandler()));
 
-            routes.Add(
-                            new Route
-                            {
-                                Url = "User.mvc/Login",
-                                RouteHandler = typeof(MvcRouteHandler),
-                                Defaults = new
-                                {
-                                    controller = "User",
-                                    action = "Login"
-                                }
-                            }
-                        );
+            routes.Add(new Route("Story.mvc/Detail/{id}", new RouteValueDictionary(new { controller = "Story", action = "Detail" }), new MvcRouteHandler()));
+            routes.Add(new Route("Story.mvc/Upcoming/{page}", new RouteValueDictionary(new { controller = "Story", action = "Upcoming" }), new MvcRouteHandler()));
+            routes.Add(new Route("Story.mvc/Search/{q}/{page}", new RouteValueDictionary(new { controller = "Story", action = "Search" }), new MvcRouteHandler()));
 
-            routes.Add(
-                            new Route
-                            {
-                                Url = "User.mvc/Logout",
-                                RouteHandler = typeof(MvcRouteHandler),
-                                Defaults = new
-                                {
-                                    controller = "User",
-                                    action = "Logout"
-                                }
-                            }
-                        );
+            var defaults = new RouteValueDictionary(
+                                                        new
+                                                        {
+                                                            controller = "Story",
+                                                            action = "Category",
+                                                            name = (string)null,
+                                                            page = (int?)null
+                                                        }
+                                                    );
 
-            routes.Add(
-                            new Route
-                            {
-                                Url = "User.mvc/Signup",
-                                RouteHandler = typeof(MvcRouteHandler),
-                                Defaults = new
-                                {
-                                    controller = "User",
-                                    action = "Signup"
-                                }
-                            }
-                        );
-
-            routes.Add(
-                            new Route
-                            {
-                                Url = "User.mvc/SendPassword",
-                                RouteHandler = typeof(MvcRouteHandler),
-                                Defaults = new
-                                {
-                                    controller = "User",
-                                    action = "SendPassword"
-                                }
-                            }
-                        );
-
-            routes.Add(
-                            new Route
-                            {
-                                Url = "Story.mvc/Detail/[id]",
-                                RouteHandler = typeof(MvcRouteHandler),
-                                Defaults = new
-                                {
-                                    controller = "Story",
-                                    action = "Detail"
-                                }
-                            }
-                        );
-
-            routes.Add(
-                            new Route
-                            {
-                                Url = "Story.mvc/Upcoming/[page]",
-                                RouteHandler = typeof(MvcRouteHandler),
-                                Defaults = new
-                                {
-                                    controller = "Story",
-                                    action = "Upcoming"
-                                }
-                            }
-                        );
-
-            routes.Add(
-                            new Route
-                            {
-                                Url = "Story.mvc/Search/[q]/[page]",
-                                RouteHandler = typeof(MvcRouteHandler),
-                                Defaults = new
-                                {
-                                    controller = "Story",
-                                    action = "Search"
-                                }
-                            }
-                        );
-
-            routes.Add(
-                            new Route
-                            {
-                                Url = "Story.mvc/Category/[page]",
-                                RouteHandler = typeof(MvcRouteHandler),
-                                Defaults = defaults
-                            }
-                        );
-
-            routes.Add(
-                            new Route
-                            {
-                                Url = "Story.mvc/[action]/[name]/[page]",
-                                RouteHandler = typeof(MvcRouteHandler),
-                                Defaults = defaults
-                            }
-                        );
-
-            routes.Add(
-                            new Route
-                            {
-                                Url = "[controller].mvc/[action]/[id]",
-                                RouteHandler = typeof(MvcRouteHandler),
-                                Defaults = defaults
-                            }
-                        );
-
-            routes.Add(
-                            new Route
-                            {
-                                Url = "Default.aspx",
-                                RouteHandler = typeof(MvcRouteHandler),
-                                Defaults = defaults
-                            }
-                        );
+            routes.Add(new Route("Story.mvc/Category/{page}", defaults, new MvcRouteHandler()));
+            routes.Add(new Route("Story.mvc/{action}/{name}/{page}", defaults, new MvcRouteHandler()));
+            routes.Add(new Route("{controller}.mvc/{action}/{id}", defaults, new MvcRouteHandler()));
+            routes.Add(new Route("Default.aspx", defaults, new MvcRouteHandler()));
         }
 
         private static void CreateDefaultUserIfNotExists()

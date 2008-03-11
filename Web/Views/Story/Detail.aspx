@@ -1,7 +1,7 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/Views/Shared/SiteTemplate.Master" AutoEventWireup="true" CodeBehind="Detail.aspx.cs" Inherits="Kigg.StoryDetailView"%>
 <%@ Import Namespace="Kigg" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
-    <% StoryDetailItem story = ((StoryDetailData)ViewData).Story; %>
+    <% var story = ((StoryDetailData)ViewData).Story; %>
     <% if (story == null) %>
     <% { %>
         <span class="pageMessage">The story does not exists.</span>
@@ -17,10 +17,10 @@
                             <br />
                             kiggs
                         </div>
-                        <div id="kiggIt" class="it" style="display:<%= ((story.HasVoted) ? "none" : "''") %>">
+                        <div id="kiggIt" class="it" style="display:<%= ((story.HasVoted) ? "none" : string.Empty) %>">
                             <a href="javascript:void(0)" onclick="javascript:Story.kigg(<%=story.ID %>, <%=story.VoteCount %>, 'kiggCount', 'kiggIt', 'kigged', 'kigging')">kigg it</a>
                         </div>
-                        <div id="kigged" class="ed" style="display:<%= ((story.HasVoted) ? "''" : "none") %>">
+                        <div id="kigged" class="ed" style="display:<%= ((story.HasVoted) ? string.Empty : "none") %>">
                             kigged
                         </div>
                         <div id="kigging" class="ing" style="display:none">
@@ -42,7 +42,7 @@
                                             <span class="time"><%= story.PublishedAgo %></span> ago,
                                             <% }%>
                                             posted by
-                                            <a href="<%= Url.Action(new { controller = "Story", action = "PostedBy", name = story.PostedBy.Name.UrlEncode(), page = 1 })%>">
+                                            <a href="<%= Url.Action("PostedBy", "Story", new { name = story.PostedBy.Name.UrlEncode(), page = 1 })%>">
                                             <img alt="" src="http://www.gravatar.com/avatar.php?gravatar_id=<%= story.PostedBy.GravatarID %>&size=15" class="gravatar" />
                                             <%= Server.HtmlEncode(story.PostedBy.Name) %>
                                             </a>
@@ -52,7 +52,7 @@
                                             <%= Server.HtmlEncode(story.Description) %>
                                         </div>
                                         <div class="summary">
-                                            <span class="category">category:</span> <%= Html.ActionLink(Server.HtmlEncode(story.Category), new { controller = "Story", action = "Category", name = story.Category.UrlEncode(), page = 1 })%>
+                                            <span class="category">category:</span>  <%= Html.ActionLink<StoryController>(c => c.Category(story.Category.UrlEncode(), 1), story.Category) %>
                                         </div>
                                     </td>
                                 </tr>
@@ -67,7 +67,7 @@
                             <%     { %>
                             <%=         ", " %>
                             <%     } %>
-                            <%=     Html.ActionLink(Server.HtmlEncode(tag), new { controller = "Story", action = "Tag", name = tag.UrlEncode(), page = 1 })%>
+                            <%=     Html.ActionLink<StoryController>(c => c.Tag(tag.UrlEncode(), 1), Server.HtmlEncode(tag))%>
                             <% } %>
                         </span>
                     </td>
@@ -83,7 +83,7 @@
                     <%  foreach(UserItem votedBy in story.VotedBy) %>
                     <%  { %>
                             <span class="user">
-                                <a href="<%= Url.Action(new { controller = "Story", action = "PostedBy", name = votedBy.Name.UrlEncode(), page = 1 })%>">
+                                <a href="<%= Url.Action("PostedBy", "Story", new { name = votedBy.Name.UrlEncode(), page = 1 })%>">
                                     <img alt="" src="http://www.gravatar.com/avatar.php?gravatar_id=<%= votedBy.GravatarID %>&size=15" class="gravatar" />
                                     <%= Server.HtmlEncode(votedBy.Name) %>
                                 </a>
@@ -117,7 +117,7 @@
                             <div class="postedBy">
                                 posted by
                                 <span class="user">
-                                    <a href="<%= Url.Action(new { controller = "Story", action = "PostedBy", name = comment.PostedBy.Name.UrlEncode(), page = 1 })%>">
+                                    <a href="<%= Url.Action("PostedBy", "Story", new { name = comment.PostedBy.Name.UrlEncode(), page = 1 })%>">
                                         <img alt="" src="http://www.gravatar.com/avatar.php?gravatar_id=<%= comment.PostedBy.GravatarID %>&size=15" class="gravatar" />
                                         <%= Server.HtmlEncode(comment.PostedBy.Name) %>
                                     </a>

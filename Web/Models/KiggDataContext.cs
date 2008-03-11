@@ -309,18 +309,18 @@
         /// <returns>Returns the id of the new story</returns>
         public int SubmitStory(string url, string title, int categoryId, string description, string tags, Guid userId)
         {
-            using (TransactionScope ts = new TransactionScope())
+            using (var ts = new TransactionScope())
             {
-                Category category = Categories.FirstOrDefault(c => c.ID == categoryId);
+                var category = Categories.FirstOrDefault(c => c.ID == categoryId);
 
                 if (category == null)
                 {
                     throw new InvalidOperationException("Specified category does not exist.");
                 }
 
-                string urlHash = string.Empty;
+                string urlHash;
 
-                using (MD5 md5 = MD5.Create())
+                using (var md5 = MD5.Create())
                 {
                     byte[] data = Encoding.Default.GetBytes(url.ToUpperInvariant());
                     byte[] hash = md5.ComputeHash(data);
@@ -328,42 +328,45 @@
                     urlHash = Convert.ToBase64String(hash);
                 }
 
-                Story story = Stories.FirstOrDefault(s => s.UrlHash == urlHash);
+                var story = Stories.FirstOrDefault(s => s.UrlHash == urlHash);
 
                 if (story != null)
                 {
                     throw new InvalidOperationException("Specified story already exists.");
                 }
 
-                story = new Story();
-                DateTime now = DateTime.UtcNow;
+                var now = DateTime.UtcNow;
 
-                story.Url = url;
-                story.UrlHash = urlHash;
-                story.Title = title.Trim();
-                story.Description = description.Trim();
-                story.CategoryID = categoryId;
-                story.PostedBy = userId;
-                story.PostedOn = now;
+                story = new Story
+                                    {
+                                        Url = url,
+                                        UrlHash = urlHash,
+                                        Title = title.Trim(),
+                                        Description = description.Trim(),
+                                        CategoryID = categoryId,
+                                        PostedBy = userId,
+                                        PostedOn = now
+                                    };
+
                 Stories.InsertOnSubmit(story);
                 SubmitChanges();
 
                 if (!string.IsNullOrEmpty(tags))
                 {
-                    string[] tagsArray = tags.Split(',');
+                    var tagsArray = tags.Split(',');
 
                     if (tagsArray.Length > 0)
                     {
-                        List<Tag> newTags = new List<Tag>();
-                        List<Tag> allTags = new List<Tag>();
+                        var newTags = new List<Tag>();
+                        var allTags = new List<Tag>();
 
-                        for (int i = 0; i < tagsArray.Length; i++)
+                        for (var i = 0; i < tagsArray.Length; i++)
                         {
-                            string tagName = tagsArray[i].Trim();
+                            var tagName = tagsArray[i].Trim();
 
                             if (tagName.Length > 0)
                             {
-                                Tag tag = Tags.FirstOrDefault(t => t.Name == tagName);
+                                var tag = Tags.FirstOrDefault(t => t.Name == tagName);
 
                                 if (tag == null)
                                 {
@@ -383,9 +386,9 @@
 
                         if (allTags.Count > 0)
                         {
-                            List<StoryTag> storyTags = new List<StoryTag>();
+                            var storyTags = new List<StoryTag>();
 
-                            for (int i = 0; i < allTags.Count; i++)
+                            for (var i = 0; i < allTags.Count; i++)
                             {
                                 storyTags.Add(new StoryTag { StoryID = story.ID, TagID = allTags[i].ID });
                             }
@@ -396,10 +399,7 @@
                     }
                 }
 
-                Vote vote = new Vote();
-                vote.StoryID = story.ID;
-                vote.UserID = userId;
-                vote.Timestamp = now;
+                var vote = new Vote {StoryID = story.ID, UserID = userId, Timestamp = now};
                 Votes.InsertOnSubmit(vote);
 
                 SubmitChanges();
@@ -418,31 +418,28 @@
         /// <param name="qualifyingKigg">The qualifying kigg which is considered to mark a story as published.</param>
         public void KiggStory(int storyId, Guid userId, int qualifyingKigg)
         {
-            using (TransactionScope ts = new TransactionScope())
+            using (var ts = new TransactionScope())
             {
-                Story story = Stories.FirstOrDefault(s => s.ID == storyId);
+                var story = Stories.FirstOrDefault(s => s.ID == storyId);
 
                 if (story == null)
                 {
                     throw new InvalidOperationException("Specified story does not exist.");
                 }
 
-                Vote vote = Votes.FirstOrDefault(v => v.StoryID == storyId && v.UserID == userId);
+                var vote = Votes.FirstOrDefault(v => v.StoryID == storyId && v.UserID == userId);
 
                 if (vote == null)
                 {
-                    int voteCount = Votes.Where(v => v.StoryID == storyId).Count();
-                    DateTime now = DateTime.UtcNow;
+                    var voteCount = Votes.Where(v => v.StoryID == storyId).Count();
+                    var now = DateTime.UtcNow;
 
                     if ((voteCount + 1) == qualifyingKigg)
                     {
                         story.PublishedOn = now;
                     }
 
-                    vote = new Vote();
-                    vote.StoryID = storyId;
-                    vote.UserID = userId;
-                    vote.Timestamp = now;
+                    vote = new Vote {StoryID = storyId, UserID = userId, Timestamp = now};
 
                     Votes.InsertOnSubmit(vote);
                     SubmitChanges();
@@ -460,21 +457,22 @@
         /// <returns>Returns the id of the new comment</returns>
         public int PostComment(int storyId, Guid userId, string content)
         {
-            using (TransactionScope ts = new TransactionScope())
+            using (var ts = new TransactionScope())
             {
-                Story story = Stories.FirstOrDefault(s => s.ID == storyId);
+                var story = Stories.FirstOrDefault(s => s.ID == storyId);
 
                 if (story == null)
                 {
                     throw new InvalidOperationException("Specified story does not exist.");
                 }
 
-                Comment comment = new Comment();
-
-                comment.StoryID = storyId;
-                comment.Content = content.Trim();
-                comment.PostedBy = userId;
-                comment.PostedOn = DateTime.UtcNow;
+                var comment = new Comment
+                                          {
+                                              StoryID = storyId,
+                                              Content = content.Trim(),
+                                              PostedBy = userId,
+                                              PostedOn = DateTime.UtcNow
+                                          };
 
                 Comments.InsertOnSubmit(comment);
                 SubmitChanges();

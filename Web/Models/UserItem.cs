@@ -25,16 +25,16 @@
 
                 byte[] hash;
 
-                using (MD5 md5 = MD5.Create())
+                using (var md5 = MD5.Create())
                 {
-                    byte[] data = Encoding.Default.GetBytes(Email);
+                    var data = Encoding.Default.GetBytes(Email);
 
                     hash = md5.ComputeHash(data);
                 }
 
-                StringBuilder result = new StringBuilder();
+                var result = new StringBuilder();
 
-                for (int i = 0; i < hash.Length; i++)
+                for (var i = 0; i < hash.Length; i++)
                 {
                     result.Append(hash[i].ToString("x2", System.Globalization.CultureInfo.InvariantCulture));
                 }
