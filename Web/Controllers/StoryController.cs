@@ -5,6 +5,7 @@
     using System.Configuration;
     using System.Globalization;
     using System.Text.RegularExpressions;
+    using System.Web.Mvc;
     using System.Web.Security;
 
     /// <summary>
@@ -64,6 +65,7 @@
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
+        [NonAction]
         public void Dispose()
         {
             if (_dataContext != null)
