@@ -35,7 +35,7 @@
 
             using (mocks.Playback())
             {
-                RouteData routeData = routes.GetRouteData(httpContext);
+                var routeData = routes.GetRouteData(httpContext);
 
                 Assert.IsNotNull(routeData);
                 Assert.AreEqual("Story", routeData.Values["Controller"]);
@@ -55,7 +55,7 @@
 
             using (mocks.Playback())
             {
-                RouteData routeData = routes.GetRouteData(httpContext);
+                var routeData = routes.GetRouteData(httpContext);
 
                 Assert.IsNotNull(routeData);
                 Assert.AreEqual("Story", routeData.Values["Controller"]);
@@ -77,7 +77,7 @@
 
             using (mocks.Playback())
             {
-                RouteData routeData = routes.GetRouteData(httpContext);
+                var routeData = routes.GetRouteData(httpContext);
 
                 Assert.IsNotNull(routeData);
                 Assert.AreEqual("Story", routeData.Values["Controller"]);
@@ -99,7 +99,7 @@
 
             using (mocks.Playback())
             {
-                RouteData routeData = routes.GetRouteData(httpContext);
+                var routeData = routes.GetRouteData(httpContext);
 
                 Assert.IsNotNull(routeData);
                 Assert.AreEqual("Story", routeData.Values["Controller"]);
@@ -119,7 +119,7 @@
 
             using (mocks.Playback())
             {
-                RouteData routeData = routes.GetRouteData(httpContext);
+                var routeData = routes.GetRouteData(httpContext);
 
                 Assert.IsNotNull(routeData);
                 Assert.AreEqual("Story", routeData.Values["Controller"]);
@@ -141,7 +141,7 @@
 
             using (mocks.Playback())
             {
-                RouteData routeData = routes.GetRouteData(httpContext);
+                var routeData = routes.GetRouteData(httpContext);
 
                 Assert.IsNotNull(routeData);
                 Assert.AreEqual("Story", routeData.Values["Controller"]);
@@ -163,7 +163,7 @@
 
             using (mocks.Playback())
             {
-                RouteData routeData = routes.GetRouteData(httpContext);
+                var routeData = routes.GetRouteData(httpContext);
 
                 Assert.IsNotNull(routeData);
                 Assert.AreEqual("Story", routeData.Values["Controller"]);
@@ -185,7 +185,7 @@
 
             using (mocks.Playback())
             {
-                RouteData routeData = routes.GetRouteData(httpContext);
+                var routeData = routes.GetRouteData(httpContext);
 
                 Assert.IsNotNull(routeData);
                 Assert.AreEqual("Story", routeData.Values["Controller"]);
@@ -206,7 +206,7 @@
 
             using (mocks.Playback())
             {
-                RouteData routeData = routes.GetRouteData(httpContext);
+                var routeData = routes.GetRouteData(httpContext);
 
                 Assert.IsNotNull(routeData);
                 Assert.AreEqual("Story", routeData.Values["Controller"]);
@@ -226,7 +226,7 @@
 
             using (mocks.Playback())
             {
-                RouteData routeData = routes.GetRouteData(httpContext);
+                var routeData = routes.GetRouteData(httpContext);
 
                 Assert.IsNotNull(routeData);
                 Assert.AreEqual("Story", routeData.Values["Controller"]);
@@ -246,7 +246,7 @@
 
             using (mocks.Playback())
             {
-                RouteData routeData = routes.GetRouteData(httpContext);
+                var routeData = routes.GetRouteData(httpContext);
 
                 Assert.IsNotNull(routeData);
                 Assert.AreEqual("Story", routeData.Values["Controller"]);
@@ -266,7 +266,7 @@
 
             using (mocks.Playback())
             {
-                RouteData routeData = routes.GetRouteData(httpContext);
+                var routeData = routes.GetRouteData(httpContext);
 
                 Assert.IsNotNull(routeData);
                 Assert.AreEqual("User", routeData.Values["Controller"]);
@@ -286,7 +286,7 @@
 
             using (mocks.Playback())
             {
-                RouteData routeData = routes.GetRouteData(httpContext);
+                var routeData = routes.GetRouteData(httpContext);
 
                 Assert.IsNotNull(routeData);
                 Assert.AreEqual("User", routeData.Values["Controller"]);
@@ -306,7 +306,7 @@
 
             using (mocks.Playback())
             {
-                RouteData routeData = routes.GetRouteData(httpContext);
+                var routeData = routes.GetRouteData(httpContext);
 
                 Assert.IsNotNull(routeData);
                 Assert.AreEqual("User", routeData.Values["Controller"]);
@@ -326,7 +326,7 @@
 
             using (mocks.Playback())
             {
-                RouteData routeData = routes.GetRouteData(httpContext);
+                var routeData = routes.GetRouteData(httpContext);
 
                 Assert.IsNotNull(routeData);
                 Assert.AreEqual("User", routeData.Values["Controller"]);

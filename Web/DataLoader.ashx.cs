@@ -88,7 +88,7 @@
 
                 if (xmlDoc.DocumentElement != null)
                 {
-                    XmlNodeList xnlStories = xmlDoc.DocumentElement.SelectNodes("story");
+                    var xnlStories = xmlDoc.DocumentElement.SelectNodes("story");
 
                     if ((xnlStories != null) && (xnlStories.Count > 0))
                     {
@@ -96,12 +96,12 @@
                         {
                             try
                             {
-                                string url = xndStory.Attributes["link"].Value;
-                                string title = xndStory.SelectSingleNode("title").InnerText;
-                                string description = xndStory.SelectSingleNode("description").InnerText;
-                                string categoryName = xndStory.SelectSingleNode("container").Attributes["name"].Value;
-                                int categoryId = _categories.First(c => c.Name == categoryName).ID;
-                                string tag = xndStory.SelectSingleNode("topic").Attributes["name"].Value;
+                                var url = xndStory.Attributes["link"].Value;
+                                var title = xndStory.SelectSingleNode("title").InnerText;
+                                var description = xndStory.SelectSingleNode("description").InnerText;
+                                var categoryName = xndStory.SelectSingleNode("container").Attributes["name"].Value;
+                                var categoryId = _categories.First(c => c.Name == categoryName).ID;
+                                var tag = xndStory.SelectSingleNode("topic").Attributes["name"].Value;
 
                                 db.SubmitStory(url, title, categoryId, description, tag, _currentUserID);
                             }

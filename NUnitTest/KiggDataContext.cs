@@ -252,7 +252,7 @@
 
             if (tempStory != null)
             {
-                using (var ts = new TransactionScope(TransactionScopeOption.RequiresNew))
+                using (new TransactionScope(TransactionScopeOption.RequiresNew))
                 {
                     var id = dataContext.SubmitStory(url, title, 1, description, tags, tempStory.PostedBy);
 
@@ -279,7 +279,7 @@
 
                 if (tempStory2 != null)
                 {
-                    using (var ts = new TransactionScope(TransactionScopeOption.RequiresNew))
+                    using (new TransactionScope(TransactionScopeOption.RequiresNew))
                     {
                         dataContext.KiggStory(tempStory2.ID, tempStory1.PostedBy, 3);
 
@@ -298,7 +298,7 @@
 
             if (tempStory != null)
             {
-                using (var ts = new TransactionScope(TransactionScopeOption.RequiresNew))
+                using (new TransactionScope(TransactionScopeOption.RequiresNew))
                 {
                     var id = dataContext.PostComment(tempStory.ID, tempStory.PostedBy, commentContent);
 

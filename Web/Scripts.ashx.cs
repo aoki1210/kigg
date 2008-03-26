@@ -7,7 +7,6 @@
     using System.Globalization;
     using System.IO;
     using System.IO.Compression;
-    using System.Reflection;
     using System.Web;
 
     public class ScriptHandler : IHttpHandler
@@ -127,9 +126,6 @@
                 cache.SetExpires(DateTime.Now.Add(duration));
                 cache.SetMaxAge(duration);
                 cache.AppendCacheExtension("must-revalidate, proxy-revalidate");
-
-                var maxAgeField = cache.GetType().GetField("_maxAge", BindingFlags.Instance | BindingFlags.NonPublic);
-                maxAgeField.SetValue(cache, duration);
             }
         }
     }
