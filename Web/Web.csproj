@@ -71,6 +71,8 @@
     <Compile Include="DataLoader.ashx.cs">
       <DependentUpon>DataLoader.ashx</DependentUpon>
     </Compile>
+    <Compile Include="Filters\CacheFilter.cs" />
+    <Compile Include="Filters\CompressFilter.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -202,7 +204,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>51731</DevelopmentServerPort>
+          <DevelopmentServerPort>52342</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>

@@ -37,6 +37,7 @@
         /// <param name="userName">Name of the user (Mandatory).</param>
         /// <param name="password">The password (Mandatory).</param>
         /// <param name="rememberMe">If <c>true</c> a persistent cookie is generated.</param>
+        [CompressFilter]
         public void Login(string userName, string password, bool rememberMe)
         {
             using (CodeBenchmark.Start)
@@ -76,6 +77,7 @@
         /// <summary>
         /// Logouts the currently logged in user. This is an Ajax Operation.
         /// </summary>
+        [CompressFilter]
         public void Logout()
         {
             using (CodeBenchmark.Start)
@@ -108,6 +110,7 @@
         /// Sends the newly generated random password. This is an Ajax Operation.
         /// </summary>
         /// <param name="email">The email (Mandatory).</param>
+        [CompressFilter]
         public void SendPassword(string email)
         {
             using (CodeBenchmark.Start)
@@ -124,7 +127,7 @@
                 }
                 else
                 {
-                    string userName = UserManager.GetUserNameByEmail(email);
+                    var userName = UserManager.GetUserNameByEmail(email);
 
                     if (string.IsNullOrEmpty(userName))
                     {
@@ -132,9 +135,9 @@
                     }
                     else
                     {
-                        MembershipUser user = UserManager.GetUser(userName, false);
+                        var user = UserManager.GetUser(userName, false);
 
-                        string password = user.ResetPassword();
+                        var password = user.ResetPassword();
 
                         //The following try block is required for TDD 
                         try
@@ -163,6 +166,7 @@
         /// <param name="userName">Name of the user (Mandatory and must be unique).</param>
         /// <param name="password">The password.</param>
         /// <param name="email">The email (Mandatory and must be unique).</param>
+        [CompressFilter]
         public void Signup(string userName, string password, string email)
         {
             using (CodeBenchmark.Start)
@@ -195,7 +199,7 @@
                     {
                         MembershipCreateStatus status;
 
-                        MembershipUser user = UserManager.CreateUser(userName, password, email, null, null, true, null, out status);
+                        var user = UserManager.CreateUser(userName, password, email, null, null, true, null, out status);
 
                         if (user == null)
                         {
@@ -245,7 +249,7 @@
 
             if (string.IsNullOrEmpty(body))
             {
-                string file = System.Web.HttpContext.Current.Server.MapPath("~/MailTemplates/Password.txt");
+                var file = System.Web.HttpContext.Current.Server.MapPath("~/MailTemplates/Password.txt");
                 body = File.ReadAllText(file);
 
                 HttpContext.Cache[CacheKey] = body;
@@ -264,7 +268,7 @@
 
             if (body == null)
             {
-                string file = System.Web.HttpContext.Current.Server.MapPath("~/MailTemplates/Signup.txt");
+                var file = System.Web.HttpContext.Current.Server.MapPath("~/MailTemplates/Signup.txt");
                 body = File.ReadAllText(file);
 
                 HttpContext.Cache[CacheKey] = body;

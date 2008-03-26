@@ -17,7 +17,7 @@
 
         public static void RegisterRoutes(RouteCollection routes)
         {
-            int iisVersion = Convert.ToInt32(ConfigurationManager.AppSettings["IISVersion"], System.Globalization.CultureInfo.InvariantCulture);
+            var iisVersion = Convert.ToInt32(ConfigurationManager.AppSettings["IISVersion"], System.Globalization.CultureInfo.InvariantCulture);
 
             if (iisVersion >= 7)
             {

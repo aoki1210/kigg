@@ -6,7 +6,6 @@ namespace Kigg
     using System.Diagnostics;
     using System.Globalization;
     using System.IO;
-    using System.Reflection;
     using System.Text;
     using System.Web;
 
@@ -42,52 +41,52 @@ namespace Kigg
         [DebuggerStepThrough]
         private CodeBenchmark()
         {
-            if (_enabled)
-            {
-                _watch = new Stopwatch();
-                _watch.Start();
-            }
+            if (!_enabled) return;
+
+            _watch = new Stopwatch();
+            _watch.Start();
         }
 
         [DebuggerStepThrough]
         public void Dispose()
         {
-            if (_enabled)
-            {
-                _watch.Stop();
-                Flush();
-            }
+            if (!_enabled) return;
+
+            _watch.Stop();
+            Flush();
         }
 
         private void Flush()
         {
-            DateTime end = DateTime.Now;
-            DateTime start = end.AddMilliseconds(-_watch.ElapsedMilliseconds);
+            var context = HttpContext.Current;
 
-            HttpContext context = HttpContext.Current;
+            if (context == null) return;
 
-            if (context != null)
+            var end = DateTime.Now;
+            var start = end.AddMilliseconds(-_watch.ElapsedMilliseconds);
+
+            var userName = "Anonymous";
+
+            var ipAddress = context.Request.UserHostAddress;
+            var url = context.Request.RawUrl;
+
+            if ((context.User != null) && (context.User.Identity != null))
             {
-                var userName = "Anonymous";
-
-                var ipAddress = context.Request.UserHostAddress;
-                var url = context.Request.RawUrl;
-
                 if (context.User.Identity.IsAuthenticated)
                 {
                     userName = context.User.Identity.Name;
                 }
-
-                var methodInfo = GetCallingMethodDetails(_includeParameters);
-
-                File.AppendAllText  (  _logFile,
-                                       string.Format(
-                                                        CultureInfo.InvariantCulture,
-                                                        "\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\"",
-                                                        userName, ipAddress, url, methodInfo, start, end, _watch.Elapsed
-                                                    )
-                                    );
             }
+
+            var methodInfo = GetCallingMethodDetails(_includeParameters);
+
+            File.AppendAllText  (  _logFile,
+                                   string.Format(
+                                       CultureInfo.InvariantCulture,
+                                       "\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\"",
+                                       userName, ipAddress, url, methodInfo, start, end, _watch.Elapsed
+                                       )
+                );
         }
 
         private static string GetCallingMethodDetails(bool includeParameters)
@@ -106,7 +105,7 @@ namespace Kigg
 
             if (includeParameters)
             {
-                ParameterInfo[] paramInfos = method.GetParameters();
+                var paramInfos = method.GetParameters();
 
                 if ((paramInfos != null) && (paramInfos.Length > 0))
                 {
@@ -116,7 +115,7 @@ namespace Kigg
 
                     if (paramInfos.Length > 1)
                     {
-                        for (int j = 1; j < paramInfos.Length; j++)
+                        for (var j = 1; j < paramInfos.Length; j++)
                         {
                             output.AppendFormat(", {0} {1}", paramInfos[j].ParameterType, paramInfos[j].Name);
                         }

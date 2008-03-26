@@ -79,6 +79,8 @@
         /// </summary>
         /// <param name="name">The category name. If the parameter is blank it shows all the stories regarless the category.</param>
         /// <param name="page">The page number (1 based). If not specifed then shows the first page.</param>
+        [CompressFilter(Order = 1)]
+        [CacheFilter(Order = 2)]
         public void Category(string name, int? page)
         {
             using (CodeBenchmark.Start)
@@ -115,6 +117,7 @@
         /// List all upcoming stories regardless the category
         /// </summary>
         /// <param name="page">The page number (1 based). If not specifed then shows the first page.</param>
+        [CompressFilter]
         public void Upcoming(int? page)
         {
             using (CodeBenchmark.Start)
@@ -135,6 +138,7 @@
         /// </summary>
         /// <param name="name">The tag name. If the parameter is blank it redirect to category action.</param>
         /// <param name="page">The page number (1 based). If not specifed then shows the first page.</param>
+        [CompressFilter]
         public void Tag(string name, int? page)
         {
             if (string.IsNullOrEmpty(name))
@@ -169,6 +173,7 @@
         /// </summary>
         /// <param name="name">The name of the user. If the parameter is blank it redirect to category action.</param>
         /// <param name="page">The page number (1 based). If not specifed then shows the first page.</param>
+        [CompressFilter]
         public void PostedBy(string name, int? page)
         {
             if (string.IsNullOrEmpty(name))
@@ -203,6 +208,7 @@
         /// </summary>
         /// <param name="q">The Search Query</param>
         /// <param name="page">The page number (1 based). If not specifed then shows the first page.</param>
+        [CompressFilter]
         public void Search(string q, int? page)
         {
             if (string.IsNullOrEmpty(q))
@@ -230,6 +236,7 @@
         /// View the detail of the specified story.
         /// </summary>
         /// <param name="id">The story id (Mandatory).</param>
+        [CompressFilter]
         public void Detail(int id)
         {
             using (CodeBenchmark.Start)
@@ -251,6 +258,7 @@
         /// <param name="storyCategoryId">The story category id (Mandatory).</param>
         /// <param name="storyDescription">The story description (Mandatory).</param>
         /// <param name="storyTags">The story tags (Optional).</param>
+        [CompressFilter]
         public void Submit(string storyUrl, string storyTitle, int storyCategoryId, string storyDescription, string storyTags)
         {
             using (CodeBenchmark.Start)
@@ -299,6 +307,7 @@
         /// This is an Ajax Operation.
         /// </summary>
         /// <param name="storyId">The story id(Mandatory).</param>
+        [CompressFilter]
         public void Kigg(int storyId)
         {
             using (CodeBenchmark.Start)
@@ -332,6 +341,7 @@
         /// </summary>
         /// <param name="storyId">The story id (Mandatory).</param>
         /// <param name="commentContent">Content of the comment (Mandatory).</param>
+        [CompressFilter]
         public void Comment(int storyId, string commentContent)
         {
             using (CodeBenchmark.Start)
