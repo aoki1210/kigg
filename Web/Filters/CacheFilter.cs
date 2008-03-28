@@ -25,8 +25,8 @@
         {
             if (Duration <= 0) return;
 
-            var cache = filterContext.HttpContext.Response.Cache;
-            var cacheDuration = TimeSpan.FromSeconds(Duration);
+            HttpCachePolicyBase cache = filterContext.HttpContext.Response.Cache;
+            TimeSpan cacheDuration = TimeSpan.FromSeconds(Duration);
 
             cache.SetCacheability(HttpCacheability.Public);
             cache.SetExpires(DateTime.Now.Add(cacheDuration));

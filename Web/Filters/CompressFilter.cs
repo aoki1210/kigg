@@ -9,35 +9,25 @@ namespace Kigg
     {
         public override void OnActionExecuting(FilterExecutingContext filterContext)
         {
-            var request = filterContext.HttpContext.Request;
+            HttpRequestBase request = filterContext.HttpContext.Request;
 
-            //It seems the Abstraction Response does not implement the AddHeader
-            //of the original response object, maybe in future we will have it.
+            string acceptEncoding = request.Headers["Accept-Encoding"];
 
-            //So we cant use the following.
-            //var response = filterContext.HttpContext.Response;
+            if (string.IsNullOrEmpty(acceptEncoding)) return;
 
-            //Instead we have to use the Old HttpContext
-            if (HttpContext.Current == null) return;
+            acceptEncoding = acceptEncoding.ToUpperInvariant();
 
-            var response = HttpContext.Current.Response;
+            HttpResponseBase response = filterContext.HttpContext.Response;
 
-            var acceptEncoding = request.Headers["Accept-Encoding"];
-
-            if (!string.IsNullOrEmpty(acceptEncoding))
+            if (acceptEncoding.Contains("GZIP"))
             {
-                acceptEncoding = acceptEncoding.ToUpperInvariant();
-
-                if (acceptEncoding.Contains("GZIP"))
-                {
-                    response.AddHeader("Content-encoding", "gzip");
-                    response.Filter = new GZipStream(response.Filter, CompressionMode.Compress);
-                }
-                else if (acceptEncoding.Contains("DEFLATE"))
-                {
-                    response.AddHeader("Content-encoding", "deflate");
-                    response.Filter = new DeflateStream(response.Filter, CompressionMode.Compress);
-                }
+                response.AppendHeader("Content-encoding", "gzip");
+                response.Filter = new GZipStream(response.Filter, CompressionMode.Compress);
+            }
+            else if (acceptEncoding.Contains("DEFLATE"))
+            {
+                response.AppendHeader("Content-encoding", "deflate");
+                response.Filter = new DeflateStream(response.Filter, CompressionMode.Compress);
             }
         }
     }
