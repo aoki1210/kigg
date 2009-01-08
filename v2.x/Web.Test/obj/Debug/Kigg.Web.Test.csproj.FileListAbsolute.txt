@@ -1,0 +1,17 @@
+C:\My Works\Projects\Kigg\Web.Test\bin\Debug\Kigg.Web.Test.dll
+C:\My Works\Projects\Kigg\Web.Test\bin\Debug\Kigg.Web.Test.pdb
+C:\My Works\Projects\Kigg\Web.Test\bin\Debug\Kigg.Core.dll
+C:\My Works\Projects\Kigg\Web.Test\bin\Debug\Kigg.Test.Infrastructure.dll
+C:\My Works\Projects\Kigg\Web.Test\bin\Debug\Kigg.Web.dll
+C:\My Works\Projects\Kigg\Web.Test\bin\Debug\Moq.dll
+C:\My Works\Projects\Kigg\Web.Test\bin\Debug\xunit.dll
+C:\My Works\Projects\Kigg\Web.Test\bin\Debug\xunit.extensions.dll
+C:\My Works\Projects\Kigg\Web.Test\bin\Debug\Kigg.Test.Infrastructure.pdb
+C:\My Works\Projects\Kigg\Web.Test\bin\Debug\Moq.xml
+C:\My Works\Projects\Kigg\Web.Test\bin\Debug\xunit.extensions.xml
+C:\My Works\Projects\Kigg\Web.Test\bin\Debug\Kigg.Core.pdb
+C:\My Works\Projects\Kigg\Web.Test\bin\Debug\xunit.xml
+C:\My Works\Projects\Kigg\Web.Test\bin\Debug\Kigg.Web.pdb
+C:\My Works\Projects\Kigg\Web.Test\obj\Debug\ResolveAssemblyReference.cache
+C:\My Works\Projects\Kigg\Web.Test\obj\Debug\Kigg.Web.Test.dll
+C:\My Works\Projects\Kigg\Web.Test\obj\Debug\Kigg.Web.Test.pdb

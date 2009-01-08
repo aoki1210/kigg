@@ -1,0 +1,6 @@
+Possible spam story submitted:
+
+Title: <%=title%>
+Site Url: <%=siteUrl%>
+Original Url: <%=originalUrl%>
+User: <%=userName%>
