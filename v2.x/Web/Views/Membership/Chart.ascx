@@ -1,0 +1,1 @@
+﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="Chart.ascx.cs" Inherits="Kigg.Web.Chart" %>
