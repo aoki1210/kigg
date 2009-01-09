@@ -152,13 +152,7 @@ namespace Kigg
             set;
         }
 
-        public bool CaptchaEnabledForStorySubmit
-        {
-            get;
-            set;
-        }
-
-        public bool CaptchaEnabledForCommentSubmit
+        public decimal MaximumUserScoreToShowCaptcha
         {
             get;
             set;

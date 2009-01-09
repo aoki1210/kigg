@@ -127,12 +127,7 @@
             get;
         }
 
-        bool CaptchaEnabledForStorySubmit
-        {
-            get;
-        }
-
-        bool CaptchaEnabledForCommentSubmit
+        decimal MaximumUserScoreToShowCaptcha
         {
             get;
         }
