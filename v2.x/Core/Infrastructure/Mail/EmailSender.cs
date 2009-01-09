@@ -179,7 +179,7 @@ namespace Kigg.Infrastructure
                 {
                     isFirstColumn = true;
 
-                    foreach (KeyValuePair<string, double> pair in stories.ElementAt(0).Weights)
+                    foreach (KeyValuePair<string, double> pair in ps.Weights)
                     {
                         if (!isFirstColumn)
                         {

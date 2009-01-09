@@ -41,6 +41,11 @@ namespace Kigg.DomainObjects
             return IsAdministrator(user) || IsModerator(user);
         }
 
+        public static bool ShouldHideCaptcha(this IUser user)
+        {
+            return (user != null) && (!IsPublicUser(user) || (user.CurrentScore > IoC.Resolve<IConfigurationSettings>().MaximumUserScoreToShowCaptcha));
+        }
+
         private static bool HasRole(IUser user, Roles role)
         {
             return (user.Role & role) == role;
