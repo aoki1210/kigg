@@ -74,8 +74,7 @@ namespace Kigg.Test.Infrastructure
             settings.ExpectGet(s => s.SendMailWhenPossibleSpamCommentSubmitted).Returns(true);
             settings.ExpectGet(s => s.PublishedStoriesFeedBurnerUrl).Returns("http://feeds.feedburner.com/Dotnetshoutout-Published");
             settings.ExpectGet(s => s.UpcomingStoriesFeedBurnerUrl).Returns("http://feeds.feedburner.com/Dotnetshoutout-Upcoming");
-            settings.ExpectGet(s => s.CaptchaEnabledForStorySubmit).Returns(true);
-            settings.ExpectGet(s => s.CaptchaEnabledForCommentSubmit).Returns(true);
+            settings.ExpectGet(s => s.MaximumUserScoreToShowCaptcha).Returns(25);
         }
 
         public virtual void Dispose()

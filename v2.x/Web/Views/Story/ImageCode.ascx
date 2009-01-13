@@ -31,31 +31,31 @@
         <p>
             <label for="txtBorderColor">Border color:</label>
             <input id="txtBorderColor" type="text" maxlength="6"/>
-            <input id="hidBorderColor" type="hidden" value="<%= ImageHandler.DefaultBorderColor %>"/>
+            <input id="hidBorderColor" type="hidden" value="<%= ViewData.Model.CounterColors.BorderColor %>"/>
             <span id="spnBorderColor" class="color"></span>
         </p>
         <p>
             <label for="txtTextBackColor"><%= ViewData.Model.PromoteText %> Backcolor:</label>
             <input id="txtTextBackColor" type="text" maxlength="6"/>
-            <input id="hidTextBackColor" type="hidden" value="<%= ImageHandler.DefaultTextBackColor %>"/>
+            <input id="hidTextBackColor" type="hidden" value="<%= ViewData.Model.CounterColors.TextBackColor %>"/>
             <span id="spnTextBackColor" class="color"></span>
         </p>
         <p>
             <label for="txtTextForeColor"><%= ViewData.Model.PromoteText %> Forecolor:</label>
             <input id="txtTextForeColor" type="text" maxlength="6"/>
-            <input id="hidTextForeColor" type="hidden" value="<%= ImageHandler.DefaultTextForeColor %>"/>
+            <input id="hidTextForeColor" type="hidden" value="<%= ViewData.Model.CounterColors.TextForeColor %>"/>
             <span id="spnTextForeColor" class="color"></span>
         </p>
         <p>
-            <label for="txtCountBackColor">Counter Backcolor:</label>
+            <label for="txtCountBackColor">Count Backcolor:</label>
             <input id="txtCountBackColor" type="text" maxlength="6"/>
-            <input id="hidCountBackColor" type="hidden" value="<%= ImageHandler.DefaultCountBackColor %>"/>
+            <input id="hidCountBackColor" type="hidden" value="<%= ViewData.Model.CounterColors.CountBackColor %>"/>
             <span id="spnCountBackColor" class="color"></span>
         </p>
         <p>
-            <label for="txtCountForeColor">Counter Forecolor:</label>
+            <label for="txtCountForeColor">Count Forecolor:</label>
             <input id="txtCountForeColor" type="text" maxlength="6"/>
-            <input id="hidCountForeColor" type="hidden" value="<%= ImageHandler.DefaultCountForeColor %>"/>
+            <input id="hidCountForeColor" type="hidden" value="<%= ViewData.Model.CounterColors.CountForeColor %>"/>
             <span id="spnCountForeColor" class="color"></span>
         </p>
     </div>

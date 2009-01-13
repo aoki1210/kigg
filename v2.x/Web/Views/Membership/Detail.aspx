@@ -69,7 +69,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Reputation:</td>
+                                    <td>Score:</td>
                                     <td><%= user.CurrentScore.ToString(FormatStrings.UserScore) %></td>
                                 </tr>
                                 <tr>

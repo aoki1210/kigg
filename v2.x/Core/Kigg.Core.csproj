@@ -88,7 +88,7 @@
     <Compile Include="Service\PublishedStory.cs" />
     <Compile Include="Service\StoryWeightCalculator\KnownSourceWeight.cs" />
     <Compile Include="Service\StoryWeightCalculator\StoryWeightBaseCalculator.cs" />
-    <Compile Include="Service\StoryWeightCalculator\UserReputationWeight.cs" />
+    <Compile Include="Service\StoryWeightCalculator\UserScoreWeight.cs" />
     <Compile Include="Service\StoryWeightCalculator\ViewWeight.cs" />
     <Compile Include="Service\StoryWeightCalculator\VoteWeight.cs" />
     <Compile Include="Service\UserScoreTable.cs" />

@@ -7,11 +7,11 @@
     <meta id="metaDescription" runat="server" name="description" content=""/>
     <meta name="robots" content="index,follow"/>
     <title></title>
-    <link href="<%= Url.Asset("css") %>" rel="stylesheet" type="text/css"/>
+    <link href="<%= Url.Asset("css").Replace("&", "&amp;") %>" rel="stylesheet" type="text/css"/>
     <link href="<%= Url.Image("fav.ico")%>" rel="shortcut icon" type="image/x-icon"/>
     <link href="<%= Url.Image("fav.ico")%>" rel="icon" type="image/x-icon"/>
     <link href="<%= Url.Content("~/opensearch.axd")%>" title="<%= ViewData.Model.SiteTitle %>" rel="search" type="application/opensearchdescription+xml"/>
-    <script src="<%= Url.Asset("js1") %>" type="text/javascript"></script>
+    <script src="<%= Url.Asset("js1").Replace("&", "&amp;") %>" type="text/javascript"></script>
     <asp:ContentPlaceHolder ID="HeadPlaceHolder" runat="server"></asp:ContentPlaceHolder>
     <script runat="server">
 
@@ -143,6 +143,7 @@
                 <% Html.RenderAction<MembershipController>(c => c.TopTabs()); %>
                 <div class="divider"></div>
                 <% Html.RenderAction<TagController>(c => c.Tabs()); %>
+                <div class="divider"></div>
             </div>
             <div id="content">
                 <asp:ContentPlaceHolder ID="MainContentPlaceHolder" runat="server"></asp:ContentPlaceHolder>
@@ -150,8 +151,15 @@
             <div class="clear"></div>
         </div>
         <div id="footer">
-            <p><a href="http://www.codeplex.com/Kigg" target="_blank">project home</a> | <a href="http://www.codeplex.com/Kigg/WorkItem/List.aspx" target="_blank">report a bug</a> | <a href="http://dotnetslackers.com/Community/forums/kigg/97.aspx" target="_blank">disscuss</a> | <a href="<%= Url.RouteUrl("About") %>">about us</a> | <a href="<%= Url.RouteUrl("Contact") %>">contact us</a></p>
-            <p> © <%= ViewData.Model.SiteTitle %>. <%= DateTime.Today.Year.ToString("0000") %> - Content posted by <%= ViewData.Model.SiteTitle %> users is <a target="_blank" rel="license" href="http://creativecommons.org/licenses/publicdomain/">dedicated to the public domain.</a></p>
+            <div style="float:left;padding-left:10px">
+                <p><a href="http://www.codeplex.com/Kigg" target="_blank">project home</a> | <a href="http://www.codeplex.com/Kigg/WorkItem/List.aspx" target="_blank">report a bug</a> | <a href="http://dotnetslackers.com/Community/forums/kigg/97.aspx" target="_blank">disscuss</a> | <a href="<%= Url.RouteUrl("About") %>">about us</a> | <a href="<%= Url.RouteUrl("Contact") %>">contact us</a></p>
+                <p> © <%= ViewData.Model.SiteTitle %>. <%= DateTime.Today.Year.ToString("0000") %> - Content posted by <%= ViewData.Model.SiteTitle %> users is <a target="_blank" rel="license" href="http://creativecommons.org/licenses/publicdomain/">dedicated to the public domain.</a></p>
+            </div>
+            <div style="float:right;padding-right:10px">
+                <a href="http://www.orcsweb.com" target="_blank">
+                    <img alt="Powered By ORCS Web" style="border:0px;padding-top:10px" src="<%= Url.Image("OrcsWeb.png") %>"/>
+                </a>
+            </div>
         </div>
     </div>
     <div id="confirmationBox"></div>

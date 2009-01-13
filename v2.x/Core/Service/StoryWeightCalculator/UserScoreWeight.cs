@@ -7,23 +7,23 @@ namespace Kigg.Service
     using DomainObjects;
     using Repository;
 
-    public class UserReputationWeight : StoryWeightBaseCalculator
+    public class UserScoreWeight : StoryWeightBaseCalculator
     {
-        private readonly float _reputationPercent;
+        private readonly float _scorePercent;
         private readonly float _adminMultiply;
         private readonly float _moderatorMultiply;
 
         private readonly IVoteRepository _voteRepository;
 
-        public UserReputationWeight(IVoteRepository voteRepository, float reputationPercent, float adminMultiply, float moderatorMultiply) : base("User-Reputation")
+        public UserScoreWeight(IVoteRepository voteRepository, float scorePercent, float adminMultiply, float moderatorMultiply): base("User-Score")
         {
             Check.Argument.IsNotNull(voteRepository, "voteRepository");
-            Check.Argument.IsNotNegative(reputationPercent, "reputationPercent");
+            Check.Argument.IsNotNegative(scorePercent, "scorePercent");
             Check.Argument.IsNotNegative(adminMultiply, "adminMultiply");
             Check.Argument.IsNotNegative(moderatorMultiply, "moderatorMultiply");
 
             _voteRepository = voteRepository;
-            _reputationPercent = reputationPercent;
+            _scorePercent = scorePercent;
             _adminMultiply = adminMultiply;
             _moderatorMultiply = moderatorMultiply;
         }
@@ -33,18 +33,18 @@ namespace Kigg.Service
             Check.Argument.IsNotNull(story, "story");
 
             double maxScore = double.MinValue;
-            double userReputationScore = 0;
+            double userScore = 0;
 
             IEnumerable<IUser> users = _voteRepository.FindAfter(story.Id, story.LastProcessedAt ?? story.CreatedAt).Select(v => v.ByUser);
 
             foreach (IUser user in users.Where(u => u.IsPublicUser()))
             {
-                double score = (Convert.ToDouble(user.CurrentScore) * _reputationPercent);
+                double score = (Convert.ToDouble(user.CurrentScore) * _scorePercent);
 
                 // Ignore bad users
                 if (score > 0)
                 {
-                    userReputationScore += score;
+                    userScore += score;
 
                     if (score > maxScore)
                     {
@@ -68,10 +68,10 @@ namespace Kigg.Service
                     users.Where(u => u.IsModerator()).ForEach(u => modaratorScore += (maxScore * _moderatorMultiply));
                 }
 
-                userReputationScore += (adminScore + modaratorScore);
+                userScore += (adminScore + modaratorScore);
             }
 
-            return userReputationScore;
+            return userScore;
         }
     }
 }

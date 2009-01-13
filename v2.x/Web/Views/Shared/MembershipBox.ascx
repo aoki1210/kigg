@@ -126,7 +126,7 @@
                         </p>
                         <p>
                             <label for="txtSignupPassword" class="label">Password:</label>
-                            <input id="txtSignupPassword" name="password" type="password" class="textBox"/>
+                            <input id="txtSignupPassword" name="password" type="text" class="textBox"/>
                             <span class="error"></span>
                         </p>
                         <p>

@@ -68,5 +68,27 @@ namespace Kigg.Core.Test
 
             Assert.True(_user.Object.CanModerate());
         }
+
+        [Fact]
+        public void ShouldHideCaptcha_Should_Be_False_When_Use_Is_Null()
+        {
+            Assert.False(((IUser) null).ShouldHideCaptcha());
+        }
+
+        [Fact]
+        public void ShouldHideCaptcha_Should_Be_True_When_Use_Is_Not_Public_User()
+        {
+            _user.ExpectGet(u => u.Role).Returns(Roles.Bot);
+
+            Assert.True(_user.Object.ShouldHideCaptcha());
+        }
+
+        [Fact]
+        public void ShouldHideCaptcha_Should_Be_True_When_User_Score_Is_More_Than_Settings_MaximumUserScoreToShowCaptcha()
+        {
+            _user.ExpectGet(u => u.CurrentScore).Returns(settings.Object.MaximumUserScoreToShowCaptcha + 1);
+
+            Assert.True(_user.Object.ShouldHideCaptcha());
+        }
     }
 }

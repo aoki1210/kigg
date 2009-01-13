@@ -1298,6 +1298,28 @@ form
     height:24px;
 }
 
+#faq
+{
+    clear:left;
+}
+
+#faq > li
+{
+    padding:4px 0px 4px 0px;
+}
+
+#faq .q
+{
+    padding-top:2px;
+    font-size:1.2em;
+}
+
+#faq .ans
+{
+    padding-top:4px;
+    font-size:1.2em;
+}
+
 #footer
 {
     position:absolute;
@@ -1307,7 +1329,6 @@ form
     border-top:solid 7px #f60;
     background-color:#404040;
     color:#fff;
-    text-align:center;
     vertical-align:middle;
     width:100%;
 }
