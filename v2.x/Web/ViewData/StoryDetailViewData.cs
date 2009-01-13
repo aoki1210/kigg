@@ -21,5 +21,11 @@ namespace Kigg.Web
             get;
             set;
         }
+
+        public DefaultColors CounterColors
+        {
+            get;
+            set;
+        }
     }
 }

@@ -9,19 +9,19 @@ namespace Kigg.Core.Test
     using Repository;
     using Service;
 
-    public class UserReputationWeightFixture
+    public class UserScoreWeightFixture
     {
-        private const float ReputationPercent = 0.01f;
+        private const float ScorePercent = 0.01f;
         private const float AdminMultiply = 4f;
         private const float ModaratorMultiply = 2f;
 
         private readonly Mock<IVoteRepository> _repository;
-        private readonly UserReputationWeight _strategy;
+        private readonly UserScoreWeight _strategy;
 
-        public UserReputationWeightFixture()
+        public UserScoreWeightFixture()
         {
             _repository = new Mock<IVoteRepository>();
-            _strategy = new UserReputationWeight(_repository.Object, ReputationPercent, AdminMultiply, ModaratorMultiply);
+            _strategy = new UserScoreWeight(_repository.Object, ScorePercent, AdminMultiply, ModaratorMultiply);
         }
 
         [Fact]
@@ -66,11 +66,11 @@ namespace Kigg.Core.Test
 
             Assert.Equal(
                             (
-                                (Convert.ToDouble(user1.Object.CurrentScore) * ReputationPercent) +
-                                (Convert.ToDouble(user2.Object.CurrentScore) * ReputationPercent) +
-                                (Convert.ToDouble(user3.Object.CurrentScore) * ReputationPercent) +
-                                ((Convert.ToDouble(user3.Object.CurrentScore) * ReputationPercent) * ModaratorMultiply) +
-                                ((Convert.ToDouble(user3.Object.CurrentScore) * ReputationPercent) * AdminMultiply)
+                                (Convert.ToDouble(user1.Object.CurrentScore) * ScorePercent) +
+                                (Convert.ToDouble(user2.Object.CurrentScore) * ScorePercent) +
+                                (Convert.ToDouble(user3.Object.CurrentScore) * ScorePercent) +
+                                ((Convert.ToDouble(user3.Object.CurrentScore) * ScorePercent) * ModaratorMultiply) +
+                                ((Convert.ToDouble(user3.Object.CurrentScore) * ScorePercent) * AdminMultiply)
                             ), 
                             _strategy.Calculate(SystemTime.Now(), story.Object)
                         );

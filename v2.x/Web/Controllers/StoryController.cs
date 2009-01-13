@@ -43,6 +43,12 @@ namespace Kigg.Web
             set;
         }
 
+        public DefaultColors CounterColors
+        {
+            get;
+            set;
+        }
+
         [AutoRefresh, Compress]
         public ActionResult Published(int? page)
         {
@@ -243,13 +249,14 @@ namespace Kigg.Web
             }
 
             StoryDetailViewData viewData = CreateStoryViewData<StoryDetailViewData>();
-            viewData.CaptchaEnabled = Settings.CaptchaEnabledForCommentSubmit;
+            viewData.CaptchaEnabled = !CurrentUser.ShouldHideCaptcha();
 
             if (story != null)
             {
                 viewData.Title = "{0} - {1}".FormatWith(Settings.SiteTitle, story.Title);
                 viewData.MetaDescription = story.StrippedDescription();
                 viewData.Story = story;
+                viewData.CounterColors = CounterColors;
             }
 
             return View(viewData);
@@ -276,7 +283,7 @@ namespace Kigg.Web
             viewData.Url = url;
             viewData.Title = title;
             viewData.AutoDiscover = Settings.AutoDiscoverContent;
-            viewData.CaptchaEnabled = Settings.CaptchaEnabledForStorySubmit;
+            viewData.CaptchaEnabled = !CurrentUser.ShouldHideCaptcha();
 
             if (isValidUrl)
             {
@@ -345,7 +352,7 @@ namespace Kigg.Web
         {
             string captchaChallenge = null;
             string captchaResponse = null;
-            bool captchaEnabled = Settings.CaptchaEnabledForStorySubmit;
+            bool captchaEnabled = !CurrentUser.ShouldHideCaptcha();
 
             if (captchaEnabled)
             {

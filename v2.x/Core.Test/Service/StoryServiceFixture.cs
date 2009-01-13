@@ -29,7 +29,7 @@ namespace Kigg.Core.Test
         private readonly Mock<IStoryWeightCalculator> _voteStrategy;
         private readonly Mock<IStoryWeightCalculator> _commentStrategy;
         private readonly Mock<IStoryWeightCalculator> _viewStrategy;
-        private readonly Mock<IStoryWeightCalculator> _userReputationStrategy;
+        private readonly Mock<IStoryWeightCalculator> _userScoreStrategy;
         private readonly Mock<IStoryWeightCalculator> _freshnessStrategy;
         private readonly Mock<IStoryWeightCalculator> _knownSourceStrategy;
 
@@ -57,8 +57,8 @@ namespace Kigg.Core.Test
             _viewStrategy = new Mock<IStoryWeightCalculator>();
             _viewStrategy.ExpectGet(s => s.Name).Returns("View");
 
-            _userReputationStrategy = new Mock<IStoryWeightCalculator>();
-            _userReputationStrategy.ExpectGet(s => s.Name).Returns("User-Reputation");
+            _userScoreStrategy = new Mock<IStoryWeightCalculator>();
+            _userScoreStrategy.ExpectGet(s => s.Name).Returns("User-Score");
 
             _knownSourceStrategy = new Mock<IStoryWeightCalculator>();
             _knownSourceStrategy.ExpectGet(s => s.Name).Returns("Known-Source");
@@ -66,7 +66,7 @@ namespace Kigg.Core.Test
             _freshnessStrategy = new Mock<IStoryWeightCalculator>();
             _freshnessStrategy.ExpectGet(s => s.Name).Returns("Freshness");
 
-            _storyService = new StoryService(settings.Object, _userScoreService.Object, _factory.Object, _categoryRepository.Object, _tagRepository.Object, _storyRepository.Object, _markAsSpamRepository.Object, _spamProtection.Object, _emailSender.Object, _contentService.Object, _htmlSanitizer.Object, thumbnail.Object, new []{ _voteStrategy.Object, _commentStrategy.Object, _viewStrategy.Object, _userReputationStrategy.Object, _knownSourceStrategy.Object, _freshnessStrategy.Object });
+            _storyService = new StoryService(settings.Object, _userScoreService.Object, _factory.Object, _categoryRepository.Object, _tagRepository.Object, _storyRepository.Object, _markAsSpamRepository.Object, _spamProtection.Object, _emailSender.Object, _contentService.Object, _htmlSanitizer.Object, thumbnail.Object, new []{ _voteStrategy.Object, _commentStrategy.Object, _viewStrategy.Object, _userScoreStrategy.Object, _knownSourceStrategy.Object, _freshnessStrategy.Object });
         }
 
         [Fact]
@@ -731,7 +731,7 @@ namespace Kigg.Core.Test
             _voteStrategy.Verify();
             _commentStrategy.Verify();
             _viewStrategy.Verify();
-            _userReputationStrategy.Verify();
+            _userScoreStrategy.Verify();
             _freshnessStrategy.Verify();
             _knownSourceStrategy.Verify();
         }
@@ -969,7 +969,7 @@ namespace Kigg.Core.Test
             _voteStrategy.Expect(s => s.Calculate(It.IsAny<DateTime>(), It.IsAny<IStory>())).Returns(rnd.Next(2, 100)).Verifiable();
             _commentStrategy.Expect(s => s.Calculate(It.IsAny<DateTime>(), It.IsAny<IStory>())).Returns(rnd.Next(0, 20)).Verifiable();
             _viewStrategy.Expect(s => s.Calculate(It.IsAny<DateTime>(), It.IsAny<IStory>())).Returns(rnd.NextDouble()).Verifiable();
-            _userReputationStrategy.Expect(s => s.Calculate(It.IsAny<DateTime>(), It.IsAny<IStory>())).Returns(rnd.Next(1, 300)).Verifiable();
+            _userScoreStrategy.Expect(s => s.Calculate(It.IsAny<DateTime>(), It.IsAny<IStory>())).Returns(rnd.Next(1, 300)).Verifiable();
             _freshnessStrategy.Expect(s => s.Calculate(It.IsAny<DateTime>(), It.IsAny<IStory>())).Returns(rnd.Next(0, 3)).Verifiable();
             _knownSourceStrategy.Expect(s => s.Calculate(It.IsAny<DateTime>(), It.IsAny<IStory>())).Returns(rnd.Next(0, 5)).Verifiable();
 

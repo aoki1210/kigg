@@ -15,23 +15,57 @@ namespace Kigg.Web
 
     public class ImageHandler : BaseHandler
     {
-        public const string DefaultBorderColor = "808080";
-        public const string DefaultTextBackColor = "404040";
-        public const string DefaultTextForeColor = "ffffff";
-        public const string DefaultCountBackColor = "eb4c07";
-        public const string DefaultCountForeColor = "ffffff";
-
-        public const int DefaultWidth = 100;
-        public const int DefaultHeight = 22;
-        public const int DefaultBorderWidth = 1;
-        public const string DefaultFontName = "Tahoma";
-        public const int DefaultFontSizeInPixel = 12;
-
-        private const int DefaultCacheDurationInMinutes = 5;
-
         public ImageHandler()
         {
             IoC.Inject(this);
+        }
+
+        public int Width
+        {
+            get;
+            set;
+        }
+
+        public int Height
+        {
+            get;
+            set;
+        }
+
+        public int BorderWidth
+        {
+            get;
+            set;
+        }
+
+        public string FontName
+        {
+            get;
+            set;
+        }
+
+        public int FontSize
+        {
+            get;
+            set;
+        }
+
+        public float NewStoryCacheDurationInMinutes
+        {
+            get;
+            set;
+        }
+
+        public float ExpiredStoryCacheDurationInMinutes
+        {
+            get;
+            set;
+        }
+
+        public DefaultColors Colors
+        {
+            get;
+            set;
         }
 
         public IConfigurationSettings Settings
@@ -87,17 +121,17 @@ namespace Kigg.Web
             HttpRequestBase request = context.Request;
             string url = request.QueryString["url"];
 
-            Color borderColor = GetColor(request.QueryString, "borderColor", DefaultBorderColor);
-            Color textBackColor = GetColor(request.QueryString, "textBackColor", DefaultTextBackColor);
-            Color textForeColor = GetColor(request.QueryString, "textForeColor", DefaultTextForeColor);
-            Color countBackColor = GetColor(request.QueryString, "countBackColor", DefaultCountBackColor);
-            Color countForeColor = GetColor(request.QueryString, "countForeColor", DefaultCountForeColor);
+            Color borderColor = GetColor(request.QueryString, "borderColor", Colors.BorderColor);
+            Color textBackColor = GetColor(request.QueryString, "textBackColor", Colors.TextBackColor);
+            Color textForeColor = GetColor(request.QueryString, "textForeColor", Colors.TextForeColor);
+            Color countBackColor = GetColor(request.QueryString, "countBackColor", Colors.CountBackColor);
+            Color countForeColor = GetColor(request.QueryString, "countForeColor", Colors.CountForeColor);
 
-            int borderWidth = GetInteger(request.QueryString, "borderWidth", DefaultBorderWidth);
-            string fontName = request.QueryString["fontName"] ?? DefaultFontName;
-            int fontSize = GetInteger(request.QueryString, "fontSize", DefaultFontSizeInPixel);
-            int width = GetInteger(request.QueryString, "width", DefaultWidth);
-            int height = GetInteger(request.QueryString, "height", DefaultHeight);
+            int width = GetInteger(request.QueryString, "width", Width);
+            int height = GetInteger(request.QueryString, "height", Height);
+            int borderWidth = GetInteger(request.QueryString, "borderWidth", BorderWidth);
+            string fontName = string.IsNullOrEmpty(request.QueryString["fontName"]) ? FontName : request.QueryString["fontName"];
+            int fontSize = GetInteger(request.QueryString, "fontSize", FontSize);
 
             HttpResponseBase response = context.Response;
             DateTime storyLastActivityAt = SystemTime.Now();
@@ -187,12 +221,11 @@ namespace Kigg.Web
             }
             else
             {
-                // If Story is older than 7 days then cache the it for 1 week otherwise 5 minutes
-                int durationInMinute = ((SystemTime.Now() - storyLastActivityAt).Days > 7) ? (60 * 24 * 7) : DefaultCacheDurationInMinutes;
+                float durationInMinutes = ((SystemTime.Now() - storyLastActivityAt).TotalDays > Settings.MaximumAgeOfStoryInHoursToPublish) ? ExpiredStoryCacheDurationInMinutes : NewStoryCacheDurationInMinutes;
 
-                if (durationInMinute > 0)
+                if (durationInMinutes > 0)
                 {
-                    context.CacheResponseFor(TimeSpan.FromMinutes(durationInMinute));
+                    context.CacheResponseFor(TimeSpan.FromMinutes(durationInMinutes));
                 }
             }
         }

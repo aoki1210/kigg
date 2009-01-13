@@ -124,6 +124,7 @@
     <Compile Include="ActionResult\FeedResult.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\CommentController.cs" />
+    <Compile Include="Handlers\Image\DefaultColors.cs" />
     <Compile Include="Helpers\IOpenIdRelyingParty.cs" />
     <Compile Include="Controllers\TagController.cs" />
     <Compile Include="Extension\HttpCookieExtension.cs" />
@@ -459,6 +460,7 @@
     <None Include="Assets\Images\markasspam.png" />
     <Content Include="Assets\Images\modarate.png" />
     <Content Include="Assets\Images\openid.png" />
+    <Content Include="Assets\Images\OrcsWeb.png" />
     <Content Include="Assets\Images\pg-preview-na.jpg" />
     <Content Include="Assets\Images\rss.jpg" />
     <Content Include="Assets\Images\search.gif" />
@@ -496,6 +498,8 @@
     <None Include="Assets\JavaScripts\Moderation.js" />
     <None Include="Assets\JavaScripts\Administration.js" />
     <Content Include="Assets\JavaScripts\Administration.min.js" />
+    <None Include="Assets\JavaScripts\Faq.js" />
+    <Content Include="Assets\JavaScripts\Faq.min.js" />
     <Content Include="Assets\JavaScripts\Moderation.min.js" />
     <Content Include="Assets\JavaScripts\Tag.min.js" />
     <Content Include="Assets\JavaScripts\OpenID.min.js" />
@@ -524,7 +528,7 @@
     <Content Include="Assets\StyleSheets\marItUp.min.css" />
     <Content Include="Assets\StyleSheets\site.min.css" />
     <Content Include="Assets\StyleSheets\ui.jquery.min.css" />
-    <Content Include="blockedIPList.txt" />
+    <Content Include="App_Data\blockedIPList.txt" />
     <Content Include="Default.aspx" />
     <Content Include="Global.asax" />
     <Content Include="Logs\trace.csv" />
@@ -536,7 +540,7 @@
     <Content Include="Assets\JavaScripts\Membership.min.js" />
     <Content Include="Assets\JavaScripts\Search.min.js" />
     <Content Include="Assets\JavaScripts\Story.min.js" />
-    <Content Include="contentNodes.txt" />
+    <Content Include="App_Data\contentNodes.txt" />
     <Content Include="Assets\Images\ajaxSmall.gif" />
     <None Include="Assets\Images\spam.png" />
     <Content Include="Assets\JavaScripts\jquery.form.min.js" />

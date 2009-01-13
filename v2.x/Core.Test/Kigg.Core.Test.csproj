@@ -95,8 +95,8 @@
     <Compile Include="Service\PublishedStoryFixture.cs" />
     <Compile Include="Service\StoryWeightBaseCalculatorFixture.cs" />
     <Compile Include="Service\StoryServiceFixture.cs" />
-    <Compile Include="Service\UserReputationWeightFixture.cs" />
     <Compile Include="Service\UserScoreServiceFixture.cs" />
+    <Compile Include="Service\UserScoreWeightFixture.cs" />
     <Compile Include="Service\ViewWeightFixture.cs" />
     <Compile Include="Service\VoteWeightFixture.cs" />
     <Compile Include="TestHelper\DecoratedRepositoryFixture.cs" />

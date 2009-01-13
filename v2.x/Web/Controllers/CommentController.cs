@@ -37,7 +37,7 @@ namespace Kigg.Web
 
             string captchaChallenge = null;
             string captchaResponse = null;
-            bool captchaEnabled = Settings.CaptchaEnabledForCommentSubmit;
+            bool captchaEnabled = !CurrentUser.ShouldHideCaptcha();
 
             if (captchaEnabled)
             {

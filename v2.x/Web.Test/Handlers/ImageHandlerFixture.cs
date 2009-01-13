@@ -31,6 +31,21 @@ namespace Kigg.Web.Test
 
             _handler = new ImageHandler
                            {
+                               Colors = new DefaultColors
+                                            {
+                                               BorderColor = "808080",
+                                               TextBackColor = "404040",
+                                               TextForeColor = "ffffff",
+                                               CountBackColor = "eb4c07",
+                                               CountForeColor = "ffffff"
+                                            },
+                               Width = 100,
+                               Height = 22,
+                               BorderWidth = 1,
+                               FontName = "Tahoma",
+                               FontSize = 12,
+                               NewStoryCacheDurationInMinutes = 5,
+                               ExpiredStoryCacheDurationInMinutes = 4320,
                                StoryRepository = repository.Object,
                                Settings = settings.Object
                            };

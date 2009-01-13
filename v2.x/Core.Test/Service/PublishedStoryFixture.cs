@@ -21,7 +21,7 @@ namespace Kigg.Core.Test
             _publishedStory.Weights.Add("View", 10);
             _publishedStory.Weights.Add("Vote", 300);
             _publishedStory.Weights.Add("Comment", 130);
-            _publishedStory.Weights.Add("User-Reputation", 450);
+            _publishedStory.Weights.Add("User-Score", 450);
             _publishedStory.Weights.Add("Known-Source", 5);
             _publishedStory.Weights.Add("Freshness", 50);
 
