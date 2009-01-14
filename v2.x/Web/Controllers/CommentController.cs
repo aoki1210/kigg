@@ -50,7 +50,7 @@ namespace Kigg.Web
                                                             new Validation(() => id.ToGuid().IsEmpty(), "Invalid story identifier."),
                                                             new Validation(() => string.IsNullOrEmpty(body.NullSafe()), "Comment cannot be blank."),
                                                             new Validation(() => captchaEnabled && string.IsNullOrEmpty(captchaChallenge), "Captcha challenge cannot be blank."),
-                                                            new Validation(() => captchaEnabled && string.IsNullOrEmpty(captchaResponse), "Captcha verfication words cannot be blank."),
+                                                            new Validation(() => captchaEnabled && string.IsNullOrEmpty(captchaResponse), "Captcha verification words cannot be blank."),
                                                             new Validation(() => !IsCurrentUserAuthenticated, "You are currently not authenticated."),
                                                             new Validation(() => captchaEnabled && !CaptchaValidator.Validate(CurrentUserIPAddress, captchaChallenge, captchaResponse), "Captcha verification words are incorrect.")
                                                           );

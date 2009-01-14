@@ -107,7 +107,7 @@
                         </p>
                         <p>
                             <label class="label"></label>
-                            <input id="btnChangePassword" type="submit" class="button" value="Chanage Password"/>
+                            <input id="btnChangePassword" type="submit" class="button" value="Change Password"/>
                         </p>
                     </form>
                 </div>

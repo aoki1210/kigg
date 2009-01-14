@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Specialized;
 using System.Web.Mvc;
+using System.Web.Routing;
 
 using Moq;
 using Xunit;
@@ -26,6 +27,9 @@ namespace Kigg.Web.Test
 
         public CommentControllerFixture()
         {
+            RouteTable.Routes.Clear();
+            new RegisterRoutes(settings.Object).Execute();
+
             _userRepository = new Mock<IUserRepository>();
 
             _reCAPTCHA = new Mock<reCAPTCHAValidator>("http://api-verify.recaptcha.net/verify", "http://api.recaptcha.net", "https://api-secure.recaptcha.net", "bar", "bar", "hello", "world", new Mock<IHttpForm>().Object);
@@ -147,7 +151,7 @@ namespace Kigg.Web.Test
             var result = (JsonViewData)((JsonResult)_controller.Post(Guid.NewGuid().Shrink(), "This is a dummy comment", true)).Data;
 
             Assert.False(result.isSuccessful);
-            Assert.Equal("Captcha verfication words cannot be blank.", result.errorMessage);
+            Assert.Equal("Captcha verification words cannot be blank.", result.errorMessage);
         }
 
         [Fact]

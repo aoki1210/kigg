@@ -39,7 +39,7 @@
             {
                 if (argument.Trim().Length > length)
                 {
-                    throw new ArgumentException("\"{0}\" cannnot be more than {1} character.".FormatWith(argumentName, length), argumentName);
+                    throw new ArgumentException("\"{0}\" cannot be more than {1} character.".FormatWith(argumentName, length), argumentName);
                 }
             }
 

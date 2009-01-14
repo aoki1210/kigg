@@ -215,25 +215,25 @@ namespace Kigg.Web.Test
         [InlineData("rss")]
         public void PromotedBy_Should_Build_Correct_ViewData(string format)
         {
-            const string UserName = "DummyUser";
+            string userId = Guid.NewGuid().Shrink();
 
-            var result = PromotedBy(format, UserName);
+            var result = PromotedBy(format, userId);
             var viewData = result.Data;
 
-            Assert.Contains("Stories promoted by {0}".FormatWith(UserName), viewData.Title);
+            Assert.Contains("Stories promoted by {0}".FormatWith(userId), viewData.Title);
             Assert.Equal(viewData.Title, viewData.Description);
-            Assert.Equal("{0}/Users/{1}".FormatWith(AppPath, UserName), viewData.Url);
+            Assert.Equal("{0}/Users/{1}".FormatWith(AppPath, userId), viewData.Url);
             Assert.Equal(format, result.Format);
         }
 
         [Fact]
         public void PromotedBy_Should_Log_Exception()
         {
-            _userRepository.Expect(r => r.FindByUserName(It.IsAny<string>())).Throws<Exception>();
+            _userRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Throws<Exception>();
 
             log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
-            _controller.PromotedBy("atom", "DummyUser", 0, 10);
+            _controller.PromotedBy("atom", Guid.NewGuid().Shrink(), 0, 10);
 
             log.Verify();
         }
@@ -241,7 +241,7 @@ namespace Kigg.Web.Test
         [Fact]
         public void PromotedBy_Should_Use_UserRepository_To_Build_ViewData()
         {
-            PromotedBy("atom", "DummyUser");
+            PromotedBy("atom", Guid.NewGuid().Shrink());
 
             _userRepository.Verify();
         }
@@ -249,7 +249,7 @@ namespace Kigg.Web.Test
         [Fact]
         public void PromotedBy_Should_Use_StoryRepository_To_Build_ViewData()
         {
-            PromotedBy("atom", "DummyUser");
+            PromotedBy("atom", Guid.NewGuid().Shrink());
 
             _storyRepository.Verify();
         }
@@ -259,25 +259,25 @@ namespace Kigg.Web.Test
         [InlineData("rss")]
         public void PostedBy_Should_Build_Correct_ViewData(string format)
         {
-            const string UserName = "DummyUser";
+            string userId = Guid.NewGuid().Shrink();
 
-            var result = PostedBy(format, UserName);
+            var result = PostedBy(format, userId);
             var viewData = result.Data;
 
-            Assert.Contains("Stories posted by {0}".FormatWith(UserName), viewData.Title);
+            Assert.Contains("Stories posted by {0}".FormatWith(userId), viewData.Title);
             Assert.Equal(viewData.Title, viewData.Description);
-            Assert.Equal("{0}/Users/{1}/Posted".FormatWith(AppPath, UserName), viewData.Url);
+            Assert.Equal("{0}/Users/{1}/Posted".FormatWith(AppPath, userId), viewData.Url);
             Assert.Equal(format, result.Format);
         }
 
         [Fact]
         public void PostedBy_Should_Log_Exception()
         {
-            _userRepository.Expect(r => r.FindByUserName(It.IsAny<string>())).Throws<Exception>();
+            _userRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Throws<Exception>();
 
             log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
-            _controller.PostedBy("atom", "DummyUser", 0, 10);
+            _controller.PostedBy("atom", Guid.NewGuid().Shrink(), 0, 10);
 
             log.Verify();
         }
@@ -285,7 +285,7 @@ namespace Kigg.Web.Test
         [Fact]
         public void PostedBy_Should_Use_UserRepository_To_Build_ViewData()
         {
-            PostedBy("atom", "DummyUser");
+            PostedBy("atom", Guid.NewGuid().Shrink());
 
             _userRepository.Verify();
         }
@@ -293,7 +293,7 @@ namespace Kigg.Web.Test
         [Fact]
         public void PostedBy_Should_Use_StoryRepository_To_Build_ViewData()
         {
-            PostedBy("atom", "DummyUser");
+            PostedBy("atom", Guid.NewGuid().Shrink());
 
             _storyRepository.Verify();
         }
@@ -303,25 +303,25 @@ namespace Kigg.Web.Test
         [InlineData("rss")]
         public void CommentedBy_Should_Build_Correct_ViewData(string format)
         {
-            const string UserName = "DummyUser";
+            string userId = Guid.NewGuid().Shrink();
 
-            var result = CommentedBy(format, UserName);
+            var result = CommentedBy(format, userId);
             var viewData = result.Data;
 
-            Assert.Contains("Stories commented by {0}".FormatWith(UserName), viewData.Title);
+            Assert.Contains("Stories commented by {0}".FormatWith(userId), viewData.Title);
             Assert.Equal(viewData.Title, viewData.Description);
-            Assert.Equal("{0}/Users/{1}/Commented".FormatWith(AppPath, UserName), viewData.Url);
+            Assert.Equal("{0}/Users/{1}/Commented".FormatWith(AppPath, userId), viewData.Url);
             Assert.Equal(format, result.Format);
         }
 
         [Fact]
         public void CommentedBy_Should_Log_Exception()
         {
-            _userRepository.Expect(r => r.FindByUserName(It.IsAny<string>())).Throws<Exception>();
+            _userRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Throws<Exception>();
 
             log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
-            _controller.CommentedBy("atom", "DummyUser", 0, 10);
+            _controller.CommentedBy("atom", Guid.NewGuid().Shrink(), 0, 10);
 
             log.Verify();
         }
@@ -329,7 +329,7 @@ namespace Kigg.Web.Test
         [Fact]
         public void CommentedBy_Should_Use_UserRepository_To_Build_ViewData()
         {
-            CommentedBy("atom", "DummyUser");
+            CommentedBy("atom", Guid.NewGuid().Shrink());
 
             _userRepository.Verify();
         }
@@ -337,7 +337,7 @@ namespace Kigg.Web.Test
         [Fact]
         public void CommentedBy_Should_Use_StoryRepository_To_Build_ViewData()
         {
-            CommentedBy("atom", "DummyUser");
+            CommentedBy("atom", Guid.NewGuid().Shrink());
 
             _storyRepository.Verify();
         }
@@ -444,43 +444,43 @@ namespace Kigg.Web.Test
             return (FeedResult) _controller.Tags(format, tagName, 0, 10);
         }
 
-        private FeedResult PromotedBy(string format, string userName)
+        private FeedResult PromotedBy(string format, string userId)
         {
             var user = new Mock<IUser>();
 
             user.ExpectGet(u => u.Id).Returns(Guid.NewGuid());
-            user.ExpectGet(u => u.UserName).Returns(userName);
+            user.ExpectGet(u => u.UserName).Returns(userId);
 
-            _userRepository.Expect(r => r.FindByUserName(It.IsAny<string>())).Returns(user.Object).Verifiable();
+            _userRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns(user.Object).Verifiable();
             _storyRepository.Expect(r => r.FindPromotedByUser(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
 
-            return (FeedResult)_controller.PromotedBy(format, userName, 0, 10);
+            return (FeedResult)_controller.PromotedBy(format, userId, 0, 10);
         }
 
-        private FeedResult PostedBy(string format, string userName)
+        private FeedResult PostedBy(string format, string userId)
         {
             var user = new Mock<IUser>();
 
             user.ExpectGet(u => u.Id).Returns(Guid.NewGuid());
-            user.ExpectGet(u => u.UserName).Returns(userName);
+            user.ExpectGet(u => u.UserName).Returns(userId);
 
-            _userRepository.Expect(r => r.FindByUserName(It.IsAny<string>())).Returns(user.Object).Verifiable();
+            _userRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns(user.Object).Verifiable();
             _storyRepository.Expect(r => r.FindPostedByUser(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
 
-            return (FeedResult) _controller.PostedBy(format, userName, 0, 10);
+            return (FeedResult) _controller.PostedBy(format, userId, 0, 10);
         }
 
-        private FeedResult CommentedBy(string format, string userName)
+        private FeedResult CommentedBy(string format, string userId)
         {
             var user = new Mock<IUser>();
 
             user.ExpectGet(u => u.Id).Returns(Guid.NewGuid());
-            user.ExpectGet(u => u.UserName).Returns(userName);
+            user.ExpectGet(u => u.UserName).Returns(userId);
 
-            _userRepository.Expect(r => r.FindByUserName(It.IsAny<string>())).Returns(user.Object).Verifiable();
+            _userRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns(user.Object).Verifiable();
             _storyRepository.Expect(r => r.FindCommentedByUser(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
 
-            return (FeedResult)_controller.CommentedBy(format, userName, 0, 10);
+            return (FeedResult)_controller.CommentedBy(format, userId, 0, 10);
         }
 
         private FeedResult Search(string format, string query)

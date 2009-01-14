@@ -57,7 +57,7 @@ namespace Kigg.Web
             _routes.MapRoute("ForgotPassword", "ForgotPassword", new { controller = "Membership", action = "ForgotPassword" });
             _routes.MapRoute("ChangePassword", "ChangePassword", new { controller = "Membership", action = "ChangePassword" });
             _routes.MapRoute("Activate", "Activate/{id}", new { controller = "Membership", action = "Activate", id = string.Empty });
-            _routes.MapRoute("User", "Users/{name}/{tab}/{page}", new { controller = "Membership", action = "Detail", tab = UserDetailTab.Promoted, page = 1 });
+            _routes.MapRoute("User", "Users/{id}/{tab}/{page}", new { controller = "Membership", action = "Detail", tab = UserDetailTab.Promoted, page = 1 });
             _routes.MapRoute("ChangeEmail", "ChangeEmail", new { controller = "Membership", action = "ChangeEmail" });
             _routes.MapRoute("ChangeRole", "ChangeRole", new { controller = "Membership", action = "ChangeRole" });
             _routes.MapRoute("LockUser", "LockUser", new { controller = "Membership", action = "Lock" });

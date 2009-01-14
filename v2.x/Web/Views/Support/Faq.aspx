@@ -114,7 +114,7 @@
         </li>
         <li>
             <a class="q" href="javascript:void(0)">How does stories get published? Why my story never get published?</a>
-            <div class="ans">Stories are published based upon votes aka shouts, comments, freshness, views, user score (who voted it), source of story etc. The more the story has these values the more chance it has to be published. Once the stories are published the top ten stories are listed in the frontpage. The story publishing process runs 4/5 times in a day depending upon the upcoming story queue.</div>
+            <div class="ans">Stories are published based upon votes aka shouts, comments, freshness, views, user score (who voted it), source of story etc. The more the story has these values the more chance it has to be published. Once the stories are published the top ten stories are listed in the front page The story publishing process runs 4/5 times in a day depending upon the upcoming story queue.</div>
         </li>
         <li>
             <a class="q" href="javascript:void(0)">I am a blogger, how can I put the <em>Shout it</em> counter in my blog's post?</a>
@@ -153,6 +153,8 @@
                     <li><a href="http://code.google.com/p/dotnetopenid/" target="_blank" rel="nofollow">DotNetOpenId</a></li>
                     <li><a href="http://www.codeplex.com/xunit" target="_blank" rel="nofollow">xUnit.net</a></li>
                     <li><a href="http://code.google.com/p/moq/" target="_blank" rel="nofollow">Moq</a></li>
+                    <li><a href="http://www.testdriven.net/" target="_blank" rel="nofollow">TestDriven.NET</a></li>
+                    <li><a href="http://www.ncover.com/" target="_blank" rel="nofollow">NCover</a></li>
                     <li><a href="http://www.jetbrains.com/resharper/" target="_blank" rel="nofollow">Jetbrains R#</a></li>
                     <li><a href="http://www.red-gate.com/Products/ants_profiler/index.htm" target="_blank" rel="nofollow">Red Gate ANTS Profiler</a></li>
                 </ul>

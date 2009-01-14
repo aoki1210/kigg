@@ -571,13 +571,13 @@ namespace Kigg.Service
                 publishingStories.AddRange(publishableStories.Where(ps => ps.Story.BelongsTo.Id == categoryId).OrderBy(ps => ps.Rank).Take(_settings.HtmlStoryPerPage));
             }
 
-            // Now take the stories for frontpage regardless its category
+            // Now take the stories for front page regardless its category
             IEnumerable<PublishedStory> frontPageStories = publishableStories.OrderBy(ps => ps.Rank).Take(_settings.HtmlStoryPerPage).AsEnumerable();
             publishingStories.AddRange(frontPageStories);
 
             if (publishingStories.Count > 0)
             {
-                // Increase the User Score if the Story hits the frontpage
+                // Increase the User Score if the Story hits the front page
                 foreach (PublishedStory ps in frontPageStories)
                 {
                     _userScoreService.StoryPublished(ps.Story.PostedBy);

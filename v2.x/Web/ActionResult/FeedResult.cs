@@ -169,10 +169,9 @@ namespace Kigg.Web
 
             item.Add(new XElement(_ns + "category", new XAttribute("domain", categoryUrl), category.Name));
 
-            string postedByName = story.PostedBy.UserName;
-            string userUrl = string.Concat(_model.RootUrl, urlHelper.RouteUrl("User", new { name = postedByName, tab = UserDetailTab.Promoted, page = 1 }));
+            string userUrl = string.Concat(_model.RootUrl, urlHelper.RouteUrl("User", new { id = story.PostedBy.Id.Shrink(), tab = UserDetailTab.Promoted, page = 1 }));
 
-            item.Add(new XElement(_ns + "contributer", new XAttribute("domain", userUrl), postedByName));
+            item.Add(new XElement(_ns + "contributer", new XAttribute("domain", userUrl), story.PostedBy.UserName));
 
             channel.Add(item);
         }
@@ -217,8 +216,7 @@ namespace Kigg.Web
             string detailUrl = string.Concat(_model.RootUrl, urlHelper.RouteUrl("Detail", new { name = story.UniqueName }));
             string storyDescription = PrepareDescription(story, detailUrl);
 
-            string postedByName = story.PostedBy.UserName;
-            string userUrl = string.Concat(_model.RootUrl, urlHelper.RouteUrl("User", new { name = postedByName, tab = UserDetailTab.Promoted, page = 1 }));
+            string userUrl = string.Concat(_model.RootUrl, urlHelper.RouteUrl("User", new { id = story.PostedBy.Id.Shrink(), tab = UserDetailTab.Promoted, page = 1 }));
 
             XElement entry = new XElement(
                                             atom + "entry",
@@ -227,7 +225,7 @@ namespace Kigg.Web
                                             new XElement(atom + "updated", story.CreatedAt.ToString(dateFormat, Constants.CurrentCulture)),
                                             new XElement(atom + "content", new XAttribute("type", "html"), storyDescription),
                                             new XElement(atom + "link", new XAttribute("rel", "alternate"), new XAttribute("href", story.Url)),
-                                            new XElement(atom + "contributor", new XElement(atom + "name", postedByName), new XElement(atom + "uri", userUrl))
+                                            new XElement(atom + "contributor", new XElement(atom + "name", story.PostedBy.UserName), new XElement(atom + "uri", userUrl))
                                           );
 
             if (story.IsPublished())

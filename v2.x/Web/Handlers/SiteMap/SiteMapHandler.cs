@@ -303,6 +303,7 @@ namespace Kigg.Web
                 AddUserPagesInRegularSiteMap(context, forMobile, urlSet, currentDate);
 
                 urlSet.Add(CreateEntry(context, rootUrl, "Submit", null, currentDate, SiteMapChangeFrequency.Monthly, SiteMapUpdatePriority.Low, forMobile));
+                urlSet.Add(CreateEntry(context, rootUrl, "Faq", null, currentDate, SiteMapChangeFrequency.Monthly, SiteMapUpdatePriority.Low, forMobile));
                 urlSet.Add(CreateEntry(context, rootUrl, "About", null, currentDate, SiteMapChangeFrequency.Monthly, SiteMapUpdatePriority.Low, forMobile));
                 urlSet.Add(CreateEntry(context, rootUrl, "Contact", null, currentDate, SiteMapChangeFrequency.Monthly, SiteMapUpdatePriority.Low, forMobile));
 
@@ -413,7 +414,7 @@ namespace Kigg.Web
 
             foreach (IUser user in topMovers)
             {
-                target.Add(CreateEntry(context, rootUrl, "User", new { name = user.UserName, tab = UserDetailTab.Promoted, page = 1 }, currentDate, SiteMapChangeFrequency.Daily, SiteMapUpdatePriority.Normal, forMobile));
+                target.Add(CreateEntry(context, rootUrl, "User", new { id = user.Id.Shrink(), tab = UserDetailTab.Promoted, page = 1 }, currentDate, SiteMapChangeFrequency.Daily, SiteMapUpdatePriority.Normal, forMobile));
             }
         }
     }

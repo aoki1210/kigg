@@ -60,7 +60,7 @@
             <p>
                 <label for="txtStoryTags" class="label">Tags:</label>
                 <input id="txtStoryTags" name="tags" type="text" class="largeTextBox"/>
-                <span class="info">(optional, separate by commma for multiple tags)</span>
+                <span class="info">(optional, separate by comma for multiple tags)</span>
             </p>
             <p>
                 <label class="label">Category:</label>

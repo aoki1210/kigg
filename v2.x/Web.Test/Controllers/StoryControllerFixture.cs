@@ -518,7 +518,7 @@ namespace Kigg.Web.Test
             var result = (JsonViewData)((JsonResult)_controller.Submit("http://astory.com", "Dummy story", "Dummy", "Dummy Story Description", "Dummy, Test")).Data;
 
             Assert.False(result.isSuccessful);
-            Assert.Equal("Captcha verfication words cannot be blank.", result.errorMessage);
+            Assert.Equal("Captcha verification words cannot be blank.", result.errorMessage);
         }
 
         [Fact]
@@ -1215,7 +1215,7 @@ namespace Kigg.Web.Test
             var result = ConfirmSpam(story.Object);
 
             Assert.False(result.isSuccessful);
-            Assert.Equal("Specified story has been already aproved as spam.", result.errorMessage);
+            Assert.Equal("Specified story has been already approved as spam.", result.errorMessage);
         }
 
         [Fact]
@@ -1299,7 +1299,7 @@ namespace Kigg.Web.Test
             Assert.Equal(0, viewData.TotalStoryCount);
             Assert.Empty(viewData.Stories);
             Assert.Equal(UserDetailTab.Promoted, viewData.SelectedTab);
-            Assert.Equal("No story promotd by \"{0}\".".FormatWith(UserName), viewData.NoStoryExistMessage);
+            Assert.Equal("No story promoted by \"{0}\".".FormatWith(UserName), viewData.NoStoryExistMessage);
         }
 
         [Fact]
@@ -1644,7 +1644,7 @@ namespace Kigg.Web.Test
 
             user.ExpectGet(u => u.UserName).Returns(UserName);
 
-            _userRepository.Expect(r => r.FindByUserName(It.IsAny<string>())).Returns(user.Object).Verifiable();
+            _userRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns(user.Object).Verifiable();
             _storyRepository.Expect(r => r.FindPromotedByUser(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
 
             return (ViewResult) _controller.PromotedBy(UserName, 1);
@@ -1656,7 +1656,7 @@ namespace Kigg.Web.Test
 
             user.ExpectGet(u => u.UserName).Returns(UserName);
 
-            _userRepository.Expect(r => r.FindByUserName(It.IsAny<string>())).Returns(user.Object).Verifiable();
+            _userRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns(user.Object).Verifiable();
             _storyRepository.Expect(r => r.FindPostedByUser(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
 
             return (ViewResult)_controller.PostedBy(UserName, 1);
@@ -1668,7 +1668,7 @@ namespace Kigg.Web.Test
 
             user.ExpectGet(u => u.UserName).Returns(UserName);
 
-            _userRepository.Expect(r => r.FindByUserName(It.IsAny<string>())).Returns(user.Object).Verifiable();
+            _userRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns(user.Object).Verifiable();
             _storyRepository.Expect(r => r.FindCommentedByUser(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
 
             return (ViewResult)_controller.CommentedBy(UserName, 1);
