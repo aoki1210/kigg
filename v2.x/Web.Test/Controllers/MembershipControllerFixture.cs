@@ -1315,7 +1315,7 @@ namespace Kigg.Web.Test
             #pragma warning restore 618,612
 
             openIdResponse.ExpectGet(r => r.Status).Returns(AuthenticationStatus.Authenticated);
-            openIdResponse.ExpectGet(r => r.FriendlyIdentifierForDisplay).Returns("kazimanzurrashid.myopenid.com");
+            openIdResponse.ExpectGet(r => r.ClaimedIdentifier).Returns("kazimanzurrashid.myopenid.com");
             openIdResponse.Expect(r => r.GetExtension<ClaimsResponse>()).Returns(claim);
 
             _openIdRelyingParty.ExpectGet(o => o.Response).Returns(openIdResponse.Object);
@@ -1345,7 +1345,7 @@ namespace Kigg.Web.Test
             #pragma warning restore 618,612
 
             openIdResponse.ExpectGet(r => r.Status).Returns(AuthenticationStatus.Authenticated);
-            openIdResponse.ExpectGet(r => r.FriendlyIdentifierForDisplay).Returns("kazimanzurrashid.myopenid.com");
+            openIdResponse.ExpectGet(r => r.ClaimedIdentifier).Returns("kazimanzurrashid.myopenid.com");
             openIdResponse.Expect(r => r.GetExtension<ClaimsResponse>()).Returns(claim);
 
             _openIdRelyingParty.ExpectGet(o => o.Response).Returns(openIdResponse.Object);
@@ -1490,14 +1490,14 @@ namespace Kigg.Web.Test
 
         private ViewResult Detail()
         {
-            const string UserName = "UserWithProfile";
+            string userId = Guid.NewGuid().Shrink();
 
             SetAdmin();
 
-            _userRepository.Expect(r => r.FindByUserName(UserName)).Returns(new Mock<IUser>().Object).Verifiable();
+            _userRepository.Expect(r => r.FindById(userId.ToGuid())).Returns(new Mock<IUser>().Object).Verifiable();
             _userRepository.Expect(r => r.FindIPAddresses(It.IsAny<Guid>())).Returns(new[] { "192.168.0.1" }).Verifiable();
 
-            return (ViewResult)_controller.Detail(UserName, "Promoted", null);
+            return (ViewResult)_controller.Detail(userId, "Promoted", null);
         }
 
         private void Activate(ref Mock<IUser> user)

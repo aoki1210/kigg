@@ -11,26 +11,26 @@
 
         private void StoryList()
         {
-            string userName = ViewData.Model.TheUser.UserName;
+            string userId = ViewData.Model.TheUser.Id.Shrink();
             int page = ViewData.Model.CurrentPage;
 
             switch (ViewData.Model.SelectedTab)
             {
                 case UserDetailTab.Posted:
                     {
-                        Html.RenderAction<StoryController>(c => c.PostedBy(userName, page));
+                        Html.RenderAction<StoryController>(c => c.PostedBy(userId, page));
                         break;
                     }
 
                 case UserDetailTab.Commented:
                     {
-                        Html.RenderAction<StoryController>(c => c.CommentedBy(userName, page));
+                        Html.RenderAction<StoryController>(c => c.CommentedBy(userId, page));
                         break;
                     }
 
                 default:
                     {
-                        Html.RenderAction<StoryController>(c => c.PromotedBy(userName, page));
+                        Html.RenderAction<StoryController>(c => c.PromotedBy(userId, page));
                         break;
                     }
             }
@@ -192,11 +192,11 @@
     <div class="divider"></div>
     <div id="userTabs">
         <ul class="ui-tabs-nav">
-            <% string userName = user.UserName; %>
+            <% string userId = user.Id.Shrink(); %>
             <% UserDetailTab selectedTab = ViewData.Model.SelectedTab; %>
-            <li class="ui-tabs-nav-item<%= ((selectedTab == UserDetailTab.Promoted) ? " ui-tabs-selected" : string.Empty) %>"><a href="<%= Url.RouteUrl("User", new { name = userName, tab = UserDetailTab.Promoted, page = 1}) %>">Promoted</a></li>
-            <li class="ui-tabs-nav-item<%= ((selectedTab == UserDetailTab.Posted) ? " ui-tabs-selected" : string.Empty) %>"><a href="<%= Url.RouteUrl("User", new { name = userName, tab = UserDetailTab.Posted, page = 1 }) %>">Posted</a></li>
-            <li class="ui-tabs-nav-item<%= ((selectedTab == UserDetailTab.Commented) ? " ui-tabs-selected" : string.Empty) %>"><a href="<%= Url.RouteUrl("User", new { name = userName, tab = UserDetailTab.Commented, page = 1}) %>">Commented</a></li>
+            <li class="ui-tabs-nav-item<%= ((selectedTab == UserDetailTab.Promoted) ? " ui-tabs-selected" : string.Empty) %>"><a href="<%= Url.RouteUrl("User", new { id = userId, tab = UserDetailTab.Promoted, page = 1}) %>">Promoted</a></li>
+            <li class="ui-tabs-nav-item<%= ((selectedTab == UserDetailTab.Posted) ? " ui-tabs-selected" : string.Empty) %>"><a href="<%= Url.RouteUrl("User", new { id = userId, tab = UserDetailTab.Posted, page = 1 }) %>">Posted</a></li>
+            <li class="ui-tabs-nav-item<%= ((selectedTab == UserDetailTab.Commented) ? " ui-tabs-selected" : string.Empty) %>"><a href="<%= Url.RouteUrl("User", new { id = userId, tab = UserDetailTab.Commented, page = 1}) %>">Commented</a></li>
         </ul>
         <div id="userTabContent" class="ui-tabs-panel">
             <span class="hide hfeed"><%= Page.Header.Title%></span>

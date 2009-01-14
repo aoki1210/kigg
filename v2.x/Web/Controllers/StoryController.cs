@@ -362,7 +362,7 @@ namespace Kigg.Web
 
             JsonViewData viewData = Validate<JsonViewData>(
                                                             new Validation(() => captchaEnabled && string.IsNullOrEmpty(captchaChallenge), "Captcha challenge cannot be blank."),
-                                                            new Validation(() => captchaEnabled && string.IsNullOrEmpty(captchaResponse), "Captcha verfication words cannot be blank."),
+                                                            new Validation(() => captchaEnabled && string.IsNullOrEmpty(captchaResponse), "Captcha verification words cannot be blank."),
                                                             new Validation(() => !IsCurrentUserAuthenticated, "You are currently not authenticated."),
                                                             new Validation(() => captchaEnabled && !CaptchaValidator.Validate(CurrentUserIPAddress, captchaChallenge, captchaResponse), "Captcha verification words are incorrect.")
                                                           );
@@ -797,7 +797,7 @@ namespace Kigg.Web
                         {
                             if (story.IsSpam())
                             {
-                                viewData = new JsonViewData { errorMessage = "Specified story has been already aproved as spam." };
+                                viewData = new JsonViewData { errorMessage = "Specified story has been already approved as spam." };
                             }
                             else
                             {
@@ -841,16 +841,16 @@ namespace Kigg.Web
 
         public ActionResult PromotedBy(string name, int? page)
         {
-            IUser user = UserRepository.FindByUserName(name.Trim());
+            IUser user = UserRepository.FindById(name.ToGuid());
             PagedResult<IStory> pagedResult = _storyRepository.FindPromotedByUser(user.Id, PageCalculator.StartIndex(page, Settings.HtmlStoryPerPage), Settings.HtmlStoryPerPage);
 
             StoryListUserViewData viewData = CreateStoryListViewData<StoryListUserViewData>(page);
 
             viewData.Stories = pagedResult.Result;
             viewData.TotalStoryCount = pagedResult.Total;
-            viewData.RssUrl = Url.Action("PromotedBy", "Feed", new { name = user.UserName });
-            viewData.AtomUrl = Url.Action("PromotedBy", "Feed", new { name = user.UserName, format = "Atom" });
-            viewData.NoStoryExistMessage = "No story promotd by \"{0}\".".FormatWith(user.UserName.HtmlEncode());
+            viewData.RssUrl = Url.Action("PromotedBy", "Feed", new { name });
+            viewData.AtomUrl = Url.Action("PromotedBy", "Feed", new { name , format = "Atom" });
+            viewData.NoStoryExistMessage = "No story promoted by \"{0}\".".FormatWith(user.UserName.HtmlEncode());
             viewData.SelectedTab = UserDetailTab.Promoted;
             viewData.TheUser = user;
 
@@ -859,15 +859,15 @@ namespace Kigg.Web
 
         public ActionResult PostedBy(string name, int? page)
         {
-            IUser user = UserRepository.FindByUserName(name.Trim());
+            IUser user = UserRepository.FindById(name.ToGuid());
             PagedResult<IStory> pagedResult = _storyRepository.FindPostedByUser(user.Id, PageCalculator.StartIndex(page, Settings.HtmlStoryPerPage), Settings.HtmlStoryPerPage);
 
             StoryListUserViewData viewData = CreateStoryListViewData<StoryListUserViewData>(page);
 
             viewData.Stories = pagedResult.Result;
             viewData.TotalStoryCount = pagedResult.Total;
-            viewData.RssUrl = Url.Action("PostedBy", "Feed", new { name = user.UserName });
-            viewData.AtomUrl = Url.Action("PostedBy", "Feed", new { name = user.UserName, format = "Atom" });
+            viewData.RssUrl = Url.Action("PostedBy", "Feed", new { name });
+            viewData.AtomUrl = Url.Action("PostedBy", "Feed", new { name, format = "Atom" });
             viewData.NoStoryExistMessage = "No story posted by \"{0}\".".FormatWith(user.UserName.HtmlEncode());
             viewData.SelectedTab = UserDetailTab.Posted;
             viewData.TheUser = user;
@@ -877,15 +877,15 @@ namespace Kigg.Web
 
         public ActionResult CommentedBy(string name, int? page)
         {
-            IUser user = UserRepository.FindByUserName(name.Trim());
+            IUser user = UserRepository.FindById(name.ToGuid());
             PagedResult<IStory> pagedResult = _storyRepository.FindCommentedByUser(user.Id, PageCalculator.StartIndex(page, Settings.HtmlStoryPerPage), Settings.HtmlStoryPerPage);
 
             StoryListUserViewData viewData = CreateStoryListViewData<StoryListUserViewData>(page);
 
             viewData.Stories = pagedResult.Result;
             viewData.TotalStoryCount = pagedResult.Total;
-            viewData.RssUrl = Url.Action("CommentedBy", "Feed", new { name = user.UserName });
-            viewData.AtomUrl = Url.Action("CommentedBy", "Feed", new { name = user.UserName, format = "Atom" });
+            viewData.RssUrl = Url.Action("CommentedBy", "Feed", new { name });
+            viewData.AtomUrl = Url.Action("CommentedBy", "Feed", new { name, format = "Atom" });
             viewData.NoStoryExistMessage = "No story commented by \"{0}\".".FormatWith(user.UserName.HtmlEncode());
             viewData.SelectedTab = UserDetailTab.Commented;
             viewData.TheUser = user;

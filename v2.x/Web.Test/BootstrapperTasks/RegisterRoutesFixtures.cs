@@ -308,7 +308,7 @@ namespace Kigg.Web.Test
 
             Assert.Equal("Membership", routeData.Values["controller"]);
             Assert.Equal("Detail", routeData.Values["action"]);
-            Assert.Equal("kazimanzurrashid", routeData.Values["name"]);
+            Assert.Equal("kazimanzurrashid", routeData.Values["id"]);
             Assert.Equal(UserDetailTab.Promoted, routeData.Values["tab"]);
             Assert.Equal(1, routeData.Values["page"]);
         }
@@ -320,7 +320,7 @@ namespace Kigg.Web.Test
 
             Assert.Equal("Membership", routeData.Values["controller"]);
             Assert.Equal("Detail", routeData.Values["action"]);
-            Assert.Equal("kazimanzurrashid", routeData.Values["name"]);
+            Assert.Equal("kazimanzurrashid", routeData.Values["id"]);
             Assert.Equal("Posted", routeData.Values["tab"]);
             Assert.Equal(1, routeData.Values["page"]);
         }
@@ -332,7 +332,7 @@ namespace Kigg.Web.Test
 
             Assert.Equal("Membership", routeData.Values["controller"]);
             Assert.Equal("Detail", routeData.Values["action"]);
-            Assert.Equal("kazimanzurrashid", routeData.Values["name"]);
+            Assert.Equal("kazimanzurrashid", routeData.Values["id"]);
             Assert.Equal("Commented", routeData.Values["tab"]);
             Assert.Equal(1, routeData.Values["page"]);
         }

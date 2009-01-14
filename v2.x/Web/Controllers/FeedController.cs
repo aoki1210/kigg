@@ -157,21 +157,21 @@ namespace Kigg.Web
         {
             EnsureInRange(ref start, ref max);
 
-            name = name.NullSafe();
+            Guid userId = name.ToGuid();
+            string userName = string.Empty;
 
             FeedViewData model = CreateViewData(start.Value, max.Value);
 
-            model.Title = "{0} - Stories promoted by {1}".FormatWith(Settings.SiteTitle.HtmlEncode(), name.HtmlEncode());
-            model.Description = model.Title;
-
-            if (!string.IsNullOrEmpty(name))
+            if (!userId.IsEmpty())
             {
                 try
                 {
-                    IUser user = UserRepository.FindByUserName(name);
+                    IUser user = UserRepository.FindById(userId);
 
                     if (user != null)
                     {
+                        userName = user.UserName;
+
                         PagedResult<IStory> pagedStories = _storyRepository.FindPromotedByUser(user.Id, start.Value, max.Value);
 
                         model.Stories = pagedStories.Result;
@@ -184,7 +184,9 @@ namespace Kigg.Web
                 }
             }
 
-            model.Url = Url.RouteUrl("User", new { name, tab = UserDetailTab.Promoted });
+            model.Title = "{0} - Stories promoted by {1}".FormatWith(Settings.SiteTitle.HtmlEncode(), userName.HtmlEncode());
+            model.Description = model.Title;
+            model.Url = Url.RouteUrl("User", new { id = name, tab = UserDetailTab.Promoted });
 
             return new FeedResult(model, format);
         }
@@ -193,21 +195,21 @@ namespace Kigg.Web
         {
             EnsureInRange(ref start, ref max);
 
-            name = name.NullSafe();
+            Guid userId = name.ToGuid();
+            string userName = string.Empty;
 
             FeedViewData model = CreateViewData(start.Value, max.Value);
 
-            model.Title = "{0} - Stories posted by {1}".FormatWith(Settings.SiteTitle.HtmlEncode(), name.HtmlEncode());
-            model.Description = model.Title;
-
-            if (!string.IsNullOrEmpty(name))
+            if (!userId.IsEmpty())
             {
                 try
                 {
-                    IUser user = UserRepository.FindByUserName(name);
+                    IUser user = UserRepository.FindById(userId);
 
                     if (user != null)
                     {
+                        userName = user.UserName;
+
                         PagedResult<IStory> pagedStories = _storyRepository.FindPostedByUser(user.Id, start.Value, max.Value);
 
                         model.Stories = pagedStories.Result;
@@ -220,7 +222,10 @@ namespace Kigg.Web
                 }
             }
 
-            model.Url = Url.RouteUrl("User", new { name, tab = UserDetailTab.Posted });
+            model.Title = "{0} - Stories posted by {1}".FormatWith(Settings.SiteTitle.HtmlEncode(), userName.HtmlEncode());
+            model.Description = model.Title;
+
+            model.Url = Url.RouteUrl("User", new { id = name, tab = UserDetailTab.Posted });
 
             return new FeedResult(model, format);
         }
@@ -229,21 +234,21 @@ namespace Kigg.Web
         {
             EnsureInRange(ref start, ref max);
 
-            name = name.NullSafe();
+            Guid userId = name.ToGuid();
+            string userName = string.Empty;
 
             FeedViewData model = CreateViewData(start.Value, max.Value);
 
-            model.Title = "{0} - Stories commented by {1}".FormatWith(Settings.SiteTitle.HtmlEncode(), name.HtmlEncode());
-            model.Description = model.Title;
-
-            if (!string.IsNullOrEmpty(name))
+            if (!userId.IsEmpty())
             {
                 try
                 {
-                    IUser user = UserRepository.FindByUserName(name);
+                    IUser user = UserRepository.FindById(userId);
 
                     if (user != null)
                     {
+                        userName = user.UserName;
+
                         PagedResult<IStory> pagedStories = _storyRepository.FindCommentedByUser(user.Id, start.Value, max.Value);
 
                         model.Stories = pagedStories.Result;
@@ -256,7 +261,9 @@ namespace Kigg.Web
                 }
             }
 
-            model.Url = Url.RouteUrl("User", new { name, tab = UserDetailTab.Commented });
+            model.Title = "{0} - Stories commented by {1}".FormatWith(Settings.SiteTitle.HtmlEncode(), userName.HtmlEncode());
+            model.Description = model.Title;
+            model.Url = Url.RouteUrl("User", new { id = name, tab = UserDetailTab.Commented });
 
             return new FeedResult(model, format);
         }

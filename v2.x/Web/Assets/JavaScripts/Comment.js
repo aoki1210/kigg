@@ -115,14 +115,14 @@
 
         if ((Membership.get_isLoggedIn()) && (Comment._captchaEnabled))
         {
-            //reCAPTCHA might not be available, so we have to poll for its availablity
+            //reCAPTCHA might not be available, so we have to poll for its availability
             var timerId = setInterval(
                                         function()
                                         {
                                             if (($('#recaptcha_area').length > 0) && ($('#recaptcha_response_field').length > 0))
                                             {
                                                 $('<span class=\"error\"></span>').appendTo('#recaptcha_area');
-                                                $('#recaptcha_response_field').attr('title', 'Captcha verfication words cannot be blank.')
+                                                $('#recaptcha_response_field').attr('title', 'Captcha verification words cannot be blank.')
                                                                               .rules('add', { required: true });
                                                 window.clearInterval(timerId);
                                             }

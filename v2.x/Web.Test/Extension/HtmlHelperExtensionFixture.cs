@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Specialized;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -172,29 +173,29 @@ namespace Kigg.Web.Test
         [Fact]
         public void StoryListPager_For_User_Should_Return_Correct_Html_When_Current_Page_Is_One_And_Total_Story_Count_Is_Two_Hundred()
         {
-            const string UserName = "Dummy";
+            string userId = Guid.NewGuid().Shrink();
 
             string output = "<div class=\"pager\"> " +
                                 "<span class=\"disabled\">Previous</span> " +
                                 "<span class=\"current\">1</span> " +
-                                "<a href=\"{0}/Users/{1}/Promoted/2\">2</a> ".FormatWith(AppPath, UserName) +
-                                "<a href=\"{0}/Users/{1}/Promoted/3\">3</a> ".FormatWith(AppPath, UserName) +
-                                "<a href=\"{0}/Users/{1}/Promoted/4\">4</a> ".FormatWith(AppPath, UserName) +
-                                "<a href=\"{0}/Users/{1}/Promoted/5\">5</a> ".FormatWith(AppPath, UserName) +
-                                "<a href=\"{0}/Users/{1}/Promoted/6\">6</a> ".FormatWith(AppPath, UserName) +
-                                "<a href=\"{0}/Users/{1}/Promoted/7\">7</a> ".FormatWith(AppPath, UserName) +
-                                "<a href=\"{0}/Users/{1}/Promoted/8\">8</a> ".FormatWith(AppPath, UserName) +
-                                "<a href=\"{0}/Users/{1}/Promoted/9\">9</a> ".FormatWith(AppPath, UserName) +
-                                "<a href=\"{0}/Users/{1}/Promoted/10\">10</a> ".FormatWith(AppPath, UserName) +
+                                "<a href=\"{0}/Users/{1}/Promoted/2\">2</a> ".FormatWith(AppPath, userId) +
+                                "<a href=\"{0}/Users/{1}/Promoted/3\">3</a> ".FormatWith(AppPath, userId) +
+                                "<a href=\"{0}/Users/{1}/Promoted/4\">4</a> ".FormatWith(AppPath, userId) +
+                                "<a href=\"{0}/Users/{1}/Promoted/5\">5</a> ".FormatWith(AppPath, userId) +
+                                "<a href=\"{0}/Users/{1}/Promoted/6\">6</a> ".FormatWith(AppPath, userId) +
+                                "<a href=\"{0}/Users/{1}/Promoted/7\">7</a> ".FormatWith(AppPath, userId) +
+                                "<a href=\"{0}/Users/{1}/Promoted/8\">8</a> ".FormatWith(AppPath, userId) +
+                                "<a href=\"{0}/Users/{1}/Promoted/9\">9</a> ".FormatWith(AppPath, userId) +
+                                "<a href=\"{0}/Users/{1}/Promoted/10\">10</a> ".FormatWith(AppPath, userId) +
                                 "... " +
-                                "<a href=\"{0}/Users/{1}/Promoted/19\">19</a> ".FormatWith(AppPath, UserName) +
-                                "<a href=\"{0}/Users/{1}/Promoted/20\">20</a> ".FormatWith(AppPath, UserName) +
-                                "<a href=\"{0}/Users/{1}/Promoted/2\">Next</a>".FormatWith(AppPath, UserName) +
+                                "<a href=\"{0}/Users/{1}/Promoted/19\">19</a> ".FormatWith(AppPath, userId) +
+                                "<a href=\"{0}/Users/{1}/Promoted/20\">20</a> ".FormatWith(AppPath, userId) +
+                                "<a href=\"{0}/Users/{1}/Promoted/2\">Next</a>".FormatWith(AppPath, userId) +
                             "</div>";
 
             var routeData = new RouteData();
 
-            routeData.Values["name"] = UserName;
+            routeData.Values["id"] = userId;
 
             var helper = GetHtmlHelperForStoryListPager("PromotedBy", routeData, 1, 200);
 

@@ -18,7 +18,6 @@ namespace Kigg.Web
     public class MembershipController : BaseController
     {
         private const int MinimumLength = 4;
-        private const string UnknownError = "An unexpected error has occurred while {0}.";
 
         private static readonly Regex UserNameExpression = new Regex(@"^([a-zA-Z])[a-zA-Z_-]*[\w_-]*[\S]$|^([a-zA-Z])[0-9_-]*[\S]$|^[a-zA-Z]*[\S]$", RegexOptions.Singleline | RegexOptions.Compiled);
 
@@ -127,8 +126,7 @@ namespace Kigg.Web
 
                 if (OpenIdRelyingParty.Response.Status == AuthenticationStatus.Authenticated)
                 {
-                    // We can't have / character in username, so replace it with -
-                    string userName = OpenIdRelyingParty.Response.FriendlyIdentifierForDisplay.Replace("/", "-").Trim();
+                    string userName = OpenIdRelyingParty.Response.ClaimedIdentifier;
 
                     using (IUnitOfWork unitOfWork = UnitOfWork.Get())
                     {
@@ -172,7 +170,7 @@ namespace Kigg.Web
                 }
                 else if ((OpenIdRelyingParty.Response.Status == AuthenticationStatus.Failed) || (OpenIdRelyingParty.Response.Status == AuthenticationStatus.Canceled))
                 {
-                    errorMessage = "Failed to login with your prefered OpenID provider.";
+                    errorMessage = "Failed to login with your preferred OpenID provider.";
                 }
             }
             catch (Exception oid)
@@ -231,7 +229,7 @@ namespace Kigg.Web
                 {
                     Log.Exception(e);
 
-                    viewData = new JsonViewData { errorMessage = UnknownError.FormatWith("signing up") };
+                    viewData = new JsonViewData { errorMessage = FormatStrings.UnknownError.FormatWith("signing up") };
                 }
             }
 
@@ -286,7 +284,7 @@ namespace Kigg.Web
                 catch (Exception e)
                 {
                     Log.Exception(e);
-                    viewData = new JsonViewData { errorMessage = UnknownError.FormatWith("logging in") };
+                    viewData = new JsonViewData { errorMessage = FormatStrings.UnknownError.FormatWith("logging in") };
                 }
             }
 
@@ -316,7 +314,7 @@ namespace Kigg.Web
                 {
                     Log.Exception(e);
 
-                    viewData = new JsonViewData { errorMessage = UnknownError.FormatWith("logging out") };
+                    viewData = new JsonViewData { errorMessage = FormatStrings.UnknownError.FormatWith("logging out") };
                 }
             }
             else
@@ -372,7 +370,7 @@ namespace Kigg.Web
                 {
                     Log.Exception(e);
 
-                    viewData = new JsonViewData { errorMessage = UnknownError.FormatWith("resetting password") };
+                    viewData = new JsonViewData { errorMessage = FormatStrings.UnknownError.FormatWith("resetting password") };
                 }
             }
 
@@ -410,7 +408,7 @@ namespace Kigg.Web
                 {
                     Log.Exception(e);
 
-                    viewData = new JsonViewData { errorMessage = UnknownError.FormatWith("changing password") };
+                    viewData = new JsonViewData { errorMessage = FormatStrings.UnknownError.FormatWith("changing password") };
                 }
             }
 
@@ -446,7 +444,7 @@ namespace Kigg.Web
                 {
                     Log.Exception(e);
 
-                    viewData = new JsonViewData { errorMessage = UnknownError.FormatWith("changing email") };
+                    viewData = new JsonViewData { errorMessage = FormatStrings.UnknownError.FormatWith("changing email") };
                 }
             }
 
@@ -489,7 +487,7 @@ namespace Kigg.Web
                 {
                     Log.Exception(e);
 
-                    viewData = new JsonViewData { errorMessage = UnknownError.FormatWith("changing role") };
+                    viewData = new JsonViewData { errorMessage = FormatStrings.UnknownError.FormatWith("changing role") };
                 }
             }
 
@@ -563,7 +561,7 @@ namespace Kigg.Web
                 {
                     Log.Exception(e);
 
-                    viewData = new JsonViewData { errorMessage = UnknownError.FormatWith("allowing the user Ip Addresses") };
+                    viewData = new JsonViewData { errorMessage = FormatStrings.UnknownError.FormatWith("allowing the user Ip Addresses") };
                 }
             }
 
@@ -603,7 +601,7 @@ namespace Kigg.Web
                 }
                 catch (Exception e)
                 {
-                    GenerateMessageCookie(UnknownError.FormatWith("activating your account"), true);
+                    GenerateMessageCookie(FormatStrings.UnknownError.FormatWith("activating your account"), true);
                     Log.Exception(e);
                 }
             }
@@ -612,16 +610,20 @@ namespace Kigg.Web
         }
 
         [AutoRefresh, Compress]
-        public ActionResult Detail(string name, string tab, int? page)
+        public ActionResult Detail(string id, string tab, int? page)
         {
-            name = name.NullSafe();
-
-            if (string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(id))
             {
                 return RedirectToRoute("Published");
             }
 
-            IUser user = UserRepository.FindByUserName(name.Trim());
+            IUser user = null;
+            Guid userId = id.NullSafe().ToGuid();
+
+            if (!userId.IsEmpty())
+            {
+                user = UserRepository.FindById(userId);
+            }
 
             if (user == null)
             {
@@ -721,7 +723,7 @@ namespace Kigg.Web
                 {
                     Log.Exception(e);
 
-                    viewData = new JsonViewData { errorMessage = UnknownError.FormatWith("{0} the user".FormatWith(unlock ? "unlocking" : "locking")) };
+                    viewData = new JsonViewData { errorMessage = FormatStrings.UnknownError.FormatWith("{0} the user".FormatWith(unlock ? "unlocking" : "locking")) };
                 }
             }
 

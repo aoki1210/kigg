@@ -34,6 +34,7 @@ namespace Kigg.Web.Test
             {
                 var user = new Mock<IUser>();
 
+                user.ExpectGet(u => u.Id).Returns(Guid.NewGuid());
                 user.ExpectGet(u => u.UserName).Returns("Top Mover {0}".FormatWith(i));
 
                 topMovers.Add(user.Object);

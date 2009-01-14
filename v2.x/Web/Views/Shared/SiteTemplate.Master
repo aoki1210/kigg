@@ -115,7 +115,7 @@
             metaKeywords.Content = ViewData.Model.MetaKeywords;
             metaDescription.Content = ViewData.Model.MetaDescription;
 
-            //Reomve the ugly server ID tag
+            //Remove the ugly server ID tag
             metaKeywords.ID = metaDescription.ID = null;
         }
 
@@ -152,7 +152,7 @@
         </div>
         <div id="footer">
             <div style="float:left;padding-left:10px">
-                <p><a href="http://www.codeplex.com/Kigg" target="_blank">project home</a> | <a href="http://www.codeplex.com/Kigg/WorkItem/List.aspx" target="_blank">report a bug</a> | <a href="http://dotnetslackers.com/Community/forums/kigg/97.aspx" target="_blank">disscuss</a> | <a href="<%= Url.RouteUrl("About") %>">about us</a> | <a href="<%= Url.RouteUrl("Contact") %>">contact us</a></p>
+                <p><a href="http://www.codeplex.com/Kigg" target="_blank">project home</a> | <a href="http://www.codeplex.com/Kigg/WorkItem/List.aspx" target="_blank">report a bug</a> | <a href="http://www.codeplex.com/Kigg/Thread/List.aspx" target="_blank">disscuss</a> | <a href="<%= Url.RouteUrl("About") %>">about us</a> | <a href="<%= Url.RouteUrl("Contact") %>">contact us</a></p>
                 <p> © <%= ViewData.Model.SiteTitle %>. <%= DateTime.Today.Year.ToString("0000") %> - Content posted by <%= ViewData.Model.SiteTitle %> users is <a target="_blank" rel="license" href="http://creativecommons.org/licenses/publicdomain/">dedicated to the public domain.</a></p>
             </div>
             <div style="float:right;padding-right:10px">
