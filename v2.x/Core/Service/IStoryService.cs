@@ -27,6 +27,8 @@ namespace Kigg.Service
 
         void Publish();
 
+        void Approve(IStory theStory, string storyUrl, IUser byUser);
+
         void Spam(IStory theStory, string storyUrl, IUser byUser);
 
         void Spam(IComment theComment, string storyUrl, IUser byUser);

@@ -186,7 +186,7 @@ namespace Kigg.Web
 
             model.Title = "{0} - Stories promoted by {1}".FormatWith(Settings.SiteTitle.HtmlEncode(), userName.HtmlEncode());
             model.Description = model.Title;
-            model.Url = Url.RouteUrl("User", new { id = name, tab = UserDetailTab.Promoted });
+            model.Url = Url.RouteUrl("User", new { name, tab = UserDetailTab.Promoted });
 
             return new FeedResult(model, format);
         }
@@ -225,7 +225,7 @@ namespace Kigg.Web
             model.Title = "{0} - Stories posted by {1}".FormatWith(Settings.SiteTitle.HtmlEncode(), userName.HtmlEncode());
             model.Description = model.Title;
 
-            model.Url = Url.RouteUrl("User", new { id = name, tab = UserDetailTab.Posted });
+            model.Url = Url.RouteUrl("User", new { name, tab = UserDetailTab.Posted });
 
             return new FeedResult(model, format);
         }
@@ -263,7 +263,7 @@ namespace Kigg.Web
 
             model.Title = "{0} - Stories commented by {1}".FormatWith(Settings.SiteTitle.HtmlEncode(), userName.HtmlEncode());
             model.Description = model.Title;
-            model.Url = Url.RouteUrl("User", new { id = name, tab = UserDetailTab.Commented });
+            model.Url = Url.RouteUrl("User", new { name, tab = UserDetailTab.Commented });
 
             return new FeedResult(model, format);
         }

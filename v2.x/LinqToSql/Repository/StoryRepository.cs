@@ -79,7 +79,7 @@
             int total = CountByPublished();
 
             var stories = Database.StoryDataSource
-                                  .Where(s => (s.SpammedAt == null) && (s.PublishedAt != null) && (s.Rank != null))
+                                  .Where(s => (s.ApprovedAt != null) && (s.PublishedAt != null) && (s.Rank != null))
                                   .OrderByDescending(s => s.PublishedAt)
                                   .ThenBy(s => s.Rank)
                                   .ThenByDescending(s => s.CreatedAt)
@@ -98,7 +98,7 @@
             int total = CountByCategory(categoryId);
 
             var stories = Database.StoryDataSource
-                                  .Where(s => (s.SpammedAt == null) && (s.PublishedAt != null) && (s.Rank != null) && (s.CategoryId == categoryId))
+                                  .Where(s => (s.ApprovedAt != null) && (s.PublishedAt != null) && (s.Rank != null) && (s.CategoryId == categoryId))
                                   .OrderByDescending(s => s.PublishedAt)
                                   .ThenBy(s => s.Rank)
                                   .ThenByDescending(s => s.CreatedAt)
@@ -116,10 +116,59 @@
             int total = CountByUpcoming();
 
             var stories = Database.StoryDataSource
-                                  .Where(s => (s.SpammedAt == null) && (s.PublishedAt == null) && (s.Rank == null))
+                                  .Where(s => (s.ApprovedAt != null) && (s.PublishedAt == null) && (s.Rank == null))
                                   .OrderByDescending(s => s.CreatedAt)
                                   .Skip(start)
                                   .Take(max);
+
+            return BuildPagedResult<IStory>(stories, total);
+        }
+
+        public virtual PagedResult<IStory> FindNew(int start, int max)
+        {
+            Check.Argument.IsNotNegative(start, "start");
+            Check.Argument.IsNotNegative(max, "max");
+
+            int total = CountByNew();
+
+            var stories = Database.StoryDataSource
+                                  .Where(s => (s.ApprovedAt != null) && (s.LastProcessedAt == null))
+                                  .OrderByDescending(s => s.CreatedAt)
+                                  .Skip(start)
+                                  .Take(max);
+
+            return BuildPagedResult<IStory>(stories, total);
+        }
+
+        public virtual PagedResult<IStory> FindUnapproved(int start, int max)
+        {
+            Check.Argument.IsNotNegative(start, "start");
+            Check.Argument.IsNotNegative(max, "max");
+
+            int total = CountByUnapproved();
+
+            var stories = Database.StoryDataSource
+                                  .Where(s => (s.ApprovedAt == null))
+                                  .OrderByDescending(s => s.CreatedAt)
+                                  .Skip(start)
+                                  .Take(max);
+
+            return BuildPagedResult<IStory>(stories, total);
+        }
+
+        public virtual PagedResult<IStory> FindPublishable(DateTime minimumDate, DateTime maximumDate, int start, int max)
+        {
+            Check.Argument.IsNotInFuture(minimumDate, "minimumDate");
+            Check.Argument.IsNotInFuture(maximumDate, "maximumDate");
+            Check.Argument.IsNotNegative(start, "start");
+            Check.Argument.IsNotNegative(max, "max");
+
+            int total = CountByPublishable(minimumDate, maximumDate);
+
+            var stories = Database.StoryDataSource
+                                  .Where(s => ((s.ApprovedAt != null) && ((s.CreatedAt >= minimumDate) && (s.CreatedAt <= maximumDate)) && ((s.LastProcessedAt == null) || (s.LastProcessedAt <= s.LastActivityAt))))
+                                  .OrderByDescending(s => s.CreatedAt)
+                                  .Skip(start).Take(max);
 
             return BuildPagedResult<IStory>(stories, total);
         }
@@ -133,7 +182,7 @@
             int total = CountByTag(tagId);
 
             var stories = Database.StoryDataSource
-                                  .Where(s => (s.SpammedAt == null) && s.StoryTags.Any(st => st.TagId == tagId))
+                                  .Where(s => (s.ApprovedAt != null) && s.StoryTags.Any(st => st.TagId == tagId))
                                   .OrderByDescending(s => s.CreatedAt)
                                   .Skip(start)
                                   .Take(max);
@@ -148,15 +197,15 @@
             Check.Argument.IsNotNegative(max, "max");
 
             int total = Database.StoryDataSource
-                                .Count(s => (s.SpammedAt == null) && (s.Title.Contains(query) || s.UniqueName.Contains(query) || s.Url.Contains(query) || s.TextDescription.Contains(query) || s.Category.Name.Contains(query) || s.StoryTags.Any(st => st.Tag.Name.Contains(query)) || s.StoryComments.Any(c => c.TextBody.Contains(query))));
+                                .Count(s => (s.ApprovedAt != null) && (s.Title.Contains(query) || s.UniqueName.Contains(query) || s.Url.Contains(query) || s.TextDescription.Contains(query) || s.Category.Name.Contains(query) || s.StoryTags.Any(st => st.Tag.Name.Contains(query)) || s.StoryComments.Any(c => c.TextBody.Contains(query))));
 
             var stories = Database.StoryDataSource
-                                  .Where(s => (s.SpammedAt == null) && (s.Title.Contains(query) || s.Url.Contains(query) || s.TextDescription.Contains(query) || s.Category.Name.Contains(query) || s.StoryTags.Any(st => st.Tag.Name.Contains(query)) || s.StoryComments.Any(c => c.TextBody.Contains(query))))
-                                 .OrderByDescending(s => s.PublishedAt)
-                                 .ThenBy(s => s.Rank)
-                                 .ThenByDescending(s => s.CreatedAt)
-                                 .Skip(start)
-                                 .Take(max);
+                                  .Where(s => (s.ApprovedAt != null) && (s.Title.Contains(query) || s.Url.Contains(query) || s.TextDescription.Contains(query) || s.Category.Name.Contains(query) || s.StoryTags.Any(st => st.Tag.Name.Contains(query)) || s.StoryComments.Any(c => c.TextBody.Contains(query))))
+                                  .OrderByDescending(s => s.PublishedAt)
+                                  .ThenBy(s => s.Rank)
+                                  .ThenByDescending(s => s.CreatedAt)
+                                  .Skip(start)
+                                  .Take(max);
 
             return BuildPagedResult<IStory>(stories, total);
         }
@@ -167,11 +216,10 @@
             Check.Argument.IsNotNegative(start, "start");
             Check.Argument.IsNotNegative(max, "max");
 
-            int total = Database.StoryDataSource
-                                .Count(s => ((s.SpammedAt == null) && (s.UserId == userId)));
+            int total = CountPostedByUser(userId);
 
             List<Story> stories = Database.StoryDataSource
-                                          .Where(s => ((s.SpammedAt == null) && (s.UserId == userId)))
+                                          .Where(s => ((s.ApprovedAt != null) && (s.UserId == userId)))
                                           .OrderByDescending(s => s.CreatedAt)
                                           .Skip(start)
                                           .Take(max)
@@ -187,10 +235,10 @@
             Check.Argument.IsNotNegative(max, "max");
 
             int total = Database.StoryDataSource
-                                .Count(s => ((s.SpammedAt == null) && s.StoryVotes.Any(v => v.UserId == userId)));
+                                .Count(s => ((s.ApprovedAt != null) && s.StoryVotes.Any(v => v.UserId == userId)));
 
             List<Story> stories = Database.VoteDataSource
-                                          .Where(v => ((v.UserId == userId) && (v.Story.SpammedAt == null)))
+                                          .Where(v => ((v.UserId == userId) && (v.Story.ApprovedAt != null)))
                                           .OrderByDescending(v => v.Timestamp)
                                           .Select(v => v.Story)
                                           .Skip(start)
@@ -207,10 +255,10 @@
             Check.Argument.IsNotNegative(max, "max");
 
             int total = Database.StoryDataSource
-                                .Count(s => ((s.SpammedAt == null) && s.StoryComments.Any(c => c.UserId == userId)));
+                                .Count(s => ((s.ApprovedAt != null) && s.StoryComments.Any(c => c.UserId == userId)));
 
             IQueryable<Guid> ids = Database.CommentDataSource
-                                           .Where(c => ((c.UserId == userId) && (c.Story.SpammedAt == null)))
+                                           .Where(c => ((c.UserId == userId) && (c.Story.ApprovedAt != null)))
                                            .OrderByDescending(c => c.Timestamp)
                                            .Select(c => c.StoryId)
                                            .Distinct()
@@ -224,33 +272,15 @@
             return BuildPagedResult<IStory>(stories, total);
         }
 
-        public virtual ICollection<IStory> FindPublishable(DateTime minimumDate, DateTime maximumDate, int start, int max)
-        {
-            Check.Argument.IsNotInFuture(minimumDate, "minimumDate");
-            Check.Argument.IsNotInFuture(maximumDate, "maximumDate");
-            Check.Argument.IsNotNegative(start, "start");
-            Check.Argument.IsNotNegative(max, "max");
-
-            return Database.StoryDataSource
-                           .Where(s => ((s.SpammedAt == null) && ((s.CreatedAt >= minimumDate) && (s.CreatedAt <= maximumDate)) && ((s.LastProcessedAt == null) || (s.LastProcessedAt <= s.LastActivityAt))))
-                           .OrderByDescending(s => s.CreatedAt)
-                           .Skip(start)
-                           .Take(max)
-                           .ToList()
-                           .Cast<IStory>()
-                           .ToList()
-                           .AsReadOnly();
-        }
-
         public virtual int CountByPublished()
         {
             return Database.StoryDataSource
-                           .Count(s => (s.SpammedAt == null) && (s.PublishedAt != null));
+                           .Count(s => (s.ApprovedAt != null) && (s.PublishedAt != null));
         }
 
         public virtual int CountByUpcoming()
         {
-            return Database.StoryDataSource.Count(s => (s.SpammedAt == null) && (s.PublishedAt == null));
+            return Database.StoryDataSource.Count(s => (s.ApprovedAt != null) && (s.PublishedAt == null));
         }
 
         public virtual int CountByCategory(Guid categoryId)
@@ -258,19 +288,24 @@
             Check.Argument.IsNotEmpty(categoryId, "categoryId");
 
             return Database.StoryDataSource
-                           .Count(s => (s.SpammedAt == null) && (s.PublishedAt != null) && (s.CategoryId == categoryId));
+                           .Count(s => (s.ApprovedAt != null) && (s.PublishedAt != null) && (s.CategoryId == categoryId));
         }
 
         public virtual int CountByTag(Guid tagId)
         {
             Check.Argument.IsNotEmpty(tagId, "tagId");
 
-            return Database.StoryDataSource.Count(s => (s.SpammedAt == null) && s.StoryTags.Any(st => st.TagId == tagId));
+            return Database.StoryDataSource.Count(s => (s.ApprovedAt != null) && s.StoryTags.Any(st => st.TagId == tagId));
         }
 
         public virtual int CountByNew()
         {
-            return Database.StoryDataSource.Count(s => ((s.SpammedAt == null) && (s.LastProcessedAt == null)));
+            return Database.StoryDataSource.Count(s => ((s.ApprovedAt != null) && (s.LastProcessedAt == null)));
+        }
+
+        public int CountByUnapproved()
+        {
+            return Database.StoryDataSource.Count(s => s.ApprovedAt == null);
         }
 
         public virtual int CountByPublishable(DateTime minimumDate, DateTime maximumDate)
@@ -278,7 +313,14 @@
             Check.Argument.IsNotInFuture(minimumDate, "minimumDate");
             Check.Argument.IsNotInFuture(maximumDate, "maximumDate");
 
-            return Database.StoryDataSource.Count(s => ((s.SpammedAt == null) && ((s.CreatedAt >= minimumDate) && (s.CreatedAt <= maximumDate)) && ((s.LastProcessedAt == null) || (s.LastProcessedAt <= s.LastActivityAt))));
+            return Database.StoryDataSource.Count(s => ((s.ApprovedAt != null) && ((s.CreatedAt >= minimumDate) && (s.CreatedAt <= maximumDate)) && ((s.LastProcessedAt == null) || (s.LastProcessedAt <= s.LastActivityAt))));
+        }
+
+        public int CountPostedByUser(Guid userId)
+        {
+            Check.Argument.IsNotEmpty(userId, "userId");
+
+            return Database.StoryDataSource.Count(s => (s.ApprovedAt != null) && (s.UserId == userId));
         }
     }
 }

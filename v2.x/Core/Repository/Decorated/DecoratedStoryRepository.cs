@@ -1,7 +1,6 @@
 ﻿namespace Kigg.Repository
 {
     using System;
-    using System.Collections.Generic;
 
     using DomainObjects;
 
@@ -56,6 +55,21 @@
             return _innerRepository.FindUpcoming(start, max);
         }
 
+        public virtual PagedResult<IStory> FindNew(int start, int max)
+        {
+            return _innerRepository.FindNew(start, max);
+        }
+
+        public virtual PagedResult<IStory> FindUnapproved(int start, int max)
+        {
+            return _innerRepository.FindUnapproved(start, max);
+        }
+
+        public virtual PagedResult<IStory> FindPublishable(DateTime minimumDate, DateTime maximumDate, int start, int max)
+        {
+            return _innerRepository.FindPublishable(minimumDate, maximumDate, start, max);
+        }
+
         public virtual PagedResult<IStory> FindByTag(Guid tagId, int start, int max)
         {
             Check.Argument.IsNotEmpty(tagId, "tagId");
@@ -85,11 +99,6 @@
             return _innerRepository.FindCommentedByUser(userId, start, max);
         }
 
-        public virtual ICollection<IStory> FindPublishable(DateTime minimumDate, DateTime maximumDate, int start, int max)
-        {
-            return _innerRepository.FindPublishable(minimumDate, maximumDate, start, max);
-        }
-
         public virtual int CountByPublished()
         {
             return _innerRepository.CountByPublished();
@@ -115,9 +124,19 @@
             return _innerRepository.CountByNew();
         }
 
+        public virtual int CountByUnapproved()
+        {
+            return _innerRepository.CountByUnapproved();
+        }
+
         public virtual int CountByPublishable(DateTime minimumDate, DateTime maximumDate)
         {
             return _innerRepository.CountByPublishable(minimumDate, maximumDate);
+        }
+
+        public virtual int CountPostedByUser(Guid userId)
+        {
+            return _innerRepository.CountPostedByUser(userId);
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Web.Mvc;
 
 using Moq;
@@ -12,27 +13,29 @@ namespace Kigg.Web.Test
 
     public class SupportControllerFixture : BaseFixture
     {
+        private const string UserName = "dummyUser";
+
         private readonly Mock<IEmailSender> _emailSender;
+        private readonly Mock<IUserRepository> _userRepository;
+        private readonly Mock<IStoryRepository> _storyRepository;
+
+        private readonly HttpContextMock _httpContext;
         private readonly SupportController _controller;
 
         public SupportControllerFixture()
         {
             _emailSender = new Mock<IEmailSender>();
+            _storyRepository = new Mock<IStoryRepository>();
+            _userRepository = new Mock<IUserRepository>();
 
-            var userRepository = new Mock<IUserRepository>();
-
-            _controller = new SupportController(_emailSender.Object)
+            _controller = new SupportController(_storyRepository.Object, _emailSender.Object)
                               {
                                   Settings = settings.Object,
-                                  UserRepository = userRepository.Object
+                                  UserRepository = _userRepository.Object
                               };
 
-            var httpContext = _controller.MockHttpContext();
-
-            httpContext.User.Identity.ExpectGet(i => i.Name).Returns("DummyUser");
-            httpContext.User.Identity.ExpectGet(i => i.IsAuthenticated).Returns(true);
-
-            userRepository.Expect(r => r.FindByUserName(It.IsAny<string>())).Returns(new Mock<IUser>().Object);
+            _httpContext = _controller.MockHttpContext("/Kigg", null, null);
+            _httpContext.HttpRequest.ExpectGet(r => r.UserHostAddress).Returns("192.168.0.1");
         }
 
         [Fact]
@@ -129,6 +132,55 @@ namespace Kigg.Web.Test
             var result = (ViewResult) _controller.About();
 
             Assert.Equal(string.Empty, result.ViewName);
+        }
+
+        [Fact]
+        public void ControlPanel_Should_Render_Default_View()
+        {
+            var result = ControlPanel(false);
+
+            Assert.Equal(string.Empty, result.ViewName);
+        }
+
+        [Fact]
+        public void ControlPanel_Should_Use_StoryRepository_When_User_Has_Permission()
+        {
+            ControlPanel(true);
+
+            _storyRepository.Verify();
+        }
+
+        [Fact]
+        public void ControlPanel_Should_Return_Error_Messsage_When_User_Is_Not_Permitted()
+        {
+            var viewData = (ControlPanelViewData) ControlPanel(false).ViewData.Model;
+
+            Assert.Equal("You do not have the privilege to view it.", viewData.ErrorMessage);
+        }
+
+        private ViewResult ControlPanel(bool permitted)
+        {
+            SetCurrentUser(new Mock<IUser>(), permitted ? Roles.Moderator : Roles.User);
+
+            _storyRepository.Expect(r => r.CountByUnapproved()).Returns(10).Verifiable();
+            _storyRepository.Expect(r => r.CountByNew()).Returns(10).Verifiable();
+            _storyRepository.Expect(r => r.CountByPublishable(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(10).Verifiable();
+
+            return (ViewResult) _controller.ControlPanel();
+        }
+
+        private void SetCurrentUser(Mock<IUser> user, Roles role)
+        {
+            var userId = Guid.NewGuid();
+
+            user.ExpectGet(u => u.Id).Returns(userId);
+            user.ExpectGet(u => u.UserName).Returns(UserName);
+            user.ExpectGet(u => u.Role).Returns(role);
+
+            _httpContext.User.Identity.ExpectGet(i => i.Name).Returns(UserName);
+            _httpContext.User.Identity.ExpectGet(i => i.IsAuthenticated).Returns(true);
+
+            _userRepository.Expect(r => r.FindByUserName(UserName)).Returns(user.Object);
         }
     }
 }

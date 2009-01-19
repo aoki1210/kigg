@@ -166,6 +166,85 @@ namespace Kigg.Web
         }
 
         [AutoRefresh, Compress]
+        public ActionResult New(int? page)
+        {
+            StoryListViewData viewData = CreateStoryListViewData<StoryListViewData>(page);
+            viewData.Title = "{0} - New stories".FormatWith(Settings.SiteTitle);
+            viewData.MetaDescription = "New stories";
+            viewData.Subtitle = "New";
+
+            if (!IsCurrentUserAuthenticated || !CurrentUser.CanModerate())
+            {
+                viewData.NoStoryExistMessage = "You do not have the privilege to view new stories.";
+            }
+            else
+            {
+                PagedResult<IStory> pagedResult = _storyRepository.FindNew(PageCalculator.StartIndex(page, Settings.HtmlStoryPerPage), Settings.HtmlStoryPerPage);
+
+                viewData.Stories = pagedResult.Result;
+                viewData.TotalStoryCount = pagedResult.Total;
+
+                viewData.NoStoryExistMessage = "No new story exists.";
+            }
+
+            return View("List", viewData);
+        }
+
+        [AutoRefresh, Compress]
+        public ActionResult Unapproved(int? page)
+        {
+            StoryListViewData viewData = CreateStoryListViewData<StoryListViewData>(page);
+            viewData.Title = "{0} - Unapproved stories".FormatWith(Settings.SiteTitle);
+            viewData.MetaDescription = "Unapproved stories";
+            viewData.Subtitle = "Unapproved";
+
+            if (!IsCurrentUserAuthenticated || !CurrentUser.CanModerate())
+            {
+                viewData.NoStoryExistMessage = "You do not have the privilege to view unapproved stories.";
+            }
+            else
+            {
+                PagedResult<IStory> pagedResult = _storyRepository.FindUnapproved(PageCalculator.StartIndex(page, Settings.HtmlStoryPerPage), Settings.HtmlStoryPerPage);
+
+                viewData.Stories = pagedResult.Result;
+                viewData.TotalStoryCount = pagedResult.Total;
+
+                viewData.NoStoryExistMessage = "No unapproved story exists.";
+            }
+
+            return View("List", viewData);
+        }
+
+        [AutoRefresh, Compress]
+        public ActionResult Publishable(int? page)
+        {
+            StoryListViewData viewData = CreateStoryListViewData<StoryListViewData>(page);
+            viewData.Title = "{0} - Publishable stories".FormatWith(Settings.SiteTitle);
+            viewData.MetaDescription = "Publishable stories";
+            viewData.Subtitle = "Publishable";
+
+            if (!IsCurrentUserAuthenticated || !CurrentUser.CanModerate())
+            {
+                viewData.NoStoryExistMessage = "You do not have the privilege to view publishable stories.";
+            }
+            else
+            {
+                DateTime currentTime = SystemTime.Now();
+                DateTime minimumDate = currentTime.AddHours(-Settings.MaximumAgeOfStoryInHoursToPublish);
+                DateTime maximumDate = currentTime.AddHours(-Settings.MinimumAgeOfStoryInHoursToPublish);
+
+                PagedResult<IStory> pagedResult = _storyRepository.FindPublishable(minimumDate, maximumDate, PageCalculator.StartIndex(page, Settings.HtmlStoryPerPage), Settings.HtmlStoryPerPage);
+
+                viewData.Stories = pagedResult.Result;
+                viewData.TotalStoryCount = pagedResult.Total;
+
+                viewData.NoStoryExistMessage = "No publishable story exists.";
+            }
+
+            return View("List", viewData);
+        }
+
+        [AutoRefresh, Compress]
         public ActionResult Tags(string name, int? page)
         {
             name = name.NullSafe();
@@ -770,6 +849,57 @@ namespace Kigg.Web
         }
 
         [AcceptVerbs(HttpVerbs.Post), Compress]
+        public ActionResult Approve(string id)
+        {
+            id = id.NullSafe();
+
+            JsonViewData viewData = Validate<JsonViewData>(
+                                                            new Validation(() => string.IsNullOrEmpty(id), "Story identifier cannot be blank."),
+                                                            new Validation(() => id.ToGuid().IsEmpty(), "Invalid story identifier."),
+                                                            new Validation(() => !IsCurrentUserAuthenticated, "You are currently not authenticated."),
+                                                            new Validation(() => !CurrentUser.CanModerate(), "You do not have the privilege to call this method.")
+                                                          );
+
+            if (viewData == null)
+            {
+                try
+                {
+                    using (IUnitOfWork unitOfWork = UnitOfWork.Get())
+                    {
+                        IStory story = _storyRepository.FindById(id.ToGuid());
+
+                        if (story == null)
+                        {
+                            viewData = new JsonViewData { errorMessage = "Specified story does not exist." };
+                        }
+                        else
+                        {
+                            if (story.IsApproved())
+                            {
+                                viewData = new JsonViewData { errorMessage = "Specified story has been already approved." };
+                            }
+                            else
+                            {
+                                _storyService.Approve(story, string.Concat(Settings.RootUrl, Url.RouteUrl("Detail", new { name = story.UniqueName })), CurrentUser);
+                                unitOfWork.Commit();
+
+                                viewData = new JsonViewData { isSuccessful = true };
+                            }
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Log.Exception(e);
+
+                    viewData = new JsonViewData { errorMessage = FormatStrings.UnknownError.FormatWith("approving story") };
+                }
+            }
+
+            return Json(viewData);
+        }
+
+        [AcceptVerbs(HttpVerbs.Post), Compress]
         public ActionResult ConfirmSpam(string id)
         {
             id = id.NullSafe();
@@ -795,17 +925,10 @@ namespace Kigg.Web
                         }
                         else
                         {
-                            if (story.IsSpam())
-                            {
-                                viewData = new JsonViewData { errorMessage = "Specified story has been already approved as spam." };
-                            }
-                            else
-                            {
-                                _storyService.Spam(story, string.Concat(Settings.RootUrl, Url.RouteUrl("Detail", new { name = story.UniqueName })), CurrentUser);
-                                unitOfWork.Commit();
+                            _storyService.Spam(story, string.Concat(Settings.RootUrl, Url.RouteUrl("Detail", new { name = story.UniqueName })), CurrentUser);
+                            unitOfWork.Commit();
 
-                                viewData = new JsonViewData { isSuccessful = true };
-                            }
+                            viewData = new JsonViewData { isSuccessful = true };
                         }
                     }
                 }
@@ -818,25 +941,6 @@ namespace Kigg.Web
             }
 
             return Json(viewData);
-        }
-
-        public ActionResult PublishBox()
-        {
-            int newStoryCount = 0;
-
-            if (IsCurrentUserAuthenticated && CurrentUser.IsAdministrator())
-            {
-                DateTime currentTime = SystemTime.Now();
-
-                DateTime minimumDate = currentTime.AddHours(-Settings.MaximumAgeOfStoryInHoursToPublish);
-                DateTime maximumDate = currentTime.AddHours(-Settings.MinimumAgeOfStoryInHoursToPublish);
-
-                newStoryCount = _storyRepository.CountByPublishable(minimumDate, maximumDate);
-            }
-
-            ViewData["count"] = newStoryCount;
-
-            return View();
         }
 
         public ActionResult PromotedBy(string name, int? page)

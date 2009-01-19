@@ -131,5 +131,10 @@
         {
             get;
         }
+
+        int StorySumittedThresholdOfUserToSpamCheck
+        {
+            get;
+        }
     }
 }

@@ -10,15 +10,6 @@
       <Association Name="Category_Story" Member="Stories" ThisKey="Id" OtherKey="CategoryId" Type="Story" />
     </Type>
   </Table>
-  <Table Name="dbo.UserTag" Member="UserTags">
-    <Type Name="UserTag">
-      <Column Name="UserId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="TagId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="Version" Type="System.Data.Linq.Binary" DbType="rowversion NOT NULL" CanBeNull="false" IsVersion="true" />
-      <Association Name="Tag_UserTag" Member="Tag" ThisKey="TagId" OtherKey="Id" Type="Tag" IsForeignKey="true" />
-      <Association Name="User_UserTag" Member="User" ThisKey="UserId" OtherKey="Id" Type="User" IsForeignKey="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.CommentSubscribtion" Member="CommentSubscribtions">
     <Type Name="CommentSubscribtion">
       <Column Name="StoryId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
@@ -48,7 +39,7 @@
       <Column Name="IPAddress" Type="System.String" DbType="VarChar(15) NOT NULL" CanBeNull="false" />
       <Column Name="CreatedAt" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="LastActivityAt" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Column Name="SpammedAt" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ApprovedAt" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="PublishedAt" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="Rank" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="LastProcessedAt" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
@@ -126,8 +117,8 @@
       <Column Name="Name" Type="System.String" DbType="NVarChar(64) NOT NULL" CanBeNull="false" />
       <Column Name="CreatedAt" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="Version" Type="System.Data.Linq.Binary" DbType="rowversion NOT NULL" CanBeNull="false" IsVersion="true" />
-      <Association Name="Tag_UserTag" Member="UserTags" ThisKey="Id" OtherKey="TagId" Type="UserTag" />
       <Association Name="Tag_StoryTag" Member="StoryTags" ThisKey="Id" OtherKey="TagId" Type="StoryTag" />
+      <Association Name="Tag_UserTag" Member="UserTags" ThisKey="Id" OtherKey="TagId" Type="UserTag" />
     </Type>
   </Table>
   <Table Name="dbo.[User]" Member="Users">
@@ -142,13 +133,13 @@
       <Column Name="LastActivityAt" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="CreatedAt" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="Version" Type="System.Data.Linq.Binary" DbType="rowversion NOT NULL" CanBeNull="false" IsVersion="true" />
-      <Association Name="User_UserTag" Member="UserTags" ThisKey="Id" OtherKey="UserId" Type="UserTag" />
       <Association Name="User_CommentSubscribtion" Member="CommentSubscribtions" ThisKey="Id" OtherKey="UserId" Type="CommentSubscribtion" />
       <Association Name="User_Story" Member="Stories" ThisKey="Id" OtherKey="UserId" Type="Story" />
       <Association Name="User_StoryComment" Member="StoryComments" ThisKey="Id" OtherKey="UserId" Type="StoryComment" />
       <Association Name="User_StoryMarkAsSpam" Member="StoryMarkAsSpams" ThisKey="Id" OtherKey="UserId" Type="StoryMarkAsSpam" />
       <Association Name="User_StoryVote" Member="StoryVotes" ThisKey="Id" OtherKey="UserId" Type="StoryVote" />
       <Association Name="User_UserScore" Member="UserScores" ThisKey="Id" OtherKey="UserId" Type="UserScore" />
+      <Association Name="User_UserTag" Member="UserTags" ThisKey="Id" OtherKey="UserId" Type="UserTag" />
     </Type>
   </Table>
   <Table Name="dbo.UserScore" Member="UserScores">
@@ -160,6 +151,15 @@
       <Column Name="Score" Type="System.Decimal" DbType="Decimal(5,2) NOT NULL" CanBeNull="false" />
       <Column Name="Version" Type="System.Data.Linq.Binary" DbType="rowversion NOT NULL" CanBeNull="false" IsVersion="true" />
       <Association Name="User_UserScore" Member="User" ThisKey="UserId" OtherKey="Id" Type="User" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.UserTag" Member="UserTags">
+    <Type Name="UserTag">
+      <Column Name="UserId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="TagId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Version" Type="System.Data.Linq.Binary" DbType="rowversion NOT NULL" CanBeNull="false" IsVersion="true" />
+      <Association Name="Tag_UserTag" Member="Tag" ThisKey="TagId" OtherKey="Id" Type="Tag" IsForeignKey="true" />
+      <Association Name="User_UserTag" Member="User" ThisKey="UserId" OtherKey="Id" Type="User" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>

@@ -86,14 +86,13 @@
                                   Title = title.Trim(),
                                   HtmlDescription = description.Trim(),
                                   Url = url,
-                                  UserId = byUser.Id,
                                   IPAddress = fromIPAddress,
-                                  CategoryId = forCategory.Id,
                                   CreatedAt = now,
                                   LastActivityAt = now,
-                                  UrlHash = url.ToUpperInvariant().Hash()
+                                  UrlHash = url.ToUpperInvariant().Hash(),
+                                  User = (User) byUser,
+                                  Category = (Category)forCategory,
                               };
-
             return story;
         }
     }

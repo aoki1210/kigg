@@ -107,7 +107,7 @@ namespace Kigg.Core.Test
             _httpForm.Expect(h => h.Post(ApiKeyCheckUrl, It.IsAny<NameValueCollection>())).Returns(ValidApiKeyResponse);
             _httpForm.Expect(h => h.PostAsync(CommentCheckUrl, It.IsAny<NameValueCollection>(), It.IsAny<Action<string>>(), It.IsAny<Action<Exception>>())).Callback((string url, NameValueCollection formFields, Action<string> onComplete, Action<Exception> onError) => onComplete(response));
 
-            _spamProtection.IsSpam(CreateDummyContent(), isSpam => Assert.Equal(result, isSpam));
+            _spamProtection.IsSpam(CreateDummyContent(), (source, isSpam) => Assert.Equal(result, isSpam));
         }
 
         [Fact]
@@ -120,7 +120,7 @@ namespace Kigg.Core.Test
             _httpForm.Expect(h => h.Post(ApiKeyCheckUrl, It.IsAny<NameValueCollection>())).Returns(ValidApiKeyResponse);
             _httpForm.Expect(h => h.PostAsync(CommentCheckUrl, It.IsAny<NameValueCollection>(), It.IsAny<Action<string>>(), It.IsAny<Action<Exception>>())).Callback((string url, NameValueCollection formFields, Action<string> onComplete, Action<Exception> onError) => onComplete(NotSpamCommentResponse));
 
-            next.Expect(sp => sp.IsSpam(It.IsAny<SpamCheckContent>(), It.IsAny<Action<bool>>())).Verifiable();
+            next.Expect(sp => sp.IsSpam(It.IsAny<SpamCheckContent>(), It.IsAny<Action<string, bool>>())).Verifiable();
 
             _spamProtection.IsSpam(CreateDummyContent(), delegate{});
 
@@ -133,7 +133,7 @@ namespace Kigg.Core.Test
             _httpForm.Expect(h => h.Post(ApiKeyCheckUrl, It.IsAny<NameValueCollection>())).Returns(ValidApiKeyResponse);
             _httpForm.Expect(h => h.PostAsync(CommentCheckUrl, It.IsAny<NameValueCollection>(), It.IsAny<Action<string>>(), It.IsAny<Action<Exception>>())).Callback((string url, NameValueCollection formFields, Action<string> onComplete, Action<Exception> onError) => onError(new InvalidOperationException()));
 
-            _spamProtection.IsSpam(CreateDummyContent(), Assert.False );
+            _spamProtection.IsSpam(CreateDummyContent(), (source, isSpam) => Assert.False(isSpam));
         }
 
         [Fact]
@@ -146,7 +146,7 @@ namespace Kigg.Core.Test
             _httpForm.Expect(h => h.Post(ApiKeyCheckUrl, It.IsAny<NameValueCollection>())).Returns(ValidApiKeyResponse);
             _httpForm.Expect(h => h.PostAsync(CommentCheckUrl, It.IsAny<NameValueCollection>(), It.IsAny<Action<string>>(), It.IsAny<Action<Exception>>())).Callback((string url, NameValueCollection formFields, Action<string> onComplete, Action<Exception> onError) => onError(new InvalidOperationException()));
 
-            next.Expect(sp => sp.IsSpam(It.IsAny<SpamCheckContent>(), It.IsAny<Action<bool>>())).Verifiable();
+            next.Expect(sp => sp.IsSpam(It.IsAny<SpamCheckContent>(), It.IsAny<Action<string, bool>>())).Verifiable();
 
             _spamProtection.IsSpam(CreateDummyContent(), delegate { });
 

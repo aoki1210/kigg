@@ -241,10 +241,9 @@ namespace Kigg.DomainObjects
             Check.Argument.IsNotNull(byUser, "byUser");
 
             // User will be able to promote the Story if
-            // 1. When Story is not approved as spam
-            // 2. User has not previously promoted it.
-            // 3. User has not previously marked it as spam.
-            return !this.IsSpam() && !HasPromoted(byUser) && !HasMarkedAsSpam(byUser);
+            // 1. User has not previously promoted it.
+            // 2. User has not previously marked it as spam.
+            return !HasPromoted(byUser) && !HasMarkedAsSpam(byUser);
         }
 
         public virtual bool Promote(DateTime at, IUser byUser, string fromIPAddress)
@@ -286,10 +285,9 @@ namespace Kigg.DomainObjects
             Check.Argument.IsNotNull(byUser, "byUser");
 
             // User will be able to demote the Story if
-            // 1. When Story is not approved as spam
-            // 2. Story is not posted by the same user
-            // 3. User has previously promoted it.
-            return !this.IsSpam() && !this.IsPostedBy(byUser) && HasPromoted(byUser);
+            // 1. Story is not posted by the same user
+            // 1. User has previously promoted it.
+            return !this.IsPostedBy(byUser) && HasPromoted(byUser);
         }
 
         public virtual bool Demote(DateTime at, IUser byUser)
@@ -319,11 +317,10 @@ namespace Kigg.DomainObjects
 
             // User will be able to mark as spam when
             // 1. When Story is not published
-            // 2. When Story is not approved as spam
-            // 3. Story is not posted by the same user
-            // 4. User has not previously promoted it.
-            // 5. user has not previously marked it as spam.
-            return !this.IsPublished() && !this.IsSpam() && !this.IsPostedBy(byUser) && !HasPromoted(byUser) && !HasMarkedAsSpam(byUser);
+            // 2. Story is not posted by the same user
+            // 3. User has not previously promoted it.
+            // 4. user has not previously marked it as spam.
+            return !this.IsPublished() && !this.IsPostedBy(byUser) && !HasPromoted(byUser) && !HasMarkedAsSpam(byUser);
         }
 
         public virtual bool MarkAsSpam(DateTime at, IUser byUser, string fromIPAddress)
@@ -365,10 +362,9 @@ namespace Kigg.DomainObjects
             Check.Argument.IsNotNull(byUser, "byUser");
 
             // User will be able to unmark as spam when
-            // 1. When Story is not approved as spam
-            // 2. When Story is not published
-            // 3. User has previously marked it as spam.
-            return !this.IsSpam() && !this.IsPublished() && HasMarkedAsSpam(byUser);
+            // 1. When Story is not published
+            // 2. User has previously marked it as spam.
+            return !this.IsPublished() && HasMarkedAsSpam(byUser);
         }
 
         public virtual bool UnmarkAsSpam(DateTime at, IUser byUser)
@@ -476,6 +472,14 @@ namespace Kigg.DomainObjects
             }
         }
 
+        public virtual void Approve(DateTime at)
+        {
+            if (!this.IsApproved())
+            {
+                ApprovedAt = at;
+            }
+        }
+
         public virtual void Publish(DateTime at, int rank)
         {
             Check.Argument.IsNotInFuture(at, "at");
@@ -491,14 +495,6 @@ namespace Kigg.DomainObjects
             Check.Argument.IsNotInFuture(at, "at");
 
             LastProcessedAt = at;
-        }
-
-        public virtual void Spam(DateTime at)
-        {
-            Check.Argument.IsNotInFuture(at, "at");
-
-            SpammedAt = at;
-            LastActivityAt = at;
         }
 
         public virtual void ChangeNameAndCreatedAt(string name, DateTime createdAt)

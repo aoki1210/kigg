@@ -96,11 +96,11 @@ namespace Kigg.Repository
             Check.Argument.IsNotInFuture(startTimestamp, "startTimestamp");
             Check.Argument.IsNotInFuture(endTimestamp, "endTimestamp");
 
-            Log.Info("Retrieving score of user: {0}, startTimestamp, endTimestamp", id, startTimestamp, endTimestamp);
+            Log.Info("Retrieving score of user: {0}, {1}, {2}", id, startTimestamp, endTimestamp);
 
             var result = base.FindScoreById(id, startTimestamp, endTimestamp);
 
-            Log.Info("Score retrieved of user: {0}, startTimestamp, endTimestamp", id, startTimestamp, endTimestamp);
+            Log.Info("Score retrieved of user: {0}, {1}, {2}", id, startTimestamp, endTimestamp);
 
             return result;
         }

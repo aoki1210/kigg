@@ -35,6 +35,8 @@ namespace Kigg.Infrastructure
             Log.Info("Pinging url: {0}", url);
 
             base.Ping(url, title, fromUrl, excerpt, siteTitle);
+
+            Log.Info("Url pinged: {0}", url);
         }
 
         public override string ShortUrl(string url)

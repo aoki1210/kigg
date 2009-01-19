@@ -19,6 +19,7 @@ namespace Kigg.Service
         private readonly IStoryRepository _storyRepository;
         private readonly IMarkAsSpamRepository _markAsSpamRepository;
         private readonly ISpamProtection _spamProtection;
+        private readonly ISpamPostprocessor _spamPostprocessor;
         private readonly IEmailSender _emailSender;
         private readonly IContentService _contentService;
         private readonly IHtmlSanitizer _htmlSanitizer;
@@ -26,7 +27,7 @@ namespace Kigg.Service
 
         private readonly IStoryWeightCalculator[] _storyWeightCalculators;
 
-        public StoryService(IConfigurationSettings settings, IUserScoreService userScoreService, IDomainObjectFactory factory, ICategoryRepository categoryRepository, ITagRepository tagRepository, IStoryRepository storyRepository, IMarkAsSpamRepository markAsSpamRepository, ISpamProtection spamProtection, IEmailSender emailSender, IContentService contentService, IHtmlSanitizer htmlSanitizer, IThumbnail thumbnail, IStoryWeightCalculator[] storyWeightCalculators)
+        public StoryService(IConfigurationSettings settings, IUserScoreService userScoreService, IDomainObjectFactory factory, ICategoryRepository categoryRepository, ITagRepository tagRepository, IStoryRepository storyRepository, IMarkAsSpamRepository markAsSpamRepository, ISpamProtection spamProtection, ISpamPostprocessor spamPostprocessor, IEmailSender emailSender, IContentService contentService, IHtmlSanitizer htmlSanitizer, IThumbnail thumbnail, IStoryWeightCalculator[] storyWeightCalculators)
         {
             Check.Argument.IsNotNull(settings, "settings");
             Check.Argument.IsNotNull(userScoreService, "userScoreService");
@@ -36,6 +37,7 @@ namespace Kigg.Service
             Check.Argument.IsNotNull(storyRepository, "storyRepository");
             Check.Argument.IsNotNull(markAsSpamRepository, "markAsSpamRepository");
             Check.Argument.IsNotNull(spamProtection, "spamProtection");
+            Check.Argument.IsNotNull(spamPostprocessor, "spamPostprocessor");
             Check.Argument.IsNotNull(emailSender, "emailSender");
             Check.Argument.IsNotNull(contentService, "contentService");
             Check.Argument.IsNotNull(htmlSanitizer, "htmlSanitizer");
@@ -50,6 +52,7 @@ namespace Kigg.Service
             _storyRepository = storyRepository;
             _markAsSpamRepository = markAsSpamRepository;
             _spamProtection = spamProtection;
+            _spamPostprocessor = spamPostprocessor;
             _emailSender = emailSender;
             _contentService = contentService;
             _htmlSanitizer = htmlSanitizer;
@@ -81,12 +84,12 @@ namespace Kigg.Service
 
                 if (content == StoryContent.Empty)
                 {
-                    return new StoryCreateResult { ErrorMessage = "Specified url appears to be a broken link." };
+                    return new StoryCreateResult { ErrorMessage = "Specified url appears to be broken." };
                 }
 
                 description = _htmlSanitizer.Sanitize(description);
 
-                if (!_settings.AllowPossibleSpamStorySubmit)
+                if (!_settings.AllowPossibleSpamStorySubmit  && ShouldCheckSpamForUser(byUser))
                 {
                     result = EnsureNotSpam<StoryCreateResult>(byUser, userIPAddress, userAgent, url, urlReferer, description, "social news", serverVariables, "Spam story rejected : {0}, {1}".FormatWith(url, byUser), "Your story appears to be a spam.");
 
@@ -116,9 +119,13 @@ namespace Kigg.Service
 
                 string detailUrl = buildDetailUrl(story);
 
-                if (_settings.AllowPossibleSpamStorySubmit && _settings.SendMailWhenPossibleSpamStorySubmitted)
+                if (_settings.AllowPossibleSpamStorySubmit && _settings.SendMailWhenPossibleSpamStorySubmitted && ShouldCheckSpamForUser(byUser))
                 {
-                    NotifyIfSpam(byUser, userIPAddress, userAgent, url, urlReferer, description, "social news", serverVariables, "Possible spam story submitted : {0}, {1}, {2}, {3}".FormatWith(detailUrl, story.Title, story.Url, byUser.UserName), () => _emailSender.NotifySpamStory(detailUrl, story));
+                    _spamProtection.IsSpam(CreateSpamCheckContent(byUser, userIPAddress, userAgent, url, urlReferer, description, "social news", serverVariables), (source, isSpam) => _spamPostprocessor.Process(source, isSpam, detailUrl, story));
+                }
+                else
+                {
+                    story.Approve(SystemTime.Now());
                 }
 
                 // Ping the Story
@@ -213,15 +220,15 @@ namespace Kigg.Service
         public virtual void MarkAsSpam(IStory theStory, string storyUrl, IUser byUser, string fromIPAddress)
         {
             Check.Argument.IsNotNull(theStory, "theStory");
+            Check.Argument.IsNotEmpty(storyUrl, "storyUrl");
             Check.Argument.IsNotNull(byUser, "byUser");
             Check.Argument.IsNotEmpty(fromIPAddress, "fromIPAddress");
 
             if (theStory.MarkAsSpam(SystemTime.Now(), byUser, fromIPAddress))
             {
                 _userScoreService.StoryMarkedAsSpam(theStory, byUser);
+                _emailSender.NotifyStoryMarkedAsSpam(storyUrl, theStory, byUser);
             }
-
-            _emailSender.NotifyStoryMarkedAsSpam(storyUrl, theStory, byUser);
         }
 
         public virtual void UnmarkAsSpam(IStory theStory, IUser byUser)
@@ -271,7 +278,7 @@ namespace Kigg.Service
 
                 if (_settings.AllowPossibleSpamCommentSubmit && _settings.SendMailWhenPossibleSpamCommentSubmitted)
                 {
-                    NotifyIfSpam(byUser, userIPAddress, userAgent, storyUrl, urlReferer, content, "comment", serverVariables, "Possible spam comment submitted : {0}, {1}, {2}".FormatWith(storyUrl, forStory.Title, byUser.UserName), () => _emailSender.NotifySpamComment(storyUrl, comment));
+                    _spamProtection.IsSpam(CreateSpamCheckContent(byUser, userIPAddress, userAgent, storyUrl, urlReferer, content, "comment", serverVariables), (source, isSpam) => _spamPostprocessor.Process(source, isSpam, storyUrl, comment));
                 }
 
                 result = new CommentCreateResult();
@@ -283,14 +290,15 @@ namespace Kigg.Service
         public virtual void Spam(IStory theStory, string storyUrl, IUser byUser)
         {
             Check.Argument.IsNotNull(theStory, "theStory");
+            Check.Argument.IsNotEmpty(storyUrl, "storyUrl");
+            Check.Argument.IsNotNull(byUser, "byUser");
 
-            if (!theStory.IsSpam())
+            if (!theStory.IsPublished())
             {
-                theStory.Spam(SystemTime.Now());
+                _storyRepository.Remove(theStory);
                 _userScoreService.StorySpammed(theStory.PostedBy);
+                _emailSender.NotifyConfirmSpamStory(storyUrl, theStory, byUser);
             }
-
-            _emailSender.NotifyConfirmSpamStory(storyUrl, theStory, byUser);
         }
 
         public virtual void Spam(IComment theComment, string storyUrl, IUser byUser)
@@ -305,10 +313,15 @@ namespace Kigg.Service
         public virtual void MarkAsOffended(IComment theComment, string storyUrl, IUser byUser)
         {
             Check.Argument.IsNotNull(theComment, "theComment");
+            Check.Argument.IsNotEmpty(storyUrl, "storyUrl");
+            Check.Argument.IsNotNull(byUser, "byUser");
 
-            theComment.MarkAsOffended();
-            _userScoreService.CommentMarkedAsOffended(theComment.ByUser);
-            _emailSender.NotifyCommentAsOffended(storyUrl, theComment, byUser);
+            if (!theComment.IsOffended)
+            {
+                theComment.MarkAsOffended();
+                _userScoreService.CommentMarkedAsOffended(theComment.ByUser);
+                _emailSender.NotifyCommentAsOffended(storyUrl, theComment, byUser);
+            }
         }
 
         public virtual void Publish()
@@ -332,6 +345,19 @@ namespace Kigg.Service
                     // Commit every thing
                     unitOfWork.Commit();
                 }
+            }
+        }
+
+        public virtual void Approve(IStory theStory, string storyUrl, IUser byUser)
+        {
+            Check.Argument.IsNotNull(theStory, "theStory");
+            Check.Argument.IsNotEmpty(storyUrl, "storyUrl");
+            Check.Argument.IsNotNull(byUser, "byUser");
+
+            if (!theStory.IsApproved())
+            {
+                theStory.Approve(SystemTime.Now());
+                _emailSender.NotifyStoryApprove(storyUrl, theStory, byUser);
             }
         }
 
@@ -436,6 +462,11 @@ namespace Kigg.Service
             return result;
         }
 
+        private bool ShouldCheckSpamForUser(IUser user)
+        {
+            return !user.CanModerate() && (_storyRepository.CountPostedByUser(user.Id) <= _settings.StorySumittedThresholdOfUserToSpamCheck);
+        }
+
         private T EnsureNotSpam<T>(IUser byUser, string userIPAddress, string userAgent, string url, string urlReferer, string content, string contentType, NameValueCollection serverVariables, string logMessage, string errorMessage) where T : BaseServiceResult, new()
         {
             bool isSpam = _spamProtection.IsSpam(CreateSpamCheckContent(byUser, userIPAddress, userAgent, url, urlReferer, content, contentType, serverVariables));
@@ -446,22 +477,6 @@ namespace Kigg.Service
             }
 
             return isSpam ? new T { ErrorMessage = errorMessage } : null;
-        }
-
-        private void NotifyIfSpam(IUser byUser, string userIPAddress, string userAgent, string url, string urlReferer, string content, string contentType, NameValueCollection serverVariables, string logMessage, Action sendEmail)
-        {
-            _spamProtection.IsSpam(
-                                        CreateSpamCheckContent(byUser, userIPAddress, userAgent, url, urlReferer, content, contentType, serverVariables),
-                                        isSpam =>
-                                        {
-                                            if (isSpam)
-                                            {
-                                                Log.Warning(logMessage);
-
-                                                // Send Mail to Notify the Support that a Spam is submitted.
-                                                sendEmail();
-                                            }
-                                        });
         }
 
         private string SanitizeHtml(string html)
@@ -520,7 +535,7 @@ namespace Kigg.Service
 
             if (publishableCount > 0)
             {
-                ICollection<IStory> stories = _storyRepository.FindPublishable(minimumDate, maximumDate, 0, publishableCount);
+                ICollection<IStory> stories = _storyRepository.FindPublishable(minimumDate, maximumDate, 0, publishableCount).Result;
 
                 foreach (IStory story in stories)
                 {

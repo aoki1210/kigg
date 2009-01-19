@@ -1011,7 +1011,7 @@ form
     /*
     background:transparent url(Assets/Images/edit.png) no-repeat scroll 0% 0%;
     */
-    background:transparent url(Assets/Images/modarate.png) no-repeat scroll 0 -36px;
+    background:transparent url(Assets/Images/modarate.png) no-repeat scroll 0 -62px;
     padding-left:18px;
 }
 
@@ -1020,7 +1020,7 @@ form
     /*
     background:transparent url(Assets/Images/spam.png) no-repeat scroll 0% 0%;
     */
-    background:transparent url(Assets/Images/modarate.png) no-repeat scroll 0 -62px;
+    background:transparent url(Assets/Images/modarate.png) no-repeat scroll 0 -88px;
     padding-left:18px;
 }
 
@@ -1028,6 +1028,15 @@ form
 {
     /*
     background:transparent url(Assets/Images/delete.png) no-repeat scroll 0% 0%;
+    */
+    background:transparent url(Assets/Images/modarate.png) no-repeat scroll 0 -36px;
+    padding-left:18px;
+}
+
+.story .content .summary .approve
+{
+    /*
+    background:transparent url(Assets/Images/approve.png) no-repeat scroll 0% 0%;
     */
     background:transparent url(Assets/Images/modarate.png) no-repeat scroll 0 -10px;
     padding-left:18px;

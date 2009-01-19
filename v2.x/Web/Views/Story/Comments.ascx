@@ -31,7 +31,7 @@
             <%{%>
                 <% i += 1;%>
                 <% string commentId = comment.Id.Shrink(); %>
-                <% string userUrl = Url.RouteUrl("User", new { id = comment.ByUser.Id.Shrink(), tab = UserDetailTab.Promoted, page = 1 }); %>
+                <% string userUrl = Url.RouteUrl("User", new { name = comment.ByUser.Id.Shrink(), tab = UserDetailTab.Promoted, page = 1 }); %>
                 <% bool isOwner = story.IsPostedBy(comment.ByUser); %>
                 <% bool canModarate = ((ViewData.Model.CurrentUser != null) && ViewData.Model.CurrentUser.CanModerate()); %>
                 <li id="li-<%= Html.AttributeEncode(commentId)%>">

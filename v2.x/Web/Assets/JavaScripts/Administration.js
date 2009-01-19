@@ -2,6 +2,9 @@
 {
     _lockUserUrl : '',
     _unlockUserUrl : '',
+    _blockUserUrl : '',
+    _unblockUserUrl : '',
+    _publishUrl : '',
 
     set_lockUserUrl : function(value)
     {
@@ -23,47 +26,29 @@
         Administration._unblockUserUrl = value;
     },
 
+    set_publishUrl : function(value)
+    {
+        Administration._publishUrl = value;
+    },
+
     init : function()
     {
-        $('#frmPublish').submit (
+        $('#lnkPublish').click  (
                                     function()
                                     {
-                                        var options =   {
-                                                            dataType : 'json',
-                                                            beforeSubmit : function(values, form, options)
-                                                            {
-                                                                $U.showProgress('Publishing Stories...');
-                                                            },
-                                                            success : function(result)
-                                                            {
-                                                                $U.hideProgress();
-
-                                                                if (result.isSuccessful)
-                                                                {
-                                                                    $U.messageBox('Success', 'Story publishing process completed.', false);
-                                                                }
-                                                                else
-                                                                {
-                                                                    $U.messageBox('Error', result.errorMessage, true);
-                                                                }
-                                                            }
-                                                        };
-
-                                        $(this).ajaxSubmit(options); 
-                                        return false;
+                                        Administration.publish();
                                     }
                                 );
 
-        $('#lnkChangeRole').click  (
+        $('#lnkChangeRole').click(
                                         function()
                                         {
                                             $('#roleViewSection').hide();
                                             $('#roleEditSection').show();
-                                            $U.focus('ddlRoles');
                                         }
                                     );
 
-        $('#lnkCancelRole').click   (
+        $('#lnkCancelRole').click(
                                         function()
                                         {
                                             $('#roleEditSection').hide();
@@ -208,6 +193,40 @@
         }
 
         $U.confirm('Unlock User?', 'Are you sure you want to unlock this user?', unlock);
+    },
+
+    publish : function()
+    {
+        function doPublish()
+        {
+            $.ajax(
+                        {
+                            url: Administration._publishUrl,
+                            type: 'POST',
+                            dataType: 'json',
+                            data : '__MVCASYNCPOST=true', // a fake param to fool iis for content-lenth,
+                            beforeSend: function()
+                            {
+                                $U.showProgress('Publishing stories...');
+                            },
+                            success: function(result)
+                            {
+                                $U.hideProgress();
+
+                                if (result.isSuccessful)
+                                {
+                                    $U.messageBox('Success', 'Story publishing process completed.', false);
+                                }
+                                else
+                                {
+                                    $U.messageBox('Error', result.errorMessage, true);
+                                }
+                            }
+                        }
+                    );
+        }
+
+        $U.confirm('Publish?', 'Are you sure you want to publish stories?', doPublish);
     },
 
     dispose : function()

@@ -2,19 +2,16 @@ namespace Kigg.Infrastructure
 {
     public class CachingContentService : DecoratedContentService
     {
-        private readonly ICache _cache;
         private readonly float _contentCacheDurationInMinutes;
-        private readonly float _urlCacheDurationInMinutes;
+        private readonly float _shortUrlCacheDurationInMinutes;
 
-        public CachingContentService(IContentService innerService, ICache cache, float contentCacheDurationInMinutes, float urlCacheDurationInMinutes) : base(innerService)
+        public CachingContentService(IContentService innerService, float contentCacheDurationInMinutes, float shortUrlCacheDurationInMinutes) : base(innerService)
         {
-            Check.Argument.IsNotNull(cache, "cache");
             Check.Argument.IsNotNegativeOrZero(contentCacheDurationInMinutes, "contentCacheDurationInMinutes");
-            Check.Argument.IsNotNegativeOrZero(urlCacheDurationInMinutes, "urlCacheDurationInMinutes");
+            Check.Argument.IsNotNegativeOrZero(shortUrlCacheDurationInMinutes, "shortUrlCacheDurationInMinutes");
 
-            _cache = cache;
             _contentCacheDurationInMinutes = contentCacheDurationInMinutes;
-            _urlCacheDurationInMinutes = urlCacheDurationInMinutes;
+            _shortUrlCacheDurationInMinutes = shortUrlCacheDurationInMinutes;
         }
 
         public override StoryContent Get(string url)
@@ -25,15 +22,15 @@ namespace Kigg.Infrastructure
 
             StoryContent result;
 
-            _cache.TryGet(cacheKey, out result);
+            Cache.TryGet(cacheKey, out result);
 
             if ((result == null) || (result == StoryContent.Empty))
             {
                 result = base.Get(url);
 
-                if ((result != StoryContent.Empty) && !_cache.Contains(cacheKey))
+                if ((result != StoryContent.Empty) && !Cache.Contains(cacheKey))
                 {
-                    _cache.Set(cacheKey, result, SystemTime.Now().AddMinutes(_contentCacheDurationInMinutes));
+                    Cache.Set(cacheKey, result, SystemTime.Now().AddMinutes(_contentCacheDurationInMinutes));
                 }
             }
 
@@ -48,15 +45,15 @@ namespace Kigg.Infrastructure
 
             string shortUrl;
 
-            _cache.TryGet(cacheKey, out shortUrl);
+            Cache.TryGet(cacheKey, out shortUrl);
 
             if (string.IsNullOrEmpty(shortUrl))
             {
                 shortUrl = base.ShortUrl(url);
 
-                if ((!string.IsNullOrEmpty(shortUrl)) && (!_cache.Contains(cacheKey)))
+                if ((!string.IsNullOrEmpty(shortUrl)) && (!Cache.Contains(cacheKey)))
                 {
-                    _cache.Set(cacheKey, shortUrl, SystemTime.Now().AddMinutes(_urlCacheDurationInMinutes));
+                    Cache.Set(cacheKey, shortUrl, SystemTime.Now().AddMinutes(_shortUrlCacheDurationInMinutes));
                 }
             }
 

@@ -71,12 +71,13 @@ namespace Kigg.Infrastructure
                                                     });
         }
 
-        public void NotifySpamStory(string url, IStory story)
+        public void NotifySpamStory(string url, IStory story, string source)
         {
             Check.Argument.IsNotEmpty(url, "storyUrl");
             Check.Argument.IsNotNull(story, "story");
+            Check.Argument.IsNotEmpty(source, "source");
 
-            string body = PrepareMailBodyWith("SpamStory", "title", story.Title, "siteUrl", url, "originalUrl", story.Url, "userName", story.PostedBy.UserName);
+            string body = PrepareMailBodyWith("SpamStory", "title", story.Title, "siteUrl", url, "originalUrl", story.Url, "userName", story.PostedBy.UserName, "protection", source);
 
             SendMailAsync(_settings.WebmasterEmail, _settings.SupportEmail, "Spam Story Submitted - {0}".FormatWith(SystemTime.Now().ToLongDateString()), body);
         }
@@ -92,14 +93,26 @@ namespace Kigg.Infrastructure
             SendMailAsync(_settings.WebmasterEmail, _settings.SupportEmail, "Story Marked As Spam - {0}".FormatWith(SystemTime.Now().ToLongDateString()), body);
         }
 
-        public void NotifySpamComment(string url, IComment comment)
+        public void NotifySpamComment(string url, IComment comment, string source)
         {
             Check.Argument.IsNotEmpty(url, "url");
             Check.Argument.IsNotNull(comment, "comment");
+            Check.Argument.IsNotEmpty(source, "source");
 
-            string body = PrepareMailBodyWith("SpamComment", "siteUrl", url, "userName", comment.ByUser.UserName, "comment", comment.HtmlBody);
+            string body = PrepareMailBodyWith("SpamComment", "siteUrl", url, "userName", comment.ByUser.UserName, "comment", comment.HtmlBody, "protection", source);
 
             SendMailAsync(_settings.WebmasterEmail, _settings.SupportEmail, "Spam Comment Submitted - {0}".FormatWith(SystemTime.Now().ToLongDateString()), body);
+        }
+
+        public void NotifyStoryApprove(string url, IStory story, IUser byUser)
+        {
+            Check.Argument.IsNotEmpty(url, "url");
+            Check.Argument.IsNotNull(story, "story");
+            Check.Argument.IsNotNull(byUser, "byUser");
+
+            string body = PrepareMailBodyWith("ApproveStory", "approvedByUserName", byUser.UserName, "title", story.Title, "siteUrl", url, "originalUrl", story.Url, "postedByUserName", story.PostedBy.UserName);
+
+            SendMailAsync(_settings.WebmasterEmail, _settings.SupportEmail, "Story Approved - {0}".FormatWith(SystemTime.Now().ToLongDateString()), body);
         }
 
         public void NotifyConfirmSpamStory(string url, IStory story, IUser byUser)

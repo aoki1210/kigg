@@ -275,14 +275,6 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         }
 
         [Fact]
-        public void CanPromote_Should_Return_False_When_Story_Is_Spam()
-        {
-            _story.SpammedAt = SystemTime.Now().AddMonths(-1);
-
-            Assert.False(_story.CanPromote(new User { Id = Guid.NewGuid() }));
-        }
-
-        [Fact]
         public void CanPromote_Should_Return_False_When_Story_Has_Been_Marked_As_Spam_By_The_User()
         {
             markAsSpamRepository.Expect(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(new StoryMarkAsSpam());
@@ -307,7 +299,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void Promote_Should_Return_False_When_User_Can_Not_Promote()
         {
-            _story.SpammedAt = SystemTime.Now().AddDays(-1);
+            markAsSpamRepository.Expect(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(new StoryMarkAsSpam());
 
             Assert.False(_story.Promote(SystemTime.Now(), new User { Id = Guid.NewGuid() }, "192.168.0.1"));
         }
@@ -365,14 +357,6 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         }
 
         [Fact]
-        public void CanDemote_Should_Return_False_When_Story_Is_Spam()
-        {
-            _story.SpammedAt = SystemTime.Now().AddDays(-1);
-
-            Assert.False(_story.CanDemote(new User { Id = Guid.NewGuid() }));
-        }
-
-        [Fact]
         public void CanDemote_Should_Return_False_When_Story_Is_Posted_By_The_Same_User()
         {
             var user = new User{ Id = Guid.NewGuid() };
@@ -405,9 +389,11 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void Demote_Should_Return_False_When_User_Can_Not_Demote()
         {
-            _story.SpammedAt = SystemTime.Now().AddDays(-1);
+            var user = new User { Id = Guid.NewGuid() };
 
-            Assert.False(_story.Demote(SystemTime.Now(), new User { Id = Guid.NewGuid() }));
+            _story.User = user;
+
+            Assert.False(_story.Demote(SystemTime.Now(), user));
         }
 
         [Fact]
@@ -459,14 +445,6 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         public void CanMarkAsSpam_Should_Return_False_When_Story_Is_Published()
         {
             _story.PublishedAt = SystemTime.Now().AddMonths(-1);
-
-            Assert.False(_story.CanMarkAsSpam(new User { Id = Guid.NewGuid() }));
-        }
-
-        [Fact]
-        public void CanMarkAsSpam_Should_Return_False_When_Story_Is_Spam()
-        {
-            _story.SpammedAt = SystemTime.Now().AddMonths(-1);
 
             Assert.False(_story.CanMarkAsSpam(new User { Id = Guid.NewGuid() }));
         }
@@ -596,14 +574,6 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         }
 
         [Fact]
-        public void CanUnmarkAsSpam_Should_Return_False_When_Story_Is_Spam()
-        {
-            _story.SpammedAt = SystemTime.Now().AddDays(-1);
-
-            Assert.False(_story.CanUnmarkAsSpam(new User { Id = Guid.NewGuid() }));
-        }
-
-        [Fact]
         public void UnmarkAsSpam_Should_Return_True_When_User_Can_Unmark_As_Spam()
         {
             _story.User = new User { Id = Guid.NewGuid() };
@@ -616,7 +586,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void UnmarkAsSpam_Should_Return_False_When_User_Can_Not_Unmark_As_Spam()
         {
-            _story.SpammedAt = SystemTime.Now().AddDays(-1);
+            _story.PublishedAt = SystemTime.Now().AddDays(-1);
 
             Assert.False(_story.UnmarkAsSpam(SystemTime.Now(), new User { Id = Guid.NewGuid() }));
         }
@@ -815,6 +785,16 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         }
 
         [Fact]
+        public void Approve_Should_Update_ApprovedAt()
+        {
+            var at = SystemTime.Now();
+
+            _story.Approve(at);
+
+            Assert.Equal(at, _story.ApprovedAt);
+        }
+
+        [Fact]
         public void Publish_Should_Update_PublishedAt()
         {
             var at = SystemTime.Now();
@@ -840,16 +820,6 @@ namespace Kigg.Infrastructure.LinqToSql.Test
             _story.LastProcessed(at);
 
             Assert.Equal(at, _story.LastProcessedAt);
-        }
-
-        [Fact]
-        public void Spam_Should_Update_SpammedAt()
-        {
-            var at = SystemTime.Now();
-
-            _story.Spam(at);
-
-            Assert.Equal(at, _story.SpammedAt);
         }
 
         [Fact]

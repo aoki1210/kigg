@@ -1,7 +1,6 @@
 namespace Kigg.Repository
 {
     using System;
-    using System.Collections.Generic;
 
     using DomainObjects;
 
@@ -15,6 +14,12 @@ namespace Kigg.Repository
 
         PagedResult<IStory> FindUpcoming(int start, int max);
 
+        PagedResult<IStory> FindNew(int start, int max);
+
+        PagedResult<IStory> FindUnapproved(int start, int max);
+
+        PagedResult<IStory> FindPublishable(DateTime minimumDate, DateTime maximumDate, int start, int max);
+
         PagedResult<IStory> FindByTag(Guid tagId, int start, int max);
 
         PagedResult<IStory> Search(string query, int start, int max);
@@ -24,8 +29,6 @@ namespace Kigg.Repository
         PagedResult<IStory> FindPromotedByUser(Guid userId, int start, int max);
 
         PagedResult<IStory> FindCommentedByUser(Guid userId, int start, int max);
-
-        ICollection<IStory> FindPublishable(DateTime minimumDate, DateTime maximumDate, int start, int max);
 
         int CountByPublished();
 
@@ -37,6 +40,10 @@ namespace Kigg.Repository
 
         int CountByNew();
 
+        int CountByUnapproved();
+
         int CountByPublishable(DateTime minimumDate, DateTime maximumDate);
+
+        int CountPostedByUser(Guid userId);
     }
 }

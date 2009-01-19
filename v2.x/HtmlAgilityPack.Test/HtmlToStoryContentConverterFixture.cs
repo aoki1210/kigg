@@ -13,13 +13,13 @@ namespace Kigg.Infrastructure.HtmlAgilityPack.Test
         {
             string[] xPaths = LargeStrings.XPaths.Split(new[]{"\r\n"}, StringSplitOptions.RemoveEmptyEntries);
 
-            _converter = new HtmlToStoryContentConverter(xPaths);
+            _converter = new HtmlToStoryContentConverter(new HtmlSanitizer(), xPaths);
         }
 
         [Fact]
         public void Constructor_Should_Throw_Exception_When_ContentNode_Text_File_Is_Missing()
         {
-            Assert.Throws<FileNotFoundException>(() => new HtmlToStoryContentConverter("contentNodes.txt"));
+            Assert.Throws<FileNotFoundException>(() => new HtmlToStoryContentConverter(new HtmlSanitizer(), "contentNodes.txt"));
         }
 
         [Fact]

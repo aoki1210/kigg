@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Linq;
 
@@ -18,15 +17,21 @@ namespace Kigg.Web.Test
         {
             _file = new Mock<IFile>();
 
-            _file.Expect(f => f.ReadAllText(It.IsAny<string>())).Returns(string.Empty);
+            _file.Expect(f => f.ReadAllLine(It.IsAny<string>())).Returns(new []{"192.168.0.254", "192.168.0.255"}).Verifiable();
 
             _blockedIPCollection = new BlockedIPCollection("BlockedIPList.txt", _file.Object);
         }
 
         [Fact]
+        public void When_Created_It_Should_Use_File()
+        {
+            _file.Verify();
+        }
+
+        [Fact]
         public void When_Created_Collection_Should_Contain_The_IpAddress_Of_File()
         {
-            _file.Expect(f => f.ReadAllText(It.IsAny<string>())).Returns("192.168.0.1{0}192.168.0.2".FormatWith(Environment.NewLine));
+            _file.Expect(f => f.ReadAllLine(It.IsAny<string>())).Returns(new[] { "192.168.0.1", "192.168.0.2" });
 
             var collection = new BlockedIPCollection("BlockedIPList.txt", _file.Object);
 
@@ -35,9 +40,9 @@ namespace Kigg.Web.Test
         }
 
         [Fact]
-        public void Count_Should_Return_Zero_When_Collection_Is_Empty()
+        public void Count_Should_Return_The_Correct_Count_Of_File()
         {
-            Assert.Equal(0, _blockedIPCollection.Count);
+            Assert.Equal(2, _blockedIPCollection.Count);
         }
 
         [Fact]
@@ -65,18 +70,23 @@ namespace Kigg.Web.Test
         [Fact]
         public void Add_Should_Increase_Collection()
         {
+            var previousCount = _blockedIPCollection.Count;
+
             _blockedIPCollection.Add("192.168.0.1");
 
-            Assert.Equal(1, _blockedIPCollection.Count);
+            Assert.True(_blockedIPCollection.Count > previousCount);
         }
 
         [Fact]
         public void Add_Should_Not_Increase_Collection_When_Duplicate_Ip_Is_Specified()
         {
             _blockedIPCollection.Add("192.168.0.1");
+
+            var previousCount = _blockedIPCollection.Count;
+
             _blockedIPCollection.Add("192.168.0.1");
 
-            Assert.Equal(1, _blockedIPCollection.Count);
+            Assert.Equal(previousCount, _blockedIPCollection.Count);
         }
 
         [Fact]
@@ -113,26 +123,34 @@ namespace Kigg.Web.Test
         public void Remove_Should_Decrease_Collection()
         {
             _blockedIPCollection.Add("192.168.0.1");
+
+            var previousCount = _blockedIPCollection.Count;
+
             _blockedIPCollection.Remove("192.168.0.1");
 
-            Assert.Equal(0, _blockedIPCollection.Count);
+            Assert.True(_blockedIPCollection.Count < previousCount);
         }
 
         [Fact]
         public void AddRange_Should_Increase_Collection()
         {
+            var previousCount = _blockedIPCollection.Count;
+
             _blockedIPCollection.AddRange(new[] { "192.168.0.1", "192.168.0.2" });
 
-            Assert.Equal(2, _blockedIPCollection.Count);
+            Assert.True(_blockedIPCollection.Count > previousCount);
         }
 
         [Fact]
         public void RemoveRange_Should_Decrease_Collection()
         {
             _blockedIPCollection.AddRange(new[] { "192.168.0.1", "192.168.0.2" });
+
+            var previousCount = _blockedIPCollection.Count;
+
             _blockedIPCollection.RemoveRange(new[] { "192.168.0.1", "192.168.0.2" });
 
-            Assert.Equal(0, _blockedIPCollection.Count);
+            Assert.True(_blockedIPCollection.Count < previousCount);
         }
 
         [Fact]
