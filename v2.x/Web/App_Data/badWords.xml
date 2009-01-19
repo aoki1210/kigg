@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<badWords>
+    <item>
+        <exp>viagra</exp>
+        <value>100</value>
+    </item>
+    <item>
+        <exp>blackjack</exp>
+        <value>100</value>
+    </item>
+    <item>
+        <exp>casino</exp>
+        <value>100</value>
+    </item>
+</badWords>

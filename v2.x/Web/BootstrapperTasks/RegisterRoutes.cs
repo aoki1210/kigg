@@ -57,7 +57,7 @@ namespace Kigg.Web
             _routes.MapRoute("ForgotPassword", "ForgotPassword", new { controller = "Membership", action = "ForgotPassword" });
             _routes.MapRoute("ChangePassword", "ChangePassword", new { controller = "Membership", action = "ChangePassword" });
             _routes.MapRoute("Activate", "Activate/{id}", new { controller = "Membership", action = "Activate", id = string.Empty });
-            _routes.MapRoute("User", "Users/{id}/{tab}/{page}", new { controller = "Membership", action = "Detail", tab = UserDetailTab.Promoted, page = 1 });
+            _routes.MapRoute("User", "Users/{name}/{tab}/{page}", new { controller = "Membership", action = "Detail", tab = UserDetailTab.Promoted, page = 1 });
             _routes.MapRoute("ChangeEmail", "ChangeEmail", new { controller = "Membership", action = "ChangeEmail" });
             _routes.MapRoute("ChangeRole", "ChangeRole", new { controller = "Membership", action = "ChangeRole" });
             _routes.MapRoute("LockUser", "LockUser", new { controller = "Membership", action = "Lock" });
@@ -79,13 +79,20 @@ namespace Kigg.Web
             _routes.MapRoute("GetStory", "GetStory", new { controller = "Story", action = "GetStory" });
             _routes.MapRoute("Update", "Update", new { controller = "Story", action = "Update" });
             _routes.MapRoute("Delete", "Delete", new { controller = "Story", action = "Delete" });
+            _routes.MapRoute("ApproveStory", "ApproveStory", new { controller = "Story", action = "Approve" });
             _routes.MapRoute("ConfirmSpamStory", "ConfirmSpamStory", new { controller = "Story", action = "ConfirmSpam" });
             _routes.MapRoute("ConfirmSpamComment", "ConfirmSpamComment", new { controller = "Comment", action = "ConfirmSpam" });
             _routes.MapRoute("MarkCommentAsOffended", "MarkCommentAsOffended", new { controller = "Comment", action = "MarkAsOffended" });
+
             _routes.MapRoute("Publish", "Publish", new { controller = "Story", action = "Publish" });
+
             _routes.MapRoute("Upcoming", "Upcoming/{page}", new { controller = "Story", action = "Upcoming", page = 1 });
+            _routes.MapRoute("New", "New/{page}", new { controller = "Story", action = "New", page = 1 });
+            _routes.MapRoute("Unapproved", "Unapproved/{page}", new { controller = "Story", action = "Unapproved", page = 1 });
+            _routes.MapRoute("Publishable", "Publishable/{page}", new { controller = "Story", action = "Publishable", page = 1 });
+
             _routes.MapRoute("Search", "Search", new { controller = "Story", action = "Search" });
-            _routes.MapRoute("StoryList", "{action}/{name}/{page}", new { controller = "Story", action = "Published", page = 1 });
+            _routes.MapRoute("StoryList", "{action}/{name}/{page}", new { controller = "Story", page = 1 });
             _routes.MapRoute("Published", "{page}", new { controller = "Story", action = "Published", page = 1 }, new { page = @"^\d+$" });
             _routes.MapRoute("Detail", "{name}", new { controller = "Story", action = "Detail" });
 

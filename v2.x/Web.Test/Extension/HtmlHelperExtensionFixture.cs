@@ -195,7 +195,7 @@ namespace Kigg.Web.Test
 
             var routeData = new RouteData();
 
-            routeData.Values["id"] = userId;
+            routeData.Values["name"] = userId;
 
             var helper = GetHtmlHelperForStoryListPager("PromotedBy", routeData, 1, 200);
 

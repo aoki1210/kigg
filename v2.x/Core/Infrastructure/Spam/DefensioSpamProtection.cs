@@ -4,8 +4,10 @@ namespace Kigg.Infrastructure
     using System.Collections.Specialized;
     using System.Xml.Linq;
 
-    public class DefensioSpamProtection : ISpamProtection
+    public class DefensioSpamProtection : BaseSpamProtection
     {
+        private const string Source = "Defensio";
+
         private readonly IConfigurationSettings _settings;
         private readonly IHttpForm _httpForm;
 
@@ -30,13 +32,7 @@ namespace Kigg.Infrastructure
             _httpForm = httpForm;
         }
 
-        public ISpamProtection NextHandler
-        {
-            get;
-            set;
-        }
-
-        public bool IsSpam(SpamCheckContent spamCheckContent)
+        public override bool IsSpam(SpamCheckContent spamCheckContent)
         {
             Check.Argument.IsNotNull(spamCheckContent, "spamCheckContent");
 
@@ -54,7 +50,7 @@ namespace Kigg.Infrastructure
             return isSpam;
         }
 
-        public void IsSpam(SpamCheckContent spamCheckContent, Action<bool> callback)
+        public override void IsSpam(SpamCheckContent spamCheckContent, Action<string, bool> callback)
         {
             Check.Argument.IsNotNull(spamCheckContent, "spamCheckContent");
             Check.Argument.IsNotNull(callback, "callback");
@@ -75,7 +71,7 @@ namespace Kigg.Infrastructure
                                                        }
                                                        else
                                                        {
-                                                           callback(isSpam);
+                                                           callback(Source, isSpam);
                                                        }
                                                    },
                                    e =>
@@ -87,7 +83,7 @@ namespace Kigg.Infrastructure
                                            }
                                            else
                                            {
-                                               callback(false);
+                                               callback(Source, false);
                                            }
                                         });
         }

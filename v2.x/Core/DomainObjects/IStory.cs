@@ -47,7 +47,7 @@
             get;
         }
 
-        DateTime? SpammedAt
+        DateTime? ApprovedAt
         {
             get;
         }
@@ -153,11 +153,11 @@
 
         void UnsubscribeComment(IUser byUser);
 
+        void Approve(DateTime at);
+
         void Publish(DateTime at, int rank);
 
         void LastProcessed(DateTime at);
-
-        void Spam(DateTime at);
 
         void ChangeNameAndCreatedAt(string name, DateTime createdAt);
     }

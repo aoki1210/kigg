@@ -85,7 +85,7 @@
 
             return Database.TagDataSource
                            .Where(t => t.StoryTags.Count  > 0)
-                           .OrderByDescending(t => t.StoryTags.Count(st => st.Story.SpammedAt == null)) // Exclude Spams
+                           .OrderByDescending(t => t.StoryTags.Count(st => st.Story.ApprovedAt != null))
                            .ThenBy(t => t.Name)
                            .Take(top)
                            .Cast<ITag>()

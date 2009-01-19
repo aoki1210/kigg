@@ -8,9 +8,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Kigg.Web {
-    
-    
-    public partial class PublishBox {
+namespace Kigg.Web
+{
+
+
+    public partial class ControlPanel
+    {
     }
 }

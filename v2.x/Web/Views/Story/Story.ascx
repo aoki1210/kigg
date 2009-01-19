@@ -88,7 +88,7 @@
                                 <span>published</span> <span class="time published" title="<%= story.PublishedAt.Value.ToString(LongDateFormat) %> GMT"><%= story.PublishedAt.Value.ToRelative() %></span> <span>ago</span> 
                         <% } %>
                         <span>posted by</span>
-                        <% string userUrl = Url.RouteUrl("User", new { id = story.PostedBy.Id.Shrink(), tab = UserDetailTab.Promoted, page = 1 }); %>
+                        <% string userUrl = Url.RouteUrl("User", new { name = story.PostedBy.Id.Shrink(), tab = UserDetailTab.Promoted, page = 1 }); %>
                         <a class="vcard author" href="<%= Html.AttributeEncode(userUrl) %>">
                             <img alt="<%= Html.AttributeEncode(story.PostedBy.UserName) %>" src="<%= Html.AttributeEncode(story.PostedBy.GravatarUrl(15)) %>" class="photo gravatar"/><span class="fn"><%=Html.Encode(story.PostedBy.UserName)%></span>
                         </a> 
@@ -144,6 +144,7 @@
                                 | <a class="edit actionLink" href="javascript:void(0)" onclick="Moderation.editStory('<%= attributedEncodedStoryId %>')">edit</a>
                                 | <a class="delete actionLink" href="javascript:void(0)" onclick="Moderation.deleteStory('<%= attributedEncodedStoryId %>')">delete</a>
                                 | <a class="spam actionLink" href="javascript:void(0)" onclick="Moderation.confirmSpamStory('<%= attributedEncodedStoryId %>')">spam</a>
+                                | <a class="approve actionLink" href="javascript:void(0)" onclick="Moderation.approveStory('<%= attributedEncodedStoryId %>')">approve</a>
                          <% } %>
                     </div>
                 </td>
@@ -159,9 +160,9 @@
                                 <% { %>
                                     <% if (i > 0) %>
                                     <% { %>
-                                        , 
+                                        ,
                                     <% } %>
-                                    <%= Html.ActionLink(tag.Name, "Tags", "Story", new { name = tag.UniqueName }, new { rel = "tag directory" }) %>
+                                    <%= Html.ActionLink(tag.Name, "Tags", "Story", new { name = tag.UniqueName }, new { rel = "tag directory" })%>
                                     <%i += 1; %>
                                 <% } %>
                             </span>

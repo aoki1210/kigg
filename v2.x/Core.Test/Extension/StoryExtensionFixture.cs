@@ -45,11 +45,11 @@ namespace Kigg.Core.Test
         }
 
         [Fact]
-        public void IsSpam_Should_Be_True_When_SpammedAt_Is_Not_Null()
+        public void IsApproved_Should_Be_True_When_Aapproved_Is_Not_Null()
         {
-            _story.ExpectGet(s => s.SpammedAt).Returns(SystemTime.Now());
+            _story.ExpectGet(s => s.ApprovedAt).Returns(SystemTime.Now());
 
-            Assert.True(_story.Object.IsSpam());
+            Assert.True(_story.Object.IsApproved());
         }
 
         [Fact]

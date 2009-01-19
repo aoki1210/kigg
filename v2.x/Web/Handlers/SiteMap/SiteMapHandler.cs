@@ -414,7 +414,7 @@ namespace Kigg.Web
 
             foreach (IUser user in topMovers)
             {
-                target.Add(CreateEntry(context, rootUrl, "User", new { id = user.Id.Shrink(), tab = UserDetailTab.Promoted, page = 1 }, currentDate, SiteMapChangeFrequency.Daily, SiteMapUpdatePriority.Normal, forMobile));
+                target.Add(CreateEntry(context, rootUrl, "User", new { name = user.Id.Shrink(), tab = UserDetailTab.Promoted, page = 1 }, currentDate, SiteMapChangeFrequency.Daily, SiteMapUpdatePriority.Normal, forMobile));
             }
         }
     }

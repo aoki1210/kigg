@@ -60,7 +60,16 @@
     <Compile Include="Extension\TagContainerFixture.cs" />
     <Compile Include="Extension\UserExtensionFixture.cs" />
     <Compile Include="Helper\DisposableResourceFixture.cs" />
+    <Compile Include="Infrastructure\BadWordMatchSpamWeightCalculatorFixture.cs" />
     <Compile Include="Infrastructure\BootstrapperFixture.cs" />
+    <Compile Include="Infrastructure\CachingHttpFormFixture.cs" />
+    <Compile Include="Infrastructure\CategoryMatchSpamWeightCalculatorFixture.cs" />
+    <Compile Include="Infrastructure\DecoratedContentServiceFixture.cs" />
+    <Compile Include="Infrastructure\DecoratedHttpFormFixture.cs" />
+    <Compile Include="Infrastructure\DefaultSpamProtectionFixture.cs" />
+    <Compile Include="Infrastructure\HyperlinkCountSpamWeightCalculatorFixture.cs" />
+    <Compile Include="Infrastructure\SpamPostprocessorFixture.cs" />
+    <Compile Include="Infrastructure\TagMatchSpamWeightCalculatorFixture.cs" />
     <Compile Include="Infrastructure\CreateDefaultUsersFixture.cs" />
     <Compile Include="Infrastructure\DefensioSpamProtectionFixture.cs" />
     <Compile Include="Infrastructure\GenericSpamProtectionFixture.cs" />
@@ -95,8 +104,8 @@
     <Compile Include="Service\PublishedStoryFixture.cs" />
     <Compile Include="Service\StoryWeightBaseCalculatorFixture.cs" />
     <Compile Include="Service\StoryServiceFixture.cs" />
-    <Compile Include="Service\UserScoreServiceFixture.cs" />
     <Compile Include="Service\UserScoreWeightFixture.cs" />
+    <Compile Include="Service\UserScoreServiceFixture.cs" />
     <Compile Include="Service\ViewWeightFixture.cs" />
     <Compile Include="Service\VoteWeightFixture.cs" />
     <Compile Include="TestHelper\DecoratedRepositoryFixture.cs" />

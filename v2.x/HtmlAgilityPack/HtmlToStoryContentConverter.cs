@@ -14,16 +14,20 @@ namespace Kigg.Infrastructure.HtmlAgilityPack
     public class HtmlToStoryContentConverter : IHtmlToStoryContentConverter
     {
         private static readonly Regex TrackbackExpression = new Regex("trackback:ping=\"([^\"]+)\"", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-        private readonly List<string> _xPaths = new List<string>();
 
-        public HtmlToStoryContentConverter(string fileName) : this(File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName)).Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries))
+        private readonly List<string> _xPaths = new List<string>();
+        private readonly IHtmlSanitizer _sanitizer;
+
+        public HtmlToStoryContentConverter(IHtmlSanitizer sanitizer, string fileName) : this(sanitizer, File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName)).Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries))
         {
         }
 
-        public HtmlToStoryContentConverter(ICollection<string> xPaths)
+        public HtmlToStoryContentConverter(IHtmlSanitizer sanitizer, ICollection<string> xPaths)
         {
+            Check.Argument.IsNotNull(sanitizer, "sanitizer");
             Check.Argument.IsNotEmpty(xPaths, "xPaths");
 
+            _sanitizer = sanitizer;
             _xPaths.AddRange(xPaths);
         }
 
@@ -40,7 +44,12 @@ namespace Kigg.Infrastructure.HtmlAgilityPack
 
             if (!string.IsNullOrEmpty(content))
             {
-                content = new HtmlSanitizer().Sanitize(content).WrapAt(512);
+                content = _sanitizer.Sanitize(content);
+
+                if (!string.IsNullOrEmpty(content))
+                {
+                    content = content.WrapAt(512);
+                }
             }
 
             string trackbackUrl = GetTrackbackUrl(html) ?? GetTrackbackUrl(url, doc);

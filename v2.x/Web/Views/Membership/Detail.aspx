@@ -70,7 +70,9 @@
                                 </tr>
                                 <tr>
                                     <td>Score:</td>
-                                    <td><%= user.CurrentScore.ToString(FormatStrings.UserScore) %></td>
+                                    <td>
+                                        <%= (user.IsPublicUser()) ? user.CurrentScore.ToString(FormatStrings.UserScore) : "n/a" %>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Last Seen: </td>
@@ -194,9 +196,9 @@
         <ul class="ui-tabs-nav">
             <% string userId = user.Id.Shrink(); %>
             <% UserDetailTab selectedTab = ViewData.Model.SelectedTab; %>
-            <li class="ui-tabs-nav-item<%= ((selectedTab == UserDetailTab.Promoted) ? " ui-tabs-selected" : string.Empty) %>"><a href="<%= Url.RouteUrl("User", new { id = userId, tab = UserDetailTab.Promoted, page = 1}) %>">Promoted</a></li>
-            <li class="ui-tabs-nav-item<%= ((selectedTab == UserDetailTab.Posted) ? " ui-tabs-selected" : string.Empty) %>"><a href="<%= Url.RouteUrl("User", new { id = userId, tab = UserDetailTab.Posted, page = 1 }) %>">Posted</a></li>
-            <li class="ui-tabs-nav-item<%= ((selectedTab == UserDetailTab.Commented) ? " ui-tabs-selected" : string.Empty) %>"><a href="<%= Url.RouteUrl("User", new { id = userId, tab = UserDetailTab.Commented, page = 1}) %>">Commented</a></li>
+            <li class="ui-tabs-nav-item<%= ((selectedTab == UserDetailTab.Promoted) ? " ui-tabs-selected" : string.Empty) %>"><a href="<%= Url.RouteUrl("User", new { name = userId, tab = UserDetailTab.Promoted, page = 1}) %>">Promoted</a></li>
+            <li class="ui-tabs-nav-item<%= ((selectedTab == UserDetailTab.Posted) ? " ui-tabs-selected" : string.Empty) %>"><a href="<%= Url.RouteUrl("User", new { name = userId, tab = UserDetailTab.Posted, page = 1 }) %>">Posted</a></li>
+            <li class="ui-tabs-nav-item<%= ((selectedTab == UserDetailTab.Commented) ? " ui-tabs-selected" : string.Empty) %>"><a href="<%= Url.RouteUrl("User", new { name = userId, tab = UserDetailTab.Commented, page = 1}) %>">Commented</a></li>
         </ul>
         <div id="userTabContent" class="ui-tabs-panel">
             <span class="hide hfeed"><%= Page.Header.Title%></span>

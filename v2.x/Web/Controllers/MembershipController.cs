@@ -610,15 +610,15 @@ namespace Kigg.Web
         }
 
         [AutoRefresh, Compress]
-        public ActionResult Detail(string id, string tab, int? page)
+        public ActionResult Detail(string name, string tab, int? page)
         {
-            if (string.IsNullOrEmpty(id))
+            if (string.IsNullOrEmpty(name))
             {
                 return RedirectToRoute("Published");
             }
 
             IUser user = null;
-            Guid userId = id.NullSafe().ToGuid();
+            Guid userId = name.NullSafe().ToGuid();
 
             if (!userId.IsEmpty())
             {

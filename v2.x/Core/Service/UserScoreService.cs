@@ -144,7 +144,7 @@ namespace Kigg.Service
 
             if (ofUser.IsPublicUser())
             {
-                ofUser.DecreaseScoreBy(_userScoreTable.SpamStorySubmitted, UserAction.SpamStorySubmitted);
+                ofUser.DecreaseScoreBy(_userScoreTable.StorySubmitted + _userScoreTable.SpamStorySubmitted, UserAction.SpamStorySubmitted);
             }
         }
 
@@ -164,7 +164,7 @@ namespace Kigg.Service
 
             if (ofUser.IsPublicUser())
             {
-                ofUser.DecreaseScoreBy(_userScoreTable.SpamCommentSubmitted, UserAction.SpamCommentSubmitted);
+                ofUser.DecreaseScoreBy(_userScoreTable.StoryCommented + _userScoreTable.SpamCommentSubmitted, UserAction.SpamCommentSubmitted);
             }
         }
 

@@ -212,6 +212,78 @@ namespace Kigg.Core.Test
         }
 
         [Fact]
+        public void FindNew_Should_Log_Info_When_Stories_Exist()
+        {
+            FindNew(new[] { CreateStubStory() });
+
+            log.Verify();
+        }
+
+        [Fact]
+        public void FindNew_Should_Log_Warning_When_Stories_Do_Not_Exist()
+        {
+            FindNew(null);
+
+            log.Verify();
+        }
+
+        [Fact]
+        public void FindNew_Should_Use_InnerRepository()
+        {
+            FindNew(new[] { CreateStubStory() });
+
+            _innerRepository.Verify();
+        }
+
+        [Fact]
+        public void FindUnapproved_Should_Log_Info_When_Stories_Exist()
+        {
+            FindUnapproved(new[] { CreateStubStory() });
+
+            log.Verify();
+        }
+
+        [Fact]
+        public void FindUnapproved_Should_Log_Warning_When_Stories_Do_Not_Exist()
+        {
+            FindUnapproved(null);
+
+            log.Verify();
+        }
+
+        [Fact]
+        public void FindUnapproved_Should_Use_InnerRepository()
+        {
+            FindUnapproved(new[] { CreateStubStory() });
+
+            _innerRepository.Verify();
+        }
+
+        [Fact]
+        public void FindPublishable_Should_Log_Info_When_Stories_Exist()
+        {
+            FindPublishable(new[] { CreateStubStory() });
+
+            log.Verify();
+        }
+
+        [Fact]
+        public void FindPublishable_Should_Log_Warning_When_Stories_Do_Not_Exist()
+        {
+            FindPublishable(null);
+
+            log.Verify();
+        }
+
+        [Fact]
+        public void FindPublishable_Should_Use_InnerRepository()
+        {
+            FindPublishable(new[] { CreateStubStory() });
+
+            _innerRepository.Verify();
+        }
+
+        [Fact]
         public void FindByTag_Should_Log_Info_When_Stories_Exist()
         {
             FindByTag(new[] { CreateStubStory() });
@@ -332,30 +404,6 @@ namespace Kigg.Core.Test
         }
 
         [Fact]
-        public void FindPublishable_Should_Log_Info_When_Stories_Exist()
-        {
-            FindPublishable(new[] { CreateStubStory() });
-
-            log.Verify();
-        }
-
-        [Fact]
-        public void FindPublishable_Should_Log_Warning_When_Stories_Do_Not_Exist()
-        {
-            FindPublishable(null);
-
-            log.Verify();
-        }
-
-        [Fact]
-        public void FindPublishable_Should_Use_InnerRepository()
-        {
-            FindPublishable(new[] { CreateStubStory() });
-
-            _innerRepository.Verify();
-        }
-
-        [Fact]
         public void CountByPublished_Should_Log_Info()
         {
             CountByPublished();
@@ -436,12 +484,19 @@ namespace Kigg.Core.Test
         }
 
         [Fact]
-        public void CountByNew_Should_Use_InnerRepository_And_Log()
+        public void CountByUnapproved_Should_Log()
         {
-            _innerRepository.Expect(r => r.CountByNew()).Returns(0).Verifiable();
-            log.Expect(l => l.Info(It.IsAny<string>())).Verifiable();
+            CountByUnapproved();
 
-            _loggingRepository.CountByNew();
+            log.Verify();
+        }
+
+        [Fact]
+        public void CountByUnapproved_Should_Use_InnerRepository()
+        {
+            CountByUnapproved();
+
+            _innerRepository.Verify();
         }
 
         [Fact]
@@ -456,6 +511,22 @@ namespace Kigg.Core.Test
         public void CountByPublishable_Should_Use_InnerRepository()
         {
             CountByPublishable();
+
+            _innerRepository.Verify();
+        }
+
+        [Fact]
+        public void CountPostedByUser_Should_Log()
+        {
+            CountPostedByUser();
+
+            log.Verify();
+        }
+
+        [Fact]
+        public void CountPostedByUser_Should_Use_InnerRepository()
+        {
+            CountPostedByUser();
 
             _innerRepository.Verify();
         }
@@ -554,6 +625,45 @@ namespace Kigg.Core.Test
             _loggingRepository.FindUpcoming(0, 10);
         }
 
+        private void FindNew(ICollection<IStory> result)
+        {
+            _innerRepository.Expect(r => r.FindNew(It.IsAny<int>(), It.IsAny<int>())).Returns((result == null) ? new PagedResult<IStory>() : new PagedResult<IStory>(result, result.Count)).Verifiable();
+            log.Expect(l => l.Info(It.IsAny<string>())).Verifiable();
+
+            if (result.IsNullOrEmpty())
+            {
+                log.Expect(l => l.Warning(It.IsAny<string>())).Verifiable();
+            }
+
+            _loggingRepository.FindNew(0, 10);
+        }
+
+        private void FindUnapproved(ICollection<IStory> result)
+        {
+            _innerRepository.Expect(r => r.FindUnapproved(It.IsAny<int>(), It.IsAny<int>())).Returns((result == null) ? new PagedResult<IStory>() : new PagedResult<IStory>(result, result.Count)).Verifiable();
+            log.Expect(l => l.Info(It.IsAny<string>())).Verifiable();
+
+            if (result.IsNullOrEmpty())
+            {
+                log.Expect(l => l.Warning(It.IsAny<string>())).Verifiable();
+            }
+
+            _loggingRepository.FindUnapproved(0, 10);
+        }
+
+        private void FindPublishable(ICollection<IStory> result)
+        {
+            _innerRepository.Expect(r => r.FindPublishable(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>(), It.IsAny<int>())).Returns((result == null) ? new PagedResult<IStory>() : new PagedResult<IStory>(result, result.Count)).Verifiable();
+            log.Expect(l => l.Info(It.IsAny<string>())).Verifiable();
+
+            if (result.IsNullOrEmpty())
+            {
+                log.Expect(l => l.Warning(It.IsAny<string>())).Verifiable();
+            }
+
+            _loggingRepository.FindPublishable(SystemTime.Now().AddDays(-7), SystemTime.Now().AddHours(-4), 0, 10);
+        }
+
         private void FindByTag(ICollection<IStory> result)
         {
             _innerRepository.Expect(r => r.FindByTag(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>())).Returns((result == null) ? new PagedResult<IStory>() : new PagedResult<IStory>(result, result.Count)).Verifiable();
@@ -619,19 +729,6 @@ namespace Kigg.Core.Test
             _loggingRepository.FindCommentedByUser(Guid.NewGuid(), 0, 10);
         }
 
-        private void FindPublishable(ICollection<IStory> result)
-        {
-            _innerRepository.Expect(r => r.FindPublishable(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>(), It.IsAny<int>())).Returns(result).Verifiable();
-            log.Expect(l => l.Info(It.IsAny<string>())).Verifiable();
-
-            if (result.IsNullOrEmpty())
-            {
-                log.Expect(l => l.Warning(It.IsAny<string>())).Verifiable();
-            }
-
-            _loggingRepository.FindPublishable(SystemTime.Now().AddDays(-7), SystemTime.Now().AddHours(-4), 0, 10);
-        }
-
         private void CountByPublished()
         {
             _innerRepository.Expect(r => r.CountByPublished()).Returns(10).Verifiable();
@@ -672,12 +769,28 @@ namespace Kigg.Core.Test
             _loggingRepository.CountByNew();
         }
 
+        private void CountByUnapproved()
+        {
+            _innerRepository.Expect(r => r.CountByUnapproved()).Returns(0).Verifiable();
+            log.Expect(l => l.Info(It.IsAny<string>())).Verifiable();
+
+            _loggingRepository.CountByUnapproved();
+        }
+
         private void CountByPublishable()
         {
             _innerRepository.Expect(r => r.CountByPublishable(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(0).Verifiable();
             log.Expect(l => l.Info(It.IsAny<string>())).Verifiable();
 
             _loggingRepository.CountByPublishable(SystemTime.Now().AddDays(-7), SystemTime.Now().AddHours(-4));
+        }
+
+        private void CountPostedByUser()
+        {
+            _innerRepository.Expect(r => r.CountPostedByUser(It.IsAny<Guid>())).Returns(0).Verifiable();
+            log.Expect(l => l.Info(It.IsAny<string>())).Verifiable();
+
+            _loggingRepository.CountPostedByUser(Guid.NewGuid());
         }
     }
 }

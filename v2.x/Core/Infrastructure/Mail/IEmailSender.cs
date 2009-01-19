@@ -14,11 +14,13 @@
 
         void SendComment(string url, IComment comment, IEnumerable<IUser> users);
 
-        void NotifySpamStory(string url, IStory story);
+        void NotifySpamStory(string url, IStory story, string source);
 
         void NotifyStoryMarkedAsSpam(string url, IStory story, IUser byUser);
 
-        void NotifySpamComment(string url, IComment comment);
+        void NotifySpamComment(string url, IComment comment, string source);
+
+        void NotifyStoryApprove(string url, IStory story, IUser byUser);
 
         void NotifyConfirmSpamStory(string url, IStory story, IUser byUser);
 

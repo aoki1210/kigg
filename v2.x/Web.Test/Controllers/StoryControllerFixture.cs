@@ -221,6 +221,111 @@ namespace Kigg.Web.Test
         }
 
         [Fact]
+        public void New_Should_Render_List_View()
+        {
+            SetCurrentUser(new Mock<IUser>(), Roles.Moderator);
+
+            var result = New();
+            var viewData = (StoryListViewData)(result).ViewData.Model;
+
+            Assert.Equal("List", result.ViewName);
+            Assert.Equal(0, viewData.TotalStoryCount);
+            Assert.Empty(viewData.Stories);
+            Assert.Equal("{0} - New stories".FormatWith(settings.Object.SiteTitle), viewData.Title);
+            Assert.Equal("New", viewData.Subtitle);
+            Assert.Equal("No new story exists.", viewData.NoStoryExistMessage);
+        }
+
+        [Fact]
+        public void New_Should_Use_StoryRepository()
+        {
+            SetCurrentUser(new Mock<IUser>(), Roles.Moderator);
+
+            New();
+
+            _storyRepository.Verify();
+        }
+
+        [Fact]
+        public void New_Should_Render_Error_Message_When_User_Does_Not_Have_Permission()
+        {
+            var result = New();
+            var viewData = (StoryListViewData)(result).ViewData.Model;
+
+            Assert.Equal("You do not have the privilege to view new stories.", viewData.NoStoryExistMessage);
+        }
+
+        [Fact]
+        public void Unapproved_Should_Render_List_View()
+        {
+            SetCurrentUser(new Mock<IUser>(), Roles.Moderator);
+
+            var result = Unapproved();
+            var viewData = (StoryListViewData)(result).ViewData.Model;
+
+            Assert.Equal("List", result.ViewName);
+            Assert.Equal(0, viewData.TotalStoryCount);
+            Assert.Empty(viewData.Stories);
+            Assert.Equal("{0} - Unapproved stories".FormatWith(settings.Object.SiteTitle), viewData.Title);
+            Assert.Equal("Unapproved", viewData.Subtitle);
+            Assert.Equal("No unapproved story exists.", viewData.NoStoryExistMessage);
+        }
+
+        [Fact]
+        public void Unapproved_Should_Use_StoryRepository()
+        {
+            SetCurrentUser(new Mock<IUser>(), Roles.Moderator);
+
+            Unapproved();
+
+            _storyRepository.Verify();
+        }
+
+        [Fact]
+        public void Unapproved_Should_Render_Error_Message_When_User_Does_Not_Have_Permission()
+        {
+            var result = Unapproved();
+            var viewData = (StoryListViewData)(result).ViewData.Model;
+
+            Assert.Equal("You do not have the privilege to view unapproved stories.", viewData.NoStoryExistMessage);
+        }
+
+        [Fact]
+        public void Publishable_Should_Render_List_View()
+        {
+            SetCurrentUser(new Mock<IUser>(), Roles.Moderator);
+
+            var result = Publishable();
+            var viewData = (StoryListViewData)(result).ViewData.Model;
+
+            Assert.Equal("List", result.ViewName);
+            Assert.Equal(0, viewData.TotalStoryCount);
+            Assert.Empty(viewData.Stories);
+            Assert.Equal("{0} - Publishable stories".FormatWith(settings.Object.SiteTitle), viewData.Title);
+            Assert.Equal("Publishable", viewData.Subtitle);
+            Assert.Equal("No publishable story exists.", viewData.NoStoryExistMessage);
+        }
+
+        [Fact]
+        public void Publishable_Should_Use_StoryRepository()
+        {
+            SetCurrentUser(new Mock<IUser>(), Roles.Moderator);
+
+            Publishable();
+
+            _storyRepository.Verify();
+        }
+
+        [Fact]
+        public void Publishable_Should_Render_Error_Message_When_User_Does_Not_Have_Permission()
+        {
+            var result = Publishable();
+            var viewData = (StoryListViewData)(result).ViewData.Model;
+
+            Assert.Equal("You do not have the privilege to view publishable stories.", viewData.NoStoryExistMessage);
+        }
+
+        [Fact]
         public void Tags_Should_Render_List_View()
         {
             var result = Tags();
@@ -334,7 +439,7 @@ namespace Kigg.Web.Test
         [Fact]
         public void Submit_Should_Render_New_View_When_Story_Does_Not_Exist()
         {
-            var result = New();
+            var result = SubmitNew();
             var viewData = (StoryContentViewData) result.ViewData.Model;
 
             Assert.Equal("New", result.ViewName);
@@ -344,7 +449,7 @@ namespace Kigg.Web.Test
         [Fact]
         public void Submit_Should_Use_StoryRepository()
         {
-            New();
+            SubmitNew();
 
             _storyRepository.Verify();
         }
@@ -352,7 +457,7 @@ namespace Kigg.Web.Test
         [Fact]
         public void Submit_Should_Use_ContentService()
         {
-            New();
+            SubmitNew();
 
             _contentService.Verify();
         }
@@ -1169,6 +1274,103 @@ namespace Kigg.Web.Test
         }
 
         [Fact]
+        public void Approve_Should_Discard_The_Story_As_Spam()
+        {
+            var result = Approve(new Mock<IStory>().Object);
+
+            Assert.True(result.isSuccessful);
+        }
+
+        [Fact]
+        public void Approve_Should_Use_StoryRepository()
+        {
+            Approve(new Mock<IStory>().Object);
+
+            _storyRepository.Verify();
+        }
+
+        [Fact]
+        public void Approve_Should_Use_StoryService()
+        {
+            Approve(new Mock<IStory>().Object);
+
+            _storyService.Verify();
+        }
+
+        [Fact]
+        public void Approve_Should_Log_Exception()
+        {
+            SetCurrentUser(new Mock<IUser>(), Roles.Moderator);
+
+            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Throws<InvalidOperationException>();
+            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+
+            _controller.Approve(Guid.NewGuid().Shrink());
+
+            log.Verify();
+        }
+
+        [Fact]
+        public void Approve_Should_Return_Error_When_Story_Is_Already_Approved()
+        {
+            var story = new Mock<IStory>();
+
+            story.ExpectGet(s => s.ApprovedAt).Returns(SystemTime.Now().AddDays(-1));
+
+            var result = Approve(story.Object);
+
+            Assert.False(result.isSuccessful);
+            Assert.Equal("Specified story has been already approved.", result.errorMessage);
+        }
+
+        [Fact]
+        public void Approve_Should_Return_Error_When_Story_Does_Not_Exists()
+        {
+            var result = Approve(null);
+
+            Assert.False(result.isSuccessful);
+            Assert.Equal("Specified story does not exist.", result.errorMessage);
+        }
+
+        [Fact]
+        public void Approve_Should_Return_Error_When_User_Can_Not_Moderate()
+        {
+            SetCurrentUser(new Mock<IUser>(), Roles.User);
+
+            var result = (JsonViewData)((JsonResult)_controller.Approve(Guid.NewGuid().Shrink())).Data;
+
+            Assert.False(result.isSuccessful);
+            Assert.Equal("You do not have the privilege to call this method.", result.errorMessage);
+        }
+
+        [Fact]
+        public void Approve_Should_Return_Error_When_User_Is_Not_Authenticated()
+        {
+            var result = (JsonViewData)((JsonResult)_controller.Approve(Guid.NewGuid().Shrink())).Data;
+
+            Assert.False(result.isSuccessful);
+            Assert.Equal("You are currently not authenticated.", result.errorMessage);
+        }
+
+        [Fact]
+        public void Approve_Should_Return_Error_When_StoryId_Is_Invalid()
+        {
+            var result = (JsonViewData)((JsonResult)_controller.Approve("foobar")).Data;
+
+            Assert.False(result.isSuccessful);
+            Assert.Equal("Invalid story identifier.", result.errorMessage);
+        }
+
+        [Fact]
+        public void Approve_Should_Return_Error_When_StoryId_Is_Blank()
+        {
+            var result = (JsonViewData)((JsonResult)_controller.Approve(string.Empty)).Data;
+
+            Assert.False(result.isSuccessful);
+            Assert.Equal("Story identifier cannot be blank.", result.errorMessage);
+        }
+
+        [Fact]
         public void ConfirmSpam_Should_Confirm_The_Story_As_Spam()
         {
             var result = ConfirmSpam(new Mock<IStory>().Object);
@@ -1203,19 +1405,6 @@ namespace Kigg.Web.Test
             _controller.ConfirmSpam(Guid.NewGuid().Shrink());
 
             log.Verify();
-        }
-
-        [Fact]
-        public void ConfirmSpam_Should_Return_Error_When_Story_Is_Already_Spam()
-        {
-            var story = new Mock<IStory>();
-
-            story.ExpectGet(s => s.SpammedAt).Returns(SystemTime.Now().AddDays(-1));
-
-            var result = ConfirmSpam(story.Object);
-
-            Assert.False(result.isSuccessful);
-            Assert.Equal("Specified story has been already approved as spam.", result.errorMessage);
         }
 
         [Fact]
@@ -1263,30 +1452,6 @@ namespace Kigg.Web.Test
 
             Assert.False(result.isSuccessful);
             Assert.Equal("Story identifier cannot be blank.", result.errorMessage);
-        }
-
-        [Fact]
-        public void PublishBox_Should_Render_Default_View()
-        {
-            var result = PublishBox(10);
-
-            Assert.Equal(string.Empty, result.ViewName);
-        }
-
-        [Fact]
-        public void PublishBox_Should_Set_Count_In_ViewData()
-        {
-            PublishBox(10);
-
-            Assert.Equal(_controller.ViewData["count"], 10);
-        }
-
-        [Fact]
-        public void PublishBox_Should_Use_StoryRepository()
-        {
-            PublishBox(10);
-
-            _storyRepository.Verify();
         }
 
         [Fact]
@@ -1465,6 +1630,27 @@ namespace Kigg.Web.Test
             return (PagedResult<StorySummary>)((JsonResult)_controller.GetUpcoming(10, 70)).Data;
         }
 
+        private ViewResult New()
+        {
+            _storyRepository.Expect(r => r.FindNew(It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
+
+            return (ViewResult)_controller.New(1);
+        }
+
+        private ViewResult Unapproved()
+        {
+            _storyRepository.Expect(r => r.FindUnapproved(It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
+
+            return (ViewResult)_controller.Unapproved(1);
+        }
+
+        private ViewResult Publishable()
+        {
+            _storyRepository.Expect(r => r.FindPublishable(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
+
+            return (ViewResult) _controller.Publishable(1);
+        }
+
         private ViewResult Tags()
         {
             var tag = new Mock<ITag>();
@@ -1497,7 +1683,7 @@ namespace Kigg.Web.Test
             return (ViewResult) _controller.Detail("Dummy-Story");
         }
 
-        private ViewResult New()
+        private ViewResult SubmitNew()
         {
             _storyRepository.Expect(r => r.FindByUrl(It.IsAny<string>())).Returns((IStory) null).Verifiable();
             _contentService.Expect(s => s.Get(It.IsAny<string>())).Returns(new StoryContent("Dummy Story", "Dummy Description", "http://trackback.com")).Verifiable();
@@ -1619,6 +1805,16 @@ namespace Kigg.Web.Test
             return (JsonViewData)((JsonResult)_controller.Delete(Guid.NewGuid().Shrink())).Data;
         }
 
+        private JsonViewData Approve(IStory story)
+        {
+            SetCurrentUser(new Mock<IUser>(), Roles.Moderator);
+
+            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns(story).Verifiable();
+            _storyService.Expect(s => s.Approve(It.IsAny<IStory>(), It.IsAny<string>(), It.IsAny<IUser>())).Verifiable();
+
+            return (JsonViewData)((JsonResult)_controller.Approve(Guid.NewGuid().Shrink())).Data;
+        }
+
         private JsonViewData ConfirmSpam(IStory story)
         {
             SetCurrentUser(new Mock<IUser>(), Roles.Moderator);
@@ -1627,15 +1823,6 @@ namespace Kigg.Web.Test
             _storyService.Expect(s => s.Spam(It.IsAny<IStory>(), It.IsAny<string>(), It.IsAny<IUser>())).Verifiable();
 
             return (JsonViewData)((JsonResult)_controller.ConfirmSpam(Guid.NewGuid().Shrink())).Data;
-        }
-
-        private ViewResult PublishBox(int count)
-        {
-            SetCurrentUser(new Mock<IUser>(), Roles.Administrator);
-
-            _storyRepository.Expect(r => r.CountByPublishable(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(count).Verifiable();
-
-            return (ViewResult) _controller.PublishBox();
         }
 
         private ViewResult PromotedBy()

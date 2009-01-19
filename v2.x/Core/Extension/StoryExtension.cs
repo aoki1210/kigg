@@ -25,9 +25,9 @@
             return story.CreatedAt <= max;
         }
 
-        public static bool IsSpam(this IStory story)
+        public static bool IsApproved(this IStory story)
         {
-            return story.SpammedAt != null;
+            return story.ApprovedAt != null;
         }
 
         public static bool HasComments(this IStory story)

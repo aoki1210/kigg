@@ -1,33 +1,40 @@
+using System;
+
 namespace Kigg.Web
 {
     using System.Web.Mvc;
+    using Repository;
 
+    using DomainObjects;
     using Infrastructure;
 
-    [Compress]
     public class SupportController : BaseController
     {
         private readonly IEmailSender _emailSender;
+        private readonly IStoryRepository _storyRepository;
 
-        public SupportController(IEmailSender emailSender)
+        public SupportController(IStoryRepository storyRepository, IEmailSender emailSender)
         {
+            Check.Argument.IsNotNull(storyRepository, "storyRepository");
             Check.Argument.IsNotNull(emailSender, "emailSender");
 
+            _storyRepository = storyRepository;
             _emailSender = emailSender;
         }
 
+        [Compress]
         public ActionResult Faq()
         {
             return PreparedView();
         }
 
-        [AcceptVerbs(HttpVerbs.Get)]
+        [AcceptVerbs(HttpVerbs.Get), Compress]
         public ActionResult Contact()
         {
             return PreparedView();
         }
 
-        [AcceptVerbs(HttpVerbs.Post)]
+        [AcceptVerbs(HttpVerbs.Post), Compress]
         public ActionResult Contact(string email, string name, string message)
         {
             JsonViewData viewData = Validate<JsonViewData>(
@@ -48,9 +55,34 @@ namespace Kigg.Web
             return Json(viewData);
         }
 
+        [Compress]
         public ActionResult About()
         {
             return PreparedView();
+        }
+
+        public ActionResult ControlPanel()
+        {
+            ControlPanelViewData viewData = new ControlPanelViewData();
+
+            if (!IsCurrentUserAuthenticated || !CurrentUser.CanModerate())
+            {
+                viewData.ErrorMessage = "You do not have the privilege to view it.";
+            }
+            else
+            {
+                viewData.IsAdministrator = CurrentUser.IsAdministrator();
+                viewData.NewCount = _storyRepository.CountByNew();
+                viewData.UnapprovedCount = _storyRepository.CountByUnapproved();
+
+                DateTime currentTime = SystemTime.Now();
+                DateTime minimumDate = currentTime.AddHours(-Settings.MaximumAgeOfStoryInHoursToPublish);
+                DateTime maximumDate = currentTime.AddHours(-Settings.MinimumAgeOfStoryInHoursToPublish);
+
+                viewData.PublishableCount = _storyRepository.CountByPublishable(minimumDate, maximumDate);
+            }
+
+            return View(viewData);
         }
 
         private ActionResult PreparedView()

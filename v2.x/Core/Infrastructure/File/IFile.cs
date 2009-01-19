@@ -4,6 +4,8 @@ namespace Kigg.Infrastructure
     {
         string ReadAllText(string path);
 
+        string[] ReadAllLine(string path);
+
         void WriteAllText(string path, string content);
     }
 }

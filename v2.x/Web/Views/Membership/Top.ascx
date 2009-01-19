@@ -8,7 +8,7 @@ if (!ViewData.Model.IsNullOrEmpty())
         <% { %>
         <%      string userName = userScore.User.UserName; %>
                 <li>
-                    <a title="<%= Html.AttributeEncode(userName) %>" href="<%= Url.RouteUrl("User", new { id = userScore.User.Id.Shrink(), tab = UserDetailTab.Promoted, page = 1 }) %>">
+                    <a title="<%= Html.AttributeEncode(userName) %>" href="<%= Url.RouteUrl("User", new { name = userScore.User.Id.Shrink(), tab = UserDetailTab.Promoted, page = 1 }) %>">
                         <img alt="<%= Html.AttributeEncode(userName) %>" src="<%= Html.AttributeEncode(userScore.User.GravatarUrl(24)) %>" class="smoothImage" onload="javascript:SmoothImage.show(this)"/>
                         <%= Html.Encode(userName.WrapAt(22)) %>
                     </a>

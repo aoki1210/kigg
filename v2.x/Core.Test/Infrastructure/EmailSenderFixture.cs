@@ -103,7 +103,7 @@ namespace Kigg.Core.Test
 
             _file.Expect(f => f.ReadAllText(It.IsAny<string>())).Returns(mailTemplate).Verifiable();
 
-            _emailSender.NotifySpamStory("http://dotnetshoutout.com/The-Dummy_Story", story.Object);
+            _emailSender.NotifySpamStory("http://dotnetshoutout.com/The-Dummy_Story", story.Object, "foo");
 
             Sleep();
         }
@@ -154,7 +154,35 @@ namespace Kigg.Core.Test
 
             _file.Expect(f => f.ReadAllText(It.IsAny<string>())).Returns(mailTemplate).Verifiable();
 
-            _emailSender.NotifySpamComment("http://dotnetshoutout.com/The-Dummy_Story", comment.Object);
+            _emailSender.NotifySpamComment("http://dotnetshoutout.com/The-Dummy_Story", comment.Object, "foo");
+
+            Sleep();
+        }
+
+        [Fact]
+        public void NotifyStoryApprove_Should_Send_Approved_Story_Details()
+        {
+            const string mailTemplate = "The following story has been approved by <%=approvedByUserName%>:\r\n\r\n" +
+                                        "Title: <%=title%>" +
+                                        "Site Url: <%=siteUrl%>" +
+                                        "Original Url: <%=originalUrl%>" +
+                                        "User: <%=postedByUserName%>";
+
+            var approvedBy = new Mock<IUser>();
+            approvedBy.ExpectGet(u => u.UserName).Returns("Approved By");
+
+            var postedBy = new Mock<IUser>();
+            postedBy.ExpectGet(u => u.UserName).Returns("Posted By");
+
+            var story = new Mock<IStory>();
+
+            story.ExpectGet(s => s.Title).Returns("A dummy story");
+            story.ExpectGet(s => s.Url).Returns("http://www.dummystory.com");
+            story.ExpectGet(s => s.PostedBy).Returns(postedBy.Object);
+
+            _file.Expect(f => f.ReadAllText(It.IsAny<string>())).Returns(mailTemplate).Verifiable();
+
+            _emailSender.NotifyStoryApprove("http://dotnetshoutout.com/The-Dummy_Story", story.Object, approvedBy.Object);
 
             Sleep();
         }

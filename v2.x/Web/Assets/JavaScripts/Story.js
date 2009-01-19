@@ -202,7 +202,6 @@
                                                 url:Story._suggestTagsUrl,
                                                 multiple:true,
                                                 max:10,
-                                                delay:50,
                                                 scrollHeight:330,
                                                 parse: function(data)
                                                 {

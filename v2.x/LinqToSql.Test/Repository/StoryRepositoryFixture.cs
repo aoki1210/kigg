@@ -87,9 +87,9 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void FindByPublished_Should_Return_Paged_Result()
         {
-            var story1 = CreateStory("http://dummyStory01.com");
-            var story2 = CreateStory("http://dummyStory02.com");
-            var story3 = CreateStory("http://dummyStory03.com");
+            var story1 = CreateStory();
+            var story2 = CreateStory();
+            var story3 = CreateStory();
 
             var rnd = new Random();
 
@@ -106,9 +106,9 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void FindPublishedByCategory_Should_Return_Paged_Result()
         {
-            var story1 = CreateStory("http://dummyStory01.com");
-            var story2 = CreateStory("http://dummyStory02.com");
-            var story3 = CreateStory("http://dummyStory03.com");
+            var story1 = CreateStory();
+            var story2 = CreateStory();
+            var story3 = CreateStory();
 
             var rnd = new Random();
 
@@ -124,9 +124,9 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void FindUpcoming_Should_Return_Paged_Result()
         {
-            var story1 = CreateStory("http://dummyStory01.com");
-            var story2 = CreateStory("http://dummyStory02.com");
-            var story3 = CreateStory("http://dummyStory03.com");
+            var story1 = CreateStory();
+            var story2 = CreateStory();
+            var story3 = CreateStory();
 
             Stories.AddRange(new[] { story1 as Story, story2 as Story, story3 as Story });
             var pagedResult = _storyRepository.FindUpcoming(0, 10);
@@ -136,11 +136,54 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         }
 
         [Fact]
+        public void FindNew_Should_Return_Paged_Result()
+        {
+            var story1 = CreateStory();
+            var story2 = CreateStory();
+            var story3 = CreateStory();
+
+            Stories.AddRange(new[] { story1 as Story, story2 as Story, story3 as Story });
+            var pagedResult = _storyRepository.FindNew(0, 10);
+
+            Assert.Equal(3, pagedResult.Result.Count);
+            Assert.Equal(3, pagedResult.Total);
+        }
+
+        [Fact]
+        public void FindUnapproved_Should_Return_Paged_Result()
+        {
+            var story1 = CreateStory(false);
+            var story2 = CreateStory(false);
+            var story3 = CreateStory(false);
+
+            Stories.AddRange(new[] { story1 as Story, story2 as Story, story3 as Story });
+            var pagedResult = _storyRepository.FindUnapproved(0, 10);
+
+            Assert.Equal(3, pagedResult.Result.Count);
+            Assert.Equal(3, pagedResult.Total);
+        }
+
+        [Fact]
+        public void FindPublishable_Should_Return_Correct_Result()
+        {
+            var story1 = CreateStory();
+            var story2 = CreateStory();
+            var story3 = CreateStory();
+
+            Stories.AddRange(new[] { story1 as Story, story2 as Story, story3 as Story });
+            Stories.ForEach(s => s.CreatedAt = SystemTime.Now().AddDays(-3));
+
+            var result = _storyRepository.FindPublishable(SystemTime.Now().AddDays(-7), SystemTime.Now().AddHours(-4), 0, 10);
+
+            Assert.Equal(3, result.Total);
+        }
+
+        [Fact]
         public void FindByTag_Should_Return_Paged_Result()
         {
-            var story1 = CreateStory("http://dummyStory01.com");
-            var story2 = CreateStory("http://dummyStory02.com");
-            var story3 = CreateStory("http://dummyStory03.com");
+            var story1 = CreateStory();
+            var story2 = CreateStory();
+            var story3 = CreateStory();
 
             Stories.AddRange(new[] { story1 as Story, story2 as Story, story3 as Story });
 
@@ -157,9 +200,9 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void Search_Should_Return_Correct_Result()
         {
-            var story1 = CreateStory("http://dummyStory01.com");
-            var story2 = CreateStory("http://dummyStory02.com");
-            var story3 = CreateStory("http://dummyStory03.com");
+            var story1 = CreateStory();
+            var story2 = CreateStory();
+            var story3 = CreateStory();
 
             Stories.AddRange(new[] { story1 as Story, story2 as Story, story3 as Story });
 
@@ -172,9 +215,9 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void FindPostedByUser_Should_Return_Correct_Result()
         {
-            var story1 = CreateStory("http://dummyStory01.com");
-            var story2 = CreateStory("http://dummyStory02.com");
-            var story3 = CreateStory("http://dummyStory03.com");
+            var story1 = CreateStory();
+            var story2 = CreateStory();
+            var story3 = CreateStory();
 
             Stories.AddRange(new[] { story1 as Story, story2 as Story, story3 as Story });
 
@@ -187,9 +230,9 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void FindPromotedByUser_Should_Return_Correct_Result()
         {
-            var story1 = CreateStory("http://dummyStory01.com");
-            var story2 = CreateStory("http://dummyStory02.com");
-            var story3 = CreateStory("http://dummyStory03.com");
+            var story1 = CreateStory();
+            var story2 = CreateStory();
+            var story3 = CreateStory();
 
             Stories.AddRange(new[] { story1 as Story, story2 as Story, story3 as Story });
 
@@ -206,9 +249,9 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void FindCommentedByUser_Should_Return_Correct_Result()
         {
-            var story1 = CreateStory("http://dummyStory01.com");
-            var story2 = CreateStory("http://dummyStory02.com");
-            var story3 = CreateStory("http://dummyStory03.com");
+            var story1 = CreateStory();
+            var story2 = CreateStory();
+            var story3 = CreateStory();
 
             Stories.AddRange(new[] { story1 as Story, story2 as Story, story3 as Story });
 
@@ -223,26 +266,11 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         }
 
         [Fact]
-        public void FindPublishable_Should_Return_Correct_Result()
-        {
-            var story1 = CreateStory("http://dummyStory01.com");
-            var story2 = CreateStory("http://dummyStory02.com");
-            var story3 = CreateStory("http://dummyStory03.com");
-
-            Stories.AddRange(new[] { story1 as Story, story2 as Story, story3 as Story });
-            Stories.ForEach(s => s.CreatedAt = SystemTime.Now().AddDays(-3));
-
-            var result = _storyRepository.FindPublishable(SystemTime.Now().AddDays(-7), SystemTime.Now().AddHours(-4), 0, 10);
-
-            Assert.Equal(3, result.Count);
-        }
-
-        [Fact]
         public void CountByPublished_Should_Return_Correct_Result()
         {
-            var story1 = CreateStory("http://dummyStory01.com");
-            var story2 = CreateStory("http://dummyStory02.com");
-            var story3 = CreateStory("http://dummyStory03.com");
+            var story1 = CreateStory();
+            var story2 = CreateStory();
+            var story3 = CreateStory();
 
             var rnd = new Random();
 
@@ -257,9 +285,9 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void CountByUpcoming_Should_Return_Correct_Result()
         {
-            var story1 = CreateStory("http://dummyStory01.com");
-            var story2 = CreateStory("http://dummyStory02.com");
-            var story3 = CreateStory("http://dummyStory03.com");
+            var story1 = CreateStory();
+            var story2 = CreateStory();
+            var story3 = CreateStory();
 
             Stories.AddRange(new[] { story1 as Story, story2 as Story, story3 as Story });
 
@@ -271,9 +299,9 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void CountByCategory_Should_Return_Correct_Result()
         {
-            var story1 = CreateStory("http://dummyStory01.com");
-            var story2 = CreateStory("http://dummyStory02.com");
-            var story3 = CreateStory("http://dummyStory03.com");
+            var story1 = CreateStory();
+            var story2 = CreateStory();
+            var story3 = CreateStory();
 
             var rnd = new Random();
 
@@ -288,9 +316,9 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void CountByTag_Should_Return_Correct_Result()
         {
-            var story1 = CreateStory("http://dummyStory01.com");
-            var story2 = CreateStory("http://dummyStory02.com");
-            var story3 = CreateStory("http://dummyStory03.com");
+            var story1 = CreateStory();
+            var story2 = CreateStory();
+            var story3 = CreateStory();
 
             Stories.AddRange(new[] { story1 as Story, story2 as Story, story3 as Story });
 
@@ -306,9 +334,9 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void CountByNew_Should_Return_Correct_Result()
         {
-            var story1 = CreateStory("http://dummyStory01.com");
-            var story2 = CreateStory("http://dummyStory02.com");
-            var story3 = CreateStory("http://dummyStory03.com");
+            var story1 = CreateStory();
+            var story2 = CreateStory();
+            var story3 = CreateStory();
 
             Stories.AddRange(new[] { story1 as Story, story2 as Story, story3 as Story });
 
@@ -318,11 +346,26 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         }
 
         [Fact]
+        public void CountByUnapproved_Should_Return_Correct_Result()
+        {
+            var story1 = CreateStory(false);
+            var story2 = CreateStory(false);
+            var story3 = CreateStory(false);
+
+            Stories.AddRange(new[] { story1 as Story, story2 as Story, story3 as Story });
+            Stories.ForEach(s => s.CreatedAt = SystemTime.Now().AddDays(-3));
+
+            var result = _storyRepository.CountByUnapproved();
+
+            Assert.Equal(3, result);
+        }
+
+        [Fact]
         public void CountByPublishable_Should_Return_Correct_Result()
         {
-            var story1 = CreateStory("http://dummyStory01.com");
-            var story2 = CreateStory("http://dummyStory02.com");
-            var story3 = CreateStory("http://dummyStory03.com");
+            var story1 = CreateStory();
+            var story2 = CreateStory();
+            var story3 = CreateStory();
 
             Stories.AddRange(new[] { story1 as Story, story2 as Story, story3 as Story });
             Stories.ForEach(s => s.CreatedAt = SystemTime.Now().AddDays(-3));
@@ -334,15 +377,22 @@ namespace Kigg.Infrastructure.LinqToSql.Test
 
         private IStory CreateStory()
         {
-            return CreateStory("http://astory.com");
+            return CreateStory(true);
         }
 
-        private IStory CreateStory(string url)
+        private IStory CreateStory(bool approved)
         {
             var category = _factory.CreateCategory("test");
             var user = _factory.CreateUser("test", "test@users.com", "xxxxxxxx");
 
-            return _factory.CreateStory(category, user, "192.168.0.1", "Test Story", "Test Story Description", url);
+            var story = _factory.CreateStory(category, user, "192.168.0.1", "Test Story", "Test Story Description", "http://astory.com");
+
+            if (approved)
+            {
+                story.Approve(SystemTime.Now());
+            }
+
+            return story;
         }
     }
 }

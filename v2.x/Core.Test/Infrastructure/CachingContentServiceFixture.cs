@@ -16,7 +16,7 @@ namespace Kigg.Core.Test
         public CachingContentServiceFixture()
         {
             _service = new Mock<IContentService>();
-            _cachingService = new CachingContentService(_service.Object, cache.Object, 10, 5);
+            _cachingService = new CachingContentService(_service.Object, 10, 5);
         }
 
         [Fact]

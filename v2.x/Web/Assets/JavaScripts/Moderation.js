@@ -3,7 +3,8 @@
     _markCommentAsOffendedUrl : '',
     _spamCommentUrl : '',
     _deleteStoryUrl : '',
-    _spamStoryUrl : '',
+    _spamStoryUrl: '',
+    _approveStoryUrl: '',
     _getStoryUrl : '',
     _centerMeTimer : null,
 
@@ -25,6 +26,11 @@
     set_spamStoryUrl : function(value)
     {
         Moderation._spamStoryUrl = value;
+    },
+
+    set_approveStoryUrl: function(value)
+    {
+        Moderation._approveStoryUrl = value;
     },
 
     set_getStoryUrl : function(value)
@@ -179,7 +185,7 @@
                 );
     },
 
-    confirmSpamStory : function(storyId)
+    approveStory: function(storyId)
     {
         function submit()
         {
@@ -187,13 +193,13 @@
 
             $.ajax  (
                         {
-                            url : Moderation._spamStoryUrl,
+                            url: Moderation._approveStoryUrl,
                             type : 'POST',
                             dataType : 'json',
                             data : data,
                             beforeSend :    function()
                                             {
-                                                $U.showProgress('Approving Spam...');
+                                                $U.showProgress('Approving Story...');
                                             },
                             success :   function(result)
                                         {
@@ -212,7 +218,7 @@
                     );
         }
 
-        $U.confirm('Approve Spam Story?', 'Are you sure you want to approve this story as spam?', submit);
+        $U.confirm('Approve Story?', 'Are you sure you want to approve this story?', submit);
     },
 
     deleteStory : function(storyId)

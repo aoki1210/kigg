@@ -113,22 +113,9 @@ namespace Kigg.Web
 
         private void Read()
         {
-            string content = _file.ReadAllText(_path);
-
             _ipAddresses.Clear();
-
-            using (StringReader sr = new StringReader(content))
-            {
-                string line;
-
-                while (!string.IsNullOrEmpty((line = sr.ReadLine() ?? string.Empty).Trim()))
-                {
-                    if (!_ipAddresses.Contains(line))
-                    {
-                        _ipAddresses.Add(line);
-                    }
-                }
-            }
+            _ipAddresses.AddRange(_file.ReadAllLine(_path));
+            _ipAddresses.RemoveAll(ip => string.IsNullOrEmpty(ip));
         }
 
         private void Write()

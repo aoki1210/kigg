@@ -157,5 +157,11 @@ namespace Kigg
             get;
             set;
         }
+
+        public int StorySumittedThresholdOfUserToSpamCheck
+        {
+            get;
+            set;
+        }
     }
 }

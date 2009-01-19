@@ -4,11 +4,12 @@ namespace Kigg.Infrastructure
     using System.Collections.Specialized;
 
     // Supports both Akismet and TypePad
-    public class GenericSpamProtection : ISpamProtection
+    public class GenericExternalSpamProtection : BaseSpamProtection
     {
         private readonly IConfigurationSettings _settings;
         private readonly IHttpForm _httpForm;
 
+        private readonly string _name;
         private readonly string _apiKey;
         private readonly string _version;
 
@@ -20,14 +21,16 @@ namespace Kigg.Infrastructure
         private string _submitUrl;
         private string _falsePositiveUrl;
 
-        public GenericSpamProtection(string baseUrl, string apiKey, string version, IConfigurationSettings settings, IHttpForm httpForm)
+        public GenericExternalSpamProtection(string name, string baseUrl, string apiKey, string version, IConfigurationSettings settings, IHttpForm httpForm)
         {
+            Check.Argument.IsNotEmpty(name, "name");
             Check.Argument.IsNotEmpty(baseUrl, "baseUrl");
             Check.Argument.IsNotEmpty(apiKey, "apiKey");
             Check.Argument.IsNotEmpty(version, "version");
             Check.Argument.IsNotNull(settings, "settings");
             Check.Argument.IsNotNull(httpForm, "httpForm");
 
+            _name = name;
             _baseUrl = baseUrl;
             _apiKey = apiKey;
             _version = version;
@@ -36,17 +39,11 @@ namespace Kigg.Infrastructure
             _httpForm = httpForm;
         }
 
-        public GenericSpamProtection(string baseUrl, string apiKey, string version, IConfigurationSettings settings, string name) : this(baseUrl, apiKey, version, settings, new HttpForm("{0}/{1} | {2}/{3}".FormatWith(settings.SiteTitle, typeof(GenericSpamProtection).Assembly.GetName().Version, name, version), 15000, false, 8))
+        public GenericExternalSpamProtection(string name, string baseUrl, string apiKey, string version, IConfigurationSettings settings) : this(name, baseUrl, apiKey, version, settings, new HttpForm("{0}/{1} | {2}/{3}".FormatWith(settings.SiteTitle, typeof(GenericExternalSpamProtection).Assembly.GetName().Version, name, version), 15000, false, 8))
         {
         }
 
-        public ISpamProtection NextHandler
-        {
-            get;
-            set;
-        }
-
-        public bool IsSpam(SpamCheckContent spamCheckContent)
+        public override bool IsSpam(SpamCheckContent spamCheckContent)
         {
             Check.Argument.IsNotNull(spamCheckContent, "spamCheckContent");
 
@@ -64,7 +61,7 @@ namespace Kigg.Infrastructure
             return isSpam;
         }
 
-        public void IsSpam(SpamCheckContent spamCheckContent, Action<bool> callback)
+        public override void IsSpam(SpamCheckContent spamCheckContent, Action<string, bool> callback)
         {
             Check.Argument.IsNotNull(spamCheckContent, "spamCheckContent");
             Check.Argument.IsNotNull(callback, "callback");
@@ -85,7 +82,7 @@ namespace Kigg.Infrastructure
                                         }
                                         else
                                         {
-                                            callback(isSpam);
+                                            callback(_name, isSpam);
                                         }
                                     },
                                     e =>
@@ -97,7 +94,7 @@ namespace Kigg.Infrastructure
                                         }
                                         else
                                         {
-                                            callback(false);
+                                            callback(_name, false);
                                         }
                                     });
         }

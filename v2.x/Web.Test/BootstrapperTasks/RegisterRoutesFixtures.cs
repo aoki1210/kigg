@@ -308,7 +308,7 @@ namespace Kigg.Web.Test
 
             Assert.Equal("Membership", routeData.Values["controller"]);
             Assert.Equal("Detail", routeData.Values["action"]);
-            Assert.Equal("kazimanzurrashid", routeData.Values["id"]);
+            Assert.Equal("kazimanzurrashid", routeData.Values["name"]);
             Assert.Equal(UserDetailTab.Promoted, routeData.Values["tab"]);
             Assert.Equal(1, routeData.Values["page"]);
         }
@@ -320,7 +320,7 @@ namespace Kigg.Web.Test
 
             Assert.Equal("Membership", routeData.Values["controller"]);
             Assert.Equal("Detail", routeData.Values["action"]);
-            Assert.Equal("kazimanzurrashid", routeData.Values["id"]);
+            Assert.Equal("kazimanzurrashid", routeData.Values["name"]);
             Assert.Equal("Posted", routeData.Values["tab"]);
             Assert.Equal(1, routeData.Values["page"]);
         }
@@ -332,7 +332,7 @@ namespace Kigg.Web.Test
 
             Assert.Equal("Membership", routeData.Values["controller"]);
             Assert.Equal("Detail", routeData.Values["action"]);
-            Assert.Equal("kazimanzurrashid", routeData.Values["id"]);
+            Assert.Equal("kazimanzurrashid", routeData.Values["name"]);
             Assert.Equal("Commented", routeData.Values["tab"]);
             Assert.Equal(1, routeData.Values["page"]);
         }
@@ -504,6 +504,15 @@ namespace Kigg.Web.Test
         }
 
         [Fact]
+        public void Should_Return_ApproveStory()
+        {
+            var routeData = GetRouteDataFor("~/ApproveStory", true);
+
+            Assert.Equal("Story", routeData.Values["controller"]);
+            Assert.Equal("Approve", routeData.Values["action"]);
+        }
+
+        [Fact]
         public void Should_Return_ConfirmSpamStory()
         {
             var routeData = GetRouteDataFor("~/ConfirmSpamStory", true);
@@ -547,6 +556,36 @@ namespace Kigg.Web.Test
             Assert.Equal("Story", routeData.Values["controller"]);
             Assert.Equal("Upcoming", routeData.Values["action"]);
             Assert.Equal("50", routeData.Values["page"]);
+        }
+
+        [Fact]
+        public void Should_Return_Unapproved()
+        {
+            var routeData = GetRouteDataFor("~/Unapproved/2");
+
+            Assert.Equal("Story", routeData.Values["controller"]);
+            Assert.Equal("Unapproved", routeData.Values["action"]);
+            Assert.Equal("2", routeData.Values["page"]);
+        }
+
+        [Fact]
+        public void Should_Return_New()
+        {
+            var routeData = GetRouteDataFor("~/New/2");
+
+            Assert.Equal("Story", routeData.Values["controller"]);
+            Assert.Equal("New", routeData.Values["action"]);
+            Assert.Equal("2", routeData.Values["page"]);
+        }
+
+        [Fact]
+        public void Should_Return_Publishable()
+        {
+            var routeData = GetRouteDataFor("~/Publishable/2");
+
+            Assert.Equal("Story", routeData.Values["controller"]);
+            Assert.Equal("Publishable", routeData.Values["action"]);
+            Assert.Equal("2", routeData.Values["page"]);
         }
 
         [Fact]

@@ -1,7 +1,6 @@
 namespace Kigg.Repository
 {
     using System;
-    using System.Collections.Generic;
 
     using DomainObjects;
     using Infrastructure;
@@ -154,6 +153,71 @@ namespace Kigg.Repository
             return pagedResult;
         }
 
+        public override PagedResult<IStory> FindNew(int start, int max)
+        {
+            Check.Argument.IsNotNegative(start, "start");
+            Check.Argument.IsNotNegative(max, "max");
+
+            Log.Info("Retrieving new stories : {0}, {1}", start, max);
+
+            var pagedResult = base.FindNew(start, max);
+
+            if (pagedResult.IsEmpty)
+            {
+                Log.Warning("Did not find any new story : {0}, {1}", start, max);
+            }
+            else
+            {
+                Log.Info("New stories retrieved : {0}, {1}", start, max);
+            }
+
+            return pagedResult;
+        }
+
+        public override PagedResult<IStory> FindUnapproved(int start, int max)
+        {
+            Check.Argument.IsNotNegative(start, "start");
+            Check.Argument.IsNotNegative(max, "max");
+
+            Log.Info("Retrieving upapproved stories : {0}, {1}", start, max);
+
+            var pagedResult = base.FindUnapproved(start, max);
+
+            if (pagedResult.IsEmpty)
+            {
+                Log.Warning("Did not find any upapproved story : {0}, {1}", start, max);
+            }
+            else
+            {
+                Log.Info("Upapproved stories retrieved : {0}, {1}", start, max);
+            }
+
+            return pagedResult;
+        }
+
+        public override PagedResult<IStory> FindPublishable(DateTime minimumDate, DateTime maximumDate, int start, int max)
+        {
+            Check.Argument.IsNotInFuture(minimumDate, "minimumDate");
+            Check.Argument.IsNotInFuture(maximumDate, "maximumDate");
+            Check.Argument.IsNotNegative(start, "start");
+            Check.Argument.IsNotNegative(max, "max");
+
+            Log.Info("Retrieving publishable stories : {0}, {1}", start, max);
+
+            var pagedResult = base.FindPublishable(minimumDate, maximumDate, start, max);
+
+            if (pagedResult.IsEmpty)
+            {
+                Log.Warning("Did not find any publishable story : {0}, {1}, {2}, {3}", minimumDate, maximumDate, start, max);
+            }
+            else
+            {
+                Log.Info("Publishable stories retrieved : {0}, {1}, {2}, {3}", minimumDate, maximumDate, start, max);
+            }
+
+            return pagedResult;
+        }
+
         public override PagedResult<IStory> FindByTag(Guid tagId, int start, int max)
         {
             Check.Argument.IsNotEmpty(tagId, "tagId");
@@ -264,29 +328,6 @@ namespace Kigg.Repository
             return pagedResult;
         }
 
-        public override ICollection<IStory> FindPublishable(DateTime minimumDate, DateTime maximumDate, int start, int max)
-        {
-            Check.Argument.IsNotInFuture(minimumDate, "minimumDate");
-            Check.Argument.IsNotInFuture(maximumDate, "maximumDate");
-            Check.Argument.IsNotNegative(start, "start");
-            Check.Argument.IsNotNegative(max, "max");
-
-            Log.Info("Retrieving publishable stories : {0}, {1}", start, max);
-
-            var result = base.FindPublishable(minimumDate, maximumDate, start, max);
-
-            if (result.IsNullOrEmpty())
-            {
-                Log.Warning("Did not find any publishable story : {0}, {1}, {2}, {3}", minimumDate, maximumDate, start, max);
-            }
-            else
-            {
-                Log.Info("Publishable stories retrieved : {0}, {1}, {2}, {3}", minimumDate, maximumDate, start, max);
-            }
-
-            return result;
-        }
-
         public override int CountByPublished()
         {
             Log.Info("Retrieving published count");
@@ -346,6 +387,17 @@ namespace Kigg.Repository
             return result;
         }
 
+        public override int CountByUnapproved()
+        {
+            Log.Info("Retrieving unapproved count");
+
+            var result = base.CountByUnapproved();
+
+            Log.Info("Unapproved count retrieved");
+
+            return result;
+        }
+
         public override int CountByPublishable(DateTime minimumDate, DateTime maximumDate)
         {
             Check.Argument.IsNotInFuture(minimumDate, "minimumDate");
@@ -356,6 +408,17 @@ namespace Kigg.Repository
             var result = base.CountByPublishable(minimumDate, maximumDate);
 
             Log.Info("Publishable count retrieved: {0}-{1}", minimumDate, maximumDate);
+
+            return result;
+        }
+
+        public override int CountPostedByUser(Guid userId)
+        {
+            Log.Info("Retrieving posted by user count: {0}".FormatWith(userId));
+
+            var result = base.CountPostedByUser(userId);
+
+            Log.Info("posted by user count: {0}".FormatWith(userId));
 
             return result;
         }

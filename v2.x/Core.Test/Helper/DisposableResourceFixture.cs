@@ -1,13 +1,12 @@
-using System;
 using Xunit;
 
 namespace Kigg.Core.Test
 {
-    public class DisposableResourceFixture : IDisposable
+    public class DisposableResourceFixtur
     {
         private DisposableResourceTestDouble _resource;
 
-        public DisposableResourceFixture()
+        public DisposableResourceFixtur()
         {
             _resource = new DisposableResourceTestDouble();
         }

@@ -6,7 +6,7 @@
 
     public class UnityPerWebRequestLifetimeModule : DisposableResource, IHttpModule
     {
-        internal static readonly object Key = new object();
+        private static readonly object Key = new object();
 
         private HttpContextBase _httpContext;
 

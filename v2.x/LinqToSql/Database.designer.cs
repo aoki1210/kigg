@@ -31,9 +31,6 @@ namespace Kigg.Repository.LinqToSql
     partial void InsertCategory(Kigg.DomainObjects.Category instance);
     partial void UpdateCategory(Kigg.DomainObjects.Category instance);
     partial void DeleteCategory(Kigg.DomainObjects.Category instance);
-    partial void InsertUserTag(Kigg.DomainObjects.UserTag instance);
-    partial void UpdateUserTag(Kigg.DomainObjects.UserTag instance);
-    partial void DeleteUserTag(Kigg.DomainObjects.UserTag instance);
     partial void InsertCommentSubscribtion(Kigg.DomainObjects.CommentSubscribtion instance);
     partial void UpdateCommentSubscribtion(Kigg.DomainObjects.CommentSubscribtion instance);
     partial void DeleteCommentSubscribtion(Kigg.DomainObjects.CommentSubscribtion instance);
@@ -67,6 +64,9 @@ namespace Kigg.Repository.LinqToSql
     partial void InsertUserScore(Kigg.DomainObjects.UserScore instance);
     partial void UpdateUserScore(Kigg.DomainObjects.UserScore instance);
     partial void DeleteUserScore(Kigg.DomainObjects.UserScore instance);
+    partial void InsertUserTag(Kigg.DomainObjects.UserTag instance);
+    partial void UpdateUserTag(Kigg.DomainObjects.UserTag instance);
+    partial void DeleteUserTag(Kigg.DomainObjects.UserTag instance);
     #endregion
 		
 		public Database(string connection) : 
@@ -98,14 +98,6 @@ namespace Kigg.Repository.LinqToSql
 			get
 			{
 				return this.GetTable<Kigg.DomainObjects.Category>();
-			}
-		}
-		
-		public System.Data.Linq.Table<Kigg.DomainObjects.UserTag> UserTags
-		{
-			get
-			{
-				return this.GetTable<Kigg.DomainObjects.UserTag>();
 			}
 		}
 		
@@ -194,6 +186,14 @@ namespace Kigg.Repository.LinqToSql
 			get
 			{
 				return this.GetTable<Kigg.DomainObjects.UserScore>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Kigg.DomainObjects.UserTag> UserTags
+		{
+			get
+			{
+				return this.GetTable<Kigg.DomainObjects.UserTag>();
 			}
 		}
 	}
@@ -433,214 +433,6 @@ namespace Kigg.DomainObjects
 		}
 	}
 	
-	[Table(Name="dbo.UserTag")]
-	[DataContract()]
-	public partial class UserTag : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private System.Guid _UserId;
-		
-		private System.Guid _TagId;
-		
-		private System.Data.Linq.Binary _Version;
-		
-		private EntityRef<Tag> _Tag;
-		
-		private EntityRef<User> _User;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnUserIdChanging(System.Guid value);
-    partial void OnUserIdChanged();
-    partial void OnTagIdChanging(System.Guid value);
-    partial void OnTagIdChanged();
-    partial void OnVersionChanging(System.Data.Linq.Binary value);
-    partial void OnVersionChanged();
-    #endregion
-		
-		public UserTag()
-		{
-			this.Initialize();
-		}
-		
-		[Column(Storage="_UserId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true, UpdateCheck=UpdateCheck.Never)]
-		[DataMember(Order=1)]
-		public System.Guid UserId
-		{
-			get
-			{
-				return this._UserId;
-			}
-			set
-			{
-				if ((this._UserId != value))
-				{
-					if (this._User.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnUserIdChanging(value);
-					this.SendPropertyChanging();
-					this._UserId = value;
-					this.SendPropertyChanged("UserId");
-					this.OnUserIdChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_TagId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true, UpdateCheck=UpdateCheck.Never)]
-		[DataMember(Order=2)]
-		public System.Guid TagId
-		{
-			get
-			{
-				return this._TagId;
-			}
-			set
-			{
-				if ((this._TagId != value))
-				{
-					if (this._Tag.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnTagIdChanging(value);
-					this.SendPropertyChanging();
-					this._TagId = value;
-					this.SendPropertyChanged("TagId");
-					this.OnTagIdChanged();
-				}
-			}
-		}
-		
-		[Column(Storage="_Version", AutoSync=AutoSync.Always, DbType="rowversion NOT NULL", CanBeNull=false, IsDbGenerated=true, IsVersion=true, UpdateCheck=UpdateCheck.Never)]
-		[DataMember(Order=3)]
-		public System.Data.Linq.Binary Version
-		{
-			get
-			{
-				return this._Version;
-			}
-			set
-			{
-				if ((this._Version != value))
-				{
-					this.OnVersionChanging(value);
-					this.SendPropertyChanging();
-					this._Version = value;
-					this.SendPropertyChanged("Version");
-					this.OnVersionChanged();
-				}
-			}
-		}
-
-        [Association(Name = "Tag_UserTag", Storage = "_Tag", ThisKey = "TagId", OtherKey = "Id", IsForeignKey = true, DeleteOnNull=true)]
-		public Tag Tag
-		{
-			get
-			{
-				return this._Tag.Entity;
-			}
-			set
-			{
-				Tag previousValue = this._Tag.Entity;
-				if (((previousValue != value) 
-							|| (this._Tag.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Tag.Entity = null;
-						previousValue.UserTags.Remove(this);
-					}
-					this._Tag.Entity = value;
-					if ((value != null))
-					{
-						value.UserTags.Add(this);
-						this._TagId = value.Id;
-					}
-					else
-					{
-						this._TagId = default(System.Guid);
-					}
-					this.SendPropertyChanged("Tag");
-				}
-			}
-		}
-
-        [Association(Name = "User_UserTag", Storage = "_User", ThisKey = "UserId", OtherKey = "Id", IsForeignKey = true, DeleteOnNull=true)]
-		public User User
-		{
-			get
-			{
-				return this._User.Entity;
-			}
-			set
-			{
-				User previousValue = this._User.Entity;
-				if (((previousValue != value) 
-							|| (this._User.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._User.Entity = null;
-						previousValue.UserTags.Remove(this);
-					}
-					this._User.Entity = value;
-					if ((value != null))
-					{
-						value.UserTags.Add(this);
-						this._UserId = value.Id;
-					}
-					else
-					{
-						this._UserId = default(System.Guid);
-					}
-					this.SendPropertyChanged("User");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-		
-		private void Initialize()
-		{
-			this._Tag = default(EntityRef<Tag>);
-			this._User = default(EntityRef<User>);
-			OnCreated();
-		}
-		
-		[OnDeserializing()]
-		[System.ComponentModel.EditorBrowsableAttribute(EditorBrowsableState.Never)]
-		public void OnDeserializing(StreamingContext context)
-		{
-			this.Initialize();
-		}
-	}
-	
 	[Table(Name="dbo.CommentSubscribtion")]
 	[DataContract()]
 	public partial class CommentSubscribtion : INotifyPropertyChanging, INotifyPropertyChanged
@@ -745,8 +537,8 @@ namespace Kigg.DomainObjects
 				}
 			}
 		}
-
-        [Association(Name = "Story_CommentSubscribtion", Storage = "_Story", ThisKey = "StoryId", OtherKey = "Id", IsForeignKey = true, DeleteOnNull=true)]
+		
+		[Association(Name="Story_CommentSubscribtion", Storage="_Story", ThisKey="StoryId", OtherKey="Id", IsForeignKey=true)]
 		public Story Story
 		{
 			get
@@ -779,8 +571,8 @@ namespace Kigg.DomainObjects
 				}
 			}
 		}
-
-        [Association(Name = "User_CommentSubscribtion", Storage = "_User", ThisKey = "UserId", OtherKey = "Id", IsForeignKey = true, DeleteOnNull=true)]
+		
+		[Association(Name="User_CommentSubscribtion", Storage="_User", ThisKey="UserId", OtherKey="Id", IsForeignKey=true)]
 		public User User
 		{
 			get
@@ -954,7 +746,6 @@ namespace Kigg.DomainObjects
 	[DataContract()]
 	public partial class Story : INotifyPropertyChanging, INotifyPropertyChanged
 	{
-		
 		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
 		
 		private System.Guid _Id;
@@ -981,7 +772,7 @@ namespace Kigg.DomainObjects
 		
 		private System.DateTime _LastActivityAt;
 		
-		private System.Nullable<System.DateTime> _SpammedAt;
+		private System.Nullable<System.DateTime> _ApprovedAt;
 		
 		private System.Nullable<System.DateTime> _PublishedAt;
 		
@@ -1037,8 +828,8 @@ namespace Kigg.DomainObjects
     partial void OnCreatedAtChanged();
     partial void OnLastActivityAtChanging(System.DateTime value);
     partial void OnLastActivityAtChanged();
-    partial void OnSpammedAtChanging(System.Nullable<System.DateTime> value);
-    partial void OnSpammedAtChanged();
+    partial void OnApprovedAtChanging(System.Nullable<System.DateTime> value);
+    partial void OnApprovedAtChanged();
     partial void OnPublishedAtChanging(System.Nullable<System.DateTime> value);
     partial void OnPublishedAtChanged();
     partial void OnRankChanging(System.Nullable<int> value);
@@ -1314,23 +1105,23 @@ namespace Kigg.DomainObjects
 			}
 		}
 		
-		[Column(Storage="_SpammedAt", DbType="DateTime", UpdateCheck=UpdateCheck.Never)]
+		[Column(Storage="_ApprovedAt", DbType="DateTime", UpdateCheck=UpdateCheck.Never)]
 		[DataMember(Order=13)]
-		public System.Nullable<System.DateTime> SpammedAt
+		public System.Nullable<System.DateTime> ApprovedAt
 		{
 			get
 			{
-				return this._SpammedAt;
+				return this._ApprovedAt;
 			}
 			set
 			{
-				if ((this._SpammedAt != value))
+				if ((this._ApprovedAt != value))
 				{
-					this.OnSpammedAtChanging(value);
+					this.OnApprovedAtChanging(value);
 					this.SendPropertyChanging();
-					this._SpammedAt = value;
-					this.SendPropertyChanged("SpammedAt");
-					this.OnSpammedAtChanged();
+					this._ApprovedAt = value;
+					this.SendPropertyChanged("ApprovedAt");
+					this.OnApprovedAtChanged();
 				}
 			}
 		}
@@ -1418,8 +1209,8 @@ namespace Kigg.DomainObjects
 				}
 			}
 		}
-
-        [Association(Name = "Story_CommentSubscribtion", Storage = "_CommentSubscribtions", ThisKey = "Id", OtherKey = "StoryId")]
+		
+		[Association(Name="Story_CommentSubscribtion", Storage="_CommentSubscribtions", ThisKey="Id", OtherKey="StoryId")]
 		[DataMember(Order=18, EmitDefaultValue=false)]
 		public EntitySet<CommentSubscribtion> CommentSubscribtions
 		{
@@ -1437,8 +1228,8 @@ namespace Kigg.DomainObjects
 				this._CommentSubscribtions.Assign(value);
 			}
 		}
-
-        [Association(Name = "Story_StoryComment", Storage = "_StoryComments", ThisKey = "Id", OtherKey = "StoryId")]
+		
+		[Association(Name="Story_StoryComment", Storage="_StoryComments", ThisKey="Id", OtherKey="StoryId")]
 		[DataMember(Order=19, EmitDefaultValue=false)]
 		public EntitySet<StoryComment> StoryComments
 		{
@@ -1456,8 +1247,8 @@ namespace Kigg.DomainObjects
 				this._StoryComments.Assign(value);
 			}
 		}
-
-        [Association(Name = "Story_StoryMarkAsSpam", Storage = "_StoryMarkAsSpams", ThisKey = "Id", OtherKey = "StoryId")]
+		
+		[Association(Name="Story_StoryMarkAsSpam", Storage="_StoryMarkAsSpams", ThisKey="Id", OtherKey="StoryId")]
 		[DataMember(Order=20, EmitDefaultValue=false)]
 		public EntitySet<StoryMarkAsSpam> StoryMarkAsSpams
 		{
@@ -1475,8 +1266,8 @@ namespace Kigg.DomainObjects
 				this._StoryMarkAsSpams.Assign(value);
 			}
 		}
-
-        [Association(Name = "Story_StoryTag", Storage = "_StoryTags", ThisKey = "Id", OtherKey = "StoryId")]
+		
+		[Association(Name="Story_StoryTag", Storage="_StoryTags", ThisKey="Id", OtherKey="StoryId")]
 		[DataMember(Order=21, EmitDefaultValue=false)]
 		public EntitySet<StoryTag> StoryTags
 		{
@@ -1494,8 +1285,8 @@ namespace Kigg.DomainObjects
 				this._StoryTags.Assign(value);
 			}
 		}
-
-        [Association(Name = "Story_StoryView", Storage = "_StoryViews", ThisKey = "Id", OtherKey = "StoryId")]
+		
+		[Association(Name="Story_StoryView", Storage="_StoryViews", ThisKey="Id", OtherKey="StoryId")]
 		[DataMember(Order=22, EmitDefaultValue=false)]
 		public EntitySet<StoryView> StoryViews
 		{
@@ -1513,8 +1304,8 @@ namespace Kigg.DomainObjects
 				this._StoryViews.Assign(value);
 			}
 		}
-
-        [Association(Name = "Story_StoryVote", Storage = "_StoryVotes", ThisKey = "Id", OtherKey = "StoryId")]
+		
+		[Association(Name="Story_StoryVote", Storage="_StoryVotes", ThisKey="Id", OtherKey="StoryId")]
 		[DataMember(Order=23, EmitDefaultValue=false)]
 		public EntitySet<StoryVote> StoryVotes
 		{
@@ -1533,7 +1324,7 @@ namespace Kigg.DomainObjects
 			}
 		}
 		
-		[Association(Name="Category_Story", Storage="_Category", ThisKey="CategoryId", OtherKey="Id", IsForeignKey=true, DeleteOnNull=true)]
+		[Association(Name="Category_Story", Storage="_Category", ThisKey="CategoryId", OtherKey="Id", IsForeignKey=true)]
 		public Category Category
 		{
 			get
@@ -1566,8 +1357,8 @@ namespace Kigg.DomainObjects
 				}
 			}
 		}
-
-        [Association(Name = "User_Story", Storage = "_User", ThisKey = "UserId", OtherKey = "Id", IsForeignKey = true, DeleteOnNull=true)]
+		
+		[Association(Name="User_Story", Storage="_User", ThisKey="UserId", OtherKey="Id", IsForeignKey=true)]
 		public User User
 		{
 			get
@@ -1983,7 +1774,7 @@ namespace Kigg.DomainObjects
 			}
 		}
 		
-		[Association(Name="Story_StoryComment", Storage="_Story", ThisKey="StoryId", OtherKey="Id", IsForeignKey=true, DeleteOnNull=true)]
+		[Association(Name="Story_StoryComment", Storage="_Story", ThisKey="StoryId", OtherKey="Id", IsForeignKey=true)]
 		public Story Story
 		{
 			get
@@ -2016,8 +1807,8 @@ namespace Kigg.DomainObjects
 				}
 			}
 		}
-
-        [Association(Name = "User_StoryComment", Storage = "_User", ThisKey = "UserId", OtherKey = "Id", IsForeignKey = true, DeleteOnNull=true)]
+		
+		[Association(Name="User_StoryComment", Storage="_User", ThisKey="UserId", OtherKey="Id", IsForeignKey=true)]
 		public User User
 		{
 			get
@@ -2240,8 +2031,8 @@ namespace Kigg.DomainObjects
 				}
 			}
 		}
-
-        [Association(Name = "Story_StoryMarkAsSpam", Storage = "_Story", ThisKey = "StoryId", OtherKey = "Id", IsForeignKey=true, DeleteOnNull=true)]
+		
+		[Association(Name="Story_StoryMarkAsSpam", Storage="_Story", ThisKey="StoryId", OtherKey="Id", IsForeignKey=true)]
 		public Story Story
 		{
 			get
@@ -2274,8 +2065,8 @@ namespace Kigg.DomainObjects
 				}
 			}
 		}
-
-        [Association(Name = "User_StoryMarkAsSpam", Storage = "_User", ThisKey = "UserId", OtherKey = "Id", IsForeignKey = true, DeleteOnNull=true)]
+		
+		[Association(Name="User_StoryMarkAsSpam", Storage="_User", ThisKey="UserId", OtherKey="Id", IsForeignKey=true)]
 		public User User
 		{
 			get
@@ -2448,8 +2239,8 @@ namespace Kigg.DomainObjects
 				}
 			}
 		}
-
-        [Association(Name = "Story_StoryTag", Storage = "_Story", ThisKey = "StoryId", OtherKey = "Id", IsForeignKey = true, DeleteOnNull=true)]
+		
+		[Association(Name="Story_StoryTag", Storage="_Story", ThisKey="StoryId", OtherKey="Id", IsForeignKey=true)]
 		public Story Story
 		{
 			get
@@ -2482,8 +2273,8 @@ namespace Kigg.DomainObjects
 				}
 			}
 		}
-
-        [Association(Name = "Tag_StoryTag", Storage = "_Tag", ThisKey = "TagId", OtherKey = "Id", IsForeignKey = true, DeleteOnNull=true)]
+		
+		[Association(Name="Tag_StoryTag", Storage="_Tag", ThisKey="TagId", OtherKey="Id", IsForeignKey=true)]
 		public Tag Tag
 		{
 			get
@@ -2700,8 +2491,8 @@ namespace Kigg.DomainObjects
 				}
 			}
 		}
-
-        [Association(Name = "Story_StoryView", Storage = "_Story", ThisKey = "StoryId", OtherKey = "Id", IsForeignKey = true, DeleteOnNull=true)]
+		
+		[Association(Name="Story_StoryView", Storage="_Story", ThisKey="StoryId", OtherKey="Id", IsForeignKey=true)]
 		public Story Story
 		{
 			get
@@ -2923,8 +2714,8 @@ namespace Kigg.DomainObjects
 				}
 			}
 		}
-
-        [Association(Name = "Story_StoryVote", Storage = "_Story", ThisKey = "StoryId", OtherKey = "Id", IsForeignKey=true, DeleteOnNull=true)]
+		
+		[Association(Name="Story_StoryVote", Storage="_Story", ThisKey="StoryId", OtherKey="Id", IsForeignKey=true)]
 		public Story Story
 		{
 			get
@@ -2957,8 +2748,8 @@ namespace Kigg.DomainObjects
 				}
 			}
 		}
-
-        [Association(Name = "User_StoryVote", Storage = "_User", ThisKey = "UserId", OtherKey = "Id", IsForeignKey=true, DeleteOnNull=true)]
+		
+		[Association(Name="User_StoryVote", Storage="_User", ThisKey="UserId", OtherKey="Id", IsForeignKey=true)]
 		public User User
 		{
 			get
@@ -3044,9 +2835,9 @@ namespace Kigg.DomainObjects
 		
 		private System.Data.Linq.Binary _Version;
 		
-		private EntitySet<UserTag> _UserTags;
-		
 		private EntitySet<StoryTag> _StoryTags;
+		
+		private EntitySet<UserTag> _UserTags;
 		
 		private bool serializing;
 		
@@ -3175,28 +2966,9 @@ namespace Kigg.DomainObjects
 				}
 			}
 		}
-
-        [Association(Name = "Tag_UserTag", Storage = "_UserTags", ThisKey = "Id", OtherKey = "TagId")]
+		
+		[Association(Name="Tag_StoryTag", Storage="_StoryTags", ThisKey="Id", OtherKey="TagId")]
 		[DataMember(Order=6, EmitDefaultValue=false)]
-		public EntitySet<UserTag> UserTags
-		{
-			get
-			{
-				if ((this.serializing 
-							&& (this._UserTags.HasLoadedOrAssignedValues == false)))
-				{
-					return null;
-				}
-				return this._UserTags;
-			}
-			set
-			{
-				this._UserTags.Assign(value);
-			}
-		}
-
-        [Association(Name = "Tag_StoryTag", Storage = "_StoryTags", ThisKey = "Id", OtherKey = "TagId")]
-		[DataMember(Order=7, EmitDefaultValue=false)]
 		public EntitySet<StoryTag> StoryTags
 		{
 			get
@@ -3211,6 +2983,25 @@ namespace Kigg.DomainObjects
 			set
 			{
 				this._StoryTags.Assign(value);
+			}
+		}
+		
+		[Association(Name="Tag_UserTag", Storage="_UserTags", ThisKey="Id", OtherKey="TagId")]
+		[DataMember(Order=7, EmitDefaultValue=false)]
+		public EntitySet<UserTag> UserTags
+		{
+			get
+			{
+				if ((this.serializing 
+							&& (this._UserTags.HasLoadedOrAssignedValues == false)))
+				{
+					return null;
+				}
+				return this._UserTags;
+			}
+			set
+			{
+				this._UserTags.Assign(value);
 			}
 		}
 		
@@ -3234,18 +3025,6 @@ namespace Kigg.DomainObjects
 			}
 		}
 		
-		private void attach_UserTags(UserTag entity)
-		{
-			this.SendPropertyChanging();
-			entity.Tag = this;
-		}
-		
-		private void detach_UserTags(UserTag entity)
-		{
-			this.SendPropertyChanging();
-			entity.Tag = null;
-		}
-		
 		private void attach_StoryTags(StoryTag entity)
 		{
 			this.SendPropertyChanging();
@@ -3258,10 +3037,22 @@ namespace Kigg.DomainObjects
 			entity.Tag = null;
 		}
 		
+		private void attach_UserTags(UserTag entity)
+		{
+			this.SendPropertyChanging();
+			entity.Tag = this;
+		}
+		
+		private void detach_UserTags(UserTag entity)
+		{
+			this.SendPropertyChanging();
+			entity.Tag = null;
+		}
+		
 		private void Initialize()
 		{
-			this._UserTags = new EntitySet<UserTag>(new Action<UserTag>(this.attach_UserTags), new Action<UserTag>(this.detach_UserTags));
 			this._StoryTags = new EntitySet<StoryTag>(new Action<StoryTag>(this.attach_StoryTags), new Action<StoryTag>(this.detach_StoryTags));
+			this._UserTags = new EntitySet<UserTag>(new Action<UserTag>(this.attach_UserTags), new Action<UserTag>(this.detach_UserTags));
 			OnCreated();
 		}
 		
@@ -3314,8 +3105,6 @@ namespace Kigg.DomainObjects
 		
 		private System.Data.Linq.Binary _Version;
 		
-		private EntitySet<UserTag> _UserTags;
-		
 		private EntitySet<CommentSubscribtion> _CommentSubscribtions;
 		
 		private EntitySet<Story> _Stories;
@@ -3327,6 +3116,8 @@ namespace Kigg.DomainObjects
 		private EntitySet<StoryVote> _StoryVotes;
 		
 		private EntitySet<UserScore> _UserScores;
+		
+		private EntitySet<UserTag> _UserTags;
 		
 		private bool serializing;
 		
@@ -3570,28 +3361,9 @@ namespace Kigg.DomainObjects
 				}
 			}
 		}
-
-        [Association(Name = "User_UserTag", Storage = "_UserTags", ThisKey = "Id", OtherKey = "UserId")]
+		
+		[Association(Name="User_CommentSubscribtion", Storage="_CommentSubscribtions", ThisKey="Id", OtherKey="UserId")]
 		[DataMember(Order=11, EmitDefaultValue=false)]
-		public EntitySet<UserTag> UserTags
-		{
-			get
-			{
-				if ((this.serializing 
-							&& (this._UserTags.HasLoadedOrAssignedValues == false)))
-				{
-					return null;
-				}
-				return this._UserTags;
-			}
-			set
-			{
-				this._UserTags.Assign(value);
-			}
-		}
-
-        [Association(Name = "User_CommentSubscribtion", Storage = "_CommentSubscribtions", ThisKey = "Id", OtherKey = "UserId")]
-		[DataMember(Order=12, EmitDefaultValue=false)]
 		public EntitySet<CommentSubscribtion> CommentSubscribtions
 		{
 			get
@@ -3608,9 +3380,9 @@ namespace Kigg.DomainObjects
 				this._CommentSubscribtions.Assign(value);
 			}
 		}
-
-        [Association(Name = "User_Story", Storage = "_Stories", ThisKey = "Id", OtherKey = "UserId")]
-		[DataMember(Order=13, EmitDefaultValue=false)]
+		
+		[Association(Name="User_Story", Storage="_Stories", ThisKey="Id", OtherKey="UserId")]
+		[DataMember(Order=12, EmitDefaultValue=false)]
 		public EntitySet<Story> Stories
 		{
 			get
@@ -3627,9 +3399,9 @@ namespace Kigg.DomainObjects
 				this._Stories.Assign(value);
 			}
 		}
-
-        [Association(Name = "User_StoryComment", Storage = "_StoryComments", ThisKey = "Id", OtherKey = "UserId")]
-		[DataMember(Order=14, EmitDefaultValue=false)]
+		
+		[Association(Name="User_StoryComment", Storage="_StoryComments", ThisKey="Id", OtherKey="UserId")]
+		[DataMember(Order=13, EmitDefaultValue=false)]
 		public EntitySet<StoryComment> StoryComments
 		{
 			get
@@ -3646,9 +3418,9 @@ namespace Kigg.DomainObjects
 				this._StoryComments.Assign(value);
 			}
 		}
-
-        [Association(Name = "User_StoryMarkAsSpam", Storage = "_StoryMarkAsSpams", ThisKey = "Id", OtherKey = "UserId")]
-		[DataMember(Order=15, EmitDefaultValue=false)]
+		
+		[Association(Name="User_StoryMarkAsSpam", Storage="_StoryMarkAsSpams", ThisKey="Id", OtherKey="UserId")]
+		[DataMember(Order=14, EmitDefaultValue=false)]
 		public EntitySet<StoryMarkAsSpam> StoryMarkAsSpams
 		{
 			get
@@ -3665,9 +3437,9 @@ namespace Kigg.DomainObjects
 				this._StoryMarkAsSpams.Assign(value);
 			}
 		}
-
-        [Association(Name = "User_StoryVote", Storage = "_StoryVotes", ThisKey = "Id", OtherKey = "UserId")]
-		[DataMember(Order=16, EmitDefaultValue=false)]
+		
+		[Association(Name="User_StoryVote", Storage="_StoryVotes", ThisKey="Id", OtherKey="UserId")]
+		[DataMember(Order=15, EmitDefaultValue=false)]
 		public EntitySet<StoryVote> StoryVotes
 		{
 			get
@@ -3684,9 +3456,9 @@ namespace Kigg.DomainObjects
 				this._StoryVotes.Assign(value);
 			}
 		}
-
-        [Association(Name = "User_UserScore", Storage = "_UserScores", ThisKey = "Id", OtherKey = "UserId")]
-		[DataMember(Order=17, EmitDefaultValue=false)]
+		
+		[Association(Name="User_UserScore", Storage="_UserScores", ThisKey="Id", OtherKey="UserId")]
+		[DataMember(Order=16, EmitDefaultValue=false)]
 		public EntitySet<UserScore> UserScores
 		{
 			get
@@ -3701,6 +3473,25 @@ namespace Kigg.DomainObjects
 			set
 			{
 				this._UserScores.Assign(value);
+			}
+		}
+		
+		[Association(Name="User_UserTag", Storage="_UserTags", ThisKey="Id", OtherKey="UserId")]
+		[DataMember(Order=17, EmitDefaultValue=false)]
+		public EntitySet<UserTag> UserTags
+		{
+			get
+			{
+				if ((this.serializing 
+							&& (this._UserTags.HasLoadedOrAssignedValues == false)))
+				{
+					return null;
+				}
+				return this._UserTags;
+			}
+			set
+			{
+				this._UserTags.Assign(value);
 			}
 		}
 		
@@ -3722,18 +3513,6 @@ namespace Kigg.DomainObjects
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
-		}
-		
-		private void attach_UserTags(UserTag entity)
-		{
-			this.SendPropertyChanging();
-			entity.User = this;
-		}
-		
-		private void detach_UserTags(UserTag entity)
-		{
-			this.SendPropertyChanging();
-			entity.User = null;
 		}
 		
 		private void attach_CommentSubscribtions(CommentSubscribtion entity)
@@ -3808,15 +3587,27 @@ namespace Kigg.DomainObjects
 			entity.User = null;
 		}
 		
+		private void attach_UserTags(UserTag entity)
+		{
+			this.SendPropertyChanging();
+			entity.User = this;
+		}
+		
+		private void detach_UserTags(UserTag entity)
+		{
+			this.SendPropertyChanging();
+			entity.User = null;
+		}
+		
 		private void Initialize()
 		{
-			this._UserTags = new EntitySet<UserTag>(new Action<UserTag>(this.attach_UserTags), new Action<UserTag>(this.detach_UserTags));
 			this._CommentSubscribtions = new EntitySet<CommentSubscribtion>(new Action<CommentSubscribtion>(this.attach_CommentSubscribtions), new Action<CommentSubscribtion>(this.detach_CommentSubscribtions));
 			this._Stories = new EntitySet<Story>(new Action<Story>(this.attach_Stories), new Action<Story>(this.detach_Stories));
 			this._StoryComments = new EntitySet<StoryComment>(new Action<StoryComment>(this.attach_StoryComments), new Action<StoryComment>(this.detach_StoryComments));
 			this._StoryMarkAsSpams = new EntitySet<StoryMarkAsSpam>(new Action<StoryMarkAsSpam>(this.attach_StoryMarkAsSpams), new Action<StoryMarkAsSpam>(this.detach_StoryMarkAsSpams));
 			this._StoryVotes = new EntitySet<StoryVote>(new Action<StoryVote>(this.attach_StoryVotes), new Action<StoryVote>(this.detach_StoryVotes));
 			this._UserScores = new EntitySet<UserScore>(new Action<UserScore>(this.attach_UserScores), new Action<UserScore>(this.detach_UserScores));
+			this._UserTags = new EntitySet<UserTag>(new Action<UserTag>(this.attach_UserTags), new Action<UserTag>(this.detach_UserTags));
 			OnCreated();
 		}
 		
@@ -4015,8 +3806,8 @@ namespace Kigg.DomainObjects
 				}
 			}
 		}
-
-        [Association(Name = "User_UserScore", Storage = "_User", ThisKey = "UserId", OtherKey = "Id", IsForeignKey=true, DeleteOnNull=true)]
+		
+		[Association(Name="User_UserScore", Storage="_User", ThisKey="UserId", OtherKey="Id", IsForeignKey=true)]
 		public User User
 		{
 			get
@@ -4072,6 +3863,214 @@ namespace Kigg.DomainObjects
 		
 		private void Initialize()
 		{
+			this._User = default(EntityRef<User>);
+			OnCreated();
+		}
+		
+		[OnDeserializing()]
+		[System.ComponentModel.EditorBrowsableAttribute(EditorBrowsableState.Never)]
+		public void OnDeserializing(StreamingContext context)
+		{
+			this.Initialize();
+		}
+	}
+	
+	[Table(Name="dbo.UserTag")]
+	[DataContract()]
+	public partial class UserTag : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private System.Guid _UserId;
+		
+		private System.Guid _TagId;
+		
+		private System.Data.Linq.Binary _Version;
+		
+		private EntityRef<Tag> _Tag;
+		
+		private EntityRef<User> _User;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnUserIdChanging(System.Guid value);
+    partial void OnUserIdChanged();
+    partial void OnTagIdChanging(System.Guid value);
+    partial void OnTagIdChanged();
+    partial void OnVersionChanging(System.Data.Linq.Binary value);
+    partial void OnVersionChanged();
+    #endregion
+		
+		public UserTag()
+		{
+			this.Initialize();
+		}
+		
+		[Column(Storage="_UserId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true, UpdateCheck=UpdateCheck.Never)]
+		[DataMember(Order=1)]
+		public System.Guid UserId
+		{
+			get
+			{
+				return this._UserId;
+			}
+			set
+			{
+				if ((this._UserId != value))
+				{
+					if (this._User.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnUserIdChanging(value);
+					this.SendPropertyChanging();
+					this._UserId = value;
+					this.SendPropertyChanged("UserId");
+					this.OnUserIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_TagId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true, UpdateCheck=UpdateCheck.Never)]
+		[DataMember(Order=2)]
+		public System.Guid TagId
+		{
+			get
+			{
+				return this._TagId;
+			}
+			set
+			{
+				if ((this._TagId != value))
+				{
+					if (this._Tag.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnTagIdChanging(value);
+					this.SendPropertyChanging();
+					this._TagId = value;
+					this.SendPropertyChanged("TagId");
+					this.OnTagIdChanged();
+				}
+			}
+		}
+		
+		[Column(Storage="_Version", AutoSync=AutoSync.Always, DbType="rowversion NOT NULL", CanBeNull=false, IsDbGenerated=true, IsVersion=true, UpdateCheck=UpdateCheck.Never)]
+		[DataMember(Order=3)]
+		public System.Data.Linq.Binary Version
+		{
+			get
+			{
+				return this._Version;
+			}
+			set
+			{
+				if ((this._Version != value))
+				{
+					this.OnVersionChanging(value);
+					this.SendPropertyChanging();
+					this._Version = value;
+					this.SendPropertyChanged("Version");
+					this.OnVersionChanged();
+				}
+			}
+		}
+		
+		[Association(Name="Tag_UserTag", Storage="_Tag", ThisKey="TagId", OtherKey="Id", IsForeignKey=true)]
+		public Tag Tag
+		{
+			get
+			{
+				return this._Tag.Entity;
+			}
+			set
+			{
+				Tag previousValue = this._Tag.Entity;
+				if (((previousValue != value) 
+							|| (this._Tag.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Tag.Entity = null;
+						previousValue.UserTags.Remove(this);
+					}
+					this._Tag.Entity = value;
+					if ((value != null))
+					{
+						value.UserTags.Add(this);
+						this._TagId = value.Id;
+					}
+					else
+					{
+						this._TagId = default(System.Guid);
+					}
+					this.SendPropertyChanged("Tag");
+				}
+			}
+		}
+		
+		[Association(Name="User_UserTag", Storage="_User", ThisKey="UserId", OtherKey="Id", IsForeignKey=true)]
+		public User User
+		{
+			get
+			{
+				return this._User.Entity;
+			}
+			set
+			{
+				User previousValue = this._User.Entity;
+				if (((previousValue != value) 
+							|| (this._User.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._User.Entity = null;
+						previousValue.UserTags.Remove(this);
+					}
+					this._User.Entity = value;
+					if ((value != null))
+					{
+						value.UserTags.Add(this);
+						this._UserId = value.Id;
+					}
+					else
+					{
+						this._UserId = default(System.Guid);
+					}
+					this.SendPropertyChanged("User");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void Initialize()
+		{
+			this._Tag = default(EntityRef<Tag>);
 			this._User = default(EntityRef<User>);
 			OnCreated();
 		}
