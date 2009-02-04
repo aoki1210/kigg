@@ -1,5 +1,5 @@
 using System;
-
+using System.Web;
 using Moq;
 using Xunit;
 
@@ -34,10 +34,7 @@ namespace Kigg.Web.Test
         [Fact]
         public void OnBeginRequest_Should_Block_Ip_If_Ip_Exists_In_BlockedIpCollection()
         {
-            _httpContext.Expect(c => c.RewritePath(It.IsAny<string>())).Verifiable();
-            _module.OnBeginRequest(_httpContext.Object);
-
-            _httpContext.Verify();
+            Assert.Throws<HttpException>(() => _module.OnBeginRequest(_httpContext.Object));
         }
 
         [Fact]
@@ -45,9 +42,25 @@ namespace Kigg.Web.Test
         {
             log.Expect(l => l.Warning(It.IsAny<string>())).Verifiable();
 
-            _module.OnBeginRequest(_httpContext.Object);
+            Assert.Throws<HttpException>(() => _module.OnBeginRequest(_httpContext.Object));
 
             log.Verify();
+        }
+
+        [Fact]
+        public void OnBeginRequest_Should_Not_Block_Assets_Directory()
+        {
+            _httpContext.HttpRequest.ExpectGet(r => r.Url).Returns(new Uri("http://dotnetshoutout.com/Assets/a.jpg"));
+
+            Assert.DoesNotThrow(() => _module.OnBeginRequest(_httpContext.Object));
+        }
+
+        [Fact]
+        public void OnBeginRequest_Should_Not_Block_Access_Denied_Page()
+        {
+            _httpContext.HttpRequest.ExpectGet(r => r.Url).Returns(new Uri("http://dotnetshoutout.com/ErrorPages/AccessDenied.aspx"));
+
+            Assert.DoesNotThrow(() => _module.OnBeginRequest(_httpContext.Object));
         }
     }
 }

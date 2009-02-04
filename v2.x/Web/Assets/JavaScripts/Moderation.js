@@ -221,7 +221,43 @@
         $U.confirm('Approve Story?', 'Are you sure you want to approve this story?', submit);
     },
 
-    deleteStory : function(storyId)
+    deleteStory: function(storyId)
+    {
+        function submit()
+        {
+            var data = 'id=' + encodeURIComponent(storyId);
+
+            $.ajax(
+                        {
+                            url: Moderation._deleteStoryUrl,
+                            type: 'POST',
+                            dataType: 'json',
+                            data: data,
+                            beforeSend: function()
+                            {
+                                $U.showProgress('Deleting Story...');
+                            },
+                            success: function(result)
+                            {
+                                $U.hideProgress();
+
+                                if (result.isSuccessful)
+                                {
+                                    $('#t-' + storyId).fadeOut('normal', function() { $(this).remove(); });
+                                }
+                                else
+                                {
+                                    $U.messageBox('Error', result.errorMessage, true);
+                                }
+                            }
+                        }
+                    );
+        }
+
+        $U.confirm('Delete Story?', 'Are you sure you want to delete this story?', submit);
+    },
+
+    confirmSpamStory: function(storyId)
     {
         function submit()
         {
@@ -229,13 +265,13 @@
 
             $.ajax  (
                         {
-                            url : Moderation._deleteStoryUrl,
+                            url: Moderation._spamStoryUrl,
                             type : 'POST',
                             dataType : 'json',
                             data : data,
                             beforeSend :    function()
                                             {
-                                                $U.showProgress('Deleting Story...');
+                                                $U.showProgress('Approving Story Spam...');
                                             },
                             success :   function(result)
                                         {
@@ -254,7 +290,7 @@
                     );
         }
 
-        $U.confirm('Delete Story?', 'Are you sure you want to delete this story?', submit);
+        $U.confirm('Approve Story Spam?', 'Are you sure you want to approve this story as spam?', submit);
     },
 
     confirmSpamComment : function(storyId, commentId)
@@ -274,7 +310,7 @@
                             data : data,
                             beforeSend :    function()
                                             {
-                                                $U.showProgress('Approving Spam...');
+                                                $U.showProgress('Approving Comment Spam...');
                                             },
                             success :   function(result)
                                         {

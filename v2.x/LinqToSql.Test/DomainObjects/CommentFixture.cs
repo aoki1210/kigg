@@ -30,14 +30,6 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         }
 
         [Fact]
-        public void PostedAt_Should_Return_The_Timestamp()
-        {
-            _comment.Timestamp = SystemTime.Now();
-
-            Assert.Equal(_comment.Timestamp, _comment.PostedAt);
-        }
-
-        [Fact]
         public void ForStory_Should_Return_The_Story()
         {
             _comment.Story = new Story();

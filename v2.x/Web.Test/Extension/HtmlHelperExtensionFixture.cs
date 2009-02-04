@@ -214,12 +214,13 @@ namespace Kigg.Web.Test
             RouteTable.Routes.Clear();
             new RegisterRoutes(settings.Object).Execute();
 
-            ViewContext context = new ViewContext(_httpContext.Object, routeData, new Mock<ControllerBase>().Object, new Mock<IView>().Object, vdd, new TempDataDictionary());
+            ControllerContext controllerContext = new ControllerContext(_httpContext.Object, routeData, new Mock<ControllerBase>().Object);
+            ViewContext viewContext = new ViewContext(controllerContext, new Mock<IView>().Object, vdd, new TempDataDictionary());
 
             Mock<IViewDataContainer> mockVdc = new Mock<IViewDataContainer>();
             mockVdc.Expect(vdc => vdc.ViewData).Returns(vdd);
 
-            HtmlHelper htmlHelper = new HtmlHelper(context, mockVdc.Object);
+            HtmlHelper htmlHelper = new HtmlHelper(viewContext, mockVdc.Object);
 
             return htmlHelper;
         }

@@ -1,8 +1,8 @@
-﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="MembershipBox.ascx.cs" Inherits="Kigg.Web.MembershipBox" %>
-<% bool isAuthenticated = ViewData.Model.IsCurrentUserAuthenticated; %>
+﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<BaseViewData>" %>
+<% bool isAuthenticated = Model.IsCurrentUserAuthenticated; %>
 <div id="membershipBox" class="modalBox">
     <div class="titleContainer">
-        <div class="title"><%= ViewData.Model.SiteTitle %></div>
+        <div class="title"><%= Model.SiteTitle %></div>
         <div id="membershipClose" class="closeButton" title="Close"></div>
     </div>
     <div class="contentContainer">
@@ -81,7 +81,7 @@
                 --%>
             </div>
         <%}%>
-        <%if ((isAuthenticated) && (!ViewData.Model.CurrentUser.IsOpenIDAccount())) %>
+        <%if ((isAuthenticated) && (!Model.CurrentUser.IsOpenIDAccount())) %>
         <%{%>
             <div id="changePasswordSection">
                 <div class="box">

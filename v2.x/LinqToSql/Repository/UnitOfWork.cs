@@ -20,7 +20,7 @@
         {
         }
 
-        public void Commit()
+        public virtual void Commit()
         {
             if (_isDisposed)
             {

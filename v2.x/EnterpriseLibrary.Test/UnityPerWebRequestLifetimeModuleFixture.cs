@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Web;
 
 using Moq;
@@ -29,8 +30,21 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
         }
 
         [Fact]
-        public void GetInstances_Should_Return_LifeTimeManagers_From_Context()
+        public void GetInstances_Should_Add_Instances_When_Instances_Does_Not_Exist_In_Context()
         {
+            Assert.NotNull(UnityPerWebRequestLifetimeModule.GetInstances(_httpContext.Object));
+        }
+
+        [Fact]
+        public void GetInstances_Should_Return_Existing_Instances_When_Instances_Exist_In_Context()
+        {
+            var items = new Mock<IDictionary>();
+
+            items.Expect(i => i.Contains(It.IsAny<object>())).Returns(true);
+            items.ExpectGet(i => i[It.IsAny<Object>()]).Returns(new Dictionary<UnityPerWebRequestLifetimeManager, object>());
+
+            _httpContext.Expect(h => h.Items).Returns(items.Object);
+
             Assert.NotNull(UnityPerWebRequestLifetimeModule.GetInstances(_httpContext.Object));
         }
 

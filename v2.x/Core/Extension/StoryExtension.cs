@@ -8,12 +8,12 @@
     {
         public static bool IsNew(this IStory story)
         {
-            return story.LastProcessedAt == null;
+            return !story.LastProcessedAt.HasValue;
         }
 
         public static bool IsPublished(this IStory story)
         {
-            return story.PublishedAt != null;
+            return story.PublishedAt.HasValue;
         }
 
         public static bool HasExpired(this IStory story)
@@ -27,7 +27,7 @@
 
         public static bool IsApproved(this IStory story)
         {
-            return story.ApprovedAt != null;
+            return story.ApprovedAt.HasValue;
         }
 
         public static bool HasComments(this IStory story)

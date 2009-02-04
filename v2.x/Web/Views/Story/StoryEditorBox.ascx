@@ -1,7 +1,7 @@
-﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="StoryEditorBox.ascx.cs" Inherits="Kigg.Web.StoryEditorBox" %>
+﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<BaseViewData>" %>
 <div id="storyEditorBox" class="modalBox">
     <div class="titleContainer">
-        <div class="title"><%= ViewData.Model.SiteTitle %></div>
+        <div class="title"><%= Model.SiteTitle %></div>
         <div id="storyEditorClose" class="closeButton" title="Close"></div>
     </div>
     <div class="contentContainer">

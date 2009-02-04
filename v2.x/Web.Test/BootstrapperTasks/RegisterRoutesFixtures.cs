@@ -302,6 +302,16 @@ namespace Kigg.Web.Test
         }
 
         [Fact]
+        public void Should_Return_Users()
+        {
+            var routeData = GetRouteDataFor("~/Users");
+
+            Assert.Equal("Membership", routeData.Values["controller"]);
+            Assert.Equal("List", routeData.Values["action"]);
+            Assert.Equal(1, routeData.Values["page"]);
+        }
+
+        [Fact]
         public void Should_Return_User()
         {
             var routeData = GetRouteDataFor("~/Users/kazimanzurrashid");

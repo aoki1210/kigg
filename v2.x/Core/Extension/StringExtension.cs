@@ -12,7 +12,7 @@
         private static readonly Regex EmailExpression = new Regex(@"^([0-9a-zA-Z]+[-._+&])*[0-9a-zA-Z]+@([-0-9a-zA-Z]+[.])+[a-zA-Z]{2,6}$", RegexOptions.Singleline | RegexOptions.Compiled);
         private static readonly Regex StripHTMLExpression = new Regex("<\\S[^><]*>", RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Multiline | RegexOptions.CultureInvariant | RegexOptions.Compiled);
 
-        private static readonly char[] IllegalUrlCharacters = new[] { ';', '/', '\\', '?', ':', '@', '&', '=', '+', '$', ',', '<', '>', '#', '%', '.', '!', '*', '\'', '"', '(', ')', '[', ']', '{', '}', '|', '^', '`', '~', '–', '‘', '’', '“', '”' };
+        private static readonly char[] IllegalUrlCharacters = new[] { ';', '/', '\\', '?', ':', '@', '&', '=', '+', '$', ',', '<', '>', '#', '%', '.', '!', '*', '\'', '"', '(', ')', '[', ']', '{', '}', '|', '^', '`', '~', '–', '‘', '’', '“', '”', '»', '«' };
 
         public static bool IsWebUrl(this string target)
         {
@@ -66,16 +66,24 @@
 
         public static Guid ToGuid(this string target)
         {
+            Guid result = Guid.Empty;
+
             if ((!string.IsNullOrEmpty(target)) && (target.Trim().Length == 22))
             {
                 string encoded = string.Concat(target.Trim().Replace("-", "+").Replace("_", "/"), "==");
 
-                byte[] base64 = Convert.FromBase64String(encoded);
+                try
+                {
+                    byte[] base64 = Convert.FromBase64String(encoded);
 
-                return new Guid(base64);
+                    result = new Guid(base64);
+                }
+                catch(FormatException)
+                {
+                }
             }
 
-            return Guid.Empty;
+            return result;
         }
 
         public static T ToEnum<T>(this string target, T defaultValue) where T : IComparable, IFormattable

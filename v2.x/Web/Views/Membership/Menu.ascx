@@ -1,6 +1,6 @@
-﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="Menu.ascx.cs" Inherits="Kigg.Web.UserMenu" %>
-<% bool isAuthenticated = ViewData.Model.IsUserAuthenticated; %>
-<% IUser user = ViewData.Model.CurrentUser; %>
+﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<UserMenuViewData>" %>
+<% bool isAuthenticated = Model.IsUserAuthenticated; %>
+<% IUser user = Model.CurrentUser; %>
 <p class="userLinks">
     Welcome 
     <%if (isAuthenticated) %>

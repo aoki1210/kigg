@@ -68,6 +68,12 @@ namespace Kigg
             set;
         }
 
+        public int HtmlUserPerPage
+        {
+            get;
+            set;
+        }
+
         public int TopUsers
         {
             get;

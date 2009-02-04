@@ -20,9 +20,11 @@ namespace Kigg.Service
 
         void StoryCommented(IStory theStory, IUser byUser);
 
-        void StoryPublished(IUser ofUser);
+        void StoryDeleted(IStory theStory);
 
-        void StorySpammed(IUser ofUser);
+        void StoryPublished(IStory theStory);
+
+        void StorySpammed(IStory ofUser);
 
         void StoryIncorrectlyMarkedAsSpam(IUser byUser);
 

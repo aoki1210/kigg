@@ -1,7 +1,7 @@
-﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="Tabs.ascx.cs" Inherits="Kigg.Web.TagTabs" %>
+﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<TagTabsViewData>" %>
 <%
-bool shouldShowPopularTab = !ViewData.Model.PopularTags.IsNullOrEmpty();
-bool shouldShowMyTagsTab = !ViewData.Model.UserTags.IsNullOrEmpty();
+bool shouldShowPopularTab = !Model.PopularTags.IsNullOrEmpty();
+bool shouldShowMyTagsTab = !Model.UserTags.IsNullOrEmpty();
 
 if (shouldShowPopularTab || shouldShowMyTagsTab)
 {
@@ -20,13 +20,13 @@ if (shouldShowPopularTab || shouldShowMyTagsTab)
         <% if (shouldShowPopularTab) %>
         <% { %>
             <div id="popularTags" class="tagCloud">
-                <% Html.RenderPartial("Cloud", ViewData.Model.PopularTags); %>
+                <% Html.RenderPartial("Cloud", Model.PopularTags); %>
             </div>
         <% } %>
         <% if (shouldShowMyTagsTab) %>
         <% { %>
             <div id="myTags" class="tagCloud">
-                <% Html.RenderPartial("Cloud", ViewData.Model.UserTags); %>
+                <% Html.RenderPartial("Cloud", Model.UserTags); %>
             </div>
         <% } %>
     </div>

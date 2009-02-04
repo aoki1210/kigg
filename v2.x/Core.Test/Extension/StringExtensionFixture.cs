@@ -89,11 +89,8 @@ namespace Kigg.Core.Test
         }
 
         [Theory]
-        [InlineData("wgndbkadkatgkghdngtdhas")]
+        [InlineData("0P#x!=?dl;)x~cxza1@&Z$")]
         [InlineData("jdgndbaxhkgsaghdngtdhas")]
-        [InlineData("aajbcjbajssgaassddaxc")]
-        [InlineData("kasdasjansaaasdfaafkalns")]
-        [InlineData("kasdasjansafafaaaasdfaafkalns")]
         public void ToGuid_Should_Return_Empty_Guid_When_Incorrect_String_Is_Passed(string invalidGuid)
         {
             Assert.Equal(Guid.Empty, invalidGuid.ToGuid());

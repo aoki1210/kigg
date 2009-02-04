@@ -1,29 +1,27 @@
-﻿<%@ Page Language="C#" MasterPageFile="~/Views/Shared/SiteTemplate.Master" AutoEventWireup="true" CodeBehind="Faq.aspx.cs" Inherits="Kigg.Web.FaqView"%>
-<asp:Content ID="Content1" ContentPlaceHolderID="HeadPlaceHolder" runat="server">
+﻿<%@ Page Language="C#" MasterPageFile="~/Views/Shared/SiteTemplate.Master" Inherits="System.Web.Mvc.ViewPage<SupportViewData>"%>
+<script runat="server">
 
-    <script runat="server">
+    protected override void OnInit(EventArgs e)
+    {
+        base.OnInit(e);
 
-        protected override void OnInit(EventArgs e)
-        {
-            base.OnInit(e);
+        GenerateScript();
 
-            GenerateScript();
+        Page.Header.Title = "{0} - FAQ".FormatWith(Model.SiteTitle);
+    }
 
-            Page.Header.Title = "{0} - FAQ".FormatWith(ViewData.Model.SiteTitle);
-        }
+    private void GenerateScript()
+    {
+        jQueryScriptManager scriptManager = jQueryScriptManager.Current;
 
-        private void GenerateScript()
-        {
-            jQueryScriptManager scriptManager = jQueryScriptManager.Current;
+        scriptManager.RegisterSource(Url.Asset("faq"));
 
-            scriptManager.RegisterSource(Url.Asset("faq"));
+        scriptManager.RegisterOnReady("Faq.init();");
+        scriptManager.RegisterOnDispose("Faq.dispose();");
+    }
 
-            scriptManager.RegisterOnReady("Faq.init();");
-            scriptManager.RegisterOnDispose("Faq.dispose();");
-        }
-
-    </script>
-</asp:Content>
+</script>
+<asp:Content ID="Content1" ContentPlaceHolderID="HeadPlaceHolder" runat="server"></asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
     <%= Html.PageHeader("Frequently Asked Questions")%>
     <ol id="faq">
@@ -174,13 +172,13 @@
         <li>
             <a class="q" href="javascript:void(0)">I heard it's a Open Source project, Can I host a site based upon this codebase?</a>
             <div class="ans">
-                Sure you can. However, since we are running a .NET Community site with this codebase, we would not love to see a site with the same codebase for the same community.
+                Sure you can. However, since we are running a .NET Community site with this codebase, we would not love to see a site with the same codebase for the english speaking .NET community.
                 If you want be a part of the development team or want to submit a patch/enhancement, just drop <a href="mailto:admin@dotnetshoutout.com">us</a> a line.
             </div>
         </li>
         <li>
             <a class="q" href="javascript:void(0)">Okay, I think it's a cool project, how can I help?</a>
-            <div class="ans">Become an active member, tell your friends to join us, just spread the word. If you have any business proposal (e.g. sponsoring this project, showing Ads in this site etc), <a href="mailto:admin@dotnetshoutout.com">we</a> would definitely love to hear from you.</div>
+            <div class="ans">Become an active member, tell your friends to join us, just spread the word. If you have any business proposal (e.g. sponsoring this project, showing Ads in this site etc), <a href="mailto:admin@dotnetshoutout.com">we</a> look forward to hear from you.</div>
         </li>
     </ol>
 </asp:Content>

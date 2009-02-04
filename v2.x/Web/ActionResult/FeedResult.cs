@@ -65,7 +65,7 @@ namespace Kigg.Web
             XDocument doc = new XDocument();
 
             XElement feed = CreateRootRssElement();
-            XElement channel = CreateRssChannel(context, urlHelper, DateFormat);
+            XElement channel = CreateRssChannel(context.RequestContext, urlHelper, DateFormat);
 
             if (_model.CacheDurationInMinutes > 0)
             {
@@ -169,7 +169,7 @@ namespace Kigg.Web
 
             item.Add(new XElement(_ns + "category", new XAttribute("domain", categoryUrl), category.Name));
 
-            string userUrl = string.Concat(_model.RootUrl, urlHelper.RouteUrl("User", new { id = story.PostedBy.Id.Shrink(), tab = UserDetailTab.Promoted, page = 1 }));
+            string userUrl = string.Concat(_model.RootUrl, urlHelper.RouteUrl("User", new { name = story.PostedBy.Id.Shrink(), tab = UserDetailTab.Promoted, page = 1 }));
 
             item.Add(new XElement(_ns + "contributer", new XAttribute("domain", userUrl), story.PostedBy.UserName));
 
@@ -194,7 +194,7 @@ namespace Kigg.Web
 
             XDocument doc = new XDocument();
 
-            XElement feed = CreateRootAtomElement(context, urlHelper, DateFormat);
+            XElement feed = CreateRootAtomElement(context.RequestContext, urlHelper, DateFormat);
 
             if (!_model.Stories.IsNullOrEmpty())
             {
@@ -216,7 +216,7 @@ namespace Kigg.Web
             string detailUrl = string.Concat(_model.RootUrl, urlHelper.RouteUrl("Detail", new { name = story.UniqueName }));
             string storyDescription = PrepareDescription(story, detailUrl);
 
-            string userUrl = string.Concat(_model.RootUrl, urlHelper.RouteUrl("User", new { id = story.PostedBy.Id.Shrink(), tab = UserDetailTab.Promoted, page = 1 }));
+            string userUrl = string.Concat(_model.RootUrl, urlHelper.RouteUrl("User", new { name = story.PostedBy.Id.Shrink(), tab = UserDetailTab.Promoted, page = 1 }));
 
             XElement entry = new XElement(
                                             atom + "entry",

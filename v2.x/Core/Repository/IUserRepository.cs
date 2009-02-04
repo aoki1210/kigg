@@ -17,6 +17,8 @@ namespace Kigg.Repository
 
         PagedResult<IUser> FindTop(DateTime startTimestamp, DateTime endTimestamp, int start, int max);
 
+        PagedResult<IUser> FindAll(int start, int max);
+
         ICollection<string> FindIPAddresses(Guid id);
     }
 }

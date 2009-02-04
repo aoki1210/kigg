@@ -1,48 +1,47 @@
-﻿<%@ Page Language="C#" MasterPageFile="~/Views/Shared/SiteTemplate.Master" AutoEventWireup="true" CodeBehind="Detail.aspx.cs" Inherits="Kigg.Web.UserDetailView"%>
-<asp:Content ID="Content1" ContentPlaceHolderID="HeadPlaceHolder" runat="server">
-    <script runat="server">
+﻿<%@ Page Language="C#" MasterPageFile="~/Views/Shared/SiteTemplate.Master" Inherits="System.Web.Mvc.ViewPage<UserDetailViewData>"%>
+<script runat="server">
 
-        protected override void OnInit(EventArgs e)
+    protected override void OnInit(EventArgs e)
+    {
+        base.OnInit(e);
+
+        Page.Header.Title = "{0} - User : {1}".FormatWith(Model.SiteTitle, Model.TheUser.UserName);
+    }
+
+    private void StoryList()
+    {
+        string userId = Model.TheUser.Id.Shrink();
+        int page = Model.CurrentPage;
+
+        switch (Model.SelectedTab)
         {
-            base.OnInit(e);
+            case UserDetailTab.Posted:
+                {
+                    Html.RenderAction<StoryController>(c => c.PostedBy(userId, page));
+                    break;
+                }
 
-            Page.Header.Title = "{0} - User : {1}".FormatWith(ViewData.Model.SiteTitle, ViewData.Model.TheUser.UserName);
+            case UserDetailTab.Commented:
+                {
+                    Html.RenderAction<StoryController>(c => c.CommentedBy(userId, page));
+                    break;
+                }
+
+            default:
+                {
+                    Html.RenderAction<StoryController>(c => c.PromotedBy(userId, page));
+                    break;
+                }
         }
-
-        private void StoryList()
-        {
-            string userId = ViewData.Model.TheUser.Id.Shrink();
-            int page = ViewData.Model.CurrentPage;
-
-            switch (ViewData.Model.SelectedTab)
-            {
-                case UserDetailTab.Posted:
-                    {
-                        Html.RenderAction<StoryController>(c => c.PostedBy(userId, page));
-                        break;
-                    }
-
-                case UserDetailTab.Commented:
-                    {
-                        Html.RenderAction<StoryController>(c => c.CommentedBy(userId, page));
-                        break;
-                    }
-
-                default:
-                    {
-                        Html.RenderAction<StoryController>(c => c.PromotedBy(userId, page));
-                        break;
-                    }
-            }
-        }
-    </script>
-</asp:Content>
+    }
+</script>
+<asp:Content ID="Content1" ContentPlaceHolderID="HeadPlaceHolder" runat="server"></asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
-    <%= Html.PageHeader(ViewData.Model.TheUser.UserName)%>
+    <%= Html.PageHeader(Model.TheUser.UserName)%>
     <div style="clear:left">
-        <% IUser user = ViewData.Model.TheUser; %>
-        <%bool isVisitingOwnPage = ((ViewData.Model.IsCurrentUserAuthenticated) && (user.Id.Equals(ViewData.Model.CurrentUser.Id)));%>
-        <%bool isAdmin = ((ViewData.Model.IsCurrentUserAuthenticated) && (ViewData.Model.CurrentUser.IsAdministrator()));%>
+        <% IUser user = Model.TheUser; %>
+        <%bool isVisitingOwnPage = ((Model.IsCurrentUserAuthenticated) && (user.Id.Equals(Model.CurrentUser.Id)));%>
+        <%bool isAdmin = ((Model.IsCurrentUserAuthenticated) && (Model.CurrentUser.IsAdministrator()));%>
         <table>
             <tbody>
                 <tr>
@@ -150,7 +149,7 @@
                                         </td>
                                     </tr>
                                 <%}%>
-                                <%if ((isAdmin) && (!ViewData.Model.IPAddresses.IsNullOrEmpty()))%>
+                                <%if ((isAdmin) && (!Model.IPAddresses.IsNullOrEmpty()))%>
                                 <%{%>
                                     <tr>
                                         <td style="vertical-align:top">
@@ -161,7 +160,7 @@
                                             <%{%>
                                                 <%= Html.Hidden("id", user.Id.Shrink()) %>
                                                 <ul style="list-style:none none outside;margin:0px;padding:0px;width:32em">
-                                                    <%foreach(KeyValuePair<string, bool> ipAddress in ViewData.Model.IPAddresses) %>
+                                                    <%foreach(KeyValuePair<string, bool> ipAddress in Model.IPAddresses) %>
                                                     <%{%>
                                                         <li style="float:left;width:8em;padding:4px;white-space:nowrap;overflow:hidden">
                                                             <label class="smallLabel">
@@ -195,13 +194,13 @@
     <div id="userTabs">
         <ul class="ui-tabs-nav">
             <% string userId = user.Id.Shrink(); %>
-            <% UserDetailTab selectedTab = ViewData.Model.SelectedTab; %>
+            <% UserDetailTab selectedTab = Model.SelectedTab; %>
             <li class="ui-tabs-nav-item<%= ((selectedTab == UserDetailTab.Promoted) ? " ui-tabs-selected" : string.Empty) %>"><a href="<%= Url.RouteUrl("User", new { name = userId, tab = UserDetailTab.Promoted, page = 1}) %>">Promoted</a></li>
             <li class="ui-tabs-nav-item<%= ((selectedTab == UserDetailTab.Posted) ? " ui-tabs-selected" : string.Empty) %>"><a href="<%= Url.RouteUrl("User", new { name = userId, tab = UserDetailTab.Posted, page = 1 }) %>">Posted</a></li>
             <li class="ui-tabs-nav-item<%= ((selectedTab == UserDetailTab.Commented) ? " ui-tabs-selected" : string.Empty) %>"><a href="<%= Url.RouteUrl("User", new { name = userId, tab = UserDetailTab.Commented, page = 1}) %>">Commented</a></li>
         </ul>
         <div id="userTabContent" class="ui-tabs-panel">
-            <span class="hide hfeed"><%= Page.Header.Title%></span>
+            <span class="hide hfeed"><%= Model.SiteTitle%></span>
             <% StoryList(); %>
         </div>
     </div>

@@ -404,6 +404,14 @@ namespace Kigg.Core.Test
         }
 
         [Fact]
+        public void Delete_Should_Use_UserScoreService()
+        {
+            Delete();
+
+            _userScoreService.Verify();
+        }
+
+        [Fact]
         public void Delete_Should_Use_StoryRepository()
         {
             Delete();
@@ -778,14 +786,6 @@ namespace Kigg.Core.Test
         }
 
         [Fact]
-        public void Publish_Should_Use_CategoryRepository()
-        {
-            Publish();
-
-            _categoryRepository.Verify();
-        }
-
-        [Fact]
         public void Publish_Should_Use_UserScoreService()
         {
             Publish();
@@ -871,6 +871,7 @@ namespace Kigg.Core.Test
 
         private void Delete()
         {
+            _userScoreService.Expect(us => us.StoryDeleted(It.IsAny<IStory>())).Verifiable();
             _storyRepository.Expect(r => r.Remove(It.IsAny<IStory>())).Verifiable();
             _emailSender.Expect(es => es.NotifyStoryDelete(It.IsAny<IStory>(), It.IsAny<IUser>())).Verifiable();
 
@@ -945,7 +946,7 @@ namespace Kigg.Core.Test
             story.ExpectGet(s => s.PostedBy).Returns(postedBy.Object);
 
             _storyRepository.Expect(r => r.Remove(It.IsAny<IStory>())).Verifiable();
-            _userScoreService.Expect(us => us.StorySpammed(It.IsAny<IUser>())).Verifiable();
+            _userScoreService.Expect(us => us.StorySpammed(It.IsAny<IStory>())).Verifiable();
             _emailSender.Expect(es => es.NotifyConfirmSpamStory(It.IsAny<string>(), It.IsAny<IStory>(), It.IsAny<IUser>())).Verifiable();
 
             var byUser = new Mock<IUser>();
@@ -990,27 +991,11 @@ namespace Kigg.Core.Test
             const int PublishableCount = 40;
             var rnd = new Random();
 
-            var categories = new List<ICategory>();
-
-            for (var i = 1; i <= 8; i++)
-            {
-                var category = new Mock<ICategory>();
-
-                category.ExpectGet(c => c.Id).Returns(Guid.NewGuid());
-                categories.Add(category.Object);
-            }
-
-            _categoryRepository.Expect(r => r.FindAll()).Returns(categories).Verifiable();
-
             var stories = new List<IStory>();
 
             for (var i = 1; i <= PublishableCount; i++ )
             {
-                var story = new Mock<IStory>();
-
-                story.ExpectGet(s => s.BelongsTo).Returns(categories[rnd.Next(0, categories.Count - 1)]);
-
-                stories.Add(story.Object);
+                stories.Add(new Mock<IStory>().Object);
             }
 
             _storyRepository.Expect(r => r.CountByPublishable(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(PublishableCount).Verifiable();
@@ -1029,7 +1014,7 @@ namespace Kigg.Core.Test
             _markAsSpamRepository.Expect(s => s.FindAfter(It.IsAny<Guid>(), It.IsAny<DateTime>())).Returns(new[] { markAsSpam.Object }).Verifiable();
 
             _userScoreService.Expect(s => s.StoryIncorrectlyMarkedAsSpam(It.IsAny<IUser>())).Verifiable();
-            _userScoreService.Expect(s => s.StoryPublished(It.IsAny<IUser>())).Verifiable();
+            _userScoreService.Expect(s => s.StoryPublished(It.IsAny<IStory>())).Verifiable();
 
             _emailSender.Expect(es => es.NotifyPublishedStories(It.IsAny<DateTime>(), It.IsAny<IEnumerable<PublishedStory>>())).Verifiable();
 

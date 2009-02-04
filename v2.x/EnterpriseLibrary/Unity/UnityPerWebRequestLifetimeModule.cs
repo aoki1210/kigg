@@ -2,11 +2,13 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Threading;
     using System.Web;
 
     public class UnityPerWebRequestLifetimeModule : DisposableResource, IHttpModule
     {
         private static readonly object Key = new object();
+        private static readonly ReaderWriterLockSlim _rwl = new ReaderWriterLockSlim();
 
         private HttpContextBase _httpContext;
 
@@ -36,20 +38,37 @@
 
         internal static IDictionary<UnityPerWebRequestLifetimeManager, object> GetInstances(HttpContextBase httpContext)
         {
-            IDictionary<UnityPerWebRequestLifetimeManager, object> instances = null;
+            _rwl.EnterUpgradeableReadLock();
 
-            if (httpContext.Items.Contains(Key))
+            try
             {
-                instances = httpContext.Items[Key] as IDictionary<UnityPerWebRequestLifetimeManager, object>;
-            }
+                IDictionary<UnityPerWebRequestLifetimeManager, object> instances;
 
-            if (instances == null)
+                if (httpContext.Items.Contains(Key))
+                {
+                    instances = (IDictionary<UnityPerWebRequestLifetimeManager, object>) httpContext.Items[Key];
+                }
+                else
+                {
+                    _rwl.EnterWriteLock();
+
+                    try
+                    {
+                        instances = new Dictionary<UnityPerWebRequestLifetimeManager, object>();
+                        httpContext.Items.Add(Key, instances);
+                    }
+                    finally
+                    {
+                        _rwl.ExitWriteLock();
+                    }
+                }
+
+                return instances;
+            }
+            finally
             {
-                instances = new Dictionary<UnityPerWebRequestLifetimeManager, object>();
-                httpContext.Items.Add(Key, instances);
+                _rwl.ExitUpgradeableReadLock();
             }
-
-            return instances;
         }
 
         internal void RemoveAllInstances()

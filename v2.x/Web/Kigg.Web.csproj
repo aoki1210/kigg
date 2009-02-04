@@ -84,11 +84,8 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Configuration" />
-    <Reference Include="System.Web.Abstractions, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\References\system.Web\System.Web.Abstractions.dll</HintPath>
+    <Reference Include="System.Web.Abstractions">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System.Web.DataVisualization, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -102,11 +99,8 @@
       <HintPath>..\References\system.Web\System.Web.Mvc.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Web.Routing, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\References\system.Web\System.Web.Routing.dll</HintPath>
+    <Reference Include="System.Web.Routing">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml" />
@@ -153,18 +147,13 @@
     <Compile Include="Helpers\FormatStrings.cs" />
     <Compile Include="Modules\BaseHttpModule.cs" />
     <Compile Include="Modules\BlockedIPCollection.cs" />
+    <Compile Include="Modules\ErrorHandler.cs" />
     <Compile Include="Modules\IBlockedIPCollection.cs" />
     <Compile Include="Modules\IPBlock.cs" />
     <Compile Include="Modules\RemoveWwwRedirector.cs" />
     <Compile Include="ViewData\ControlPanelViewData.cs" />
     <Compile Include="ViewData\StoryItemViewData.cs" />
-    <Compile Include="Views\Category\Menu.ascx.cs">
-      <DependentUpon>Menu.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Category\Menu.ascx.designer.cs">
-      <DependentUpon>Menu.ascx</DependentUpon>
-    </Compile>
+    <Compile Include="ViewData\UserListViewData.cs" />
     <Compile Include="ViewData\StoryListUserViewData.cs" />
     <Compile Include="ViewData\TopUserTabsViewData.cs" />
     <Compile Include="ViewData\UserDetailTab.cs" />
@@ -195,160 +184,6 @@
     </Compile>
     <Compile Include="ViewData\SupportViewData.cs" />
     <Compile Include="ViewData\UserWithScore.cs" />
-    <Compile Include="Views\Membership\Detail.aspx.cs">
-      <DependentUpon>Detail.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Membership\Detail.aspx.designer.cs">
-      <DependentUpon>Detail.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Support\ControlPanel.ascx.cs">
-      <DependentUpon>ControlPanel.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Support\ControlPanel.ascx.designer.cs">
-      <DependentUpon>ControlPanel.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Shared\IntroBox.ascx.cs">
-      <DependentUpon>IntroBox.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Shared\IntroBox.ascx.designer.cs">
-      <DependentUpon>IntroBox.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Membership\Top.ascx.cs">
-      <DependentUpon>Top.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Membership\Top.ascx.designer.cs">
-      <DependentUpon>Top.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Membership\Chart.ascx.cs">
-      <DependentUpon>Chart.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Membership\Chart.ascx.designer.cs">
-      <DependentUpon>Chart.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Story\ImageCode.ascx.cs">
-      <DependentUpon>ImageCode.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Story\ImageCode.ascx.designer.cs">
-      <DependentUpon>ImageCode.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Story\Comments.ascx.cs">
-      <DependentUpon>Comments.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Story\Comments.ascx.designer.cs">
-      <DependentUpon>Comments.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Story\Votes.ascx.cs">
-      <DependentUpon>Votes.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Story\Votes.ascx.designer.cs">
-      <DependentUpon>Votes.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Story\UserStoryList.ascx.cs">
-      <DependentUpon>UserStoryList.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Story\UserStoryList.ascx.designer.cs">
-      <DependentUpon>UserStoryList.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Story\StoryList.ascx.cs">
-      <DependentUpon>StoryList.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Story\StoryList.ascx.designer.cs">
-      <DependentUpon>StoryList.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Support\Faq.aspx.cs">
-      <DependentUpon>Faq.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Support\Faq.aspx.designer.cs">
-      <DependentUpon>Faq.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Tag\Cloud.ascx.cs">
-      <DependentUpon>Cloud.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Tag\Cloud.ascx.designer.cs">
-      <DependentUpon>Cloud.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Shared\SearchBox.ascx.cs">
-      <DependentUpon>SearchBox.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Shared\SearchBox.ascx.designer.cs">
-      <DependentUpon>SearchBox.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Story\List.aspx.cs">
-      <DependentUpon>List.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Story\List.aspx.designer.cs">
-      <DependentUpon>List.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Membership\TopTabs.ascx.cs">
-      <DependentUpon>TopTabs.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Membership\TopTabs.ascx.designer.cs">
-      <DependentUpon>TopTabs.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Category\RadioButtonList.ascx.cs">
-      <DependentUpon>RadioButtonList.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Category\RadioButtonList.ascx.designer.cs">
-      <DependentUpon>RadioButtonList.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Story\StoryEditorBox.ascx.cs">
-      <DependentUpon>StoryEditorBox.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Story\StoryEditorBox.ascx.designer.cs">
-      <DependentUpon>StoryEditorBox.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Support\About.aspx.cs">
-      <DependentUpon>About.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Support\About.aspx.designer.cs">
-      <DependentUpon>About.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Story\Detail.aspx.cs">
-      <DependentUpon>Detail.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Story\Detail.aspx.designer.cs">
-      <DependentUpon>Detail.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Story\New.aspx.cs">
-      <DependentUpon>New.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Story\New.aspx.designer.cs">
-      <DependentUpon>New.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Shared\MembershipBox.ascx.cs">
-      <DependentUpon>MembershipBox.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Shared\MembershipBox.ascx.designer.cs">
-      <DependentUpon>MembershipBox.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Support\Contact.aspx.cs">
-      <DependentUpon>Contact.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Support\Contact.aspx.designer.cs">
-      <DependentUpon>Contact.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Helpers\FormsAuthenticationWrapper.cs" />
     <Compile Include="Extension\HtmlHelperExtension.cs" />
     <Compile Include="Helpers\IFormsAuthentication.cs" />
@@ -364,34 +199,6 @@
     <Compile Include="ViewData\StoryDetailViewData.cs" />
     <Compile Include="ViewData\StoryListSearchViewData.cs" />
     <Compile Include="ViewData\JsonViewData.cs" />
-    <Compile Include="Views\Shared\SiteTemplate.Master.cs">
-      <DependentUpon>SiteTemplate.Master</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Shared\SiteTemplate.Master.designer.cs">
-      <DependentUpon>SiteTemplate.Master</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Membership\Menu.ascx.cs">
-      <DependentUpon>Menu.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Membership\Menu.ascx.designer.cs">
-      <DependentUpon>Menu.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Story\Story.ascx.cs">
-      <DependentUpon>Story.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Story\Story.ascx.designer.cs">
-      <DependentUpon>Story.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Tag\Tabs.ascx.cs">
-      <DependentUpon>Tabs.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Tag\Tabs.ascx.designer.cs">
-      <DependentUpon>Tabs.ascx</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Logs\exception.txt" />
@@ -422,8 +229,12 @@
   <ItemGroup>
     <Content Include="App_Data\badWords.xml" />
     <None Include="Assets\Images\approve.png" />
+    <Content Include="Assets\Images\aboutus.jpg" />
+    <Content Include="Assets\Images\arrow.png" />
     <Content Include="Assets\Images\atom.jpg" />
     <None Include="Assets\Images\btnClose.png" />
+    <Content Include="Assets\Images\edge.gif" />
+    <Content Include="Assets\Images\foot_bck.gif" />
     <Content Include="Assets\Images\logo2.png" />
     <Content Include="Assets\Images\buttonBG.png" />
     <None Include="Assets\Images\category.png" />
@@ -438,7 +249,7 @@
     <None Include="Assets\Images\facebook.png" />
     <None Include="Assets\Images\delete.png" />
     <None Include="Assets\Images\edit.png" />
-    <Content Include="Assets\Images\backSoon.png" />
+    <Content Include="Assets\Images\preview.png" />
     <None Include="Assets\Images\fav-all.ico" />
     <Content Include="Assets\Images\fav.ico" />
     <Content Include="Assets\Images\fav.png" />
@@ -471,6 +282,7 @@
     <None Include="Assets\Images\source.png" />
     <None Include="Assets\Images\tag.png" />
     <None Include="Assets\Images\time.png" />
+    <Content Include="Assets\Images\th_bck.gif" />
     <Content Include="Assets\Images\toRightButtonBG.png" />
     <None Include="Assets\Images\twitter.png" />
     <Content Include="Assets\Images\ui.jquery\222222_11x11_icon_close.gif" />
@@ -528,10 +340,13 @@
     <None Include="Assets\StyleSheets\ui.jquery.css" />
     <Content Include="Assets\JavaScripts\Utility.min.js" />
     <Content Include="Assets\StyleSheets\colorPicker.min.css" />
+    <None Include="Assets\StyleSheets\error.css" />
+    <Content Include="Assets\StyleSheets\error.min.css" />
     <Content Include="Assets\StyleSheets\marItUp.min.css" />
     <Content Include="Assets\StyleSheets\site.min.css" />
     <Content Include="Assets\StyleSheets\ui.jquery.min.css" />
     <Content Include="App_Data\blockedIPList.txt" />
+    <Content Include="ErrorPages\NotFound.aspx" />
     <Content Include="Default.aspx" />
     <Content Include="Global.asax" />
     <Content Include="Logs\trace.csv" />
@@ -566,11 +381,13 @@
     <Content Include="MailTemplates\SpamStory.txt" />
     <Content Include="MailTemplates\Feedback.txt" />
     <Content Include="Maintenance\app_offline.htm" />
-    <Content Include="Maintenance\IpBlocked.aspx" />
+    <Content Include="ErrorPages\Generic.aspx" />
+    <Content Include="ErrorPages\AccessDenied.aspx" />
     <Content Include="Views\Category\Menu.ascx" />
     <Content Include="robots.txt" />
     <Content Include="Views\Membership\Chart.ascx" />
     <Content Include="Views\Membership\Detail.aspx" />
+    <Content Include="Views\Membership\List.aspx" />
     <Content Include="Views\Support\ControlPanel.ascx" />
     <Content Include="Views\Shared\IntroBox.ascx" />
     <Content Include="Views\Membership\Top.ascx" />

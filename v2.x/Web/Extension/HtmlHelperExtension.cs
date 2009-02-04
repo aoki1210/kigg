@@ -42,7 +42,7 @@ namespace Kigg.Web
 
             if (!string.IsNullOrEmpty(rssUrl) || !string.IsNullOrEmpty(atomUrl))
             {
-                UrlHelper urlHelper = new UrlHelper(helper.ViewContext);
+                UrlHelper urlHelper = new UrlHelper(helper.ViewContext.RequestContext);
 
                 html.Append("<div class=\"feed\">");
 
@@ -101,7 +101,7 @@ namespace Kigg.Web
             return Pager(helper, "User", null, null, helper.ViewContext.RouteData.Values, "page", true, viewData.PageCount, 10, 2, viewData.CurrentPage);
         }
 
-        private static string Pager(this HtmlHelper helper, string routeName, string actionName, string controllerName, IDictionary<string, object> values, string pageParamName, bool appendQueryString, int pageCount, int noOfPageToShow, int noOfPageInEdge, int currentPage)
+        public static string Pager(this HtmlHelper helper, string routeName, string actionName, string controllerName, IDictionary<string, object> values, string pageParamName, bool appendQueryString, int pageCount, int noOfPageToShow, int noOfPageInEdge, int currentPage)
         {
             Func<string, int, string> getPageLink = (text, page) =>
                                                                     {

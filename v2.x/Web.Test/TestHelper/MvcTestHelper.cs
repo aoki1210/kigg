@@ -19,7 +19,7 @@ namespace Kigg.Web.Test
             HttpContextMock httpContext = GetHttpContext(appPath, requestPath, httpMethod);
 
             controller.ControllerContext = new ControllerContext(httpContext.Object, new RouteData(), controller);
-            controller.Url = new UrlHelper(controller.ControllerContext);
+            controller.Url = new UrlHelper(controller.ControllerContext.RequestContext);
 
             return httpContext;
         }

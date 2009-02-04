@@ -90,6 +90,43 @@ namespace Kigg.Repository.LinqToSql
                    0;
         }
 
+        public virtual PagedResult<IUser> FindTop(DateTime startTimestamp, DateTime endTimestamp, int start, int max)
+        {
+            Check.Argument.IsNotInFuture(startTimestamp, "startTimestamp");
+            Check.Argument.IsNotInFuture(endTimestamp, "endTimestamp");
+            Check.Argument.IsNotNegative(start, "start");
+            Check.Argument.IsNotNegative(max, "max");
+
+            var userWithScore = Database.UserScoreDataSource
+                                        .Where(us => (us.User.Role == Roles.User) && (!us.User.IsLockedOut) && (us.Timestamp >= startTimestamp && us.Timestamp <= endTimestamp))
+                                        .GroupBy(us => us.UserId)
+                                        .Select(g => new { UserId = g.Key, Total = g.Sum(us => us.Score) });
+
+            var users = from user in Database.UserDataSource
+                        join score in userWithScore
+                        on user.Id equals score.UserId
+                        where score.Total > 0
+                        orderby score.Total descending, user.LastActivityAt descending
+                        select user;
+
+            return BuildPagedResult<IUser>(users.Skip(start).Take(max), users.Count());
+        }
+
+        public virtual PagedResult<IUser> FindAll(int start, int max)
+        {
+            Check.Argument.IsNotNegative(start, "start");
+            Check.Argument.IsNotNegative(max, "max");
+
+            int total = Database.UserDataSource.Count(u => u.IsActive && !u.IsLockedOut && u.Role == Roles.User);
+
+            IQueryable<User> users = Database.UserDataSource
+                                             .Where(u => u.IsActive && !u.IsLockedOut && u.Role == Roles.User)
+                                             .OrderBy(u => u.UserName)
+                                             .ThenByDescending(u => u.LastActivityAt);
+
+            return BuildPagedResult<IUser>(users.Skip(start).Take(max), total);
+        }
+
         public virtual ICollection<string> FindIPAddresses(Guid id)
         {
             Check.Argument.IsNotEmpty(id, "id");
@@ -118,28 +155,6 @@ namespace Kigg.Repository.LinqToSql
                                               .AsReadOnly();
 
             return all;
-        }
-
-        public virtual PagedResult<IUser> FindTop(DateTime startTimestamp, DateTime endTimestamp, int start, int max)
-        {
-            Check.Argument.IsNotInFuture(startTimestamp, "startTimestamp");
-            Check.Argument.IsNotInFuture(endTimestamp, "endTimestamp");
-            Check.Argument.IsNotNegative(start, "start");
-            Check.Argument.IsNotNegative(max, "max");
-
-            var userWithScore = Database.UserScoreDataSource
-                                        .Where(us => (us.User.Role == Roles.User) && (us.Timestamp >= startTimestamp && us.Timestamp <= endTimestamp))
-                                        .GroupBy(us => us.UserId)
-                                        .Select(g => new { UserId = g.Key, Total = g.Sum(us => us.Score) });
-
-            var users = from user in Database.UserDataSource
-                        join score in userWithScore
-                        on user.Id equals score.UserId
-                        where score.Total > 0
-                        orderby score.Total descending, user.LastActivityAt descending
-                        select user;
-
-            return BuildPagedResult<IUser>(users.Skip(start).Take(max), users.Count());
         }
     }
 }

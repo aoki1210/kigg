@@ -20,6 +20,12 @@ namespace Kigg.Web.Test
         }
 
         [Fact]
+        public void OnError_Should_Do_Nothing()
+        {
+            _module.OnError(_httpContext.Object);
+        }
+
+        [Fact]
         public void OnEndRequest_Should_Do_Nothing()
         {
             _module.OnEndRequest(_httpContext.Object);

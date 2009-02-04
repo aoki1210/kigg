@@ -177,6 +177,7 @@ namespace Kigg.Service
             Check.Argument.IsNotNull(theStory, "theStory");
             Check.Argument.IsNotNull(byUser, "byUser");
 
+            _userScoreService.StoryDeleted(theStory);
             _storyRepository.Remove(theStory);
             _emailSender.NotifyStoryDelete(theStory, byUser);
         }
@@ -295,8 +296,8 @@ namespace Kigg.Service
 
             if (!theStory.IsPublished())
             {
+                _userScoreService.StorySpammed(theStory);
                 _storyRepository.Remove(theStory);
-                _userScoreService.StorySpammed(theStory.PostedBy);
                 _emailSender.NotifyConfirmSpamStory(storyUrl, theStory, byUser);
             }
         }
@@ -328,23 +329,17 @@ namespace Kigg.Service
         {
             DateTime currentTime = SystemTime.Now();
 
-            using (IUnitOfWork unitOfWork = UnitOfWork.Get())
+            IList<PublishedStory> publishableStories = GetPublishableStories(currentTime);
+
+            if (!publishableStories.IsNullOrEmpty())
             {
-                IList<PublishedStory> publishableStories = GetPublishableStories(currentTime);
+                // First penalty the user for marking the story as spam;
+                // It is obvious that the Moderator has already reviewed the story
+                // before it gets this far.
+                PenaltyUsersForIncorrectlyMarkingStoriesAsSpam(publishableStories);
 
-                if (!publishableStories.IsNullOrEmpty())
-                {
-                    // First penalty the user for marking the story as spam;
-                    // It is obvious that the Moderator has already reviewed the story
-                    // before it gets this far.
-                    PenaltyUsersForIncorrectlyMarkingStoriesAsSpam(publishableStories);
-
-                    //Then Publish the stories
-                    PublishStories(currentTime, publishableStories);
-
-                    // Commit every thing
-                    unitOfWork.Commit();
-                }
+                //Then Publish the stories
+                PublishStories(currentTime, publishableStories);
             }
         }
 
@@ -574,55 +569,24 @@ namespace Kigg.Service
             // Now assign the Rank
             publishableStories.ForEach(ps => ps.Rank = (publishableStories.IndexOf(ps) + 1));
 
-            List<PublishedStory> publishingStories = new List<PublishedStory>();
+            // Now take the stories for front page
+            ICollection<PublishedStory> frontPageStories = publishableStories.OrderBy(ps => ps.Rank).Take(_settings.HtmlStoryPerPage).ToList();
 
-            // Now Take stories that should fill the first page of each category
-            ICollection<ICategory> categories = _categoryRepository.FindAll();
-
-            foreach (ICategory category in categories)
+            if (!frontPageStories.IsNullOrEmpty())
             {
-                Guid categoryId = category.Id;
-
-                publishingStories.AddRange(publishableStories.Where(ps => ps.Story.BelongsTo.Id == categoryId).OrderBy(ps => ps.Rank).Take(_settings.HtmlStoryPerPage));
-            }
-
-            // Now take the stories for front page regardless its category
-            IEnumerable<PublishedStory> frontPageStories = publishableStories.OrderBy(ps => ps.Rank).Take(_settings.HtmlStoryPerPage).AsEnumerable();
-            publishingStories.AddRange(frontPageStories);
-
-            if (publishingStories.Count > 0)
-            {
-                // Increase the User Score if the Story hits the front page
                 foreach (PublishedStory ps in frontPageStories)
                 {
-                    _userScoreService.StoryPublished(ps.Story.PostedBy);
-                }
-
-                publishingStories = publishingStories.Distinct(new PublishedStoryComparer()).OrderBy(ps => ps.Rank).ToList();
-
-                foreach (PublishedStory ps in publishingStories)
-                {
+                    //Increase user score
+                    _userScoreService.StoryPublished(ps.Story);
                     ps.Story.Publish(currentTime, ps.Rank);
                 }
 
-                _emailSender.NotifyPublishedStories(currentTime, publishingStories);
+                //Send mail to support
+                _emailSender.NotifyPublishedStories(currentTime, frontPageStories);
             }
 
             // Mark the Story that it has been processed
             publishableStories.ForEach(ps => ps.Story.LastProcessed(currentTime));
-        }
-
-        private sealed class PublishedStoryComparer : IEqualityComparer<PublishedStory>
-        {
-            public bool Equals(PublishedStory x, PublishedStory y)
-            {
-                return x.Story.Id.Equals(y.Story.Id);
-            }
-
-            public int GetHashCode(PublishedStory obj)
-            {
-                return obj.Story.Id.GetHashCode();
-            }
         }
     }
 }

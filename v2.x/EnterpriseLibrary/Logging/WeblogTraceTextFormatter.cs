@@ -25,15 +25,22 @@ namespace Kigg.Infrastructure.EnterpriseLibrary
         {
             IDictionary<string, TokenHandler<LogEntry>> extraHandlers = new Dictionary<string, TokenHandler<LogEntry>>();
 
-            // Web Application parameters
-            extraHandlers["namaspace"] = GenericTextFormatter<LogEntry>.CreateSimpleTokenHandler(le => ((WeblogEntry)le).NamespaceName);
-            extraHandlers["className"] = GenericTextFormatter<LogEntry>.CreateSimpleTokenHandler(le => ((WeblogEntry)le).ClassName);
-            extraHandlers["methodSignature"] = GenericTextFormatter<LogEntry>.CreateSimpleTokenHandler(le => ((WeblogEntry)le).MethodSignature);
-            extraHandlers["user"] = GenericTextFormatter<LogEntry>.CreateSimpleTokenHandler(le => ((WeblogEntry)le).CurrentUserName);
-            extraHandlers["ipAddress"] = GenericTextFormatter<LogEntry>.CreateSimpleTokenHandler(le => ((WeblogEntry)le).CurrentUserIPAddress);
-            extraHandlers["userAgent"] = GenericTextFormatter<LogEntry>.CreateSimpleTokenHandler(le => ((WeblogEntry)le).CurrentUserAgent);
-            extraHandlers["url"] = GenericTextFormatter<LogEntry>.CreateSimpleTokenHandler(le => ((WeblogEntry)le).CurrentUrl);
-            extraHandlers["referrer"] = GenericTextFormatter<LogEntry>.CreateSimpleTokenHandler(le => ((WeblogEntry)le).CurrentUrl);
+            try
+            {
+                // Web Application parameters
+                extraHandlers["namaspace"] = GenericTextFormatter<LogEntry>.CreateSimpleTokenHandler(le => ((WeblogEntry)le).NamespaceName);
+                extraHandlers["className"] = GenericTextFormatter<LogEntry>.CreateSimpleTokenHandler(le => ((WeblogEntry)le).ClassName);
+                extraHandlers["methodSignature"] = GenericTextFormatter<LogEntry>.CreateSimpleTokenHandler(le => ((WeblogEntry)le).MethodSignature);
+                extraHandlers["user"] = GenericTextFormatter<LogEntry>.CreateSimpleTokenHandler(le => ((WeblogEntry)le).CurrentUserName);
+                extraHandlers["ipAddress"] = GenericTextFormatter<LogEntry>.CreateSimpleTokenHandler(le => ((WeblogEntry)le).CurrentUserIPAddress);
+                extraHandlers["userAgent"] = GenericTextFormatter<LogEntry>.CreateSimpleTokenHandler(le => ((WeblogEntry)le).CurrentUserAgent);
+                extraHandlers["url"] = GenericTextFormatter<LogEntry>.CreateSimpleTokenHandler(le => ((WeblogEntry)le).CurrentUrl);
+                extraHandlers["referrer"] = GenericTextFormatter<LogEntry>.CreateSimpleTokenHandler(le => ((WeblogEntry)le).CurrentUrl);
+            }
+            catch(System.Web.HttpException)
+            {
+
+            }
 
             return extraHandlers;
         }

@@ -222,13 +222,13 @@ form
 
 #content
 {
-    margin:0 300px 0 10px;
+    margin:0 340px 0 10px;
 }
 
 #sidebar
 {
     float:right;
-    width:280px;
+    width:320px;
     margin-right:10px;
 }
 
@@ -1305,6 +1305,62 @@ form
     vertical-align:middle;
     width:24px;
     height:24px;
+}
+
+#userList
+{
+    clear:left;
+}
+
+#userList table, #userList td
+{
+    border:1px solid #ccc;
+    border-collapse:collapse;
+}
+
+#userList table
+{
+    border:none;
+    border:1px solid #ccc;
+    width:100%;
+}
+
+#userList thead th, #userList tbody th
+{
+    background:#fff url(Assets/Images/th_bck.gif) repeat-x;
+    color:#666;
+    padding:5px 10px;
+    border-left:1px solid #ccc;
+}
+
+#userList tbody th
+{
+    background:#fafafb;
+    border-top:1px solid #ccc;
+    text-align:left;
+    font-weight:normal;
+}
+
+#userList tbody tr td
+{
+    padding:5px 10px;
+    color:#666;
+    vertical-align:top;
+}
+
+#userList tfoot td, #userList tfoot th
+{
+    border-left:none;
+    border-top:1px solid #ccc;
+    padding:4px;
+    background:#fff url(Assets/Images/foot_bck.gif) repeat;
+    color:#666;
+    text-align:right;
+}
+
+#userList table img
+{
+    padding-right:8px;
 }
 
 #faq

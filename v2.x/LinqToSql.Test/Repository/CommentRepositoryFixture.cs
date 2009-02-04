@@ -51,9 +51,9 @@ namespace Kigg.Infrastructure.LinqToSql.Test
             var now = SystemTime.Now().AddDays(-1);
             var storyId = Guid.NewGuid();
 
-            Comments.Add(new StoryComment { StoryId = storyId, Timestamp = now.AddHours(1) });
-            Comments.Add(new StoryComment { StoryId = storyId, Timestamp = now.AddHours(2) });
-            Comments.Add(new StoryComment { StoryId = storyId, Timestamp = now.AddHours(3) });
+            Comments.Add(new StoryComment { StoryId = storyId, CreatedAt = now.AddHours(1) });
+            Comments.Add(new StoryComment { StoryId = storyId, CreatedAt = now.AddHours(2) });
+            Comments.Add(new StoryComment { StoryId = storyId, CreatedAt = now.AddHours(3) });
 
             var result = _commentRepository.FindAfter(storyId, now);
 

@@ -17,6 +17,7 @@ namespace Kigg.DomainObjects
         SpamStorySubmitted = 12,
         StoryIncorrectlyMarkedAsSpam = 13,
         SpamCommentSubmitted = 14,
-        CommentMarkedAsOffended = 15
+        CommentMarkedAsOffended = 15,
+        StoryDeleted = 16
     }
 }

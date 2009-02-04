@@ -166,6 +166,30 @@ namespace Kigg.Core.Test
         }
 
         [Fact]
+        public void FindAll_Should_Log_Info_When_Users_Exist()
+        {
+            FindAll(new[] { CreateStubUser() });
+
+            log.Verify();
+        }
+
+        [Fact]
+        public void FindAll_Should_Log_Warning_When_Users_Do_Not_Exist()
+        {
+            FindAll(null);
+
+            log.Verify();
+        }
+
+        [Fact]
+        public void FindAll_Should_Use_InnerRepository()
+        {
+            FindAll(new[] { CreateStubUser() });
+
+            _innerRepository.Verify();
+        }
+
+        [Fact]
         public void FindIPAddresses_Should_Log_Info_When_IpAddresses_Exist()
         {
             FindIPAddresses(new[] { "192.168.0.1" });
@@ -263,6 +287,19 @@ namespace Kigg.Core.Test
             }
 
             _loggingRepository.FindTop(SystemTime.Now().AddHours(-4), SystemTime.Now(), 0, 10);
+        }
+
+        private void FindAll(ICollection<IUser> result)
+        {
+            _innerRepository.Expect(r => r.FindAll(It.IsAny<int>(), It.IsAny<int>())).Returns((result == null) ? new PagedResult<IUser>() : new PagedResult<IUser>(result, result.Count)).Verifiable();
+            log.Expect(l => l.Info(It.IsAny<string>())).Verifiable();
+
+            if (result.IsNullOrEmpty())
+            {
+                log.Expect(l => l.Warning(It.IsAny<string>())).Verifiable();
+            }
+
+            _loggingRepository.FindAll(0, 10);
         }
 
         private void FindIPAddresses(ICollection<string> result)
