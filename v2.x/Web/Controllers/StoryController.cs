@@ -52,15 +52,6 @@ namespace Kigg.Web
         [Compress]
         public ActionResult Published(int? page)
         {
-            try
-            {
-                throw new InvalidCastException();
-            }
-            catch(Exception e)
-            {
-                Log.Exception(e);
-            }
-
             StoryListViewData viewData = CreateStoryListViewData<StoryListViewData>(page);
             PagedResult<IStory> pagedResult = _storyRepository.FindPublished(PageCalculator.StartIndex(page, Settings.HtmlStoryPerPage), Settings.HtmlStoryPerPage);
 
