@@ -1,7 +1,5 @@
 namespace Kigg.DomainObjects
 {
-    using System;
-
     public partial class StoryComment : IComment
     {
         public IUser ByUser
@@ -17,14 +15,6 @@ namespace Kigg.DomainObjects
             get
             {
                 return IPAddress;
-            }
-        }
-
-        public DateTime PostedAt
-        {
-            get
-            {
-                return Timestamp;
             }
         }
 

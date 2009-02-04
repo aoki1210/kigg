@@ -96,7 +96,7 @@ namespace Kigg.Web
                         // Cache
                         if (setting.CacheDurationInDays > 0)
                         {
-                            // Helpful when hosting in Single Webserver.
+                            // Helpful when hosting in Single Web server
                             if (setting.GenerateETag)
                             {
                                 response.Cache.SetETag(asset.ETag);
@@ -147,7 +147,7 @@ namespace Kigg.Web
                     clone.CacheDurationInDays = settings.CacheDurationInDays;
                 }
 
-                // Assign the global version if setting does not have any verison
+                // Assign the global version if setting does not have any version
                 if (string.IsNullOrEmpty(clone.Version))
                 {
                     clone.Version = settings.Version;

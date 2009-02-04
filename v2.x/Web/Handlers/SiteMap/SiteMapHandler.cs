@@ -410,6 +410,8 @@ namespace Kigg.Web
         {
             string rootUrl = Settings.RootUrl;
 
+            target.Add(CreateEntry(context, rootUrl, "Users", new { page = 1 }, currentDate, SiteMapChangeFrequency.Hourly, SiteMapUpdatePriority.Normal, forMobile));
+
             ICollection<IUser> topMovers = UserRepository.FindTop(currentDate.AddDays(-1), currentDate, 0, Settings.TopUsers).Result;
 
             foreach (IUser user in topMovers)

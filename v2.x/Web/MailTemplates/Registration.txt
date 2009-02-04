@@ -4,9 +4,9 @@ Thank you for signing up with <%=siteTitle%>! We hope you are enjoying the site.
 
 The following is your registration info. Please verify your email address by clicking on this link:
 
-UserName:<%=userName%>
-Password:<%=password%>
-Url:<%=url%>
+UserName: <%=userName%>
+Password: <%=password%>
+Url: <%=url%>
 
 If clicking on the above link doesn't work, copy and paste it into your browser.
 

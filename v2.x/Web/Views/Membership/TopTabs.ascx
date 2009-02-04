@@ -1,7 +1,7 @@
-﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="TopTabs.ascx.cs" Inherits="Kigg.Web.TopUserTabs" %>
+﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<TopUserTabsViewData>" %>
 <%
-bool shouldShowMoverTab = (!ViewData.Model.TopMovers.IsNullOrEmpty());
-bool shouldShowLeaderTab = (!ViewData.Model.TopLeaders.IsNullOrEmpty());
+bool shouldShowMoverTab = (!Model.TopMovers.IsNullOrEmpty());
+bool shouldShowLeaderTab = (!Model.TopLeaders.IsNullOrEmpty());
 
 if (shouldShowMoverTab || shouldShowLeaderTab)
 {
@@ -20,13 +20,13 @@ if (shouldShowMoverTab || shouldShowLeaderTab)
         <% if (shouldShowMoverTab) %>
         <% { %>
             <div id="topMovers" class="topUsers">
-                <% Html.RenderPartial("Top", ViewData.Model.TopMovers); %>
+                <% Html.RenderPartial("Top", Model.TopMovers); %>
             </div>
         <% } %>
         <% if (shouldShowLeaderTab) %>
         <% { %>
             <div id="topLeaders" class="topUsers">
-                <% Html.RenderPartial("Top", ViewData.Model.TopLeaders); %>
+                <% Html.RenderPartial("Top", Model.TopLeaders); %>
             </div>
         <% } %>
     </div>

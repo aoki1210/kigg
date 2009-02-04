@@ -1,29 +1,28 @@
-﻿<%@ Page Language="C#" MasterPageFile="~/Views/Shared/SiteTemplate.Master" AutoEventWireup="true" CodeBehind="Detail.aspx.cs" Inherits="Kigg.Web.StoryDetailView"%>
-<asp:Content ID="Content1" ContentPlaceHolderID="HeadPlaceHolder" runat="server">
-    <script runat="server">
+﻿<%@ Page Language="C#" MasterPageFile="~/Views/Shared/SiteTemplate.Master" Inherits="System.Web.Mvc.ViewPage<StoryDetailViewData>"%>
+<script runat="server">
 
-        protected override void OnInit(EventArgs e)
-        {
-            base.OnInit(e);
+    protected override void OnInit(EventArgs e)
+    {
+        base.OnInit(e);
 
-            jQueryScriptManager.Current.RegisterSource(Url.Asset("js3"));
+        jQueryScriptManager.Current.RegisterSource(Url.Asset("js3"));
 
-            Page.Header.Title = ViewData.Model.Title;
-        }
+        Page.Header.Title = Model.Title;
+    }
 
-    </script>
-</asp:Content>
+</script>
+<asp:Content ID="Content1" ContentPlaceHolderID="HeadPlaceHolder" runat="server"></asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
-    <% IStory story = ViewData.Model.Story; %>
+    <% IStory story = Model.Story; %>
     <table id="t-<%= Html.AttributeEncode(story.Id.Shrink()) %>" class="story odd">
         <tbody>
             <tr>
-                <% Html.RenderPartial("Story", new StoryItemViewData { Story = story, User = ViewData.Model.CurrentUser, PromoteText = ViewData.Model.PromoteText, DemoteText = ViewData.Model.DemoteText, CountText = ViewData.Model.CountText, SocialServices = ViewData.Model.SocialServices, DetailMode = true }); %>
+                <% Html.RenderPartial("Story", new StoryItemViewData { Story = story, User = Model.CurrentUser, PromoteText = Model.PromoteText, DemoteText = Model.DemoteText, CountText = Model.CountText, SocialServices = Model.SocialServices, DetailMode = true }); %>
             </tr>
             <tr>
                 <td></td>
                 <td class="content">
-                    <% Html.RenderPartial("ImageCode", ViewData.Model); %>
+                    <% Html.RenderPartial("ImageCode", Model); %>
                 </td>
             </tr>
             <tr>
@@ -35,7 +34,7 @@
                             <li class="ui-tabs-nav-item"><a href="#votes">Promoted By</a></li>
                         </ul>
                         <div id="comments">
-                            <% Html.RenderPartial("Comments", ViewData.Model); %>
+                            <% Html.RenderPartial("Comments", Model); %>
                         </div>
                         <div id="votes">
                             <% Html.RenderPartial("Votes", story.Votes); %>
@@ -46,7 +45,7 @@
         </tbody>
     </table>
     <%
-        if (ViewData.Model.CanCurrentUserModerate)
+        if (Model.CanCurrentUserModerate)
         {
             Html.RenderPartial("StoryEditorBox");
         }

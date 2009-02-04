@@ -1156,6 +1156,22 @@ namespace Kigg.Web.Test
         }
 
         [Fact]
+        public void List_Should_Render_Default_View()
+        {
+            var result = List();
+
+            Assert.Equal(string.Empty, result.ViewName);
+        }
+
+        [Fact]
+        public void List_Should_Use_UserRepository()
+        {
+            List();
+
+            _userRepository.Verify();
+        }
+
+        [Fact]
         public void Detail_Should_Render_Default_View()
         {
             var result = Detail();
@@ -1172,11 +1188,11 @@ namespace Kigg.Web.Test
         }
 
         [Fact]
-        public void Detail_Should_Redirect_To_Published_When_Blank_Name_Is_Specified()
+        public void Detail_Should_Redirect_To_Users_When_Blank_Name_Is_Specified()
         {
             var result = (RedirectToRouteResult) _controller.Detail(null, null, null);
 
-            Assert.Equal("Published", result.RouteName);
+            Assert.Equal("Users", result.RouteName);
         }
 
         [Fact]
@@ -1486,6 +1502,13 @@ namespace Kigg.Web.Test
             _blockedIPList.Expect(bl => bl.RemoveRange(It.IsAny<ICollection<string>>())).Verifiable();
 
             return (JsonViewData) ((JsonResult)_controller.AllowIps(userId.Shrink(), new[] { "192.168.0.1", "192.168.0.3" })).Data;
+        }
+
+        private ViewResult List()
+        {
+            _userRepository.Expect(r => r.FindAll(It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IUser>()).Verifiable();
+
+            return (ViewResult) _controller.List(2);
         }
 
         private ViewResult Detail()

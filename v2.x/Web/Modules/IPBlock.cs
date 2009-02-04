@@ -1,6 +1,7 @@
 namespace Kigg.Web
 {
     using System;
+    using System.Net;
     using System.Web;
 
     using Infrastructure;
@@ -9,11 +10,13 @@ namespace Kigg.Web
     {
         public override void OnBeginRequest(HttpContextBase context)
         {
-            var requestedUrl = context.Request.Url;
+            Uri requestedUrl = context.Request.Url;
 
-            string prefix = "{0}://{1}/Assets".FormatWith(requestedUrl.Scheme, requestedUrl.Host);
+            string assets = "{0}://{1}/Assets".FormatWith(requestedUrl.Scheme, requestedUrl.Host);
+            string blocked = "{0}://{1}/ErrorPages/AccessDenied.aspx".FormatWith(requestedUrl.Scheme, requestedUrl.Host);
 
-            if (!requestedUrl.ToString().StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+            if ((!requestedUrl.ToString().StartsWith(assets, StringComparison.OrdinalIgnoreCase)) &&
+                (!requestedUrl.ToString().StartsWith(blocked, StringComparison.OrdinalIgnoreCase)))
             {
                 string ip = context.Request.UserHostAddress;
 
@@ -24,7 +27,7 @@ namespace Kigg.Web
                     if (shouldBlock)
                     {
                         Log.Warning("Blocked Ip Address detected: {0}.", ip);
-                        context.RewritePath("~/Maintenance/IpBlocked.aspx");
+                        throw new HttpException((int) HttpStatusCode.Forbidden, "Ip Address blocked.");
                     }
                 }
             }

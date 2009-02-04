@@ -1,16 +1,16 @@
-﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="Top.ascx.cs" Inherits="Kigg.Web.TopUsers" %>
+﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<ICollection<UserWithScore>>" %>
 <%
-if (!ViewData.Model.IsNullOrEmpty())
+if (!Model.IsNullOrEmpty())
 {
 %>
     <ol>
-        <% foreach (UserWithScore userScore in ViewData.Model) %>
+        <% foreach (UserWithScore userScore in Model) %>
         <% { %>
         <%      string userName = userScore.User.UserName; %>
                 <li>
                     <a title="<%= Html.AttributeEncode(userName) %>" href="<%= Url.RouteUrl("User", new { name = userScore.User.Id.Shrink(), tab = UserDetailTab.Promoted, page = 1 }) %>">
                         <img alt="<%= Html.AttributeEncode(userName) %>" src="<%= Html.AttributeEncode(userScore.User.GravatarUrl(24)) %>" class="smoothImage" onload="javascript:SmoothImage.show(this)"/>
-                        <%= Html.Encode(userName.WrapAt(22)) %>
+                        <%= Html.Encode(userName.WrapAt(28)) %>
                     </a>
                     (<%= userScore.Score.ToString(FormatStrings.UserScore) %>)
                 </li>
@@ -19,3 +19,6 @@ if (!ViewData.Model.IsNullOrEmpty())
 <%
 }
 %>
+<div style="text-align:right">
+    <%= Html.RouteLink("more »", "Users", new { page = 1 }, new { rel = "directory" })%>
+</div>

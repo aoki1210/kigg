@@ -1,28 +1,27 @@
-﻿<%@ Page Language="C#" MasterPageFile="~/Views/Shared/SiteTemplate.Master" AutoEventWireup="true" CodeBehind="Contact.aspx.cs" Inherits="Kigg.Web.ContactView"%>
-<asp:Content ID="Content1" ContentPlaceHolderID="HeadPlaceHolder" runat="server">
-    <script runat="server">
+﻿<%@ Page Language="C#" MasterPageFile="~/Views/Shared/SiteTemplate.Master" Inherits="System.Web.Mvc.ViewPage<SupportViewData>"%>
+<script runat="server">
 
-        protected override void OnInit(EventArgs e)
-        {
-            base.OnInit(e);
+    protected override void OnInit(EventArgs e)
+    {
+        base.OnInit(e);
 
-            GenerateScript();
+        GenerateScript();
 
-            Page.Header.Title = "{0} - Contact Us".FormatWith(ViewData.Model.SiteTitle);
-        }
+        Page.Header.Title = "{0} - Contact Us".FormatWith(Model.SiteTitle);
+    }
 
-        private void GenerateScript()
-        {
-            jQueryScriptManager scriptManager = jQueryScriptManager.Current;
+    private void GenerateScript()
+    {
+        jQueryScriptManager scriptManager = jQueryScriptManager.Current;
 
-            scriptManager.RegisterSource(Url.Asset("contact"));
+        scriptManager.RegisterSource(Url.Asset("contact"));
 
-            scriptManager.RegisterOnReady("Contact.init();");
-            scriptManager.RegisterOnDispose("Contact.dispose();");
-        }
+        scriptManager.RegisterOnReady("Contact.init();");
+        scriptManager.RegisterOnDispose("Contact.dispose();");
+    }
 
-    </script>
-</asp:Content>
+</script>
+<asp:Content ID="Content1" ContentPlaceHolderID="HeadPlaceHolder" runat="server"></asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
     <%= Html.PageHeader("Contact Us")%>
     <form id="frmContact" action="<%= Url.Action("Contact", "Support") %>" method="post">

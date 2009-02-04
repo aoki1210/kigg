@@ -1,6 +1,6 @@
-﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="Votes.ascx.cs" Inherits="Kigg.Web.Votes" %>
+﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<ICollection<IVote>>" %>
 <ul id="voteList">
-<% foreach (IVote vote in ViewData.Model) %>
+<% foreach (IVote vote in Model) %>
 <% {%>
 <%      string promotedByName = vote.ByUser.UserName; %>
         <li>

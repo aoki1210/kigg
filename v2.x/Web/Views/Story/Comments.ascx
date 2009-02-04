@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="Comments.ascx.cs" Inherits="Kigg.Web.Comments" %>
+﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<StoryDetailViewData>" %>
 <script runat="server">
     protected override void OnInit(EventArgs e)
     {
@@ -11,14 +11,14 @@
     {
         jQueryScriptManager scriptManager = jQueryScriptManager.Current;
 
-        scriptManager.RegisterOnReady("Comment.set_captchaEnabled({0});".FormatWith(ViewData.Model.CaptchaEnabled.ToString().ToLowerInvariant()));
+        scriptManager.RegisterOnReady("Comment.set_captchaEnabled({0});".FormatWith(Model.CaptchaEnabled.ToString().ToLowerInvariant()));
         scriptManager.RegisterOnReady("Comment.init();");
         scriptManager.RegisterOnDispose("Comment.dispose();");
     }
 
 </script>
 <%
-    IStory story = ViewData.Model.Story;
+    IStory story = Model.Story;
     string message = story.HasComments() ? "{0} {1} posted.".FormatWith(story.CommentCount, (story.CommentCount > 1 ? "comments" : "comment")) : "No comments yet, be the first one to post comment.";
 %>
 <div class="commentMessage"><h2><%= message%></h2></div>
@@ -33,7 +33,7 @@
                 <% string commentId = comment.Id.Shrink(); %>
                 <% string userUrl = Url.RouteUrl("User", new { name = comment.ByUser.Id.Shrink(), tab = UserDetailTab.Promoted, page = 1 }); %>
                 <% bool isOwner = story.IsPostedBy(comment.ByUser); %>
-                <% bool canModarate = ((ViewData.Model.CurrentUser != null) && ViewData.Model.CurrentUser.CanModerate()); %>
+                <% bool canModarate = ((Model.CurrentUser != null) && Model.CurrentUser.CanModerate()); %>
                 <li id="li-<%= Html.AttributeEncode(commentId)%>">
                     <div class="hreview">
                         <div class="hide">
@@ -41,7 +41,7 @@
                             <div class="item">
                                 <a href="<%= Html.AttributeEncode(story.Url) %>" class="fn url"><%= Html.Encode(story.Title) %></a>
                             </div>
-                            <abbr class="dtreviewed" title="<%=comment.PostedAt.ToString("yyyy-MM-ddThh:mm:ssZ")%>"><%=comment.PostedAt.ToString("F")%> GMT</abbr>
+                            <abbr class="dtreviewed" title="<%=comment.CreatedAt.ToString("yyyy-MM-ddThh:mm:ssZ")%>"><%=comment.CreatedAt.ToString("F")%> GMT</abbr>
                         </div>
                     </div>
                     <p class="meta <%= isOwner ? "metaOwner" : "metaVisitor" %>">
@@ -51,7 +51,7 @@
                         <span class="postedBy reviewer vcard">
                             <a href="<%= Html.AttributeEncode(userUrl) %>"><img class="photo" alt="<%= Html.AttributeEncode(comment.ByUser.UserName) %>" src="<%= Html.AttributeEncode(comment.ByUser.GravatarUrl(15)) %>"/><span class="fn"><%= Html.Encode(comment.ByUser.UserName) %></span></a>
                         </span>
-                        <span class="time" title="<%=comment.PostedAt.ToString("F")%> GMT"><%= comment.PostedAt.ToRelative() %></span> ago said:
+                        <span class="time" title="<%=comment.CreatedAt.ToString("F")%> GMT"><%= comment.CreatedAt.ToRelative() %></span> ago said:
                     </p>
                     <div class="body <%= isOwner ? "ownerBody" : "visitorBody" %>">
                         <div class="description">

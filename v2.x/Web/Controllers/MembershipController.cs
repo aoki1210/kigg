@@ -609,12 +609,31 @@ namespace Kigg.Web
             return RedirectToRoute("Published");
         }
 
-        [AutoRefresh, Compress]
+        [Compress]
+        public ActionResult List(int? page)
+        {
+            UserListViewData viewData = CreateViewData<UserListViewData>();
+
+            PagedResult<IUser> pagedResult = UserRepository.FindAll(PageCalculator.StartIndex(page, Settings.HtmlUserPerPage), Settings.HtmlUserPerPage);
+
+            viewData.CurrentPage = page ?? 1;
+            viewData.UserPerPage = Settings.HtmlUserPerPage;
+            viewData.Users = pagedResult.Result;
+            viewData.TotalUserCount = pagedResult.Total;
+
+            viewData.Title = "{0} - Users".FormatWith(Settings.SiteTitle);
+            viewData.Subtitle = "Users";
+            viewData.NoUserExistMessage = "No user exists.";
+
+            return View(viewData);
+        }
+
+        [Compress]
         public ActionResult Detail(string name, string tab, int? page)
         {
             if (string.IsNullOrEmpty(name))
             {
-                return RedirectToRoute("Published");
+                return RedirectToRoute("Users", new { page = 1});
             }
 
             IUser user = null;

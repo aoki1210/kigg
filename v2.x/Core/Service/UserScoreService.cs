@@ -1,15 +1,20 @@
 namespace Kigg.Service
 {
+    using System;
+
     using DomainObjects;
 
     public class UserScoreService : IUserScoreService
     {
+        private readonly IConfigurationSettings _settings;
         private readonly IUserScoreTable _userScoreTable;
 
-        public UserScoreService(IUserScoreTable userScoreTable)
+        public UserScoreService(IConfigurationSettings settings, IUserScoreTable userScoreTable)
         {
+            Check.Argument.IsNotNull(settings, "settings");
             Check.Argument.IsNotNull(userScoreTable, "userScoreTable");
 
+            _settings = settings;
             _userScoreTable = userScoreTable;
         }
 
@@ -128,23 +133,32 @@ namespace Kigg.Service
             }
         }
 
-        public virtual void StoryPublished(IUser ofUser)
+        public virtual void StoryDeleted(IStory theStory)
         {
-            Check.Argument.IsNotNull(ofUser, "ofUser");
+            Check.Argument.IsNotNull(theStory, "theStory");
 
-            if (ofUser.IsPublicUser())
+            StoryRemoved(theStory, UserAction.StoryDeleted);
+        }
+
+        public virtual void StoryPublished(IStory theStory)
+        {
+            Check.Argument.IsNotNull(theStory, "theStory");
+
+            if (theStory.PostedBy.IsPublicUser())
             {
-                ofUser.IncreaseScoreBy(_userScoreTable.StoryPublished, UserAction.StoryPublished);
+                theStory.PostedBy.IncreaseScoreBy(_userScoreTable.StoryPublished, UserAction.StoryPublished);
             }
         }
 
-        public virtual void StorySpammed(IUser ofUser)
+        public virtual void StorySpammed(IStory theStory)
         {
-            Check.Argument.IsNotNull(ofUser, "ofUser");
+            Check.Argument.IsNotNull(theStory, "theStory");
 
-            if (ofUser.IsPublicUser())
+            StoryRemoved(theStory, UserAction.SpamStorySubmitted);
+
+            if (theStory.PostedBy.IsPublicUser())
             {
-                ofUser.DecreaseScoreBy(_userScoreTable.StorySubmitted + _userScoreTable.SpamStorySubmitted, UserAction.SpamStorySubmitted);
+                theStory.PostedBy.DecreaseScoreBy(_userScoreTable.SpamStorySubmitted, UserAction.SpamStorySubmitted);
             }
         }
 
@@ -181,6 +195,49 @@ namespace Kigg.Service
         private static bool CanChangeScoreForStory(IStory theStory, IUser theUser)
         {
             return !theStory.HasExpired() && theUser.IsPublicUser();
+        }
+
+        private void StoryRemoved(IStory theStory, UserAction action)
+        {
+            Check.Argument.IsNotNull(theStory, "theStory");
+
+            DateTime expireDate = theStory.CreatedAt.AddHours(_settings.MaximumAgeOfStoryInHoursToPublish);
+
+            foreach (IMarkAsSpam markAsSpam in theStory.MarkAsSpams)
+            {
+                if (markAsSpam.ByUser.IsPublicUser() && (markAsSpam.MarkedAt <= expireDate))
+                {
+                    markAsSpam.ByUser.DecreaseScoreBy(_userScoreTable.StoryMarkedAsSpam, action);
+                }
+            }
+
+            foreach (IComment comment in theStory.Comments)
+            {
+                if (comment.ByUser.IsPublicUser() && (comment.CreatedAt <= expireDate))
+                {
+                    comment.ByUser.DecreaseScoreBy(_userScoreTable.StoryCommented, action);
+                }
+            }
+
+            foreach (IVote vote in theStory.Votes)
+            {
+                if (!theStory.IsPostedBy(vote.ByUser))
+                {
+                    if (vote.ByUser.IsPublicUser() && (vote.PromotedAt <= expireDate))
+                    {
+                        decimal score = theStory.IsPublished() ?
+                                        _userScoreTable.PublishedStoryPromoted :
+                                        _userScoreTable.UpcomingStoryPromoted;
+
+                        vote.ByUser.DecreaseScoreBy(score, action);
+                    }
+                }
+            }
+
+            if (theStory.PostedBy.IsPublicUser())
+            {
+                theStory.PostedBy.DecreaseScoreBy(_userScoreTable.StorySubmitted, action);
+            }
         }
     }
 }

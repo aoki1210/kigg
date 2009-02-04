@@ -118,11 +118,32 @@ namespace Kigg.Repository
 
             if (pagedResult.IsEmpty)
             {
-                Log.Warning("Did not find any top users : {0}, {1}, {2}, {3}", startTimestamp, endTimestamp, start, max);
+                Log.Warning("Did not find any top user : {0}, {1}, {2}, {3}", startTimestamp, endTimestamp, start, max);
             }
             else
             {
                 Log.Info("Top users retrieved : {0}, {1}, {2}, {3}", startTimestamp, endTimestamp, start, max);
+            }
+
+            return pagedResult;
+        }
+
+        public override PagedResult<IUser> FindAll(int start, int max)
+        {
+            Check.Argument.IsNotNegative(start, "start");
+            Check.Argument.IsNotNegative(max, "max");
+
+            Log.Info("Retrieving all users : {0}, {1}", start, max);
+
+            var pagedResult = base.FindAll(start, max);
+
+            if (pagedResult.IsEmpty)
+            {
+                Log.Warning("Did not find any user : {0}, {1}", start, max);
+            }
+            else
+            {
+                Log.Info("Top users retrieved : {0}, {1}", start, max);
             }
 
             return pagedResult;

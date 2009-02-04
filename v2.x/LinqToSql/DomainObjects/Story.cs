@@ -86,7 +86,7 @@ namespace Kigg.DomainObjects
             [DebuggerStepThrough]
             get
             {
-                return StoryComments.OrderBy(c => c.Timestamp).Cast<IComment>().ToList().AsReadOnly();
+                return StoryComments.OrderBy(c => c.CreatedAt).Cast<IComment>().ToList().AsReadOnly();
             }
         }
 
@@ -319,7 +319,7 @@ namespace Kigg.DomainObjects
             // 1. When Story is not published
             // 2. Story is not posted by the same user
             // 3. User has not previously promoted it.
-            // 4. user has not previously marked it as spam.
+            // 4. User has not previously marked it as spam.
             return !this.IsPublished() && !this.IsPostedBy(byUser) && !HasPromoted(byUser) && !HasMarkedAsSpam(byUser);
         }
 
@@ -403,7 +403,7 @@ namespace Kigg.DomainObjects
                                            Story = this,
                                            User = (User) byUser,
                                            IPAddress = fromIPAddress,
-                                           Timestamp = at
+                                           CreatedAt = at
                                        };
 
             StoryComments.Add(comment);

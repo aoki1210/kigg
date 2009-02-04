@@ -57,6 +57,11 @@
             get;
         }
 
+        int HtmlUserPerPage
+        {
+            get;
+        }
+
         int TopUsers
         {
             get;

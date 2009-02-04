@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="Story.ascx.cs" Inherits="Kigg.Web.StoryItem" %>
+﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<StoryItemViewData>" %>
 <script runat="server">
     string ShareLinks(string id, IEnumerable<string> socialServices)
     {
@@ -14,17 +14,38 @@
 
         return shareHtml.ToString();
     }
+
+    string TagLinks(IEnumerable<ITag> tags)
+    {
+        StringBuilder tagHtml = new StringBuilder();
+
+        int i = 0;
+
+        foreach(ITag tag in tags)
+        {
+            if (i > 0)
+            {
+                tagHtml.Append(", ");
+            }
+
+            tagHtml.Append(Html.ActionLink(tag.Name, "Tags", "Story", new { name = tag.UniqueName }, new { rel = "tag directory" }));
+
+            i += 1;
+        }
+
+        return tagHtml.ToString();
+    }
 </script>
 <% const string hDateFormat = "yyyy-MM-ddThh:mm:ssZ"; %>
 <% const string LongDateFormat = "F"; %>
-<% IStory story = ViewData.Model.Story; %>
-<% IUser user = ViewData.Model.User; %>
+<% IStory story = Model.Story; %>
+<% IUser user = Model.User; %>
 <% string attributedEncodedStoryId = Html.AttributeEncode(story.Id.Shrink()); %>
 <td class="kigg">
     <div class="count">
         <span id="s-c-<%= attributedEncodedStoryId %>"><%= story.VoteCount %></span>
         <br/>
-        <%= ViewData.Model.CountText %>
+        <%= Model.CountText %>
     </div>
     <%
         string actionClass = "none";
@@ -108,7 +129,7 @@
                     </div>
                     <% string detailUrl = Url.RouteUrl("Detail", new { name = story.UniqueName }); %>
                     <div class="entry-content description">
-                        <% if (ViewData.Model.DetailMode) %>
+                        <% if (Model.DetailMode) %>
                         <% { %>
                                 <%= story.HtmlDescription %>
                         <% } %>
@@ -120,14 +141,14 @@
                     <div class="summary">
                         <span class="category">category: </span> <%= Html.ActionLink(story.BelongsTo.Name, "Category", "Story", new { name = story.BelongsTo.UniqueName }, new { rel = "tag directory" })%> |
                         <span class="view">clicked: </span><%= story.ViewCount %>
-                        <% if (!ViewData.Model.DetailMode) %>
+                        <% if (!Model.DetailMode) %>
                         <% { %>
                                 <% string comment = story.HasComments() ? ("{0} " + ((story.CommentCount > 1) ? "comments" : "comment")).FormatWith(story.CommentCount) : "comment"; %>
                                 | <a href="<%= Html.AttributeEncode(detailUrl) %>#comments" class="addComment"><%= comment %></a>
                         <% } %>
                          |
                          <span class="share">share:
-                            <%= ShareLinks(story.Id.Shrink(), ViewData.Model.SocialServices)%>
+                            <%= ShareLinks(story.Id.Shrink(), Model.SocialServices)%>
                          </span>
                          | <span class="source">source: </span><a href="http://<%= Html.AttributeEncode(story.Host()) %>" target="_blank"><%= story.Host()%></a> 
                          <% if (!story.IsPublished()) %>
@@ -135,7 +156,7 @@
                                 <% string markAsSpamClass = ((user == null) || story.CanMarkAsSpam(user)) ? "inline" : "hide"; %>
                                 <div id="d-m-<%= attributedEncodedStoryId %>" class="<%= markAsSpamClass %>"> | <a id="a-s-<%= attributedEncodedStoryId %>" href="javascript:void(0)" class="markSpam actionLink" onclick="javascript:Story.markAsSpam('<%= attributedEncodedStoryId %>')">flag as spam</a></div>
                          <% } %>
-                         <% if (ViewData.Model.DetailMode) %>
+                         <% if (Model.DetailMode) %>
                          <% { %>
                                 | <a id="a-c" href="javascript:void(0)" class="imageCode actionLink">show counter code</a>
                          <% } %>
@@ -144,7 +165,10 @@
                                 | <a class="edit actionLink" href="javascript:void(0)" onclick="Moderation.editStory('<%= attributedEncodedStoryId %>')">edit</a>
                                 | <a class="delete actionLink" href="javascript:void(0)" onclick="Moderation.deleteStory('<%= attributedEncodedStoryId %>')">delete</a>
                                 | <a class="spam actionLink" href="javascript:void(0)" onclick="Moderation.confirmSpamStory('<%= attributedEncodedStoryId %>')">spam</a>
-                                | <a class="approve actionLink" href="javascript:void(0)" onclick="Moderation.approveStory('<%= attributedEncodedStoryId %>')">approve</a>
+                                <% if (!story.IsApproved()) %>
+                                <% { %>
+                                    | <a class="approve actionLink" href="javascript:void(0)" onclick="Moderation.approveStory('<%= attributedEncodedStoryId %>')">approve</a>
+                                <% } %>
                          <% } %>
                     </div>
                 </td>
@@ -155,16 +179,7 @@
                     <% { %>
                             <span class="tags">
                                 <span class="text">tags: </span>
-                                <% int i = 0;  %>
-                                <% foreach (ITag tag in story.Tags) %>
-                                <% { %>
-                                    <% if (i > 0) %>
-                                    <% { %>
-                                        ,
-                                    <% } %>
-                                    <%= Html.ActionLink(tag.Name, "Tags", "Story", new { name = tag.UniqueName }, new { rel = "tag directory" })%>
-                                    <%i += 1; %>
-                                <% } %>
+                                <%= TagLinks(story.Tags) %>
                             </span>
                     <% } %>
                 </td>

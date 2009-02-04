@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="IntroBox.ascx.cs" Inherits="Kigg.Web.IntroBox" %>
+﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl" %>
 <div id="intro">
     <h3>Welcome!</h3>
     <div>

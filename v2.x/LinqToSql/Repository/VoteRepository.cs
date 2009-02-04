@@ -16,14 +16,14 @@ namespace Kigg.Repository.LinqToSql
         {
         }
 
-        public int CountByStory(Guid storyId)
+        public virtual int CountByStory(Guid storyId)
         {
             Check.Argument.IsNotEmpty(storyId, "storyId");
 
             return Database.VoteDataSource.Count(v => v.StoryId == storyId);
         }
 
-        public IVote FindById(Guid storyId, Guid userId)
+        public virtual IVote FindById(Guid storyId, Guid userId)
         {
             Check.Argument.IsNotEmpty(storyId, "storyId");
             Check.Argument.IsNotEmpty(userId, "userId");
@@ -31,7 +31,7 @@ namespace Kigg.Repository.LinqToSql
             return Database.VoteDataSource.SingleOrDefault(v => v.StoryId == storyId && v.UserId == userId);
         }
 
-        public ICollection<IVote> FindAfter(Guid storyId, DateTime timestamp)
+        public virtual ICollection<IVote> FindAfter(Guid storyId, DateTime timestamp)
         {
             Check.Argument.IsNotEmpty(storyId, "storyId");
             Check.Argument.IsNotInvalidDate(timestamp, "timestamp");

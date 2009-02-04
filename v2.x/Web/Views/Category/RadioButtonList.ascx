@@ -1,6 +1,6 @@
-﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="RadioButtonList.ascx.cs" Inherits="Kigg.Web.CategoryRadioList" %>
+﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<ICollection<ICategory>>" %>
 <span class="categoryRadioList">
-<%foreach (ICategory category in ViewData.Model.OrderBy(c => c.Name)) %>
+<%foreach (ICategory category in Model.OrderBy(c => c.Name)) %>
 <%{%>
     <label><input type="radio" name="category" value="<%= Html.AttributeEncode(category.UniqueName) %>"/> <%= Html.Encode(category.Name)%></label>
 <%}%>

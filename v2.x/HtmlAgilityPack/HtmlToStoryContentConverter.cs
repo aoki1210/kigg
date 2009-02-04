@@ -119,7 +119,7 @@ namespace Kigg.Infrastructure.HtmlAgilityPack
 
             string body;
 
-            using (StringWriter writer = new StringWriter(System.Globalization.CultureInfo.CurrentCulture))
+            using (StringWriter writer = new StringWriter(Constants.CurrentCulture))
             {
                 ConvertTo(contentNode, writer);
                 writer.Flush();

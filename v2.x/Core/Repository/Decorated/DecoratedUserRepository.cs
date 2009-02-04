@@ -51,6 +51,11 @@ namespace Kigg.Repository
             return _innerRepository.FindTop(startTimestamp, endTimestamp, start, max);
         }
 
+        public virtual PagedResult<IUser> FindAll(int start, int max)
+        {
+            return _innerRepository.FindAll(start, max);
+        }
+
         public virtual ICollection<string> FindIPAddresses(Guid id)
         {
             Check.Argument.IsNotEmpty(id, "id");

@@ -28,7 +28,8 @@ namespace Kigg.Repository.LinqToSql
             Check.Argument.IsNotEmpty(storyId, "storyId");
             Check.Argument.IsNotEmpty(commentId, "commentId");
 
-            return Database.CommentDataSource.SingleOrDefault(c => c.Id == c.Id && c.StoryId == storyId);
+            //
+            return Database.CommentDataSource.SingleOrDefault(c => c.Id == commentId && c.StoryId == storyId);
         }
 
         public virtual ICollection<IComment> FindAfter(Guid storyId, DateTime timestamp)
@@ -36,7 +37,7 @@ namespace Kigg.Repository.LinqToSql
             Check.Argument.IsNotEmpty(storyId, "storyId");
             Check.Argument.IsNotInvalidDate(timestamp, "timestamp");
 
-            return Database.CommentDataSource.Where(c => c.StoryId == storyId && c.Timestamp >= timestamp)
+            return Database.CommentDataSource.Where(c => c.StoryId == storyId && c.CreatedAt >= timestamp)
                                              .Cast<IComment>()
                                              .ToList()
                                              .AsReadOnly();

@@ -16,14 +16,14 @@ namespace Kigg.Repository.LinqToSql
         {
         }
 
-        public int CountByStory(Guid storyId)
+        public virtual int CountByStory(Guid storyId)
         {
             Check.Argument.IsNotEmpty(storyId, "storyId");
 
             return Database.StoryViewDataSource.Count(v => v.StoryId == storyId);
         }
 
-        public ICollection<IStoryView> FindAfter(Guid storyId, DateTime timestamp)
+        public virtual ICollection<IStoryView> FindAfter(Guid storyId, DateTime timestamp)
         {
             Check.Argument.IsNotEmpty(storyId, "storyId");
             Check.Argument.IsNotInvalidDate(timestamp, "timestamp");

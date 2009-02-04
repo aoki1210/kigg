@@ -36,9 +36,14 @@ namespace Kigg.Web
             // Ignore axd files such as assest, image, sitemap etc
             _routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
-            // Ignore the assets and Maintenance directory which contains images, js, css & html
+            // Ignore the assets directory which contains images, js, css & html
             _routes.IgnoreRoute("Assets/{*pathInfo}");
-            _routes.IgnoreRoute("Maintenance/{*pathInfo}");
+
+            // Ignore the error directory which contains error pages
+            _routes.IgnoreRoute("ErrorPages/{*pathInfo}");
+
+            //Exclude favicon (google toolbar request gif file as fav icon)
+            _routes.IgnoreRoute("{*favicon}", new { favicon = @"(.*/)?favicon.([iI][cC][oO]|[gG][iI][fF])(/.*)?" });
 
             _routes.MapRoute("FeedUpcoming", "Feed/{format}/Upcoming/{start}/{max}", new { controller = "Feed", action = "Upcoming", format = "Rss", start = 1, max = _settings.FeedStoryPerPage });
             _routes.MapRoute("FeedSearch", "Feed/{format}/Search/{q}/{start}/{max}", new { controller = "Feed", action = "Search", format = "Rss", q = string.Empty, start = 1, max = _settings.FeedStoryPerPage });
@@ -57,6 +62,7 @@ namespace Kigg.Web
             _routes.MapRoute("ForgotPassword", "ForgotPassword", new { controller = "Membership", action = "ForgotPassword" });
             _routes.MapRoute("ChangePassword", "ChangePassword", new { controller = "Membership", action = "ChangePassword" });
             _routes.MapRoute("Activate", "Activate/{id}", new { controller = "Membership", action = "Activate", id = string.Empty });
+            _routes.MapRoute("Users", "Users/{page}", new { controller = "Membership", action = "List", page = 1 }, new { page = @"^\d+$" });
             _routes.MapRoute("User", "Users/{name}/{tab}/{page}", new { controller = "Membership", action = "Detail", tab = UserDetailTab.Promoted, page = 1 });
             _routes.MapRoute("ChangeEmail", "ChangeEmail", new { controller = "Membership", action = "ChangeEmail" });
             _routes.MapRoute("ChangeRole", "ChangeRole", new { controller = "Membership", action = "ChangeRole" });

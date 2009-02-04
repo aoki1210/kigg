@@ -49,7 +49,7 @@ namespace Kigg.Web
             set;
         }
 
-        [AutoRefresh, Compress]
+        [Compress]
         public ActionResult Published(int? page)
         {
             StoryListViewData viewData = CreateStoryListViewData<StoryListViewData>(page);
@@ -86,7 +86,7 @@ namespace Kigg.Web
             return Json(summary);
         }
 
-        [AutoRefresh, Compress]
+        [Compress]
         public ActionResult Category(string name, int? page)
         {
             name = name.NullSafe();
@@ -126,7 +126,7 @@ namespace Kigg.Web
             return View("List", viewData);
         }
 
-        [AutoRefresh, Compress]
+        [Compress]
         public ActionResult Upcoming(int? page)
         {
             StoryListViewData viewData = CreateStoryListViewData<StoryListViewData>(page);
@@ -137,7 +137,6 @@ namespace Kigg.Web
 
             viewData.Title = "{0} - Upcoming stories".FormatWith(Settings.SiteTitle);
             viewData.MetaDescription = "Upcoming stories";
-            viewData.RssUrl = Url.RouteUrl("FeedUpcoming");
             viewData.RssUrl = string.IsNullOrEmpty(Settings.UpcomingStoriesFeedBurnerUrl) ? Url.RouteUrl("FeedUpcoming") : Settings.UpcomingStoriesFeedBurnerUrl;
             viewData.AtomUrl = Url.RouteUrl("FeedUpcoming", new { format = "Atom" });
             viewData.Subtitle = "Upcoming";
@@ -165,7 +164,7 @@ namespace Kigg.Web
             return Json(summary);
         }
 
-        [AutoRefresh, Compress]
+        [Compress]
         public ActionResult New(int? page)
         {
             StoryListViewData viewData = CreateStoryListViewData<StoryListViewData>(page);
@@ -244,7 +243,7 @@ namespace Kigg.Web
             return View("List", viewData);
         }
 
-        [AutoRefresh, Compress]
+        [Compress]
         public ActionResult Tags(string name, int? page)
         {
             name = name.NullSafe();
@@ -285,7 +284,7 @@ namespace Kigg.Web
             return View("List", viewData);
         }
 
-        [Compress]
+        [AutoRefresh, Compress]
         public ActionResult Search(string q, int? page)
         {
             if (string.IsNullOrEmpty(q))
@@ -357,11 +356,13 @@ namespace Kigg.Web
                 }
             }
 
+            bool autoDiscover = Settings.AutoDiscoverContent || (IsCurrentUserAuthenticated && !CurrentUser.IsPublicUser());
+
             StoryContentViewData viewData = CreateViewData<StoryContentViewData>();
 
             viewData.Url = url;
             viewData.Title = title;
-            viewData.AutoDiscover = Settings.AutoDiscoverContent;
+            viewData.AutoDiscover = autoDiscover;
             viewData.CaptchaEnabled = !CurrentUser.ShouldHideCaptcha();
 
             if (isValidUrl)
@@ -376,7 +377,7 @@ namespace Kigg.Web
                         viewData.Title = content.Title;
                     }
 
-                    if (Settings.AutoDiscoverContent)
+                    if (autoDiscover)
                     {
                         viewData.Description = content.Description;
                     }
@@ -695,9 +696,14 @@ namespace Kigg.Web
             {
                 try
                 {
-                    _storyService.Publish();
+                    using(IUnitOfWork unitOfWork = UnitOfWork.Get())
+                    {
+                        _storyService.Publish();
 
-                    viewData = new JsonViewData { isSuccessful = true };
+                        viewData = new JsonViewData { isSuccessful = true };
+
+                        unitOfWork.Commit();
+                    }
                 }
                 catch (Exception e)
                 {

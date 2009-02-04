@@ -15,14 +15,14 @@ namespace Kigg.Repository.LinqToSql
         {
         }
 
-        public int CountByStory(Guid storyId)
+        public virtual int CountByStory(Guid storyId)
         {
             Check.Argument.IsNotEmpty(storyId, "storyId");
 
             return Database.CommentSubscribtionDataSource.Count(cs => cs.StoryId == storyId);
         }
 
-        public ICommentSubscribtion FindById(Guid storyId, Guid userId)
+        public virtual ICommentSubscribtion FindById(Guid storyId, Guid userId)
         {
             Check.Argument.IsNotEmpty(storyId, "storyId");
             Check.Argument.IsNotEmpty(userId, "userId");

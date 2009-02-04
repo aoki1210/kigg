@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 using Moq;
 using Xunit;
@@ -31,9 +32,11 @@ namespace Kigg.Core.Test
             userScoreTable.ExpectGet(us => us.SpamCommentSubmitted).Returns(5);
 
             _user = new Mock<IUser>();
+
+            _user.ExpectGet(u => u.Id).Returns(Guid.NewGuid());
             _user.ExpectGet(u => u.Role).Returns(Roles.User);
 
-            _userScoreService = new UserScoreService(userScoreTable.Object);
+            _userScoreService = new UserScoreService(settings.Object, userScoreTable.Object);
         }
 
         public override void Dispose()
@@ -136,17 +139,39 @@ namespace Kigg.Core.Test
         }
 
         [Fact]
+        public void StoryDeleted_Should_Decreasase_Score()
+        {
+            var story = new Mock<IStory>();
+
+            PrepareStoryToRemove(story);
+            story.ExpectGet(s => s.PostedBy).Returns(_user.Object);
+
+            _user.Expect(u => u.DecreaseScoreBy(It.IsAny<decimal>(), UserAction.StoryDeleted)).Verifiable();
+
+            _userScoreService.StoryDeleted(story.Object);
+        }
+
+        [Fact]
         public void StoryPublished_Should_Increase_Score()
         {
+            var story = new Mock<IStory>();
+            story.ExpectGet(s => s.PostedBy).Returns(_user.Object);
+
             _user.Expect(u => u.IncreaseScoreBy(It.IsAny<decimal>(), UserAction.StoryPublished)).Verifiable();
-            _userScoreService.StoryPublished(_user.Object);
+            _userScoreService.StoryPublished(story.Object);
         }
 
         [Fact]
         public void StorySpammed_Should_Decreasase_Score()
         {
+            var story = new Mock<IStory>();
+
+            PrepareStoryToRemove(story);
+            story.ExpectGet(s => s.PostedBy).Returns(_user.Object);
+
             _user.Expect(u => u.DecreaseScoreBy(It.IsAny<decimal>(), UserAction.SpamStorySubmitted)).Verifiable();
-            _userScoreService.StorySpammed(_user.Object);
+
+            _userScoreService.StorySpammed(story.Object);
         }
 
         [Fact]
@@ -176,6 +201,57 @@ namespace Kigg.Core.Test
             story.ExpectGet(s => s.CreatedAt).Returns(SystemTime.Now().AddHours(-1));
 
             return story;
+        }
+
+        private static void PrepareStoryToRemove(Mock<IStory> story)
+        {
+            const int counter = 5;
+
+            DateTime fakeDate = SystemTime.Now().AddDays(-1);
+
+            List<IMarkAsSpam> markAsSpams = new List<IMarkAsSpam>();
+
+            for(var i = 1; i <= counter; i++)
+            {
+                var markAsSpam = new Mock<IMarkAsSpam>();
+
+                markAsSpam.ExpectGet(m => m.ByUser).Returns(new Mock<IUser>().Object);
+                markAsSpam.ExpectGet(m => m.MarkedAt).Returns(fakeDate.AddHours(1));
+
+                markAsSpams.Add(markAsSpam.Object);
+            }
+
+            story.ExpectGet(s => s.MarkAsSpams).Returns(markAsSpams);
+
+            List<IComment> comments = new List<IComment>();
+
+            for (var i = 1; i <= counter; i++)
+            {
+                var comment = new Mock<IComment>();
+
+                comment.ExpectGet(c => c.ByUser).Returns(new Mock<IUser>().Object);
+                comment.ExpectGet(c => c.CreatedAt).Returns(fakeDate.AddHours(1));
+
+                comments.Add(comment.Object);
+            }
+
+            story.ExpectGet(s => s.Comments).Returns(comments);
+
+            List<IVote> votes = new List<IVote>();
+
+            for (var i = 1; i <= counter; i++)
+            {
+                var vote = new Mock<IVote>();
+
+                vote.ExpectGet(v => v.ByUser).Returns(new Mock<IUser>().Object);
+                vote.ExpectGet(v => v.PromotedAt).Returns(fakeDate.AddHours(1));
+
+                votes.Add(vote.Object);
+            }
+
+            story.ExpectGet(s => s.Votes).Returns(votes);
+
+            story.ExpectGet(s => s.CreatedAt).Returns(fakeDate);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="ImageCode.ascx.cs" Inherits="Kigg.Web.ImageCode" %>
+﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<StoryDetailViewData>" %>
 <script runat="server">
 
     protected override void OnInit(EventArgs e)
@@ -12,17 +12,17 @@
     {
         jQueryScriptManager scriptManager = jQueryScriptManager.Current;
 
-        scriptManager.RegisterOnReady("ImageCode.set_promoteText('{0}');".FormatWith(ViewData.Model.PromoteText));
+        scriptManager.RegisterOnReady("ImageCode.set_promoteText('{0}');".FormatWith(Model.PromoteText));
         scriptManager.RegisterOnReady("ImageCode.init();");
         scriptManager.RegisterOnDispose("ImageCode.dispose();");
     }
 
 </script>
 
-<% string rootUrl = ViewData.Model.RootUrl; %>
+<% string rootUrl = Model.RootUrl; %>
 <div id="imageCode">
-    <% string kiggUrl = "{0}{1}".FormatWith(rootUrl, Url.RouteUrl("Detail", new { name = ViewData.Model.Story.UniqueName })); %>
-    <% string originalUrl = ViewData.Model.Story.Url; %>
+    <% string kiggUrl = "{0}{1}".FormatWith(rootUrl, Url.RouteUrl("Detail", new { name = Model.Story.UniqueName })); %>
+    <% string originalUrl = Model.Story.Url; %>
     <% string imageUrl = "{0}/{1}".FormatWith(rootUrl, "image.axd"); %>
     <%= Html.Hidden("hidKiggUrl", kiggUrl)%>
     <%= Html.Hidden("hidOriginalUrl", originalUrl)%>
@@ -31,31 +31,31 @@
         <p>
             <label for="txtBorderColor">Border color:</label>
             <input id="txtBorderColor" type="text" maxlength="6"/>
-            <input id="hidBorderColor" type="hidden" value="<%= ViewData.Model.CounterColors.BorderColor %>"/>
+            <input id="hidBorderColor" type="hidden" value="<%= Model.CounterColors.BorderColor %>"/>
             <span id="spnBorderColor" class="color"></span>
         </p>
         <p>
-            <label for="txtTextBackColor"><%= ViewData.Model.PromoteText %> Backcolor:</label>
+            <label for="txtTextBackColor"><%= Model.PromoteText %> Backcolor:</label>
             <input id="txtTextBackColor" type="text" maxlength="6"/>
-            <input id="hidTextBackColor" type="hidden" value="<%= ViewData.Model.CounterColors.TextBackColor %>"/>
+            <input id="hidTextBackColor" type="hidden" value="<%= Model.CounterColors.TextBackColor %>"/>
             <span id="spnTextBackColor" class="color"></span>
         </p>
         <p>
-            <label for="txtTextForeColor"><%= ViewData.Model.PromoteText %> Forecolor:</label>
+            <label for="txtTextForeColor"><%= Model.PromoteText %> Forecolor:</label>
             <input id="txtTextForeColor" type="text" maxlength="6"/>
-            <input id="hidTextForeColor" type="hidden" value="<%= ViewData.Model.CounterColors.TextForeColor %>"/>
+            <input id="hidTextForeColor" type="hidden" value="<%= Model.CounterColors.TextForeColor %>"/>
             <span id="spnTextForeColor" class="color"></span>
         </p>
         <p>
             <label for="txtCountBackColor">Count Backcolor:</label>
             <input id="txtCountBackColor" type="text" maxlength="6"/>
-            <input id="hidCountBackColor" type="hidden" value="<%= ViewData.Model.CounterColors.CountBackColor %>"/>
+            <input id="hidCountBackColor" type="hidden" value="<%= Model.CounterColors.CountBackColor %>"/>
             <span id="spnCountBackColor" class="color"></span>
         </p>
         <p>
             <label for="txtCountForeColor">Count Forecolor:</label>
             <input id="txtCountForeColor" type="text" maxlength="6"/>
-            <input id="hidCountForeColor" type="hidden" value="<%= ViewData.Model.CounterColors.CountForeColor %>"/>
+            <input id="hidCountForeColor" type="hidden" value="<%= Model.CounterColors.CountForeColor %>"/>
             <span id="spnCountForeColor" class="color"></span>
         </p>
     </div>

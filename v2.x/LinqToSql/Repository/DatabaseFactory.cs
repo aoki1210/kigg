@@ -25,6 +25,7 @@ namespace Kigg.Repository.LinqToSql
                 options.LoadWith<UserTag>(ut => ut.Tag);
                 options.LoadWith<Story>(s => s.Category);
                 options.LoadWith<Story>(s => s.User);
+                options.LoadWith<Story>(s => s.StoryTags);
                 options.LoadWith<StoryTag>(st => st.Tag);
                 options.LoadWith<StoryVote>(v => v.User);
                 options.LoadWith<StoryMarkAsSpam>(s => s.User);

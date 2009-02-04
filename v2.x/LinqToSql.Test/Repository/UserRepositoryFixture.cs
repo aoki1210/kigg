@@ -126,21 +126,6 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         }
 
         [Fact]
-        public void FindIPAddresses_Should_Return_The_IPAddresses_That_The_User_Used_To_Submit_Comment_Promote_And_MarkAsSpams()
-        {
-            var id = Guid.NewGuid();
-
-            Stories.Add(new Story{ Id = Guid.NewGuid(), UserId = id, IPAddress = "192.168.0.1" });
-            Comments.Add(new StoryComment { Id = Guid.NewGuid(), UserId = id, IPAddress = "192.168.0.2", StoryId = Stories[0].Id });
-            Votes.Add(new StoryVote { UserId = id, IPAddress = "192.168.0.1", StoryId = Stories[0].Id });
-            MarkAsSpams.Add(new StoryMarkAsSpam { UserId = id, IPAddress = "192.168.0.3"});
-
-            var ipAddresses = _userRepository.FindIPAddresses(id);
-
-            Assert.Equal(3, ipAddresses.Count);
-        }
-
-        [Fact]
         public void FindTop_Should_Return_Top_Users()
         {
             UserScores.AddRange(
@@ -171,6 +156,30 @@ namespace Kigg.Infrastructure.LinqToSql.Test
 
             Assert.Equal(2, pagedResult.Result.Count);
             Assert.Equal(2, pagedResult.Total);
+        }
+
+        [Fact]
+        public void FindAll_Should_Return_All_Public_Users()
+        {
+            var pagedResult = _userRepository.FindAll(0, 10);
+
+            Assert.Empty(pagedResult.Result);
+            Assert.Equal(0, pagedResult.Total);
+        }
+
+        [Fact]
+        public void FindIPAddresses_Should_Return_The_IPAddresses_That_The_User_Used_To_Submit_Comment_Promote_And_MarkAsSpams()
+        {
+            var id = Guid.NewGuid();
+
+            Stories.Add(new Story { Id = Guid.NewGuid(), UserId = id, IPAddress = "192.168.0.1" });
+            Comments.Add(new StoryComment { Id = Guid.NewGuid(), UserId = id, IPAddress = "192.168.0.2", StoryId = Stories[0].Id });
+            Votes.Add(new StoryVote { UserId = id, IPAddress = "192.168.0.1", StoryId = Stories[0].Id });
+            MarkAsSpams.Add(new StoryMarkAsSpam { UserId = id, IPAddress = "192.168.0.3" });
+
+            var ipAddresses = _userRepository.FindIPAddresses(id);
+
+            Assert.Equal(3, ipAddresses.Count);
         }
     }
 }

@@ -1,14 +1,7 @@
 ﻿namespace Kigg.DomainObjects
 {
-    using System;
-
-    public interface IComment
+    public interface IComment : IEntity
     {
-        Guid Id
-        {
-            get;
-        }
-
         IStory ForStory
         {
             get;
@@ -30,11 +23,6 @@
         }
 
         string FromIPAddress
-        {
-            get;
-        }
-
-        DateTime PostedAt
         {
             get;
         }

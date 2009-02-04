@@ -259,7 +259,7 @@
 
             IQueryable<Guid> ids = Database.CommentDataSource
                                            .Where(c => ((c.UserId == userId) && (c.Story.ApprovedAt != null)))
-                                           .OrderByDescending(c => c.Timestamp)
+                                           .OrderByDescending(c => c.CreatedAt)
                                            .Select(c => c.StoryId)
                                            .Distinct()
                                            .Skip(start)
@@ -303,7 +303,7 @@
             return Database.StoryDataSource.Count(s => ((s.ApprovedAt != null) && (s.LastProcessedAt == null)));
         }
 
-        public int CountByUnapproved()
+        public virtual int CountByUnapproved()
         {
             return Database.StoryDataSource.Count(s => s.ApprovedAt == null);
         }
@@ -316,7 +316,7 @@
             return Database.StoryDataSource.Count(s => ((s.ApprovedAt != null) && ((s.CreatedAt >= minimumDate) && (s.CreatedAt <= maximumDate)) && ((s.LastProcessedAt == null) || (s.LastProcessedAt <= s.LastActivityAt))));
         }
 
-        public int CountPostedByUser(Guid userId)
+        public virtual int CountPostedByUser(Guid userId)
         {
             Check.Argument.IsNotEmpty(userId, "userId");
 

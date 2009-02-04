@@ -257,7 +257,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
 
             var user = _factory.CreateUser("commenter", "commenter@users.com", "xxxxxx");
 
-            Stories.ForEach(s => Comments.Add(new StoryComment { User = (User) user, Story = s, IPAddress = "192.168.0.1", Timestamp = SystemTime.Now().AddDays(-3), HtmlBody = "<p>This is a comment</p>", TextBody = "This is a comment." }));
+            Stories.ForEach(s => Comments.Add(new StoryComment { User = (User) user, Story = s, IPAddress = "192.168.0.1", CreatedAt = SystemTime.Now().AddDays(-3), HtmlBody = "<p>This is a comment</p>", TextBody = "This is a comment." }));
 
             var pagedResult = _storyRepository.FindCommentedByUser(user.Id, 0, 10);
 
