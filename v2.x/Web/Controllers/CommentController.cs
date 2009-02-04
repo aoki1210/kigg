@@ -29,7 +29,7 @@ namespace Kigg.Web
             set;
         }
 
-        [AcceptVerbs(HttpVerbs.Post)]
+        [AcceptVerbs(HttpVerbs.Post), ValidateInput(false)]
         public ActionResult Post(string id, string body, bool? subscribe)
         {
             id = id.NullSafe();
