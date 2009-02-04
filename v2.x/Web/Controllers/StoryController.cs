@@ -52,6 +52,15 @@ namespace Kigg.Web
         [Compress]
         public ActionResult Published(int? page)
         {
+            try
+            {
+                throw new InvalidCastException();
+            }
+            catch(Exception e)
+            {
+                Log.Exception(e);
+            }
+
             StoryListViewData viewData = CreateStoryListViewData<StoryListViewData>(page);
             PagedResult<IStory> pagedResult = _storyRepository.FindPublished(PageCalculator.StartIndex(page, Settings.HtmlStoryPerPage), Settings.HtmlStoryPerPage);
 
@@ -427,7 +436,7 @@ namespace Kigg.Web
             return Json(viewData);
         }
 
-        [AcceptVerbs(HttpVerbs.Post), Compress]
+        [AcceptVerbs(HttpVerbs.Post), ValidateInput(false), Compress]
         public ActionResult Submit(string url, string title, string category, string description, string tags)
         {
             string captchaChallenge = null;
