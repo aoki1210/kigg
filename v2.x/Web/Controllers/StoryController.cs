@@ -120,7 +120,7 @@ namespace Kigg.Web
             viewData.MetaDescription = "Latest published stories in {0}".FormatWith(name);
             viewData.RssUrl = Url.Action("Category", "Feed", new { name = uniqueName });
             viewData.AtomUrl = Url.Action("Category", "Feed", new { name = uniqueName, format = "Atom" });
-            viewData.Subtitle = name.HtmlEncode();
+            viewData.Subtitle = name;
             viewData.NoStoryExistMessage = "No published story exists under \"{0}\".".FormatWith(name.HtmlEncode());
 
             return View("List", viewData);
@@ -278,13 +278,13 @@ namespace Kigg.Web
             viewData.MetaDescription = "Stories tagged with {0}".FormatWith(name);
             viewData.RssUrl = Url.Action("Tags", "Feed", new { name = uniqueName });
             viewData.AtomUrl = Url.Action("Tags", "Feed", new { name = uniqueName, format = "Atom" });
-            viewData.Subtitle = name.HtmlEncode();
+            viewData.Subtitle = name;
             viewData.NoStoryExistMessage = "No story exists with \"{0}\".".FormatWith(name.HtmlEncode());
 
             return View("List", viewData);
         }
 
-        [AutoRefresh, Compress]
+        [AutoRefresh, ValidateInput(false), Compress]
         public ActionResult Search(string q, int? page)
         {
             if (string.IsNullOrEmpty(q))
@@ -303,7 +303,7 @@ namespace Kigg.Web
             viewData.MetaDescription = "Search Result for {0}".FormatWith(q);
             viewData.RssUrl = Url.Action("Search", "Feed", new { q });
             viewData.AtomUrl = Url.Action("Search", "Feed", new { q, format = "Atom" });
-            viewData.Subtitle = "Search Result : {0}".FormatWith(q.HtmlEncode());
+            viewData.Subtitle = "Search Result : {0}".FormatWith(q);
             viewData.NoStoryExistMessage = "No story found for \"{0}\".".FormatWith(q.HtmlEncode());
 
             return View("List", viewData);
@@ -340,7 +340,7 @@ namespace Kigg.Web
             return View(viewData);
         }
 
-        [AcceptVerbs(HttpVerbs.Get), Compress]
+        [AcceptVerbs(HttpVerbs.Get), ValidateInput(false), Compress]
         public ActionResult Submit(string url, string title)
         {
             bool isValidUrl = url.IsWebUrl();
@@ -451,31 +451,26 @@ namespace Kigg.Web
             {
                 try
                 {
-                    using (IUnitOfWork unitOfWork = UnitOfWork.Get())
-                    {
-                        StoryCreateResult result = _storyService.Create(
-                                                                            CurrentUser,
-                                                                            url.NullSafe(),
-                                                                            title.NullSafe(),
-                                                                            category.NullSafe(),
-                                                                            description.NullSafe(),
-                                                                            tags.NullSafe(),
-                                                                            CurrentUserIPAddress,
-                                                                            HttpContext.Request.UserAgent,
-                                                                            ((HttpContext.Request.UrlReferrer != null) ? HttpContext.Request.UrlReferrer.ToString() : null),
-                                                                            HttpContext.Request.ServerVariables,
-                                                                            story => string.Concat(Settings.RootUrl, Url.RouteUrl("Detail", new { name = story.UniqueName }))
-                                                                        );
+                    StoryCreateResult result = _storyService.Create(
+                                                                        CurrentUser,
+                                                                        url.NullSafe(),
+                                                                        title.NullSafe(),
+                                                                        category.NullSafe(),
+                                                                        description.NullSafe(),
+                                                                        tags.NullSafe(),
+                                                                        CurrentUserIPAddress,
+                                                                        HttpContext.Request.UserAgent,
+                                                                        ((HttpContext.Request.UrlReferrer != null) ? HttpContext.Request.UrlReferrer.ToString() : null),
+                                                                        HttpContext.Request.ServerVariables,
+                                                                        story => string.Concat(Settings.RootUrl, Url.RouteUrl("Detail", new { name = story.UniqueName }))
+                                                                    );
 
-                        viewData = new JsonCreateViewData
-                                       {
-                                           isSuccessful = string.IsNullOrEmpty(result.ErrorMessage),
-                                           errorMessage = result.ErrorMessage,
-                                           url = result.DetailUrl
-                                       };
-
-                        unitOfWork.Commit();
-                    }
+                    viewData = new JsonCreateViewData
+                                   {
+                                       isSuccessful = string.IsNullOrEmpty(result.ErrorMessage),
+                                       errorMessage = result.ErrorMessage,
+                                       url = result.DetailUrl
+                                   };
                 }
                 catch (Exception e)
                 {
@@ -502,21 +497,17 @@ namespace Kigg.Web
             {
                 try
                 {
-                    using (IUnitOfWork unitOfWork = UnitOfWork.Get())
+                    IStory story = _storyRepository.FindById(id.ToGuid());
+
+                    if (story == null)
                     {
-                        IStory story = _storyRepository.FindById(id.ToGuid());
+                        viewData = new JsonViewData { errorMessage = "Specified story does not exist." };
+                    }
+                    else
+                    {
+                        _storyService.View(story, CurrentUser, CurrentUserIPAddress);
 
-                        if (story == null)
-                        {
-                            viewData = new JsonViewData { errorMessage = "Specified story does not exist." };
-                        }
-                        else
-                        {
-                            _storyService.View(story, CurrentUser, CurrentUserIPAddress);
-                            unitOfWork.Commit();
-
-                            viewData = new JsonViewData { isSuccessful = true };
-                        }
+                        viewData = new JsonViewData { isSuccessful = true };
                     }
                 }
                 catch (Exception e)
@@ -545,29 +536,25 @@ namespace Kigg.Web
             {
                 try
                 {
-                    using (IUnitOfWork unitOfWork = UnitOfWork.Get())
-                    {
-                        IStory story = _storyRepository.FindById(id.ToGuid());
+                    IStory story = _storyRepository.FindById(id.ToGuid());
 
-                        if (story == null)
+                    if (story == null)
+                    {
+                        viewData = new JsonViewData { errorMessage = "Specified story does not exist." };
+                    }
+                    else
+                    {
+                        if (!story.CanPromote(CurrentUser))
                         {
-                            viewData = new JsonViewData { errorMessage = "Specified story does not exist." };
+                            viewData = story.HasPromoted(CurrentUser) ?
+                                       new JsonViewData { errorMessage = "You have already promoted this story." } :
+                                       new JsonViewData { errorMessage = "You are not allowed to promote this story." };
                         }
                         else
                         {
-                            if (!story.CanPromote(CurrentUser))
-                            {
-                                viewData = story.HasPromoted(CurrentUser) ?
-                                           new JsonViewData { errorMessage = "You have already promoted this story." } :
-                                           new JsonViewData { errorMessage = "You are not allowed to promote this story." };
-                            }
-                            else
-                            {
-                                _storyService.Promote(story, CurrentUser, CurrentUserIPAddress);
-                                unitOfWork.Commit();
+                            _storyService.Promote(story, CurrentUser, CurrentUserIPAddress);
 
-                                viewData = new JsonVoteViewData { isSuccessful = true, votes = story.VoteCount };
-                            }
+                            viewData = new JsonVoteViewData { isSuccessful = true, votes = story.VoteCount };
                         }
                     }
                 }
@@ -597,27 +584,23 @@ namespace Kigg.Web
             {
                 try
                 {
-                    using (IUnitOfWork unitOfWork = UnitOfWork.Get())
-                    {
-                        IStory story = _storyRepository.FindById(id.ToGuid());
+                    IStory story = _storyRepository.FindById(id.ToGuid());
 
-                        if (story == null)
+                    if (story == null)
+                    {
+                        viewData = new JsonViewData { errorMessage = "Specified story does not exist." };
+                    }
+                    else
+                    {
+                        if (!story.CanDemote(CurrentUser))
                         {
-                            viewData = new JsonViewData { errorMessage = "Specified story does not exist." };
+                            viewData = new JsonViewData { errorMessage = "You are not allowed to demote this story." };
                         }
                         else
                         {
-                            if (!story.CanDemote(CurrentUser))
-                            {
-                                viewData = new JsonViewData { errorMessage = "You are not allowed to demote this story." };
-                            }
-                            else
-                            {
-                                _storyService.Demote(story, CurrentUser);
-                                unitOfWork.Commit();
+                            _storyService.Demote(story, CurrentUser);
 
-                                viewData = new JsonVoteViewData { isSuccessful = true, votes = story.VoteCount };
-                            }
+                            viewData = new JsonVoteViewData { isSuccessful = true, votes = story.VoteCount };
                         }
                     }
                 }
@@ -647,29 +630,25 @@ namespace Kigg.Web
             {
                 try
                 {
-                    using (IUnitOfWork unitOfWork = UnitOfWork.Get())
-                    {
-                        IStory story = _storyRepository.FindById(id.ToGuid());
+                    IStory story = _storyRepository.FindById(id.ToGuid());
 
-                        if (story == null)
+                    if (story == null)
+                    {
+                        viewData = new JsonViewData { errorMessage = "Specified story does not exist." };
+                    }
+                    else
+                    {
+                        if (!story.CanMarkAsSpam(CurrentUser))
                         {
-                            viewData = new JsonViewData { errorMessage = "Specified story does not exist." };
+                            viewData = story.HasMarkedAsSpam(CurrentUser) ?
+                                        new JsonViewData { errorMessage = "You have already marked this story as spam." } :
+                                        new JsonViewData { errorMessage = "You are not allowed to mark this story as spam." };
                         }
                         else
                         {
-                            if (!story.CanMarkAsSpam(CurrentUser))
-                            {
-                                viewData = story.HasMarkedAsSpam(CurrentUser) ?
-                                            new JsonViewData { errorMessage = "You have already marked this story as spam." } :
-                                            new JsonViewData { errorMessage = "You are not allowed to mark this story as spam." };
-                            }
-                            else
-                            {
-                                _storyService.MarkAsSpam(story, string.Concat(Settings.RootUrl, Url.RouteUrl("Detail", new { name = story.UniqueName })), CurrentUser, CurrentUserIPAddress);
-                                unitOfWork.Commit();
+                            _storyService.MarkAsSpam(story, string.Concat(Settings.RootUrl, Url.RouteUrl("Detail", new { name = story.UniqueName })), CurrentUser, CurrentUserIPAddress);
 
-                                viewData = new JsonViewData { isSuccessful = true };
-                            }
+                            viewData = new JsonViewData { isSuccessful = true };
                         }
                     }
                 }
@@ -696,14 +675,9 @@ namespace Kigg.Web
             {
                 try
                 {
-                    using(IUnitOfWork unitOfWork = UnitOfWork.Get())
-                    {
-                        _storyService.Publish();
+                    _storyService.Publish();
 
-                        viewData = new JsonViewData { isSuccessful = true };
-
-                        unitOfWork.Commit();
-                    }
+                    viewData = new JsonViewData { isSuccessful = true };
                 }
                 catch (Exception e)
                 {
@@ -765,7 +739,7 @@ namespace Kigg.Web
             return Json(viewData);
         }
 
-        [AcceptVerbs(HttpVerbs.Post), Compress]
+        [AcceptVerbs(HttpVerbs.Post), ValidateInput(false), Compress]
         public ActionResult Update(string id, string name, DateTime createdAt, string title, string category, string description, string tags)
         {
             id = id.NullSafe();
@@ -781,22 +755,17 @@ namespace Kigg.Web
             {
                 try
                 {
-                    using (IUnitOfWork unitOfWork = UnitOfWork.Get())
+                    IStory story = _storyRepository.FindById(id.ToGuid());
+
+                    if (story == null)
                     {
-                        IStory story = _storyRepository.FindById(id.ToGuid());
+                        viewData = new JsonViewData { errorMessage = "Specified story does not exist." };
+                    }
+                    else
+                    {
+                        _storyService.Update(story, name.NullSafe(), createdAt, title.NullSafe(), category.NullSafe(), description.NullSafe(), tags.NullSafe());
 
-                        if (story == null)
-                        {
-                            viewData = new JsonViewData { errorMessage = "Specified story does not exist." };
-                        }
-                        else
-                        {
-                            _storyService.Update(story, name.NullSafe(), createdAt, title.NullSafe(), category.NullSafe(), description.NullSafe(), tags.NullSafe());
-
-                            unitOfWork.Commit();
-
-                            viewData = new JsonViewData { isSuccessful = true };
-                        }
+                        viewData = new JsonViewData { isSuccessful = true };
                     }
                 }
                 catch (Exception e)
@@ -826,21 +795,17 @@ namespace Kigg.Web
             {
                 try
                 {
-                    using (IUnitOfWork unitOfWork = UnitOfWork.Get())
+                    IStory story = _storyRepository.FindById(id.ToGuid());
+
+                    if (story == null)
                     {
-                        IStory story = _storyRepository.FindById(id.ToGuid());
+                        viewData = new JsonViewData { errorMessage = "Specified story does not exist." };
+                    }
+                    else
+                    {
+                        _storyService.Delete(story, CurrentUser);
 
-                        if (story == null)
-                        {
-                            viewData = new JsonViewData { errorMessage = "Specified story does not exist." };
-                        }
-                        else
-                        {
-                            _storyService.Delete(story, CurrentUser);
-                            unitOfWork.Commit();
-
-                            viewData = new JsonViewData { isSuccessful = true };
-                        }
+                        viewData = new JsonViewData { isSuccessful = true };
                     }
                 }
                 catch (Exception e)
@@ -870,27 +835,23 @@ namespace Kigg.Web
             {
                 try
                 {
-                    using (IUnitOfWork unitOfWork = UnitOfWork.Get())
-                    {
-                        IStory story = _storyRepository.FindById(id.ToGuid());
+                    IStory story = _storyRepository.FindById(id.ToGuid());
 
-                        if (story == null)
+                    if (story == null)
+                    {
+                        viewData = new JsonViewData { errorMessage = "Specified story does not exist." };
+                    }
+                    else
+                    {
+                        if (story.IsApproved())
                         {
-                            viewData = new JsonViewData { errorMessage = "Specified story does not exist." };
+                            viewData = new JsonViewData { errorMessage = "Specified story has been already approved." };
                         }
                         else
                         {
-                            if (story.IsApproved())
-                            {
-                                viewData = new JsonViewData { errorMessage = "Specified story has been already approved." };
-                            }
-                            else
-                            {
-                                _storyService.Approve(story, string.Concat(Settings.RootUrl, Url.RouteUrl("Detail", new { name = story.UniqueName })), CurrentUser);
-                                unitOfWork.Commit();
+                            _storyService.Approve(story, string.Concat(Settings.RootUrl, Url.RouteUrl("Detail", new { name = story.UniqueName })), CurrentUser);
 
-                                viewData = new JsonViewData { isSuccessful = true };
-                            }
+                            viewData = new JsonViewData { isSuccessful = true };
                         }
                     }
                 }
@@ -921,21 +882,17 @@ namespace Kigg.Web
             {
                 try
                 {
-                    using (IUnitOfWork unitOfWork = UnitOfWork.Get())
+                    IStory story = _storyRepository.FindById(id.ToGuid());
+
+                    if (story == null)
                     {
-                        IStory story = _storyRepository.FindById(id.ToGuid());
+                        viewData = new JsonViewData { errorMessage = "Specified story does not exist." };
+                    }
+                    else
+                    {
+                        _storyService.Spam(story, string.Concat(Settings.RootUrl, Url.RouteUrl("Detail", new { name = story.UniqueName })), CurrentUser);
 
-                        if (story == null)
-                        {
-                            viewData = new JsonViewData { errorMessage = "Specified story does not exist." };
-                        }
-                        else
-                        {
-                            _storyService.Spam(story, string.Concat(Settings.RootUrl, Url.RouteUrl("Detail", new { name = story.UniqueName })), CurrentUser);
-                            unitOfWork.Commit();
-
-                            viewData = new JsonViewData { isSuccessful = true };
-                        }
+                        viewData = new JsonViewData { isSuccessful = true };
                     }
                 }
                 catch (Exception e)

@@ -49,7 +49,14 @@ namespace Kigg.Infrastructure
 
             EnsureValidApiKey();
 
-            string response = _httpForm.Post(_checkUrl, PrepareFormFieldsFrom(spamCheckContent));
+            string response = _httpForm.Post(
+                                                new HttpFormPostRequest
+                                                    {
+                                                        Url = _checkUrl,
+                                                        FormFields = PrepareFormFieldsFrom(spamCheckContent)
+                                                    }
+                                            ).Response;
+
             bool isSpam = ToBool(response);
 
             // This protection does not think it is spam so forward it to next handler (If there is any)
@@ -69,11 +76,14 @@ namespace Kigg.Infrastructure
             EnsureValidApiKey();
 
             _httpForm.PostAsync(
-                                    _checkUrl,
-                                    PrepareFormFieldsFrom(spamCheckContent),
-                                    response =>
+                                    new HttpFormPostRequest
+                                        {
+                                            Url = _checkUrl,
+                                            FormFields = PrepareFormFieldsFrom(spamCheckContent),
+                                        },
+                                    httpResponse =>
                                     {
-                                        bool isSpam = ToBool(response);
+                                        bool isSpam = ToBool(httpResponse.Response);
 
                                         // This protection does not think it is spam so forward it to next handler (If there is any)
                                         if ((!isSpam) && (NextHandler != null))
@@ -105,7 +115,7 @@ namespace Kigg.Infrastructure
 
             EnsureValidApiKey();
 
-            _httpForm.PostAsync(_submitUrl, PrepareFormFieldsFrom(checkContent));
+            _httpForm.PostAsync(new HttpFormPostRequest { Url = _submitUrl, FormFields = PrepareFormFieldsFrom(checkContent) });
         }
 
         public void MarkAsFalsePositive(SpamCheckContent checkContent)
@@ -114,7 +124,7 @@ namespace Kigg.Infrastructure
 
             EnsureValidApiKey();
 
-            _httpForm.PostAsync(_falsePositiveUrl, PrepareFormFieldsFrom(checkContent));
+            _httpForm.PostAsync(new HttpFormPostRequest { Url = _falsePositiveUrl, FormFields = PrepareFormFieldsFrom(checkContent) });
         }
 
         private static bool ToBool(string response)
@@ -153,13 +163,16 @@ namespace Kigg.Infrastructure
 
         private bool IsValidApiKey()
         {
-            NameValueCollection parameters = new NameValueCollection
+            string response = _httpForm.Post(new HttpFormPostRequest
                                                  {
-                                                     { "key", _apiKey.UrlEncode() },
-                                                     { "blog", _settings.RootUrl.UrlEncode() }
-                                                 };
-
-            string response = _httpForm.Post("http://{0}/{1}/verify-key".FormatWith(_baseUrl, _version), parameters);
+                                                     Url = "http://{0}/{1}/verify-key".FormatWith(_baseUrl, _version),
+                                                     FormFields =   new NameValueCollection
+                                                                    {
+                                                                         { "key", _apiKey.UrlEncode() },
+                                                                         { "blog", _settings.RootUrl.UrlEncode() }
+                                                                    }
+                                                 }
+                                            ).Response;
 
             return string.Compare(response, "valid", StringComparison.OrdinalIgnoreCase) == 0;
         }

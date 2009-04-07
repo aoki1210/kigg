@@ -30,7 +30,7 @@ namespace Kigg.Infrastructure
         {
             Check.Argument.IsNotInvalidWebUrl(url, "url");
 
-            _httpForm.GetAsync(For(url, ThumbnailSize.Small));
+            _httpForm.GetAsync(new HttpFormGetRequest { Url = For(url, ThumbnailSize.Small) });
         }
     }
 }

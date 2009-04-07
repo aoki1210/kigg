@@ -1,6 +1,7 @@
 ﻿namespace Kigg
 {
     using System;
+    using System.Diagnostics;
     using System.Security.Cryptography;
     using System.Text;
     using System.Text.RegularExpressions;
@@ -14,21 +15,25 @@
 
         private static readonly char[] IllegalUrlCharacters = new[] { ';', '/', '\\', '?', ':', '@', '&', '=', '+', '$', ',', '<', '>', '#', '%', '.', '!', '*', '\'', '"', '(', ')', '[', ']', '{', '}', '|', '^', '`', '~', '–', '‘', '’', '“', '”', '»', '«' };
 
+        [DebuggerStepThrough]
         public static bool IsWebUrl(this string target)
         {
             return !string.IsNullOrEmpty(target) && WebUrlExpression.IsMatch(target);
         }
 
+        [DebuggerStepThrough]
         public static bool IsEmail(this string target)
         {
             return !string.IsNullOrEmpty(target) && EmailExpression.IsMatch(target);
         }
 
+        [DebuggerStepThrough]
         public static string NullSafe(this string target)
         {
             return (target ?? string.Empty).Trim();
         }
 
+        [DebuggerStepThrough]
         public static string FormatWith(this string target, params object[] args)
         {
             Check.Argument.IsNotEmpty(target, "target");
@@ -36,6 +41,7 @@
             return string.Format(Constants.CurrentCulture, target, args);
         }
 
+        [DebuggerStepThrough]
         public static string Hash(this string target)
         {
             Check.Argument.IsNotEmpty(target, "target");
@@ -49,6 +55,7 @@
             }
         }
 
+        [DebuggerStepThrough]
         public static string WrapAt(this string target, int index)
         {
             const int DotCount = 3;
@@ -56,14 +63,16 @@
             Check.Argument.IsNotEmpty(target, "target");
             Check.Argument.IsNotNegativeOrZero(index, "index");
 
-            return (target.Length < index) ? target : string.Concat(target.Substring(0, index), new string('.', DotCount));
+            return (target.Length <= index) ? target : string.Concat(target.Substring(0, index - DotCount), new string('.', DotCount));
         }
 
+        [DebuggerStepThrough]
         public static string StripHtml(this string target)
         {
             return StripHTMLExpression.Replace(target, string.Empty);
         }
 
+        [DebuggerStepThrough]
         public static Guid ToGuid(this string target)
         {
             Guid result = Guid.Empty;
@@ -86,6 +95,7 @@
             return result;
         }
 
+        [DebuggerStepThrough]
         public static T ToEnum<T>(this string target, T defaultValue) where T : IComparable, IFormattable
         {
             T convertedValue = defaultValue;
@@ -104,6 +114,7 @@
             return convertedValue;
         }
 
+        [DebuggerStepThrough]
         public static string ToLegalUrl(this string target)
         {
             if (string.IsNullOrEmpty(target))
@@ -131,26 +142,31 @@
             return target;
         }
 
+        [DebuggerStepThrough]
         public static string UrlEncode(this string target)
         {
             return HttpUtility.UrlEncode(target);
         }
 
+        [DebuggerStepThrough]
         public static string UrlDecode(this string target)
         {
             return HttpUtility.UrlDecode(target);
         }
 
+        [DebuggerStepThrough]
         public static string AttributeEncode(this string target)
         {
             return HttpUtility.HtmlAttributeEncode(target);
         }
 
+        [DebuggerStepThrough]
         public static string HtmlEncode(this string target)
         {
             return HttpUtility.HtmlEncode(target);
         }
 
+        [DebuggerStepThrough]
         public static string HtmlDecode(this string target)
         {
             return HttpUtility.HtmlDecode(target);

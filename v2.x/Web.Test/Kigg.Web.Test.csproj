@@ -79,7 +79,9 @@
     <Compile Include="Controllers\CommentControllerFixture.cs" />
     <Compile Include="Controllers\ControllerFactoryFixture.cs" />
     <Compile Include="Controllers\FeedControllerFixture.cs" />
-    <Compile Include="Controllers\MembershipControllerFixture.cs" />
+    <Compile Include="Controllers\MembershipControllerFixture.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Controllers\StoryControllerFixture.cs">
       <SubType>Code</SubType>
     </Compile>

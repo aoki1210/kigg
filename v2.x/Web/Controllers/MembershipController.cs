@@ -1,3 +1,5 @@
+using Kigg.Service;
+
 namespace Kigg.Web
 {
     using System;
@@ -13,7 +15,6 @@ namespace Kigg.Web
 
     using DomainObjects;
     using Infrastructure;
-    using Service;
 
     public class MembershipController : BaseController
     {
@@ -22,19 +23,19 @@ namespace Kigg.Web
         private static readonly Regex UserNameExpression = new Regex(@"^([a-zA-Z])[a-zA-Z_-]*[\w_-]*[\S]$|^([a-zA-Z])[0-9_-]*[\S]$|^[a-zA-Z]*[\S]$", RegexOptions.Singleline | RegexOptions.Compiled);
 
         private readonly IDomainObjectFactory _factory;
-        private readonly IUserScoreService _userScoreService;
+        private readonly IEventAggregator _eventAggregator;
         private readonly IEmailSender _emailSender;
         private readonly IBlockedIPCollection _blockedIPList;
 
-        public MembershipController(IDomainObjectFactory factory, IUserScoreService userScoreService, IEmailSender emailSender, IBlockedIPCollection blockedIPList)
+        public MembershipController(IDomainObjectFactory factory, IEventAggregator eventAggregator, IEmailSender emailSender, IBlockedIPCollection blockedIPList)
         {
             Check.Argument.IsNotNull(factory, "factory");
-            Check.Argument.IsNotNull(userScoreService, "userScoreService");
+            Check.Argument.IsNotNull(eventAggregator, "eventAggregator");
             Check.Argument.IsNotNull(emailSender, "emailSender");
             Check.Argument.IsNotNull(blockedIPList, "blockedIPList");
 
             _factory = factory;
-            _userScoreService = userScoreService;
+            _eventAggregator = eventAggregator;
             _emailSender = emailSender;
             _blockedIPList = blockedIPList;
         }
@@ -80,6 +81,44 @@ namespace Kigg.Web
             }
         }
 
+        private string ReturnUrl
+        {
+            get
+            {
+                string returnUrl = string.Empty;
+
+                HttpCookie cookie = Request.Cookies["returnUrl"];
+
+                if (cookie != null)
+                {
+                    returnUrl = cookie.Value;
+
+                    cookie = Response.Cookies["returnUrl"];
+
+                    if (cookie != null)
+                    {
+                        cookie.Expire();
+                    }
+                }
+
+                return returnUrl;
+            }
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    HttpCookie cookie = new HttpCookie("returnUrl")
+                                            {
+                                                Expires = DateTime.Now.AddMinutes(5),
+                                                HttpOnly = false,
+                                                Value = value
+                                            };
+
+                    HttpContext.Response.Cookies.Add(cookie);
+                }
+            }
+        }
+
         public IOpenIdRelyingParty OpenIdRelyingParty
         {
             get;
@@ -116,6 +155,7 @@ namespace Kigg.Web
                             request.AddExtension(fetch);
 
                             OpenIdRememberMe = rememberMe ?? false;
+                            ReturnUrl = (HttpContext.Request.UrlReferrer != null) ? HttpContext.Request.UrlReferrer.ToString() : string.Empty;
 
                             request.RedirectToProvider();
                         }
@@ -128,7 +168,7 @@ namespace Kigg.Web
                 {
                     string userName = OpenIdRelyingParty.Response.ClaimedIdentifier;
 
-                    using (IUnitOfWork unitOfWork = UnitOfWork.Get())
+                    using (IUnitOfWork unitOfWork = UnitOfWork.Begin())
                     {
                         IUser user = UserRepository.FindByUserName(userName);
 
@@ -149,7 +189,7 @@ namespace Kigg.Web
                             {
                                 user = _factory.CreateUser(userName, email, null);
                                 UserRepository.Add(user);
-                                _userScoreService.AccountActivated(user);
+                                _eventAggregator.GetEvent<UserActivateEvent>().Publish(new UserActivateEventArgs(user));
                             }
                             else
                             {
@@ -183,6 +223,13 @@ namespace Kigg.Web
                 GenerateMessageCookie(errorMessage, true);
             }
 
+            string returnUrl = ReturnUrl;
+
+            if (!string.IsNullOrEmpty(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+
             return RedirectToRoute("Published");
         }
 
@@ -203,7 +250,7 @@ namespace Kigg.Web
             {
                 try
                 {
-                    using (IUnitOfWork unitOfWork = UnitOfWork.Get())
+                    using (IUnitOfWork unitOfWork = UnitOfWork.Begin())
                     {
                         IUser user = _factory.CreateUser(userName.Trim(), email.Trim(), password.Trim());
                         UserRepository.Add(user);
@@ -248,7 +295,7 @@ namespace Kigg.Web
             {
                 try
                 {
-                    using (IUnitOfWork unitOfWork = UnitOfWork.Get())
+                    using (IUnitOfWork unitOfWork = UnitOfWork.Begin())
                     {
                         IUser user = UserRepository.FindByUserName(userName.Trim());
 
@@ -300,7 +347,7 @@ namespace Kigg.Web
             {
                 try
                 {
-                    using (IUnitOfWork unitOfWork = UnitOfWork.Get())
+                    using (IUnitOfWork unitOfWork = UnitOfWork.Begin())
                     {
                         CurrentUser.LastActivityAt = SystemTime.Now();
                         unitOfWork.Commit();
@@ -337,7 +384,7 @@ namespace Kigg.Web
             {
                 try
                 {
-                    using (IUnitOfWork unitOfWork = UnitOfWork.Get())
+                    using (IUnitOfWork unitOfWork = UnitOfWork.Begin())
                     {
                         IUser user = UserRepository.FindByEmail(email.Trim());
 
@@ -392,7 +439,7 @@ namespace Kigg.Web
             {
                 try
                 {
-                    using (IUnitOfWork unitOfWork = UnitOfWork.Get())
+                    using (IUnitOfWork unitOfWork = UnitOfWork.Begin())
                     {
                         CurrentUser.ChangePassword(oldPassword.Trim(), newPassword.Trim());
                         unitOfWork.Commit();
@@ -428,7 +475,7 @@ namespace Kigg.Web
             {
                 try
                 {
-                    using (IUnitOfWork unitOfWork = UnitOfWork.Get())
+                    using (IUnitOfWork unitOfWork = UnitOfWork.Begin())
                     {
                         CurrentUser.ChangeEmail(email.Trim());
                         unitOfWork.Commit();
@@ -466,7 +513,7 @@ namespace Kigg.Web
             {
                 try
                 {
-                    using (IUnitOfWork unitOfWork = UnitOfWork.Get())
+                    using (IUnitOfWork unitOfWork = UnitOfWork.Begin())
                     {
                         IUser user = UserRepository.FindById(id.ToGuid());
 
@@ -577,7 +624,7 @@ namespace Kigg.Web
             {
                 try
                 {
-                    using (IUnitOfWork unitOfWork = UnitOfWork.Get())
+                    using (IUnitOfWork unitOfWork = UnitOfWork.Begin())
                     {
                         IUser user = UserRepository.FindById(userId);
 
@@ -585,7 +632,8 @@ namespace Kigg.Web
                         {
                             user.IsActive = true;
                             user.LastActivityAt = SystemTime.Now();
-                            _userScoreService.AccountActivated(user);
+
+                            _eventAggregator.GetEvent<UserActivateEvent>().Publish(new UserActivateEventArgs(user));
 
                             unitOfWork.Commit();
 
@@ -670,6 +718,7 @@ namespace Kigg.Web
             return View(viewData);
         }
 
+        [ValidateInput(false)]
         public ActionResult Menu()
         {
             return View(new UserMenuViewData { IsUserAuthenticated = IsCurrentUserAuthenticated, CurrentUser = CurrentUser });
@@ -713,7 +762,7 @@ namespace Kigg.Web
             {
                 try
                 {
-                    using (IUnitOfWork unitOfWork = UnitOfWork.Get())
+                    using (IUnitOfWork unitOfWork = UnitOfWork.Begin())
                     {
                         IUser user = UserRepository.FindById(id.ToGuid());
 

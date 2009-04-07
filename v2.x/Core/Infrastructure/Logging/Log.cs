@@ -1,4 +1,6 @@
-﻿namespace Kigg.Infrastructure
+﻿using System.Diagnostics;
+
+namespace Kigg.Infrastructure
 {
     using System;
     using System.Runtime.CompilerServices;
@@ -6,6 +8,7 @@
     public static class Log
     {
         [MethodImpl(MethodImplOptions.NoInlining)]
+        [DebuggerStepThrough]
         public static void Info(string message)
         {
             Check.Argument.IsNotEmpty(message, "message");
@@ -14,6 +17,7 @@
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
+        [DebuggerStepThrough]
         public static void Info(string format, params object[] args)
         {
             Check.Argument.IsNotEmpty(format, "format");
@@ -22,6 +26,7 @@
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
+        [DebuggerStepThrough]
         public static void Warning(string message)
         {
             Check.Argument.IsNotEmpty(message, "message");
@@ -30,6 +35,7 @@
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
+        [DebuggerStepThrough]
         public static void Warning(string format, params object[] args)
         {
             Check.Argument.IsNotEmpty(format, "format");
@@ -38,6 +44,7 @@
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
+        [DebuggerStepThrough]
         public static void Error(string message)
         {
             Check.Argument.IsNotEmpty(message, "message");
@@ -46,6 +53,7 @@
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
+        [DebuggerStepThrough]
         public static void Error(string format, params object[] args)
         {
             Check.Argument.IsNotEmpty(format, "format");
@@ -54,6 +62,7 @@
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
+        [DebuggerStepThrough]
         public static void Exception(Exception exception)
         {
             Check.Argument.IsNotNull(exception, "exception");

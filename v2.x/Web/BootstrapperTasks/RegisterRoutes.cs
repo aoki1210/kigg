@@ -32,6 +32,7 @@ namespace Kigg.Web
             _routes.IgnoreRoute("{file}.txt");
             _routes.IgnoreRoute("{file}.htm");
             _routes.IgnoreRoute("{file}.html");
+            _routes.IgnoreRoute("{file}.xml");
 
             // Ignore axd files such as assest, image, sitemap etc
             _routes.IgnoreRoute("{resource}.axd/{*pathInfo}");

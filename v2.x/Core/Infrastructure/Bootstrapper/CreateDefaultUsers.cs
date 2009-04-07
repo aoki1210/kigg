@@ -23,7 +23,7 @@ namespace Kigg.Infrastructure
         {
             if (!_users.IsNullOrEmpty())
             {
-                using (IUnitOfWork unitOfWork = UnitOfWork.Get())
+                using (IUnitOfWork unitOfWork = UnitOfWork.Begin())
                 {
                     _users.ForEach(CreateUserIfNotExists);
 

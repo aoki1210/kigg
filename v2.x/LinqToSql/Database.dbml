@@ -150,4 +150,16 @@
       <Association Name="User_UserScore" Member="User" ThisKey="UserId" OtherKey="Id" Type="User" IsForeignKey="true" DeleteOnNull="true" />
     </Type>
   </Table>
+  <Function Name="dbo.CommentSearch" Method="CommentSearch" IsComposable="true">
+    <Parameter Name="query" Type="System.String" DbType="NVarChar(4000)" />
+    <ElementType Name="CommentSearchResult">
+      <Column Name="StoryId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.StorySearch" Method="StorySearch" IsComposable="true">
+    <Parameter Name="query" Type="System.String" DbType="NVarChar(4000)" />
+    <ElementType Name="StorySearchResult">
+      <Column Name="Id" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
 </Database>

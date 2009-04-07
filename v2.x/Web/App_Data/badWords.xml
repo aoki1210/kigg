@@ -160,4 +160,152 @@
         <exp>easy money</exp>
         <value>100</value>
     </item>
+    <item>
+        <exp>valentine</exp>
+        <value>100</value>
+    </item>
+    <item>
+        <exp>gift</exp>
+        <value>100</value>
+    </item>
+    <item>
+        <exp>clipart</exp>
+        <value>100</value>
+    </item>
+    <item>
+        <exp>laptop battery</exp>
+        <value>100</value>
+    </item>
+    <item>
+        <exp>discount</exp>
+        <value>100</value>
+    </item>
+    <item>
+        <exp>post card</exp>
+        <value>100</value>
+    </item>
+    <item>
+        <exp>postcard</exp>
+        <value>100</value>
+    </item>
+    <item>
+        <exp>ecard</exp>
+        <value>100</value>
+    </item>
+    <item>
+        <exp>lucky winner</exp>
+        <value>100</value>
+    </item>
+    <item>
+        <exp>lucky draw</exp>
+        <value>100</value>
+    </item>
+    <item>
+        <exp>mutual trust</exp>
+        <value>100</value>
+    </item>
+    <item>
+        <exp>abs exercise</exp>
+        <value>100</value>
+    </item>
+    <item>
+        <exp>fat belly</exp>
+        <value>100</value>
+    </item>
+    <item>
+        <exp>belly fat</exp>
+        <value>100</value>
+    </item>
+    <item>
+        <exp>loose fat</exp>
+        <value>100</value>
+    </item>
+    <item>
+        <exp>medicine</exp>
+        <value>100</value>
+    </item>
+    <item>
+        <exp>pet food</exp>
+        <value>100</value>
+    </item>
+    <item>
+        <exp>diabetes</exp>
+        <value>100</value>
+    </item>
+    <item>
+        <exp>e-card</exp>
+        <value>100</value>
+    </item>
+    <item>
+        <exp>lotterii</exp>
+        <value>100</value>
+    </item>
+    <item>
+        <exp>l0tterii</exp>
+        <value>100</value>
+    </item>
+    <item>
+        <exp>electrical repair</exp>
+        <value>100</value>
+    </item>
+    <item>
+        <exp>electrical repair</exp>
+        <value>100</value>
+    </item>
+    <item>
+        <exp>electrical bill</exp>
+        <value>100</value>
+    </item>
+    <item>
+        <exp>obsessive compulsive behavior</exp>
+        <value>100</value>
+    </item>
+    <item>
+        <exp>infection</exp>
+        <value>100</value>
+    </item>
+    <item>
+        <exp>voip</exp>
+        <value>100</value>
+    </item>
+    <item>
+        <exp>pbx</exp>
+        <value>100</value>
+    </item>
+    <item>
+        <exp>car insurance</exp>
+        <value>100</value>
+    </item>
+    <item>
+        <exp>herbal</exp>
+        <value>100</value>
+    </item>
+    <item>
+        <exp>tobacco</exp>
+        <value>100</value>
+    </item>
+    <item>
+        <exp>vapir</exp>
+        <value>100</value>
+    </item>
+    <item>
+        <exp>tramadol</exp>
+        <value>100</value>
+    </item>
+    <item>
+        <exp>bridal</exp>
+        <value>100</value>
+    </item>
+    <item>
+        <exp>car sale</exp>
+        <value>100</value>
+    </item>
+    <item>
+        <exp>dining</exp>
+        <value>100</value>
+    </item>
+    <item>
+        <exp>diving</exp>
+        <value>100</value>
+    </item>
 </badWords>

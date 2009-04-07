@@ -89,5 +89,9 @@
         void DeleteAll<TEntity>(IEnumerable<TEntity> instances) where TEntity : class;
 
         void SubmitChanges();
+
+        IQueryable<StorySearchResult> StorySearch(string query);
+
+        IQueryable<CommentSearchResult> CommentSearch(string query);
     }
 }

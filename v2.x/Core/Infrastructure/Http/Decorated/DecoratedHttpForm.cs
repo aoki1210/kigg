@@ -1,7 +1,7 @@
 namespace Kigg.Infrastructure
 {
     using System;
-    using System.Collections.Specialized;
+    using System.Diagnostics;
 
     public abstract class DecoratedHttpForm : IHttpForm
     {
@@ -14,89 +14,58 @@ namespace Kigg.Infrastructure
             _innerHttpForm = innerHttpForm;
         }
 
-        public virtual string Get(string url)
+        [DebuggerStepThrough]
+        public virtual HttpFormResponse Get(HttpFormGetRequest getRequest)
         {
-            return _innerHttpForm.Get(url);
+            return _innerHttpForm.Get(getRequest);
         }
 
-        public virtual string Get(string url, NameValueCollection headers)
+        [DebuggerStepThrough]
+        public virtual void GetAsync(HttpFormGetRequest getRequest)
         {
-            return _innerHttpForm.Get(url, headers);
+            _innerHttpForm.GetAsync(getRequest);
         }
 
-        public virtual void GetAsync(string url)
+        [DebuggerStepThrough]
+        public virtual void GetAsync(HttpFormGetRequest getRequest, Action<HttpFormResponse> onComplete, Action<Exception> onError)
         {
-            _innerHttpForm.GetAsync(url);
+            _innerHttpForm.GetAsync(getRequest, onComplete, onError);
         }
 
-        public virtual void GetAsync(string url, Action<string> onComplete, Action<Exception> onError)
+        [DebuggerStepThrough]
+        public virtual HttpFormResponse Post(HttpFormPostRequest postRequest)
         {
-            _innerHttpForm.GetAsync(url, onComplete, onError);
+            return _innerHttpForm.Post(postRequest);
         }
 
-        public virtual void GetAsync(string url, NameValueCollection headers)
+        [DebuggerStepThrough]
+        public virtual HttpFormResponse Post(HttpFormPostRawRequest postRequest)
         {
-            _innerHttpForm.GetAsync(url, headers);
+            return _innerHttpForm.Post(postRequest);
         }
 
-        public virtual void GetAsync(string url, NameValueCollection headers, Action<string> onComplete, Action<Exception> onError)
+        [DebuggerStepThrough]
+        public virtual void PostAsync(HttpFormPostRequest postRequest)
         {
-            _innerHttpForm.GetAsync(url, headers, onComplete, onError);
+            _innerHttpForm.PostAsync(postRequest);
         }
 
-        public virtual string Post(string url, NameValueCollection formFields)
+        [DebuggerStepThrough]
+        public virtual void PostAsync(HttpFormPostRequest postRequest, Action<HttpFormResponse> onComplete, Action<Exception> onError)
         {
-            return _innerHttpForm.Post(url, formFields);
+            _innerHttpForm.PostAsync(postRequest, onComplete, onError);
         }
 
-        public virtual string Post(string url, NameValueCollection headers, NameValueCollection formFields)
+        [DebuggerStepThrough]
+        public virtual void PostAsync(HttpFormPostRawRequest postRequest)
         {
-            return _innerHttpForm.Post(url, headers, formFields);
+            _innerHttpForm.PostAsync(postRequest);
         }
 
-        public virtual string Post(string url, string rawData)
+        [DebuggerStepThrough]
+        public virtual void PostAsync(HttpFormPostRawRequest postRequest, Action<HttpFormResponse> onComplete, Action<Exception> onError)
         {
-            return _innerHttpForm.Post(url, rawData);
-        }
-
-        public virtual string Post(string url, NameValueCollection headers, string rawData)
-        {
-            return _innerHttpForm.Post(url, headers, rawData);
-        }
-
-        public virtual void PostAsync(string url, NameValueCollection formFields)
-        {
-            _innerHttpForm.PostAsync(url, formFields);
-        }
-
-        public virtual void PostAsync(string url, NameValueCollection formFields, Action<string> onComplete, Action<Exception> onError)
-        {
-            _innerHttpForm.PostAsync(url, formFields, onComplete, onError);
-        }
-
-        public virtual void PostAsync(string url, NameValueCollection headers, NameValueCollection formFields)
-        {
-            _innerHttpForm.PostAsync(url, headers, formFields);
-        }
-
-        public virtual void PostAsync(string url, NameValueCollection headers, NameValueCollection formFields, Action<string> onComplete, Action<Exception> onError)
-        {
-            _innerHttpForm.PostAsync(url, headers, formFields, onComplete, onError);
-        }
-
-        public virtual void PostAsync(string url, string rawData)
-        {
-            _innerHttpForm.PostAsync(url, rawData);
-        }
-
-        public virtual void PostAsync(string url, NameValueCollection headers, string rawData)
-        {
-            _innerHttpForm.PostAsync(url, headers, rawData);
-        }
-
-        public virtual void PostAsync(string url, NameValueCollection headers, string rawData, Action<string> onComplete, Action<Exception> onError)
-        {
-            _innerHttpForm.PostAsync(url, headers, rawData, onComplete, onError);
+            _innerHttpForm.PostAsync(postRequest, onComplete, onError);
         }
     }
 }

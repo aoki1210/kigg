@@ -2,13 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Threading;
     using System.Web;
 
     public class UnityPerWebRequestLifetimeModule : DisposableResource, IHttpModule
     {
         private static readonly object Key = new object();
-        private static readonly ReaderWriterLockSlim _rwl = new ReaderWriterLockSlim();
 
         private HttpContextBase _httpContext;
 
@@ -38,37 +36,29 @@
 
         internal static IDictionary<UnityPerWebRequestLifetimeManager, object> GetInstances(HttpContextBase httpContext)
         {
-            _rwl.EnterUpgradeableReadLock();
+            IDictionary<UnityPerWebRequestLifetimeManager, object> instances;
 
-            try
+            if (httpContext.Items.Contains(Key))
             {
-                IDictionary<UnityPerWebRequestLifetimeManager, object> instances;
-
-                if (httpContext.Items.Contains(Key))
+                instances = (IDictionary<UnityPerWebRequestLifetimeManager, object>) httpContext.Items[Key];
+            }
+            else
+            {
+                lock (httpContext.Items)
                 {
-                    instances = (IDictionary<UnityPerWebRequestLifetimeManager, object>) httpContext.Items[Key];
-                }
-                else
-                {
-                    _rwl.EnterWriteLock();
-
-                    try
+                    if (httpContext.Items.Contains(Key))
+                    {
+                        instances = (IDictionary<UnityPerWebRequestLifetimeManager, object>) httpContext.Items[Key];
+                    }
+                    else
                     {
                         instances = new Dictionary<UnityPerWebRequestLifetimeManager, object>();
                         httpContext.Items.Add(Key, instances);
                     }
-                    finally
-                    {
-                        _rwl.ExitWriteLock();
-                    }
                 }
+            }
 
-                return instances;
-            }
-            finally
-            {
-                _rwl.ExitUpgradeableReadLock();
-            }
+            return instances;
         }
 
         internal void RemoveAllInstances()

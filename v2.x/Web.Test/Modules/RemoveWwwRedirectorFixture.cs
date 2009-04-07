@@ -7,7 +7,7 @@ namespace Kigg.Web.Test
     public class RemoveWwwRedirectorFixture
     {
         [Fact]
-        public void OnBeginRequest_Should_Redirect_WWW_Less_Url_When_Requesting_WWW_Url()
+        public void OnBeginRequest_Should_Redirect_When_Requesting_WWW_Url()
         {
             var httpContext = MvcTestHelper.GetHttpContext();
 

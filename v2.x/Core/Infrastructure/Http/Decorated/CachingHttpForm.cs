@@ -1,6 +1,7 @@
 namespace Kigg.Infrastructure
 {
     using System;
+    using System.Text;
 
     public class CachingHttpForm : DecoratedHttpForm
     {
@@ -13,62 +14,104 @@ namespace Kigg.Infrastructure
             _cacheDurationInMinutes = cacheDurationInMinutes;
         }
 
-        public override string Get(string url)
+        public override HttpFormResponse Get(HttpFormGetRequest getRequest)
         {
-            Check.Argument.IsNotInvalidWebUrl(url, "url");
+            Check.Argument.IsNotNull(getRequest, "getRequest");
 
-            string cacheKey = BuildCacheKey(url);
+            string cacheKey = BuildCacheKey(getRequest);
 
-            string result;
+            HttpFormResponse response;
 
-            Cache.TryGet(cacheKey, out result);
+            Cache.TryGet(cacheKey, out response);
 
-            if (string.IsNullOrEmpty(result))
+            if (response == null)
             {
-                result = base.Get(url);
+                response = base.Get(getRequest);
 
-                if ((!string.IsNullOrEmpty(result)) && !Cache.Contains(cacheKey))
+                if ((response != null) && !Cache.Contains(cacheKey))
                 {
-                    Cache.Set(cacheKey, result, SystemTime.Now().AddMinutes(_cacheDurationInMinutes));
+                    Cache.Set(cacheKey, response, SystemTime.Now().AddMinutes(_cacheDurationInMinutes));
                 }
             }
 
-            return result;
+            return response;
         }
 
-        public override void GetAsync(string url, Action<string> onComplete, Action<Exception> onError)
+        public override void GetAsync(HttpFormGetRequest getRequest)
         {
-            string cacheKey = BuildCacheKey(url);
+            GetAsync(getRequest, delegate { }, delegate { });
+        }
 
-            string result;
+        public override void GetAsync(HttpFormGetRequest getRequest, Action<HttpFormResponse> onComplete, Action<Exception> onError)
+        {
+            Check.Argument.IsNotNull(getRequest, "getRequest");
 
-            Cache.TryGet(cacheKey, out result);
+            string cacheKey = BuildCacheKey(getRequest);
 
-            if (string.IsNullOrEmpty(result))
+            HttpFormResponse response;
+
+            Cache.TryGet(cacheKey, out response);
+
+            if (response == null)
             {
                 base.GetAsync(
-                                url,
-                                response =>
+                                getRequest,
+                                r =>
                                 {
-                                    if ((!string.IsNullOrEmpty(response)) && !Cache.Contains(cacheKey))
+                                    if ((r!= null) && !Cache.Contains(cacheKey))
                                     {
-                                        Cache.Set(cacheKey, response, SystemTime.Now().AddMinutes(_cacheDurationInMinutes));
+                                        Cache.Set(cacheKey, r, SystemTime.Now().AddMinutes(_cacheDurationInMinutes));
                                     }
 
-                                    onComplete(response);
+                                    onComplete(r);
                                 },
                                 onError
                              );
             }
             else
             {
-                onComplete(result);
+                onComplete(response);
             }
         }
 
-        private static string BuildCacheKey(string url)
+        private static string BuildCacheKey(HttpFormGetRequest getRequest)
         {
-            return "rawHtml:{0}".FormatWith(url);
+            Check.Argument.IsNotInvalidWebUrl(getRequest.Url, "getRequest.Url");
+
+            StringBuilder cacheKeyValue = new StringBuilder(getRequest.Url);
+
+            if (!string.IsNullOrEmpty(getRequest.UserName))
+            {
+                cacheKeyValue.Append("|" + getRequest.UserName);
+            }
+
+            if (!string.IsNullOrEmpty(getRequest.Password))
+            {
+                cacheKeyValue.Append("|" + getRequest.Password);
+            }
+
+            if (!string.IsNullOrEmpty(getRequest.ContentType))
+            {
+                cacheKeyValue.Append("|" + getRequest.ContentType);
+            }
+
+            if (getRequest.Headers.Count > 0)
+            {
+                foreach(string key in getRequest.Headers)
+                {
+                    cacheKeyValue.Append("|{0}:{1}".FormatWith(key, getRequest.Headers[key]));
+                }
+            }
+
+            if (getRequest.Cookies.Count > 0)
+            {
+                foreach (string key in getRequest.Cookies)
+                {
+                    cacheKeyValue.Append("|{0}:{1}".FormatWith(key, getRequest.Cookies[key]));
+                }
+            }
+
+            return "rawHtml:{0}".FormatWith(cacheKeyValue.ToString().Hash());
         }
     }
 }

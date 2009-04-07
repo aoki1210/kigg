@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 using Moq;
 using Xunit;
@@ -171,7 +173,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
             var story3 = CreateStory();
 
             Stories.AddRange(new[] { story1 as Story, story2 as Story, story3 as Story });
-            Stories.ForEach(s => s.CreatedAt = SystemTime.Now().AddDays(-3));
+            Stories.ForEach(s => s.ApprovedAt = SystemTime.Now().AddDays(-3));
 
             var result = _storyRepository.FindPublishable(SystemTime.Now().AddDays(-7), SystemTime.Now().AddHours(-4), 0, 10);
 
@@ -202,14 +204,16 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         {
             var story1 = CreateStory();
             var story2 = CreateStory();
-            var story3 = CreateStory();
 
-            Stories.AddRange(new[] { story1 as Story, story2 as Story, story3 as Story });
+            Stories.AddRange(new[] { story1 as Story, story2 as Story });
+
+            database.Expect(db => db.StorySearch(It.IsAny<string>())).Returns((new List<StorySearchResult>{new StorySearchResult{Id = story1.Id }}).AsQueryable());
+            database.Expect(db => db.CommentSearch(It.IsAny<string>())).Returns((new List<CommentSearchResult> { new CommentSearchResult { StoryId = story2.Id } }).AsQueryable());
 
             var pagedResult = _storyRepository.Search("Test", 0, 10);
 
-            Assert.Equal(3, pagedResult.Result.Count);
-            Assert.Equal(3, pagedResult.Total);
+            Assert.Equal(2, pagedResult.Result.Count);
+            Assert.Equal(2, pagedResult.Total);
         }
 
         [Fact]
@@ -368,7 +372,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
             var story3 = CreateStory();
 
             Stories.AddRange(new[] { story1 as Story, story2 as Story, story3 as Story });
-            Stories.ForEach(s => s.CreatedAt = SystemTime.Now().AddDays(-3));
+            Stories.ForEach(s => s.ApprovedAt = SystemTime.Now().AddDays(-3));
 
             var result = _storyRepository.CountByPublishable(SystemTime.Now().AddDays(-7), SystemTime.Now().AddHours(-4));
 

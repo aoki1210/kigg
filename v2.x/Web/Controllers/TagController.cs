@@ -65,6 +65,7 @@ namespace Kigg.Web
             return Content(content, "application/json");
         }
 
+        [ValidateInput(false)]
         public ActionResult Tabs()
         {
             ICollection<ITag> userTags = IsCurrentUserAuthenticated ? CurrentUser.Tags.ToList() : new List<ITag>();

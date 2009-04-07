@@ -166,7 +166,7 @@
             int total = CountByPublishable(minimumDate, maximumDate);
 
             var stories = Database.StoryDataSource
-                                  .Where(s => ((s.ApprovedAt != null) && ((s.CreatedAt >= minimumDate) && (s.CreatedAt <= maximumDate)) && ((s.LastProcessedAt == null) || (s.LastProcessedAt <= s.LastActivityAt))))
+                                  .Where(s => (((s.ApprovedAt >= minimumDate) && (s.ApprovedAt <= maximumDate)) && ((s.LastProcessedAt == null) || (s.LastProcessedAt <= s.LastActivityAt))))
                                   .OrderByDescending(s => s.CreatedAt)
                                   .Skip(start).Take(max);
 
@@ -196,11 +196,13 @@
             Check.Argument.IsNotNegative(start, "start");
             Check.Argument.IsNotNegative(max, "max");
 
+            string ftQuery = "\"" + query + "*\"";
+
             int total = Database.StoryDataSource
-                                .Count(s => (s.ApprovedAt != null) && (s.Title.Contains(query) || s.UniqueName.Contains(query) || s.Url.Contains(query) || s.TextDescription.Contains(query) || s.Category.Name.Contains(query) || s.StoryTags.Any(st => st.Tag.Name.Contains(query)) || s.StoryComments.Any(c => c.TextBody.Contains(query))));
+                                .Count(s => (s.ApprovedAt != null) && (Database.StorySearch(ftQuery).Any(result => s.Id == result.Id) || s.Category.Name.Contains(query) || s.StoryTags.Any(st => st.Tag.Name.Contains(query)) || Database.CommentSearch(ftQuery).Any(result => result.StoryId == s.Id)));
 
             var stories = Database.StoryDataSource
-                                  .Where(s => (s.ApprovedAt != null) && (s.Title.Contains(query) || s.Url.Contains(query) || s.TextDescription.Contains(query) || s.Category.Name.Contains(query) || s.StoryTags.Any(st => st.Tag.Name.Contains(query)) || s.StoryComments.Any(c => c.TextBody.Contains(query))))
+                                  .Where(s => (s.ApprovedAt != null) && (Database.StorySearch(ftQuery).Any(result => s.Id == result.Id) || s.Category.Name.Contains(query) || s.StoryTags.Any(st => st.Tag.Name.Contains(query)) || Database.CommentSearch(ftQuery).Any(result => result.StoryId == s.Id)))
                                   .OrderByDescending(s => s.PublishedAt)
                                   .ThenBy(s => s.Rank)
                                   .ThenByDescending(s => s.CreatedAt)
@@ -313,7 +315,7 @@
             Check.Argument.IsNotInFuture(minimumDate, "minimumDate");
             Check.Argument.IsNotInFuture(maximumDate, "maximumDate");
 
-            return Database.StoryDataSource.Count(s => ((s.ApprovedAt != null) && ((s.CreatedAt >= minimumDate) && (s.CreatedAt <= maximumDate)) && ((s.LastProcessedAt == null) || (s.LastProcessedAt <= s.LastActivityAt))));
+            return Database.StoryDataSource.Count(s => (((s.ApprovedAt >= minimumDate) && (s.ApprovedAt <= maximumDate)) && ((s.LastProcessedAt == null) || (s.LastProcessedAt <= s.LastActivityAt))));
         }
 
         public virtual int CountPostedByUser(Guid userId)

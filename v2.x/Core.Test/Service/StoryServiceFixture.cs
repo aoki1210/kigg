@@ -11,19 +11,19 @@ namespace Kigg.Core.Test
     using Infrastructure;
     using Repository;
     using Service;
+
     using Kigg.Test.Infrastructure;
 
     public class StoryServiceFixture : BaseFixture
     {
-        private readonly Mock<IUserScoreService> _userScoreService;
         private readonly Mock<IDomainObjectFactory> _factory;
         private readonly Mock<ICategoryRepository> _categoryRepository;
         private readonly Mock<ITagRepository> _tagRepository;
         private readonly Mock<IStoryRepository> _storyRepository;
         private readonly Mock<IMarkAsSpamRepository> _markAsSpamRepository;
+        private readonly Mock<IEventAggregator> _eventAggregator;
         private readonly Mock<ISpamProtection> _spamProtection;
         private readonly Mock<ISpamPostprocessor> _spamPostProcessor;
-        private readonly Mock<IEmailSender> _emailSender;
         private readonly Mock<IContentService> _contentService;
         private readonly Mock<IHtmlSanitizer> _htmlSanitizer;
 
@@ -34,19 +34,32 @@ namespace Kigg.Core.Test
         private readonly Mock<IStoryWeightCalculator> _freshnessStrategy;
         private readonly Mock<IStoryWeightCalculator> _knownSourceStrategy;
 
+        private Mock<StorySubmitEvent> _storySubmitEvent;
+        private Mock<StoryDeleteEvent> _storyDeleteEvent;
+        private Mock<StoryViewEvent> _storyViewEvent;
+        private Mock<StoryPromoteEvent> _storyPromoteEvent;
+        private Mock<StoryDemoteEvent> _storyDemoteEvent;
+        private Mock<StoryMarkAsSpamEvent> _storyMarkAsSpamEvent;
+        private Mock<StoryUnmarkAsSpamEvent> _storyUnmarkAsSpamEvent;
+        private Mock<StorySpamEvent> _storySpamEvent;
+        private Mock<CommentSpamEvent> _commentSpamEvent;
+        private Mock<CommentMarkAsOffendedEvent> _commentMarkAsOffendedEvent;
+        private Mock<StoryPublishEvent> _storyPublishEvent;
+        private Mock<StoryApproveEvent> _storyApproveEvent;
+        private Mock<StoryIncorrectlyMarkedAsSpamEvent> _storyIncorrectlyMarkedAsSpamEvent;
+
         private readonly StoryService _storyService;
 
         public StoryServiceFixture()
         {
-            _userScoreService = new Mock<IUserScoreService>();
             _factory = new Mock<IDomainObjectFactory>();
             _categoryRepository = new Mock<ICategoryRepository>();
             _tagRepository = new Mock<ITagRepository>();
             _storyRepository = new Mock<IStoryRepository>();
             _markAsSpamRepository = new Mock<IMarkAsSpamRepository>();
+            _eventAggregator = new Mock<IEventAggregator>();
             _spamProtection = new Mock<ISpamProtection>();
             _spamPostProcessor = new Mock<ISpamPostprocessor>();
-            _emailSender = new Mock<IEmailSender>();
             _contentService = new Mock<IContentService>();
             _htmlSanitizer = new Mock<IHtmlSanitizer>();
 
@@ -68,7 +81,7 @@ namespace Kigg.Core.Test
             _freshnessStrategy = new Mock<IStoryWeightCalculator>();
             _freshnessStrategy.ExpectGet(s => s.Name).Returns("Freshness");
 
-            _storyService = new StoryService(settings.Object, _userScoreService.Object, _factory.Object, _categoryRepository.Object, _tagRepository.Object, _storyRepository.Object, _markAsSpamRepository.Object, _spamProtection.Object, _spamPostProcessor.Object, _emailSender.Object, _contentService.Object, _htmlSanitizer.Object, thumbnail.Object, new []{ _voteStrategy.Object, _commentStrategy.Object, _viewStrategy.Object, _userScoreStrategy.Object, _knownSourceStrategy.Object, _freshnessStrategy.Object });
+            _storyService = new StoryService(settings.Object, _factory.Object, _categoryRepository.Object, _tagRepository.Object, _storyRepository.Object, _markAsSpamRepository.Object, _eventAggregator.Object, _spamProtection.Object, _spamPostProcessor.Object, _contentService.Object, _htmlSanitizer.Object, thumbnail.Object, new []{ _voteStrategy.Object, _commentStrategy.Object, _viewStrategy.Object, _userScoreStrategy.Object, _knownSourceStrategy.Object, _freshnessStrategy.Object });
         }
 
         [Fact]
@@ -155,30 +168,6 @@ namespace Kigg.Core.Test
         }
 
         [Fact]
-        public void Create_Should_Notify_User_Score_Service()
-        {
-            var story = new Mock<IStory>();
-
-            _userScoreService.Expect(us => us.StorySubmitted(It.IsAny<IUser>())).Verifiable();
-
-            Create(story);
-
-            _userScoreService.Verify();
-        }
-
-        [Fact]
-        public void Create_Should_Ping_Story()
-        {
-            var story = new Mock<IStory>();
-
-            _contentService.Expect(cs => cs.Ping(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Verifiable();
-
-            Create(story);
-
-            _contentService.Verify();
-        }
-
-        [Fact]
         public void Create_Should_Not_CheckForSpam_When_Possible_Spam_Is_Not_Allowed_And_User_CanModerate()
         {
             settings.ExpectGet(s => s.AllowPossibleSpamStorySubmit).Returns(false);
@@ -239,6 +228,31 @@ namespace Kigg.Core.Test
             Create(story);
 
             story.Verify();
+        }
+
+        [Fact]
+        public void Create_Should_Publish_Story_Submit_Event_When_Spam_Is_Not_Detected_And_Possible_Spam_Is_Not_Allowed()
+        {
+            settings.ExpectGet(s => s.AllowPossibleSpamStorySubmit).Returns(false);
+
+            var story = new Mock<IStory>();
+
+            _spamProtection.Expect(sp => sp.IsSpam(It.IsAny<SpamCheckContent>())).Returns(false);
+
+            Create(story);
+
+            _eventAggregator.Verify();
+            _storySubmitEvent.Verify();
+        }
+
+        [Fact]
+        public void Create_Should_Return_Error_Message_When_Url_Is_Restricted()
+        {
+            _contentService.Expect(cs => cs.IsRestricted(It.IsAny<string>())).Returns(true);
+
+            var result = Create();
+
+            Assert.Equal("Specifed url has match with our banned url list.", result.ErrorMessage);
         }
 
         [Fact]
@@ -404,11 +418,12 @@ namespace Kigg.Core.Test
         }
 
         [Fact]
-        public void Delete_Should_Use_UserScoreService()
+        public void Delete_Should_Publish_Story_Delete_Event()
         {
             Delete();
 
-            _userScoreService.Verify();
+            _eventAggregator.Verify();
+            _storyDeleteEvent.Verify();
         }
 
         [Fact]
@@ -417,14 +432,6 @@ namespace Kigg.Core.Test
             Delete();
 
             _storyRepository.Verify();
-        }
-
-        [Fact]
-        public void Delete_Should_Use_EmailSender()
-        {
-            Delete();
-
-            _emailSender.Verify();
         }
 
         [Fact]
@@ -438,11 +445,12 @@ namespace Kigg.Core.Test
         }
 
         [Fact]
-        public void View_Should_Use_UserScoreService()
+        public void View_Should_Publish_Story_View_Event()
         {
             View(new Mock<IStory>());
 
-            _userScoreService.Verify();
+            _eventAggregator.Verify();
+            _storyViewEvent.Verify();
         }
 
         [Fact]
@@ -456,11 +464,12 @@ namespace Kigg.Core.Test
         }
 
         [Fact]
-        public void Promote_Should_Use_UserScoreService()
+        public void Promote_Should_Publish_Story_Promote_Event()
         {
             Promote(new Mock<IStory>());
 
-            _userScoreService.Verify();
+            _eventAggregator.Verify();
+            _storyPromoteEvent.Verify();
         }
 
         [Fact]
@@ -474,11 +483,12 @@ namespace Kigg.Core.Test
         }
 
         [Fact]
-        public void Demote_Should_Use_UserScoreService()
+        public void Demote_Should_Publish_Story_Demote_Event()
         {
             Demote(new Mock<IStory>());
 
-            _userScoreService.Verify();
+            _eventAggregator.Verify();
+            _storyDemoteEvent.Verify();
         }
 
         [Fact]
@@ -492,19 +502,12 @@ namespace Kigg.Core.Test
         }
 
         [Fact]
-        public void MarkAsSpam_Should_Use_UserScoreService()
+        public void MarkAsSpam_Should_Publish_Story_Mark_As_Spam_Event()
         {
             MarkAsSpam(new Mock<IStory>());
 
-            _userScoreService.Verify();
-        }
-
-        [Fact]
-        public void MarkAsSpam_Should_Use_EmailSender()
-        {
-            MarkAsSpam(new Mock<IStory>());
-
-            _emailSender.Verify();
+            _eventAggregator.Verify();
+            _storyMarkAsSpamEvent.Verify();
         }
 
         [Fact]
@@ -518,11 +521,12 @@ namespace Kigg.Core.Test
         }
 
         [Fact]
-        public void UnmarkAsSpam_Should_Use_UserScoreService()
+        public void UnmarkAsSpam_Should_Publish_Story_Unmark_As_Spam_Event()
         {
             UnmarkAsSpam(new Mock<IStory>());
 
-            _userScoreService.Verify();
+            _eventAggregator.Verify();
+            _storyUnmarkAsSpamEvent.Verify();
         }
 
         [Fact]
@@ -540,18 +544,16 @@ namespace Kigg.Core.Test
         }
 
         [Fact]
-        public void Comment_Should_Use_UserScoreService_And_Story()
+        public void Comment_Should_Use_Story()
         {
             var story = new Mock<IStory>();
             var user = new Mock<IUser>();
             var comment = new Mock<IComment>();
 
             story.Expect(s => s.PostComment(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<IUser>(), It.IsAny<string>())).Returns(comment.Object).Verifiable();
-            _userScoreService.Expect(us => us.StoryCommented(It.IsAny<IStory>(), It.IsAny<IUser>())).Verifiable();
             Comment(story.Object, user.Object, true);
 
             story.Verify();
-            _userScoreService.Verify();
         }
 
         [Fact]
@@ -570,7 +572,7 @@ namespace Kigg.Core.Test
         }
 
         [Fact]
-        public void Comment_Should_Unsubscribe_from_Email_When_Passing_false()
+        public void Comment_Should_Unsubscribe_from_Email_When_Passing_False()
         {
             var story = new Mock<IStory>();
             var user = new Mock<IUser>();
@@ -585,21 +587,29 @@ namespace Kigg.Core.Test
         }
 
         [Fact]
-        public void Comment_Should_Send_Mail_To_All_Subcribers()
+        public void Comment_Should_Publish_Comment_Submit_Event_When_Spam_Is_Not_Detected_And_Possible_Spam_Is_Not_Allowed()
         {
+            settings.ExpectGet(s => s.AllowPossibleSpamCommentSubmit).Returns(false);
+
             var story = new Mock<IStory>();
             var user = new Mock<IUser>();
             var subscriber = new Mock<IUser>();
 
             var comment = new Mock<IComment>();
 
+            _spamProtection.Expect(sp => sp.IsSpam(It.IsAny<SpamCheckContent>())).Returns(false);
+
             story.Expect(s => s.PostComment(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<IUser>(), It.IsAny<string>())).Returns(comment.Object);
             story.ExpectGet(s => s.Subscribers).Returns(new List<IUser>{ subscriber.Object });
-            _emailSender.Expect(es => es.SendComment(It.IsAny<string>(), It.IsAny<IComment>(), It.IsAny<IEnumerable<IUser>>())).Verifiable();
+
+            var commentSubmitEvent = new Mock<CommentSubmitEvent>();
+            _eventAggregator.Expect(ea => ea.GetEvent<CommentSubmitEvent>()).Returns(commentSubmitEvent.Object).Verifiable();
+            commentSubmitEvent.Expect(e => e.Publish(It.IsAny<CommentSubmitEventArgs>())).Verifiable();
 
             Comment(story.Object, user.Object, true);
 
-            _emailSender.Verify();
+            _eventAggregator.Verify();
+            commentSubmitEvent.Verify();
         }
 
         [Fact]
@@ -689,19 +699,12 @@ namespace Kigg.Core.Test
         }
 
         [Fact]
-        public void Spam_Should_Use_UserScoreService_For_Story()
+        public void Spam_Should_Publish_Story_Spam_Event()
         {
             SpamStory(new Mock<IStory>());
 
-            _userScoreService.Verify();
-        }
-
-        [Fact]
-        public void Spam_Should_Use_EmailSender_For_Story()
-        {
-            SpamStory(new Mock<IStory>());
-
-            _emailSender.Verify();
+            _eventAggregator.Verify();
+            _storySpamEvent.Verify();
         }
 
         [Fact]
@@ -715,19 +718,12 @@ namespace Kigg.Core.Test
         }
 
         [Fact]
-        public void Spam_Should_Use_UserScoreService_For_Comment()
+        public void Spam_Should_Publish_Comment_Spam_Event()
         {
             SpamComment(new Mock<IStory>());
 
-            _userScoreService.Verify();
-        }
-
-        [Fact]
-        public void Spam_Should_Use_EmailSender_For_Comment()
-        {
-            SpamComment(new Mock<IStory>());
-
-            _emailSender.Verify();
+            _eventAggregator.Verify();
+            _commentSpamEvent.Verify();
         }
 
         [Fact]
@@ -741,19 +737,12 @@ namespace Kigg.Core.Test
         }
 
         [Fact]
-        public void MarkAsOffended_Should_Use_UserScoreService()
+        public void MarkAsOffended_Should_Publish_Comment_Mark_As_Offended_Event()
         {
             MarkAsOffended(new Mock<IComment>());
 
-            _userScoreService.Verify();
-        }
-
-        [Fact]
-        public void MarkAsOffended_Should_Use_EmailSender()
-        {
-            MarkAsOffended(new Mock<IComment>());
-
-            _emailSender.Verify();
+            _eventAggregator.Verify();
+            _commentMarkAsOffendedEvent.Verify();
         }
 
         [Fact]
@@ -786,19 +775,21 @@ namespace Kigg.Core.Test
         }
 
         [Fact]
-        public void Publish_Should_Use_UserScoreService()
+        public void Publish_Should_Publish_Story_Publish_Event()
         {
             Publish();
 
-            _userScoreService.Verify();
+            _eventAggregator.Verify();
+            _storyPublishEvent.Verify();
         }
 
         [Fact]
-        public void Publish_Should_Use_EmailSender()
+        public void Publish_Should_Publish_Story_Incorrectly_Marked_As_Spam_Event()
         {
             Publish();
 
-            _emailSender.Verify();
+            _eventAggregator.Verify();
+            _storyIncorrectlyMarkedAsSpamEvent.Verify();
         }
 
         [Fact]
@@ -812,11 +803,12 @@ namespace Kigg.Core.Test
         }
 
         [Fact]
-        public void Approve_Should_EmailSender()
+        public void Approve_Should_Publish_Story_AApprove_Event()
         {
             Approve(new Mock<IStory>());
 
-            _emailSender.Verify();
+            _eventAggregator.Verify();
+            _storyApproveEvent.Verify();
         }
 
         private StoryCreateResult Create(IMock<IStory> story)
@@ -834,6 +826,11 @@ namespace Kigg.Core.Test
             _categoryRepository.Expect(r => r.FindByUniqueName(It.IsAny<string>())).Returns(new Mock<ICategory>().Object);
             _contentService.Expect(s => s.Get(It.IsAny<string>())).Returns(new StoryContent("A dummy story", "Dummy description", "http://trackbackurl.com"));
             _factory.Expect(f => f.CreateStory(It.IsAny<ICategory>(), It.IsAny<IUser>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(story.Object);
+
+            _storySubmitEvent = new Mock<StorySubmitEvent>();
+
+            _eventAggregator.Expect(ea => ea.GetEvent<StorySubmitEvent>()).Returns(_storySubmitEvent.Object).Verifiable();
+            _storySubmitEvent.Expect(e => e.Publish(It.IsAny<StorySubmitEventArgs>())).Verifiable();
 
             return Create(user.Object, "http://astory.com", "A dummy Story", "dummy", "Dummy description of Story", "192.168.0.1", "A dummy agent");
         }
@@ -871,9 +868,13 @@ namespace Kigg.Core.Test
 
         private void Delete()
         {
-            _userScoreService.Expect(us => us.StoryDeleted(It.IsAny<IStory>())).Verifiable();
             _storyRepository.Expect(r => r.Remove(It.IsAny<IStory>())).Verifiable();
-            _emailSender.Expect(es => es.NotifyStoryDelete(It.IsAny<IStory>(), It.IsAny<IUser>())).Verifiable();
+
+            _storyDeleteEvent = new Mock<StoryDeleteEvent>();
+
+            _eventAggregator.Expect(ea => ea.GetEvent<StoryDeleteEvent>()).Returns(_storyDeleteEvent.Object).Verifiable();
+            _storyDeleteEvent.Expect(e => e.Publish(It.IsAny<StoryDeleteEventArgs>())).Verifiable();
+
 
             _storyService.Delete(new Mock<IStory>().Object, new Mock<IUser>().Object);
         }
@@ -883,7 +884,11 @@ namespace Kigg.Core.Test
             var user = new Mock<IUser>();
 
             story.Expect(s => s.View(It.IsAny<DateTime>(), It.IsAny<string>())).Verifiable();
-            _userScoreService.Expect(us => us.StoryViewed(It.IsAny<IStory>(), It.IsAny<IUser>())).Verifiable();
+
+            _storyViewEvent = new Mock<StoryViewEvent>();
+
+            _eventAggregator.Expect(ea => ea.GetEvent<StoryViewEvent>()).Returns(_storyViewEvent.Object).Verifiable();
+            _storyViewEvent.Expect(e => e.Publish(It.IsAny<StoryViewEventArgs>())).Verifiable();
 
             _storyService.View(story.Object, user.Object, "192.168.0.1");
         }
@@ -893,7 +898,11 @@ namespace Kigg.Core.Test
             var user = new Mock<IUser>();
 
             story.Expect(s => s.Promote(It.IsAny<DateTime>(), It.IsAny<IUser>(), It.IsAny<string>())).Returns(true).Verifiable();
-            _userScoreService.Expect(us => us.StoryPromoted(It.IsAny<IStory>(), It.IsAny<IUser>())).Verifiable();
+
+            _storyPromoteEvent = new Mock<StoryPromoteEvent>();
+
+            _eventAggregator.Expect(ea => ea.GetEvent<StoryPromoteEvent>()).Returns(_storyPromoteEvent.Object).Verifiable();
+            _storyPromoteEvent.Expect(e => e.Publish(It.IsAny<StoryPromoteEventArgs>())).Verifiable();
 
             _storyService.Promote(story.Object, user.Object, "192.168.0.1");
         }
@@ -903,7 +912,11 @@ namespace Kigg.Core.Test
             var user = new Mock<IUser>();
 
             story.Expect(s => s.Demote(It.IsAny<DateTime>(), It.IsAny<IUser>())).Returns(true).Verifiable();
-            _userScoreService.Expect(us => us.StoryDemoted(It.IsAny<IStory>(), It.IsAny<IUser>())).Verifiable();
+
+            _storyDemoteEvent = new Mock<StoryDemoteEvent>();
+
+            _eventAggregator.Expect(ea => ea.GetEvent<StoryDemoteEvent>()).Returns(_storyDemoteEvent.Object).Verifiable();
+            _storyDemoteEvent.Expect(e => e.Publish(It.IsAny<StoryDemoteEventArgs>())).Verifiable();
 
             _storyService.Demote(story.Object, user.Object);
         }
@@ -913,8 +926,11 @@ namespace Kigg.Core.Test
             var user = new Mock<IUser>();
 
             story.Expect(s => s.MarkAsSpam(It.IsAny<DateTime>(), It.IsAny<IUser>(), It.IsAny<string>())).Returns(true).Verifiable();
-            _userScoreService.Expect(us => us.StoryMarkedAsSpam(It.IsAny<IStory>(), It.IsAny<IUser>())).Verifiable();
-            _emailSender.Expect(es => es.NotifyStoryMarkedAsSpam(It.IsAny<string>(), It.IsAny<IStory>(), It.IsAny<IUser>())).Verifiable();
+
+            _storyMarkAsSpamEvent = new Mock<StoryMarkAsSpamEvent>();
+
+            _eventAggregator.Expect(ea => ea.GetEvent<StoryMarkAsSpamEvent>()).Returns(_storyMarkAsSpamEvent.Object).Verifiable();
+            _storyMarkAsSpamEvent.Expect(e => e.Publish(It.IsAny<StoryMarkAsSpamEventArgs>())).Verifiable();
 
             _storyService.MarkAsSpam(story.Object, "http://dotnetshoutout.com/A-Dummy-Story", user.Object, "192.168.0.1");
         }
@@ -924,7 +940,11 @@ namespace Kigg.Core.Test
             var user = new Mock<IUser>();
 
             story.Expect(s => s.UnmarkAsSpam(It.IsAny<DateTime>(), It.IsAny<IUser>())).Returns(true).Verifiable();
-            _userScoreService.Expect(us => us.StoryUnmarkedAsSpam(It.IsAny<IStory>(), It.IsAny<IUser>())).Verifiable();
+
+            _storyUnmarkAsSpamEvent = new Mock<StoryUnmarkAsSpamEvent>();
+
+            _eventAggregator.Expect(ea => ea.GetEvent<StoryUnmarkAsSpamEvent>()).Returns(_storyUnmarkAsSpamEvent.Object).Verifiable();
+            _storyUnmarkAsSpamEvent.Expect(e => e.Publish(It.IsAny<StoryUnmarkAsSpamEventArgs>())).Verifiable();
 
             _storyService.UnmarkAsSpam(story.Object, user.Object);
         }
@@ -946,12 +966,13 @@ namespace Kigg.Core.Test
             story.ExpectGet(s => s.PostedBy).Returns(postedBy.Object);
 
             _storyRepository.Expect(r => r.Remove(It.IsAny<IStory>())).Verifiable();
-            _userScoreService.Expect(us => us.StorySpammed(It.IsAny<IStory>())).Verifiable();
-            _emailSender.Expect(es => es.NotifyConfirmSpamStory(It.IsAny<string>(), It.IsAny<IStory>(), It.IsAny<IUser>())).Verifiable();
 
-            var byUser = new Mock<IUser>();
+            _storySpamEvent = new Mock<StorySpamEvent>();
 
-            _storyService.Spam(story.Object, "http://dotnetshoutout.com/Dummy-Story", byUser.Object);
+            _eventAggregator.Expect(ea => ea.GetEvent<StorySpamEvent>()).Returns(_storySpamEvent.Object).Verifiable();
+            _storySpamEvent.Expect(e => e.Publish(It.IsAny<StorySpamEventArgs>())).Verifiable();
+
+            _storyService.Spam(story.Object, "http://dotnetshoutout.com/Dummy-Story", new Mock<IUser>().Object);
         }
 
         private void SpamComment(IMock<IStory> story)
@@ -963,12 +984,12 @@ namespace Kigg.Core.Test
             comment.ExpectGet(c => c.ForStory).Returns(story.Object);
 
             story.Expect(s => s.DeleteComment(It.IsAny<IComment>())).Verifiable();
-            _userScoreService.Expect(us => us.CommentSpammed(It.IsAny<IUser>())).Verifiable();
-            _emailSender.Expect(es => es.NotifyConfirmSpamComment(It.IsAny<string>(), It.IsAny<IComment>(), It.IsAny<IUser>())).Verifiable();
 
-            var byUser = new Mock<IUser>();
+            _commentSpamEvent = new Mock<CommentSpamEvent>();
+            _eventAggregator.Expect(ea => ea.GetEvent<CommentSpamEvent>()).Returns(_commentSpamEvent.Object).Verifiable();
+            _commentSpamEvent.Expect(e => e.Publish(It.IsAny<CommentSpamEventArgs>())).Verifiable();
 
-            _storyService.Spam(comment.Object, "http://dotnetshoutout.com/Dummy-Story", byUser.Object);
+            _storyService.Spam(comment.Object, "http://dotnetshoutout.com/Dummy-Story", new Mock<IUser>().Object);
         }
 
         private void MarkAsOffended(Mock<IComment> comment)
@@ -978,12 +999,12 @@ namespace Kigg.Core.Test
             comment.ExpectGet(c => c.ByUser).Returns(postedBy.Object);
 
             comment.Expect(c => c.MarkAsOffended()).Verifiable();
-            _userScoreService.Expect(us => us.CommentMarkedAsOffended(It.IsAny<IUser>())).Verifiable();
-            _emailSender.Expect(es => es.NotifyCommentAsOffended(It.IsAny<string>(), It.IsAny<IComment>(), It.IsAny<IUser>())).Verifiable();
 
-            var byUser = new Mock<IUser>();
+            _commentMarkAsOffendedEvent = new Mock<CommentMarkAsOffendedEvent>();
+            _eventAggregator.Expect(ea => ea.GetEvent<CommentMarkAsOffendedEvent>()).Returns(_commentMarkAsOffendedEvent.Object).Verifiable();
+            _commentMarkAsOffendedEvent.Expect(e => e.Publish(It.IsAny<CommentMarkAsOffendedEventArgs>())).Verifiable();
 
-            _storyService.MarkAsOffended(comment.Object, "http://dotnetshoutout.com", byUser.Object);
+            _storyService.MarkAsOffended(comment.Object, "http://dotnetshoutout.com", new Mock<IUser>().Object);
         }
 
         private void Publish()
@@ -1013,10 +1034,13 @@ namespace Kigg.Core.Test
             markAsSpam.Expect(m => m.ByUser).Returns(new Mock<IUser>().Object);
             _markAsSpamRepository.Expect(s => s.FindAfter(It.IsAny<Guid>(), It.IsAny<DateTime>())).Returns(new[] { markAsSpam.Object }).Verifiable();
 
-            _userScoreService.Expect(s => s.StoryIncorrectlyMarkedAsSpam(It.IsAny<IUser>())).Verifiable();
-            _userScoreService.Expect(s => s.StoryPublished(It.IsAny<IStory>())).Verifiable();
+            _storyPublishEvent = new Mock<StoryPublishEvent>();
+            _eventAggregator.Expect(ea => ea.GetEvent<StoryPublishEvent>()).Returns(_storyPublishEvent.Object).Verifiable();
+            _storyPublishEvent.Expect(e => e.Publish(It.IsAny<StoryPublishEventArgs>())).Verifiable();
 
-            _emailSender.Expect(es => es.NotifyPublishedStories(It.IsAny<DateTime>(), It.IsAny<IEnumerable<PublishedStory>>())).Verifiable();
+            _storyIncorrectlyMarkedAsSpamEvent = new Mock<StoryIncorrectlyMarkedAsSpamEvent>();
+            _eventAggregator.Expect(ea => ea.GetEvent<StoryIncorrectlyMarkedAsSpamEvent>()).Returns(_storyIncorrectlyMarkedAsSpamEvent.Object).Verifiable();
+            _storyIncorrectlyMarkedAsSpamEvent.Expect(e => e.Publish(It.IsAny<StoryIncorrectlyMarkedAsSpamEventArgs>())).Verifiable();
 
             _storyService.Publish();
         }
@@ -1028,7 +1052,10 @@ namespace Kigg.Core.Test
             story.ExpectGet(s => s.PostedBy).Returns(postedBy.Object);
 
             story.Expect(s => s.Approve(It.IsAny<DateTime>())).Verifiable();
-            _emailSender.Expect(es => es.NotifyStoryApprove(It.IsAny<string>(), It.IsAny<IStory>(), It.IsAny<IUser>())).Verifiable();
+
+            _storyApproveEvent = new Mock<StoryApproveEvent>();
+            _eventAggregator.Expect(ea => ea.GetEvent<StoryApproveEvent>()).Returns(_storyApproveEvent.Object).Verifiable();
+            _storyApproveEvent.Expect(e => e.Publish(It.IsAny<StoryApproveEventArgs>())).Verifiable();
 
             var byUser = new Mock<IUser>();
 

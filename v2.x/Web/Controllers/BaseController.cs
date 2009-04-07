@@ -56,7 +56,7 @@ namespace Kigg.Web
 
                     if (user == null)
                     {
-                        using (IUnitOfWork unitOfWork = UnitOfWork.Get())
+                        using (IUnitOfWork unitOfWork = UnitOfWork.Begin())
                         {
                             user = UserRepository.FindByUserName(CurrentUserName);
 
@@ -98,8 +98,12 @@ namespace Kigg.Web
                         return true;
                     }
 
+                    Log.Warning("Logging out User: {0}", CurrentUserName);
+
                     // Logout the user if the account is locked out
                     FormsAuthentication.SignOut();
+
+                    Log.Info("User Logged out.");
                 }
 
                 return false;

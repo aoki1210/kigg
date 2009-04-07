@@ -109,22 +109,31 @@ namespace Kigg.Infrastructure.HtmlAgilityPack
 
         private string GetContent(Document document)
         {
-            Node bodyNode = document.DocumentNode.SelectSingleNode("//body");
-            Node contentNode = null;
+            string body = string.Empty;
 
-            if (bodyNode != null)
+            try
             {
-                contentNode = TryToFindContentNode(bodyNode) ?? bodyNode;
+                Node bodyNode = document.DocumentNode.SelectSingleNode("//body");
+                Node contentNode = null;
+
+                if (bodyNode != null)
+                {
+                    contentNode = TryToFindContentNode(bodyNode) ?? bodyNode;
+                }
+
+                if (bodyNode != null)
+                {
+                    using (StringWriter writer = new StringWriter(Constants.CurrentCulture))
+                    {
+                        ConvertTo(contentNode, writer);
+                        writer.Flush();
+
+                        body = writer.ToString();
+                    }
+                }
             }
-
-            string body;
-
-            using (StringWriter writer = new StringWriter(Constants.CurrentCulture))
+            catch(NullReferenceException)
             {
-                ConvertTo(contentNode, writer);
-                writer.Flush();
-
-                body = writer.ToString();
             }
 
             return body.Trim('\t').Trim();

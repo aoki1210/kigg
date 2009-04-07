@@ -70,7 +70,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void WrapAt_Should_Returns_String_Which_Ends_With_Three_Dots()
         {
-            Assert.Equal("a dummy...", "a dummy string".WrapAt(7));
+            Assert.Equal("a du...", "a dummy string".WrapAt(7));
         }
 
         [Fact]

@@ -5,7 +5,7 @@
     public static class UnitOfWork
     {
         [DebuggerStepThrough]
-        public static IUnitOfWork Get()
+        public static IUnitOfWork Begin()
         {
             return IoC.Resolve<IUnitOfWork>();
         }
