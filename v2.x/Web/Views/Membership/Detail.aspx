@@ -50,7 +50,7 @@
                         <%if (isVisitingOwnPage) %>
                         <%{%>
                             <br/>
-                            <a href="http://gravatar.com" target="_blank">Change Image</a>
+                            <a href="http://gravatar.com" target="_blank" rel="external">Change Image</a>
                         <%}%>
                     </td>
                     <td style="padding-left:10px">

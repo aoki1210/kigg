@@ -17,6 +17,8 @@ namespace Kigg.Web.Test
         public ErrorHandlerFixture()
         {
             _httpContext = MvcTestHelper.GetHttpContext();
+            _httpContext.ExpectGet(h => h.IsCustomErrorEnabled).Returns(true);
+
             _handler = new ErrorHandler();
         }
 
@@ -34,7 +36,7 @@ namespace Kigg.Web.Test
         [Fact]
         public void OnError_Should_Log_Exception()
         {
-            _httpContext.HttpServerUtility.Expect(s => s.GetLastError()).Returns(new Exception());
+            _httpContext.HttpServerUtility.Expect(s => s.GetLastError()).Returns(new HttpException());
 
             OnError();
 

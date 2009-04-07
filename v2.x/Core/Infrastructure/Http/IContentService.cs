@@ -2,9 +2,9 @@ namespace Kigg.Infrastructure
 {
     public interface IContentService
     {
-        StoryContent Get(string url);
+        bool IsRestricted(string url);
 
-        void Ping(string url, string title, string fromUrl, string excerpt, string siteTitle);
+        StoryContent Get(string url);
 
         string ShortUrl(string url);
     }

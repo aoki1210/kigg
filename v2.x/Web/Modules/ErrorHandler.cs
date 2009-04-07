@@ -15,36 +15,46 @@ namespace Kigg.Web
             HttpException httpException = e as HttpException;
             int statusCode = (int) HttpStatusCode.InternalServerError;
 
-            // Skip Page Not Found from logging
-            if (!((httpException != null) && (httpException.GetHttpCode() == (int) HttpStatusCode.NotFound)))
+            // Skip Page Not Found and Service not unavailable from logging
+            if (httpException != null)
             {
-                Log.Exception(e);
+                statusCode = httpException.GetHttpCode();
+
+                if ((statusCode != (int) HttpStatusCode.NotFound) && (statusCode != (int) HttpStatusCode.ServiceUnavailable))
+                {
+                    Log.Exception(e);
+                }
             }
 
-            CustomErrorsSection section = IoC.Resolve<IConfigurationManager>().GetSection<CustomErrorsSection>("system.web/customErrors");
             string redirectUrl = null;
 
-            if ((section.Mode != CustomErrorsMode.Off) && (!((section.Mode == CustomErrorsMode.RemoteOnly) && (context.Request.IsLocal))))
+            if (context.IsCustomErrorEnabled)
             {
-                redirectUrl = section.DefaultRedirect;
+                CustomErrorsSection section = IoC.Resolve<IConfigurationManager>().GetSection<CustomErrorsSection>("system.web/customErrors");
 
-                if (httpException != null)
+                if (section != null)
                 {
-                    statusCode = httpException.GetHttpCode();
+                    redirectUrl = section.DefaultRedirect;
 
-                    if (section.Errors.Count > 0)
+                    if (httpException != null)
                     {
-                        CustomError item = section.Errors[statusCode.ToString(Constants.CurrentCulture)];
-
-                        if (item != null)
+                        if (section.Errors.Count > 0)
                         {
-                            redirectUrl = item.Redirect;
+                            CustomError item = section.Errors[statusCode.ToString(Constants.CurrentCulture)];
+
+                            if (item != null)
+                            {
+                                redirectUrl = item.Redirect;
+                            }
                         }
                     }
                 }
             }
 
+            context.Response.Clear();
             context.Response.StatusCode = statusCode;
+            context.Response.TrySkipIisCustomErrors = true;
+
             context.ClearError();
 
             if (!string.IsNullOrEmpty(redirectUrl))

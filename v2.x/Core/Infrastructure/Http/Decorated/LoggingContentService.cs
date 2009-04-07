@@ -6,6 +6,24 @@ namespace Kigg.Infrastructure
         {
         }
 
+        public override bool IsRestricted(string url)
+        {
+            Log.Info("Checking restriction of url: {0}", url);
+
+            var result = base.IsRestricted(url);
+
+            if (result)
+            {
+                Log.Warning("Url restricted: {0}", url);
+            }
+            else
+            {
+                Log.Warning("Url is not restricted: {0}", url);
+            }
+
+            return result;
+        }
+
         public override StoryContent Get(string url)
         {
             Log.Info("Retrieving content of url: {0}", url);
@@ -22,21 +40,6 @@ namespace Kigg.Infrastructure
             }
 
             return result;
-        }
-
-        public override void Ping(string url, string title, string fromUrl, string excerpt, string siteTitle)
-        {
-            Check.Argument.IsNotInvalidWebUrl(url, "url");
-            Check.Argument.IsNotEmpty(title, "title");
-            Check.Argument.IsNotEmpty(fromUrl, "fromUrl");
-            Check.Argument.IsNotEmpty(excerpt, "excerpt");
-            Check.Argument.IsNotEmpty(siteTitle, "siteTitle");
-
-            Log.Info("Pinging url: {0}", url);
-
-            base.Ping(url, title, fromUrl, excerpt, siteTitle);
-
-            Log.Info("Url pinged: {0}", url);
         }
 
         public override string ShortUrl(string url)

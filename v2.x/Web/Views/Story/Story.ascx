@@ -28,7 +28,9 @@
                 tagHtml.Append(", ");
             }
 
+            tagHtml.Append("<strong>");
             tagHtml.Append(Html.ActionLink(tag.Name, "Tags", "Story", new { name = tag.UniqueName }, new { rel = "tag directory" }));
+            tagHtml.Append("</strong>");
 
             i += 1;
         }
@@ -98,7 +100,7 @@
         <tbody>
             <tr>
                 <td class="title">
-                    <h2><a class="entry-title taggedlink" rel="bookmark" href="<%= Html.AttributeEncode(story.Url) %>" target="_blank" onclick="javascript:Story.click('<%= attributedEncodedStoryId %>')"><%= Html.Encode(story.Title)%></a></h2>
+                    <h2><a class="entry-title taggedlink" rel="bookmark external" href="<%= Html.AttributeEncode(story.Url) %>" target="_blank" onclick="javascript:Story.click('<%= attributedEncodedStoryId %>')"><%= Html.Encode(story.Title)%></a></h2>
                 </td>
             </tr>
             <tr>
@@ -123,7 +125,7 @@
                         <abbr class="updated" title="<%= story.CreatedAt.ToString(hDateFormat) %>"><%= story.CreatedAt.ToString(LongDateFormat) %> GMT</abbr>
                     </div>
                     <div class="preview">
-                        <a href="<%= Html.AttributeEncode(story.Url) %>" target="_blank">
+                        <a href="<%= Html.AttributeEncode(story.Url) %>" target="_blank" rel="external">
                             <img alt="<%= Html.AttributeEncode(story.Title) %>" src="<%= Html.AttributeEncode(story.SmallThumbnail()) %>" class="smoothImage" onload="javascript:SmoothImage.show(this)"/>
                         </a>
                     </div>
@@ -139,7 +141,7 @@
                         <% } %>
                     </div>
                     <div class="summary">
-                        <span class="category">category: </span> <%= Html.ActionLink(story.BelongsTo.Name, "Category", "Story", new { name = story.BelongsTo.UniqueName }, new { rel = "tag directory" })%> |
+                        <span class="category">category: </span> <strong><%= Html.ActionLink(story.BelongsTo.Name, "Category", "Story", new { name = story.BelongsTo.UniqueName }, new { rel = "tag directory" })%></strong> |
                         <span class="view">clicked: </span><%= story.ViewCount %>
                         <% if (!Model.DetailMode) %>
                         <% { %>

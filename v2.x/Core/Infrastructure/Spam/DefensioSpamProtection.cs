@@ -38,8 +38,7 @@ namespace Kigg.Infrastructure
 
             EnsureValidApiKey();
 
-            string response = _httpForm.Post(_checkUrl, PrepareFormFields(spamCheckContent));
-
+            string response = _httpForm.Post(new HttpFormPostRequest{ Url = _checkUrl, FormFields = PrepareFormFields(spamCheckContent) }).Response;
             bool isSpam = IsMatch(response, "spam", "true");
 
             if ((!isSpam) && (NextHandler != null))
@@ -57,12 +56,10 @@ namespace Kigg.Infrastructure
 
             EnsureValidApiKey();
 
-            _httpForm.PostAsync(
-                                    _checkUrl,
-                                    PrepareFormFields(spamCheckContent),
-                                    response =>
+            _httpForm.PostAsync(    new HttpFormPostRequest { Url = _checkUrl, FormFields = PrepareFormFields(spamCheckContent) },
+                                    httpResponse =>
                                                    {
-                                                       bool isSpam = IsMatch(response, "spam", "true");
+                                                       bool isSpam = IsMatch(httpResponse.Response, "spam", "true");
 
                                                        // Defensio does not think it is spam so forward it to next handler (If there is any)
                                                        if ((!isSpam) && (NextHandler != null))
@@ -155,7 +152,11 @@ namespace Kigg.Infrastructure
 
         private bool IsValidApiKey()
         {
-            string response = _httpForm.Post("http://api.defensio.com/app/{1}/validate-key/{0}.xml".FormatWith(_apiKey, _version), new NameValueCollection { { "owner-url", _settings.RootUrl } });
+            string response = _httpForm.Post(new HttpFormPostRequest
+                                                 {
+                                                     Url = "http://api.defensio.com/app/{1}/validate-key/{0}.xml".FormatWith(_apiKey, _version),
+                                                     FormFields = new NameValueCollection { { "owner-url", _settings.RootUrl } }
+                                                 }).Response;
 
             return IsMatch(response, "status", "success");
         }

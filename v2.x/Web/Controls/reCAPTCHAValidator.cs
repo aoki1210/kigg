@@ -80,15 +80,18 @@ namespace Kigg.Web
             try
             {
                 string[] result = _httpForm.Post(
-                                                    _verifyUrl,
-                                                    new NameValueCollection
-                                                    {
-                                                        { "privatekey", _privateKey.UrlEncode() },
-                                                        { "remoteip", fromIPAddress.UrlEncode() },
-                                                        { "challenge", challenge.UrlEncode() },
-                                                        { "response", response.UrlEncode() }
-                                                    }
-                                                ).Split();
+                                                    new HttpFormPostRequest
+                                                        {
+                                                            Url = _verifyUrl,
+                                                            FormFields =    new NameValueCollection
+                                                                            {
+                                                                                { "privatekey", _privateKey.UrlEncode() },
+                                                                                { "remoteip", fromIPAddress.UrlEncode() },
+                                                                                { "challenge", challenge.UrlEncode() },
+                                                                                { "response", response.UrlEncode() }
+                                                                            }
+                                                        }
+                                                ).Response.Split();
 
                 if (result.Length > 0)
                 {

@@ -21,7 +21,7 @@ namespace Kigg.Web.Test
 
             var description = _story.Object.StrippedDescription();
 
-            Assert.Equal(string.Concat(new string('x', 512), "..."), description);
+            Assert.Equal(string.Concat(new string('x', 509), "..."), description);
         }
     }
 }

@@ -1,3 +1,5 @@
+using System;
+
 using Xunit;
 
 namespace Kigg.Core.Test
@@ -11,17 +13,15 @@ namespace Kigg.Core.Test
             _resource = new DisposableResourceTestDouble();
         }
 
-        public void Dispose()
-        {
-            _resource = null;
-        }
-
         [Fact]
         public void Dispose_Should_Call_Protected_Dispose()
         {
             _resource.Dispose();
 
             Assert.True(_resource.IsDisposed);
+
+            _resource = null;
+            GC.Collect();
         }
 
         private class DisposableResourceTestDouble  : DisposableResource

@@ -7,7 +7,7 @@ using System.Web.Routing;
 using DotNetOpenId;
 using DotNetOpenId.Extensions.SimpleRegistration;
 using DotNetOpenId.RelyingParty;
-
+using Kigg.Service;
 using Moq;
 using Xunit;
 
@@ -16,13 +16,13 @@ namespace Kigg.Web.Test
     using DomainObjects;
     using Infrastructure;
     using Repository;
-    using Service;
+
     using Kigg.Test.Infrastructure;
 
     public class MembershipControllerFixture : BaseFixture
     {
         private readonly Mock<IDomainObjectFactory> _factory;
-        private readonly Mock<IUserScoreService> _userScoreService;
+        private readonly Mock<IEventAggregator> _eventAggregator;
         private readonly Mock<IEmailSender> _emailSender;
         private readonly Mock<IBlockedIPCollection> _blockedIPList;
 
@@ -39,7 +39,7 @@ namespace Kigg.Web.Test
             new RegisterRoutes(settings.Object).Execute();
 
             _factory = new Mock<IDomainObjectFactory>();
-            _userScoreService = new Mock<IUserScoreService>();
+            _eventAggregator = new Mock<IEventAggregator>();
             _emailSender = new Mock<IEmailSender>();
             _blockedIPList = new Mock<IBlockedIPCollection>();
 
@@ -49,7 +49,7 @@ namespace Kigg.Web.Test
 
             resolver.Expect(r => r.Resolve<IUserRepository>()).Returns(_userRepository.Object);
 
-            _controller = new MembershipController(_factory.Object, _userScoreService.Object, _emailSender.Object, _blockedIPList.Object)
+            _controller = new MembershipController(_factory.Object, _eventAggregator.Object, _emailSender.Object, _blockedIPList.Object)
                               {
                                   Settings = settings.Object,
                                   UserRepository = _userRepository.Object,
@@ -106,11 +106,11 @@ namespace Kigg.Web.Test
         }
 
         [Fact]
-        public void OpenId_Should_Increase_New_User_Score()
+        public void OpenId_Should_Publish_Event()
         {
             OpenIdForNewUser();
 
-            _userScoreService.Verify();
+            _eventAggregator.Verify();
         }
 
         [Fact]
@@ -1232,13 +1232,13 @@ namespace Kigg.Web.Test
         }
 
         [Fact]
-        public void Activate_Should_Use_UserScoreService()
+        public void Activate_Should_Publish_Event()
         {
             var user = new Mock<IUser>();
 
             Activate(ref user);
 
-            _userScoreService.Verify();
+            _eventAggregator.Verify();
         }
 
         [Fact]
@@ -1343,7 +1343,7 @@ namespace Kigg.Web.Test
 
             _factory.Expect(f => f.CreateUser(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(user.Object);
             _userRepository.Expect(r => r.Add(It.IsAny<IUser>())).Verifiable();
-            _userScoreService.Expect(s => s.AccountActivated(It.IsAny<IUser>())).Verifiable();
+            _eventAggregator.Expect(ea => ea.GetEvent<UserActivateEvent>()).Returns(new UserActivateEvent()).Verifiable();
 
             _formsAuthentication.Expect(fa => fa.SetAuthCookie(It.IsAny<string>(), It.IsAny<bool>())).Verifiable();
 
@@ -1532,7 +1532,7 @@ namespace Kigg.Web.Test
 
             _userRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns(user.Object).Verifiable();
 
-            _userScoreService.Expect(s => s.AccountActivated(It.IsAny<IUser>())).Verifiable();
+            _eventAggregator.Expect(ea => ea.GetEvent<UserActivateEvent>()).Returns(new UserActivateEvent()).Verifiable();
 
             log.Expect(l => l.Info(It.IsAny<string>())).Verifiable();
 

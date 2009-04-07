@@ -1,5 +1,7 @@
 ﻿namespace Kigg.Infrastructure
 {
+    using System.Diagnostics;
+
     public abstract class DecoratedContentService : IContentService
     {
         private readonly IContentService _innerService;
@@ -9,16 +11,19 @@
             _innerService = innerService;
         }
 
+        [DebuggerStepThrough]
+        public virtual bool IsRestricted(string url)
+        {
+            return _innerService.IsRestricted(url);
+        }
+
+        [DebuggerStepThrough]
         public virtual StoryContent Get(string url)
         {
             return _innerService.Get(url);
         }
 
-        public virtual void Ping(string url, string title, string fromUrl, string excerpt, string siteTitle)
-        {
-            _innerService.Ping(url, title, fromUrl, excerpt, siteTitle);
-        }
-
+        [DebuggerStepThrough]
         public virtual string ShortUrl(string url)
         {
             return _innerService.ShortUrl(url);

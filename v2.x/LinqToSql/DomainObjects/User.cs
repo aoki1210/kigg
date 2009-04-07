@@ -13,7 +13,7 @@ namespace Kigg.DomainObjects
         {
             get
             {
-                return GetScoreBetween(Constants.ProductionDate, SystemTime.Now());
+                return GetScoreBetween(CreatedAt, SystemTime.Now());
             }
         }
 

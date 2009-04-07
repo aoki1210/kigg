@@ -28,7 +28,6 @@ namespace Kigg.Repository.LinqToSql
             Check.Argument.IsNotEmpty(storyId, "storyId");
             Check.Argument.IsNotEmpty(commentId, "commentId");
 
-            //
             return Database.CommentDataSource.SingleOrDefault(c => c.Id == commentId && c.StoryId == storyId);
         }
 

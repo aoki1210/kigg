@@ -27,11 +27,11 @@
     <ol id="faq">
         <li>
             <a class="q" href="javascript:void(0)">What kind of stories can I submit?</a>
-            <div class="ans">We only accept stories that are related with .NET. However, if you can think the .NET community can be benefited from an alien technology story, you can also submit it here.</div>
+            <div class="ans">We only accept stories that are related with .NET and must be in english. However, if you can think the .NET community can be benefited from an alien technology story, you can also submit it here.</div>
         </li>
         <li>
             <a class="q" href="javascript:void(0)">What is the difference between OpenID or Signed up user?</a>
-            <div class="ans"><a href="http://openid.net/" target="_blank" rel="nofollow">OpenID</a> eliminates the need for multiple usernames across different websites. We support OpenID login, which means if you have an account in <a href="http://openid.yahoo.com/" target="_blank" rel="nofollow">Yahoo</a>, <a href="http://openid.aol.com/" target="_blank" rel="nofollow">AOL</a>, <a href="http://wordpress.com/" target="_blank" rel="nofollow">Wordpress</a>, <a href="http://blogspot.com/" target="_blank" rel="nofollow">Blogger</a>, <a href="https://www.myopenid.com/" target="_blank" rel="nofollow">myOpenID</a> etc you can login without registering in DotNetShoutout. If you do not have any OpenID account, you can get one free from <a href="https://www.myopenid.com/signup?affiliate_id=22806&amp;openid.sreg.optional=email" target="_blank">here</a>. There is no difference between OpenID and signed up users, we treat both the same. However, some of the OpenID providers do not provide email address of user, which is required to get the complete benefits of DotNetShoutout (e.g. comment notification via mail).</div>
+            <div class="ans"><a href="http://openid.net/" target="_blank" rel="nofollow external">OpenID</a> eliminates the need for multiple usernames across different websites. We support OpenID login, which means if you have an account in <a href="http://openid.yahoo.com/" target="_blank external" rel="nofollow external">Yahoo</a>, <a href="http://openid.aol.com/" target="_blank" rel="nofollow external">AOL</a>, <a href="http://wordpress.com/" target="_blank" rel="nofollow external">Wordpress</a>, <a href="http://blogspot.com/" target="_blank" rel="nofollow external">Blogger</a>, <a href="https://www.myopenid.com/" target="_blank" rel="nofollow external">myOpenID</a> etc you can login without registering in DotNetShoutout. If you do not have any OpenID account, you can get one free from <a href="https://www.myopenid.com/signup?affiliate_id=22806&amp;openid.sreg.optional=email" target="_blank" rel="external">here</a>. There is no difference between OpenID and signed up users, we treat both the same. However, some of the OpenID providers do not provide email address of user, which is required to get the complete benefits of DotNetShoutout (e.g. comment notification via mail).</div>
         </li>
         <li>
             <a class="q" href="javascript:void(0)">What is shout?</a>
@@ -119,10 +119,10 @@
             <div class="ans">
                 The easiest way to get the counter html is from your submitted story page, just go to that page, click the <em>show counter code</em> link, copy the html and put it in your blog post. If you are a serious blogger, then go for the following:
                 <ul>
-                    <li><a href="http://download.live.com/writer" target="_blank" rel="nofollow">Live Writer</a> Plugin.</li>
-                    <li><a href="http://www.dotnetblogengine.net/" target="_blank" rel="nofollow">BlogEngine.NET</a> Extension.</li>
-                    <li><a href="http://graffiticms.com/" target="_blank" rel="nofollow">Graffiti Cms</a> Chalk.</li>
-                    <li><a href="http://communityserver.com/" target="_blank" rel="nofollow">Community Server</a> ICSModule.</li>
+                    <li><a href="http://download.live.com/writer" target="_blank" rel="nofollow external">Live Writer</a> Plugin.</li>
+                    <li><a href="http://www.dotnetblogengine.net/" target="_blank" rel="nofollow external">BlogEngine.NET</a> Extension.</li>
+                    <li><a href="http://graffiticms.com/" target="_blank" rel="nofollow external">Graffiti Cms</a> Chalk.</li>
+                    <li><a href="http://communityserver.com/" target="_blank" rel="nofollow external">Community Server</a> ICSModule.</li>
                 </ul>
                 The above components have the complete customization of <em>Shout It</em> counter and the source codes are also available. To download just visit <a href="http://www.codeplex.com/Kigg/Release/ProjectReleases.aspx" target="_blank">our latest release</a> section and follow the instruction in the downloaded file. We are currently working on to add the other platforms as well,
                 till then you can modify your blogging platform templates like the following:
@@ -147,25 +147,25 @@
                 </ul>
                 Other Open Source/Commercial products:
                 <ul>
-                    <li><a href="http://www.codeplex.com/htmlagilitypack" target="_blank" rel="nofollow">Html Agility Pack</a></li>
-                    <li><a href="http://code.google.com/p/dotnetopenid/" target="_blank" rel="nofollow">DotNetOpenId</a></li>
-                    <li><a href="http://www.codeplex.com/xunit" target="_blank" rel="nofollow">xUnit.net</a></li>
-                    <li><a href="http://code.google.com/p/moq/" target="_blank" rel="nofollow">Moq</a></li>
-                    <li><a href="http://www.testdriven.net/" target="_blank" rel="nofollow">TestDriven.NET</a></li>
-                    <li><a href="http://www.ncover.com/" target="_blank" rel="nofollow">NCover</a></li>
-                    <li><a href="http://www.jetbrains.com/resharper/" target="_blank" rel="nofollow">Jetbrains R#</a></li>
-                    <li><a href="http://www.red-gate.com/Products/ants_profiler/index.htm" target="_blank" rel="nofollow">Red Gate ANTS Profiler</a></li>
+                    <li><a href="http://www.codeplex.com/htmlagilitypack" target="_blank" rel="nofollow external">Html Agility Pack</a></li>
+                    <li><a href="http://code.google.com/p/dotnetopenid/" target="_blank" rel="nofollow external">DotNetOpenId</a></li>
+                    <li><a href="http://www.codeplex.com/xunit" target="_blank" rel="nofollow external">xUnit.net</a></li>
+                    <li><a href="http://code.google.com/p/moq/" target="_blank" rel="nofollow external">Moq</a></li>
+                    <li><a href="http://www.testdriven.net/" target="_blank" rel="nofollow external">TestDriven.NET</a></li>
+                    <li><a href="http://www.ncover.com/" target="_blank" rel="nofollow external">NCover</a></li>
+                    <li><a href="http://www.jetbrains.com/resharper/" target="_blank" rel="nofollow external">Jetbrains R#</a></li>
+                    <li><a href="http://www.red-gate.com/Products/ants_profiler/index.htm" target="_blank" rel="nofollow external">Red Gate ANTS Profiler</a></li>
                 </ul>
                 External Services:
                 <ul>
-                    <li><a href="http://www.pageglimpse.com/" target="_blank" rel="nofollow">PageGilmpse</a></li>
-                    <li><a href="http://gravatar.com" target="_blank" rel="nofollow">gravatar</a></li>
-                    <li><a href="http://recaptcha.net/" target="_blank" rel="nofollow">reCaptcha</a></li>
-                    <li><a href="http://akismet.com/" target="_blank" rel="nofollow">Akismet</a></li>
-                    <li><a href="http://defensio.com/" target="_blank" rel="nofollow">Defensio</a></li>
-                    <li><a href="http://antispam.typepad.com/" target="_blank" rel="nofollow">TypePad Antispam</a></li>
-                    <li><a href="https://www.idselector.com/" target="_blank" rel="nofollow">ID Selector</a></li>
-                    <li><a href="https://www.myopenid.com/" target="_blank" rel="nofollow">myOpenID</a></li>
+                    <li><a href="http://www.pageglimpse.com/" target="_blank" rel="nofollow external">PageGilmpse</a></li>
+                    <li><a href="http://gravatar.com" target="_blank" rel="nofollow external">gravatar</a></li>
+                    <li><a href="http://recaptcha.net/" target="_blank" rel="nofollow external">reCaptcha</a></li>
+                    <li><a href="http://akismet.com/" target="_blank" rel="nofollow external">Akismet</a></li>
+                    <li><a href="http://defensio.com/" target="_blank" rel="nofollow external">Defensio</a></li>
+                    <li><a href="http://antispam.typepad.com/" target="_blank" rel="nofollow external">TypePad Antispam</a></li>
+                    <li><a href="https://www.idselector.com/" target="_blank" rel="nofollow external">ID Selector</a></li>
+                    <li><a href="https://www.myopenid.com/" target="_blank" rel="nofollow external">myOpenID</a></li>
                 </ul>
             </div>
         </li>

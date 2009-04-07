@@ -89,7 +89,7 @@
         if (!Request.IsLocal)
         {
             scriptManager.RegisterSource("http://www.google-analytics.com/ga.js");
-            scriptManager.RegisterBlock("_gat._getTracker('UA-5894416-2')._trackPageview();");
+            scriptManager.RegisterOnReady("Analytics.init();");
         }
     }
 
@@ -114,7 +114,8 @@
     <meta http-equiv="content-type" content="text/html;charset=utf-8"/>
     <meta id="metaKeywords" runat="server" name="keywords" content=""/>
     <meta id="metaDescription" runat="server" name="description" content=""/>
-    <meta name="robots" content="index,follow"/>
+    <meta name="Rating" content="General"/>
+    <meta name="robots" content="index, follow"/>
     <title></title>
     <link href="<%= Url.Asset("css").Replace("&", "&amp;") %>" rel="stylesheet" type="text/css"/>
     <link href="<%= Url.Image("fav.ico")%>" rel="shortcut icon" type="image/x-icon"/>
@@ -127,7 +128,7 @@
     <div id="pageContainer">
         <div id="header">
             <div class="title">
-                <h1><a rel="home" href="<%= Url.Content("~/")%>"><%= Model.SiteTitle %></a></h1>
+                <h1><a rel="home" title="<%= Model.SiteTitle %>" href="<%= Url.Content("~/")%>"><%= Model.SiteTitle %></a></h1>
             </div>
             <div class="links">
                 <% Html.RenderAction<MembershipController>(c => c.Menu()); %>
@@ -159,11 +160,11 @@
         </div>
         <div id="footer">
             <div style="float:left;padding-left:10px">
-                <p><a href="http://www.codeplex.com/Kigg" target="_blank">project home</a> | <a href="http://www.codeplex.com/Kigg/WorkItem/List.aspx" target="_blank">report a bug</a> | <a href="http://www.codeplex.com/Kigg/Thread/List.aspx" target="_blank">disscuss</a> | <a href="<%= Url.RouteUrl("About") %>">about us</a> | <a href="<%= Url.RouteUrl("Contact") %>">contact us</a></p>
+                <p><a href="http://www.codeplex.com/Kigg" target="_blank" rel="external">project home</a> | <a href="http://www.codeplex.com/Kigg/WorkItem/List.aspx" target="_blank" rel="external">report a bug</a> | <a href="http://www.codeplex.com/Kigg/Thread/List.aspx" target="_blank" rel="external">disscuss</a> | <a href="http://weblogs.asp.net/rashid/archive/tags/DotNetShoutout/default.aspx" target="_blank" rel="external">blog</a> | <a href="<%= Url.RouteUrl("About") %>">about us</a> | <a href="<%= Url.RouteUrl("Contact") %>">contact us</a></p>
                 <p> © <%= Model.SiteTitle %>. <%= DateTime.Today.Year.ToString("0000") %> - Content posted by <%= ViewData.Model.SiteTitle %> users is <a target="_blank" rel="license" href="http://creativecommons.org/licenses/publicdomain/">dedicated to the public domain.</a></p>
             </div>
             <div style="float:right;padding-right:10px">
-                <a href="http://www.orcsweb.com" target="_blank">
+                <a href="http://www.orcsweb.com" target="_blank" rel="external">
                     <img alt="Powered By ORCS Web" style="border:0px;padding-top:10px" src="<%= Url.Image("OrcsWeb.png") %>"/>
                 </a>
             </div>

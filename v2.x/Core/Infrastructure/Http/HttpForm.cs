@@ -33,40 +33,27 @@ namespace Kigg.Infrastructure
             _maximumRedirects = maximumRedirects;
         }
 
-        public string Get(string url)
+        public HttpFormResponse Get(HttpFormGetRequest getRequest)
         {
-            return Get(url, null);
-        }
+            Check.Argument.IsNotNull(getRequest, "getRequest");
+            Check.Argument.IsNotEmpty(getRequest.Url, "getRequest.Url");
 
-        public string Get(string url, NameValueCollection headers)
-        {
-            Check.Argument.IsNotInvalidWebUrl(url, "url");
-
-            WebRequest request = CreateRequest(url, headers, false);
+            WebRequest request = CreateRequest(getRequest.Url, getRequest.UserName, getRequest.Password, getRequest.ContentType, getRequest.Headers, getRequest.Cookies, false);
 
             return ReadResponse(request);
         }
 
-        public void GetAsync(string url)
+        public void GetAsync(HttpFormGetRequest getRequest)
         {
-            GetAsync(url, null, null, null);
+            GetAsync(getRequest, null, null);
         }
 
-        public void GetAsync(string url, Action<string> onComplete, Action<Exception> onError)
+        public void GetAsync(HttpFormGetRequest getRequest, Action<HttpFormResponse> onComplete, Action<Exception> onError)
         {
-            GetAsync(url, null, onComplete, onError);
-        }
+            Check.Argument.IsNotNull(getRequest, "getRequest");
+            Check.Argument.IsNotEmpty(getRequest.Url, "getRequest.Url");
 
-        public void GetAsync(string url, NameValueCollection headers)
-        {
-            GetAsync(url, headers, null, null);
-        }
-
-        public void GetAsync(string url, NameValueCollection headers, Action<string> onComplete, Action<Exception> onError)
-        {
-            Check.Argument.IsNotInvalidWebUrl(url, "url");
-
-            WebRequest request = CreateRequest(url, headers, false);
+            WebRequest request = CreateRequest(getRequest.Url, getRequest.UserName, getRequest.Password, getRequest.ContentType, getRequest.Headers, getRequest.Cookies, false);
 
             try
             {
@@ -81,82 +68,58 @@ namespace Kigg.Infrastructure
             }
         }
 
-        public string Post(string url, NameValueCollection formFields)
+        public HttpFormResponse Post(HttpFormPostRequest postRequest)
         {
-            return Post(url, null, formFields);
+            string rawData = PrepareRequestBody(postRequest.FormFields);
+
+            return Post(postRequest, rawData);
         }
 
-        public string Post(string url, NameValueCollection headers, NameValueCollection formFields)
+        public HttpFormResponse Post(HttpFormPostRawRequest postRequest)
         {
-            Check.Argument.IsNotNull(formFields, "formFields");
-
-            return Post(url, headers, PrepareRequestBody(formFields));
+            return Post(postRequest, postRequest.Data);
         }
 
-        public string Post(string url, string rawData)
+        public void PostAsync(HttpFormPostRequest postRequest)
         {
-            return Post(url, null, rawData);
+            PostAsync(postRequest, null, null);
         }
 
-        public string Post(string url, NameValueCollection headers, string rawData)
+        public void PostAsync(HttpFormPostRequest postRequest, Action<HttpFormResponse> onComplete, Action<Exception> onError)
         {
-            Check.Argument.IsNotInvalidWebUrl(url, "url");
-            Check.Argument.IsNotEmpty(rawData, "rawData");
+            string rawData = PrepareRequestBody(postRequest.FormFields);
 
-            WebRequest request = CreateRequest(url, headers, true);
+            PostAsync(postRequest, rawData, onComplete, onError);
+        }
 
-            byte[] content = Encoding.ASCII.GetBytes(rawData);
+        public void PostAsync(HttpFormPostRawRequest postRequest)
+        {
+            PostAsync(postRequest, null, null);
+        }
 
-            request.ContentLength = content.Length;
+        public void PostAsync(HttpFormPostRawRequest postRequest, Action<HttpFormResponse> onComplete, Action<Exception> onError)
+        {
+            PostAsync(postRequest, postRequest.Data, onComplete, onError);
+        }
 
-            using (Stream requestStream = request.GetRequestStream())
-            {
-                requestStream.Write(content, 0, content.Length);
-            }
+        internal HttpFormResponse Post(HttpFormGetRequest postRequest, string rawData)
+        {
+            Check.Argument.IsNotNull(postRequest, "postRequest");
+            Check.Argument.IsNotEmpty(postRequest.Url, "postRequest.Url");
+
+            WebRequest request = CreateRequest(postRequest.Url, postRequest.UserName, postRequest.Password, postRequest.ContentType, postRequest.Headers, postRequest.Cookies, true);
+
+            PreapreRequestToPost(request, rawData);
 
             return ReadResponse(request);
         }
 
-        public void PostAsync(string url, NameValueCollection formFields)
+        internal void PostAsync(HttpFormGetRequest postRequest, string rawData, Action<HttpFormResponse> onComplete, Action<Exception> onError)
         {
-            PostAsync(url, null, formFields);
-        }
+            Check.Argument.IsNotNull(postRequest, "postRequest");
+            Check.Argument.IsNotEmpty(postRequest.Url, "postRequest.Url");
 
-        public void PostAsync(string url, NameValueCollection formFields, Action<string> onComplete, Action<Exception> onError)
-        {
-            PostAsync(url, null, formFields, onComplete, onError);
-        }
-
-        public void PostAsync(string url, NameValueCollection headers, NameValueCollection formFields)
-        {
-            Check.Argument.IsNotNull(formFields, "formFields");
-
-            PostAsync(url, headers, PrepareRequestBody(formFields));
-        }
-
-        public void PostAsync(string url, NameValueCollection headers, NameValueCollection formFields, Action<string> onComplete, Action<Exception> onError)
-        {
-            Check.Argument.IsNotNull(formFields, "formFields");
-
-            PostAsync(url, headers, PrepareRequestBody(formFields), onComplete, onError);
-        }
-
-        public void PostAsync(string url, string rawData)
-        {
-            PostAsync(url, null, rawData);
-        }
-
-        public void PostAsync(string url, NameValueCollection headers, string rawData)
-        {
-            PostAsync(url, headers, rawData, null, null);
-        }
-
-        public void PostAsync(string url, NameValueCollection headers, string rawData, Action<string> onComplete, Action<Exception> onError)
-        {
-            Check.Argument.IsNotInvalidWebUrl(url, "url");
-            Check.Argument.IsNotEmpty(rawData, "rawData");
-
-            WebRequest request = CreateRequest(url, headers, true);
+            WebRequest request = CreateRequest(postRequest.Url, postRequest.UserName, postRequest.Password, postRequest.ContentType, postRequest.Headers, postRequest.Cookies, true);
 
             byte[] content = Encoding.ASCII.GetBytes(rawData);
             request.ContentLength = content.Length;
@@ -219,13 +182,15 @@ namespace Kigg.Infrastructure
 
             try
             {
+                HttpFormResponse httpFormResponse = new HttpFormResponse();
                 WebResponse response = states.Request.EndGetResponse(result);
+
+                PopulateHeadersAndCookies(response, httpFormResponse);
 
                 using (Stream stream = response.GetResponseStream())
                 {
                     const int BufferLength = 8096;
                     byte[] buffer = new byte[BufferLength];
-                    string responseString;
 
                     using (MemoryStream ms = new MemoryStream())
                     {
@@ -238,12 +203,12 @@ namespace Kigg.Infrastructure
 
                         ms.Flush();
 
-                        responseString = Encoding.UTF8.GetString(ms.ToArray());
+                        httpFormResponse.Response = Encoding.UTF8.GetString(ms.ToArray());
                     }
 
                     if (states.OnComplete != null)
                     {
-                        states.OnComplete(responseString);
+                        states.OnComplete(httpFormResponse);
                     }
                 }
             }
@@ -253,6 +218,17 @@ namespace Kigg.Infrastructure
                 {
                     states.OnError(e);
                 }
+            }
+        }
+
+        internal static void PreapreRequestToPost(WebRequest request,string rawData)
+        {
+            byte[] content = Encoding.ASCII.GetBytes(rawData);
+            request.ContentLength = content.Length;
+
+            using (Stream requestStream = request.GetRequestStream())
+            {
+                requestStream.Write(content, 0, content.Length);
             }
         }
 
@@ -273,23 +249,26 @@ namespace Kigg.Infrastructure
             return requestBody.ToString();
         }
 
-        internal static string ReadResponse(WebRequest request)
+        internal static HttpFormResponse ReadResponse(WebRequest request)
         {
             const int MaxTry = 3;
+
             int tryCount = 0;
-            string responseString = null;
+            HttpFormResponse httpFormResponse = new HttpFormResponse();
 
             // Sometimes the external site can throw exception so we might
             // have to retry few more times
-            while (string.IsNullOrEmpty(responseString) && (tryCount < MaxTry))
+            while (string.IsNullOrEmpty(httpFormResponse.Response) && (tryCount < MaxTry))
             {
                 try
                 {
                     using (WebResponse response = request.GetResponse())
                     {
+                        PopulateHeadersAndCookies(response, httpFormResponse);
+
                         using (StreamReader sr = new StreamReader(response.GetResponseStream()))
                         {
-                            responseString = sr.ReadToEnd();
+                            httpFormResponse.Response = sr.ReadToEnd();
                         }
                     }
                 }
@@ -300,32 +279,62 @@ namespace Kigg.Infrastructure
                 }
             }
 
-            return responseString;
+            return httpFormResponse;
         }
 
-        protected internal virtual WebRequest CreateRequest(string url, NameValueCollection headers, bool isPost)
+        internal static void PopulateHeadersAndCookies(WebResponse webResponse, HttpFormResponse response)
         {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(new Uri(url));
+            response.Headers.Add(response.Headers);
+
+            HttpWebResponse httpWebResponse = webResponse as HttpWebResponse;
+
+            if (httpWebResponse != null)
+            {
+                foreach (Cookie cookie in httpWebResponse.Cookies)
+                {
+                    response.Cookies.Add(cookie.Name, cookie.Value);
+                }
+            }
+        }
+
+        protected internal virtual WebRequest CreateRequest(string url, string userName, string password, string contentType, NameValueCollection headers, NameValueCollection cookies, bool isPost)
+        {
+            HttpWebRequest request = (HttpWebRequest) WebRequest.Create(new Uri(url));
 
             request.Method = isPost ? "POST" : "GET";
             request.UserAgent = _userAgent;
 
-            if (_maximumRedirects == 0)
+            if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(password))
             {
-                request.AllowAutoRedirect = false;
+                request.Credentials = new NetworkCredential(userName, password);
             }
 
             if (_maximumRedirects > 0)
             {
+                request.AllowAutoRedirect = true;
                 request.MaximumAutomaticRedirections = _maximumRedirects;
+            }
+            else
+            {
+                request.AllowAutoRedirect = false;
             }
 
             request.Accept = "*/*";
             request.Expect = string.Empty;
 
-            if (headers != null)
+            if (headers.Count > 0)
             {
                 request.Headers.Add(headers);
+            }
+
+            if (cookies.Count > 0)
+            {
+                request.CookieContainer = new CookieContainer();
+
+                foreach(string key in cookies)
+                {
+                    request.CookieContainer.Add(new Cookie(key, cookies[key]));
+                }
             }
 
             if (_timeout > 0)
@@ -333,11 +342,17 @@ namespace Kigg.Infrastructure
                 request.Timeout = _timeout;
             }
 
-            if (isPost)
+            if (!string.IsNullOrEmpty(contentType))
+            {
+                request.ContentType = contentType;
+            }
+
+            if ((isPost) && (string.IsNullOrEmpty(request.ContentType)))
             {
                 request.ContentType = "application/x-www-form-urlencoded; charset=utf-8";
             }
-            else
+
+            if (!isPost)
             {
                 request.CachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.CacheIfAvailable);
             }
@@ -371,7 +386,7 @@ namespace Kigg.Infrastructure
                 set;
             }
 
-            public Action<string> OnComplete
+            public Action<HttpFormResponse> OnComplete
             {
                 get;
                 set;

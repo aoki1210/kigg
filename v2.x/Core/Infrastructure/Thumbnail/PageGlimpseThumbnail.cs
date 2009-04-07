@@ -34,7 +34,7 @@ namespace Kigg.Infrastructure
 
             string requestUrl = "{0}/request?devkey={1}&url={2}".FormatWith(_baseUrl, _key, url);
 
-            _httpForm.GetAsync(requestUrl);
+            _httpForm.GetAsync(new HttpFormGetRequest { Url = requestUrl });
         }
     }
 }

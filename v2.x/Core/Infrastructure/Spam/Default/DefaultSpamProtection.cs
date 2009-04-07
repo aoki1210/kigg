@@ -78,39 +78,40 @@ namespace Kigg.Infrastructure
                 }
                 else
                 {
-                    _httpForm.GetAsync(spamCheckContent.Url,
-                                                                response =>
-                                                                {
-                                                                    if (!string.IsNullOrEmpty(response))
-                                                                    {
-                                                                        total += CalculateTotal(response, _storyRemoteCalculators);
-                                                                    }
+                    _httpForm.GetAsync(
+                                            new HttpFormGetRequest { Url = spamCheckContent.Url},
+                                            httpResponse =>
+                                            {
+                                                if (!string.IsNullOrEmpty(httpResponse.Response))
+                                                {
+                                                    total += CalculateTotal(httpResponse.Response, _storyRemoteCalculators);
+                                                }
 
-                                                                    if (total > _storyThreshold)
-                                                                    {
-                                                                        callback(Source, true);
-                                                                    }
-                                                                    else if (NextHandler != null)
-                                                                    {
-                                                                        NextHandler.IsSpam(spamCheckContent, callback);
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        callback(Source, false);
-                                                                    }
-                                                                },
-                                                                e =>
-                                                                {
-                                                                    // When exception occurs try next handler
-                                                                    if (NextHandler != null)
-                                                                    {
-                                                                        NextHandler.IsSpam(spamCheckContent, callback);
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        callback(Source, false);
-                                                                    }
-                                                                }
+                                                if (total > _storyThreshold)
+                                                {
+                                                    callback(Source, true);
+                                                }
+                                                else if (NextHandler != null)
+                                                {
+                                                    NextHandler.IsSpam(spamCheckContent, callback);
+                                                }
+                                                else
+                                                {
+                                                    callback(Source, false);
+                                                }
+                                            },
+                                            e =>
+                                            {
+                                                // When exception occurs try next handler
+                                                if (NextHandler != null)
+                                                {
+                                                    NextHandler.IsSpam(spamCheckContent, callback);
+                                                }
+                                                else
+                                                {
+                                                    callback(Source, false);
+                                                }
+                                            }
                         );
                 }
             }
@@ -143,7 +144,7 @@ namespace Kigg.Infrastructure
             //If it is small then run it over story url
             if (total <= _storyThreshold)
             {
-                string response = _httpForm.Get(spamCheckContent.Url);
+                string response = _httpForm.Get(new HttpFormGetRequest { Url = spamCheckContent.Url }).Response;
 
                 if (!string.IsNullOrEmpty(response))
                 {

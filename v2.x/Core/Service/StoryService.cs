@@ -12,48 +12,44 @@ namespace Kigg.Service
     public class StoryService : IStoryService
     {
         private readonly IConfigurationSettings _settings;
-        private readonly IUserScoreService _userScoreService;
         private readonly IDomainObjectFactory _factory;
         private readonly ICategoryRepository _categoryRepository;
         private readonly ITagRepository _tagRepository;
         private readonly IStoryRepository _storyRepository;
         private readonly IMarkAsSpamRepository _markAsSpamRepository;
+        private readonly IEventAggregator _eventAggregator;
         private readonly ISpamProtection _spamProtection;
         private readonly ISpamPostprocessor _spamPostprocessor;
-        private readonly IEmailSender _emailSender;
         private readonly IContentService _contentService;
         private readonly IHtmlSanitizer _htmlSanitizer;
         private readonly IThumbnail _thumbnail;
-
         private readonly IStoryWeightCalculator[] _storyWeightCalculators;
 
-        public StoryService(IConfigurationSettings settings, IUserScoreService userScoreService, IDomainObjectFactory factory, ICategoryRepository categoryRepository, ITagRepository tagRepository, IStoryRepository storyRepository, IMarkAsSpamRepository markAsSpamRepository, ISpamProtection spamProtection, ISpamPostprocessor spamPostprocessor, IEmailSender emailSender, IContentService contentService, IHtmlSanitizer htmlSanitizer, IThumbnail thumbnail, IStoryWeightCalculator[] storyWeightCalculators)
+        public StoryService(IConfigurationSettings settings, IDomainObjectFactory factory, ICategoryRepository categoryRepository, ITagRepository tagRepository, IStoryRepository storyRepository, IMarkAsSpamRepository markAsSpamRepository, IEventAggregator eventAggregator, ISpamProtection spamProtection, ISpamPostprocessor spamPostprocessor, IContentService contentService, IHtmlSanitizer htmlSanitizer, IThumbnail thumbnail, IStoryWeightCalculator[] storyWeightCalculators)
         {
             Check.Argument.IsNotNull(settings, "settings");
-            Check.Argument.IsNotNull(userScoreService, "userScoreService");
             Check.Argument.IsNotNull(factory, "factory");
             Check.Argument.IsNotNull(categoryRepository, "categoryRepository");
             Check.Argument.IsNotNull(tagRepository, "tagRepository");
             Check.Argument.IsNotNull(storyRepository, "storyRepository");
             Check.Argument.IsNotNull(markAsSpamRepository, "markAsSpamRepository");
+            Check.Argument.IsNotNull(eventAggregator, "eventAggregator");
             Check.Argument.IsNotNull(spamProtection, "spamProtection");
             Check.Argument.IsNotNull(spamPostprocessor, "spamPostprocessor");
-            Check.Argument.IsNotNull(emailSender, "emailSender");
             Check.Argument.IsNotNull(contentService, "contentService");
             Check.Argument.IsNotNull(htmlSanitizer, "htmlSanitizer");
             Check.Argument.IsNotNull(thumbnail, "thumbnail");
             Check.Argument.IsNotEmpty(storyWeightCalculators, "storyWeightCalculators");
 
             _settings = settings;
-            _userScoreService = userScoreService;
             _factory = factory;
             _categoryRepository = categoryRepository;
             _tagRepository = tagRepository;
             _storyRepository = storyRepository;
             _markAsSpamRepository = markAsSpamRepository;
+            _eventAggregator = eventAggregator;
             _spamProtection = spamProtection;
             _spamPostprocessor = spamPostprocessor;
-            _emailSender = emailSender;
             _contentService = contentService;
             _htmlSanitizer = htmlSanitizer;
             _thumbnail = thumbnail;
@@ -66,72 +62,81 @@ namespace Kigg.Service
 
             if (result == null)
             {
-                IStory alreadyExists = _storyRepository.FindByUrl(url);
-
-                if (alreadyExists != null)
+                if (_contentService.IsRestricted(url))
                 {
-                    return new StoryCreateResult { ErrorMessage = "Story with the same url already exists.", DetailUrl = buildDetailUrl(alreadyExists) };
+                    result = new StoryCreateResult { ErrorMessage = "Specifed url has match with our banned url list." };
                 }
+            }
 
-                ICategory storyCategory = _categoryRepository.FindByUniqueName(category);
-
-                if (storyCategory == null)
+            if (result == null)
+            {
+                using (IUnitOfWork unitOfWork = UnitOfWork.Begin())
                 {
-                    return new StoryCreateResult { ErrorMessage = "\"{0}\" category does not exist.".FormatWith(category) };
-                }
+                    IStory alreadyExists = _storyRepository.FindByUrl(url);
 
-                StoryContent content = _contentService.Get(url);
-
-                if (content == StoryContent.Empty)
-                {
-                    return new StoryCreateResult { ErrorMessage = "Specified url appears to be broken." };
-                }
-
-                description = _htmlSanitizer.Sanitize(description);
-
-                if (!_settings.AllowPossibleSpamStorySubmit  && ShouldCheckSpamForUser(byUser))
-                {
-                    result = EnsureNotSpam<StoryCreateResult>(byUser, userIPAddress, userAgent, url, urlReferer, description, "social news", serverVariables, "Spam story rejected : {0}, {1}".FormatWith(url, byUser), "Your story appears to be a spam.");
-
-                    if (result != null)
+                    if (alreadyExists != null)
                     {
-                        return result;
+                        return new StoryCreateResult { ErrorMessage = "Story with the same url already exists.", DetailUrl = buildDetailUrl(alreadyExists) };
                     }
+
+                    ICategory storyCategory = _categoryRepository.FindByUniqueName(category);
+
+                    if (storyCategory == null)
+                    {
+                        return new StoryCreateResult { ErrorMessage = "\"{0}\" category does not exist.".FormatWith(category) };
+                    }
+
+                    StoryContent content = _contentService.Get(url);
+
+                    if (content == StoryContent.Empty)
+                    {
+                        return new StoryCreateResult { ErrorMessage = "Specified url appears to be broken." };
+                    }
+
+                    description = _htmlSanitizer.Sanitize(description);
+
+                    if (!_settings.AllowPossibleSpamStorySubmit && ShouldCheckSpamForUser(byUser))
+                    {
+                        result = EnsureNotSpam<StoryCreateResult>(byUser, userIPAddress, userAgent, url, urlReferer, description, "social news", serverVariables, "Spam story rejected : {0}, {1}".FormatWith(url, byUser), "Your story appears to be a spam.");
+
+                        if (result != null)
+                        {
+                            return result;
+                        }
+                    }
+
+                    // If we are here which means story is not spam
+                    IStory story = _factory.CreateStory(storyCategory, byUser, userIPAddress, title.StripHtml(), description, url);
+
+                    _storyRepository.Add(story);
+
+                    // The Initial vote;
+                    story.Promote(story.CreatedAt, byUser, userIPAddress);
+
+                    // Capture the thumbnail, might speed up the thumbnail generation process
+                    _thumbnail.Capture(story.Url);
+
+                    // Subscribe comments by default
+                    story.SubscribeComment(byUser);
+
+                    AddTagsToContainers(tags, new ITagContainer[] { story, byUser });
+
+                    string detailUrl = buildDetailUrl(story);
+
+                    if (_settings.AllowPossibleSpamStorySubmit && _settings.SendMailWhenPossibleSpamStorySubmitted && ShouldCheckSpamForUser(byUser))
+                    {
+                        unitOfWork.Commit();
+                        _spamProtection.IsSpam(CreateSpamCheckContent(byUser, userIPAddress, userAgent, url, urlReferer, description, "social news", serverVariables), (source, isSpam) => _spamPostprocessor.Process(source, isSpam, detailUrl, story));
+                    }
+                    else
+                    {
+                        story.Approve(SystemTime.Now());
+                        _eventAggregator.GetEvent<StorySubmitEvent>().Publish(new StorySubmitEventArgs(story, detailUrl));
+                        unitOfWork.Commit();
+                    }
+
+                    result = new StoryCreateResult { NewStory = story, DetailUrl = detailUrl };
                 }
-
-                // If we are here which means story is not spam
-                IStory story = _factory.CreateStory(storyCategory, byUser, userIPAddress, title.StripHtml(), description, url);
-
-                _storyRepository.Add(story);
-
-                // The Initial vote;
-                story.Promote(story.CreatedAt, byUser, userIPAddress);
-
-                // Capture the thumbnail, might speed up the thumbnail generation process
-                _thumbnail.Capture(story.Url);
-
-                // Subscribe comments by default
-                story.SubscribeComment(byUser);
-
-                AddTagsToContainers(tags, new ITagContainer[] { story, byUser });
-
-                _userScoreService.StorySubmitted(byUser);
-
-                string detailUrl = buildDetailUrl(story);
-
-                if (_settings.AllowPossibleSpamStorySubmit && _settings.SendMailWhenPossibleSpamStorySubmitted && ShouldCheckSpamForUser(byUser))
-                {
-                    _spamProtection.IsSpam(CreateSpamCheckContent(byUser, userIPAddress, userAgent, url, urlReferer, description, "social news", serverVariables), (source, isSpam) => _spamPostprocessor.Process(source, isSpam, detailUrl, story));
-                }
-                else
-                {
-                    story.Approve(SystemTime.Now());
-                }
-
-                // Ping the Story
-                PingStory(content, story, detailUrl);
-
-                result = new StoryCreateResult { NewStory = story, DetailUrl = detailUrl };
             }
 
             return result;
@@ -141,35 +146,41 @@ namespace Kigg.Service
         {
             Check.Argument.IsNotNull(theStory, "theStory");
 
-            if (string.IsNullOrEmpty(uniqueName))
+            using (IUnitOfWork unitOfWork = UnitOfWork.Begin())
             {
-                uniqueName = theStory.UniqueName;
+                if (string.IsNullOrEmpty(uniqueName))
+                {
+                    uniqueName = theStory.UniqueName;
+                }
+
+                if (!createdAt.IsValid())
+                {
+                    createdAt = theStory.CreatedAt;
+                }
+
+                theStory.ChangeNameAndCreatedAt(uniqueName, createdAt);
+
+                if (!string.IsNullOrEmpty(title))
+                {
+                    theStory.Title = title;
+                }
+
+                if ((!string.IsNullOrEmpty(category)) &&
+                    (string.Compare(category, theStory.BelongsTo.UniqueName, StringComparison.OrdinalIgnoreCase) != 0))
+                {
+                    ICategory storyCategory = _categoryRepository.FindByUniqueName(category);
+                    theStory.ChangeCategory(storyCategory);
+                }
+
+                if (!string.IsNullOrEmpty(description))
+                {
+                    theStory.HtmlDescription = description.Trim();
+                }
+
+                AddTagsToContainers(tags, new[] { theStory });
+
+                unitOfWork.Commit();
             }
-
-            if (!createdAt.IsValid())
-            {
-                createdAt = theStory.CreatedAt;
-            }
-
-            theStory.ChangeNameAndCreatedAt(uniqueName, createdAt);
-
-            if (!string.IsNullOrEmpty(title))
-            {
-                theStory.Title = title;
-            }
-
-            if ((!string.IsNullOrEmpty(category)) && (string.Compare(category, theStory.BelongsTo.UniqueName, StringComparison.OrdinalIgnoreCase) != 0))
-            {
-                ICategory storyCategory = _categoryRepository.FindByUniqueName(category);
-                theStory.ChangeCategory(storyCategory);
-            }
-
-            if (!string.IsNullOrEmpty(description))
-            {
-                theStory.HtmlDescription = description.Trim();
-            }
-
-            AddTagsToContainers(tags, new[] { theStory });
         }
 
         public virtual void Delete(IStory theStory, IUser byUser)
@@ -177,9 +188,14 @@ namespace Kigg.Service
             Check.Argument.IsNotNull(theStory, "theStory");
             Check.Argument.IsNotNull(byUser, "byUser");
 
-            _userScoreService.StoryDeleted(theStory);
-            _storyRepository.Remove(theStory);
-            _emailSender.NotifyStoryDelete(theStory, byUser);
+            using(IUnitOfWork unitOfWork = UnitOfWork.Begin())
+            {
+                _storyRepository.Remove(theStory);
+
+                _eventAggregator.GetEvent<StoryDeleteEvent>().Publish(new StoryDeleteEventArgs(theStory, byUser));
+
+                unitOfWork.Commit();
+            }
         }
 
         public virtual void View(IStory theStory, IUser byUser, string fromIPAddress)
@@ -187,12 +203,14 @@ namespace Kigg.Service
             Check.Argument.IsNotNull(theStory, "theStory");
             Check.Argument.IsNotEmpty(fromIPAddress, "fromIPAddress");
 
-            if (byUser != null)
+            using(IUnitOfWork unitOfWork = UnitOfWork.Begin())
             {
-                _userScoreService.StoryViewed(theStory, byUser);
-            }
+                theStory.View(SystemTime.Now(), fromIPAddress);
 
-            theStory.View(SystemTime.Now(), fromIPAddress);
+                _eventAggregator.GetEvent<StoryViewEvent>().Publish(new StoryViewEventArgs(theStory, byUser));
+
+                unitOfWork.Commit();
+            }
         }
 
         public virtual void Promote(IStory theStory, IUser byUser, string fromIPAddress)
@@ -201,9 +219,14 @@ namespace Kigg.Service
             Check.Argument.IsNotNull(byUser, "byUser");
             Check.Argument.IsNotEmpty(fromIPAddress, "fromIPAddress");
 
-            if (theStory.Promote(SystemTime.Now(), byUser, fromIPAddress))
+            using(IUnitOfWork unitOfWork = UnitOfWork.Begin())
             {
-                _userScoreService.StoryPromoted(theStory, byUser);
+                if (theStory.Promote(SystemTime.Now(), byUser, fromIPAddress))
+                {
+                    _eventAggregator.GetEvent<StoryPromoteEvent>().Publish(new StoryPromoteEventArgs(theStory, byUser));
+
+                    unitOfWork.Commit();
+                }
             }
         }
 
@@ -212,9 +235,14 @@ namespace Kigg.Service
             Check.Argument.IsNotNull(theStory, "theStory");
             Check.Argument.IsNotNull(byUser, "byUser");
 
-            if (theStory.Demote(SystemTime.Now(), byUser))
+            using(IUnitOfWork unitOfWork = UnitOfWork.Begin())
             {
-                _userScoreService.StoryDemoted(theStory, byUser);
+                if (theStory.Demote(SystemTime.Now(), byUser))
+                {
+                    _eventAggregator.GetEvent<StoryDemoteEvent>().Publish(new StoryDemoteEventArgs(theStory, byUser));
+
+                    unitOfWork.Commit();
+                }
             }
         }
 
@@ -225,10 +253,14 @@ namespace Kigg.Service
             Check.Argument.IsNotNull(byUser, "byUser");
             Check.Argument.IsNotEmpty(fromIPAddress, "fromIPAddress");
 
-            if (theStory.MarkAsSpam(SystemTime.Now(), byUser, fromIPAddress))
+            using(IUnitOfWork unitOfWork = UnitOfWork.Begin())
             {
-                _userScoreService.StoryMarkedAsSpam(theStory, byUser);
-                _emailSender.NotifyStoryMarkedAsSpam(storyUrl, theStory, byUser);
+                if (theStory.MarkAsSpam(SystemTime.Now(), byUser, fromIPAddress))
+                {
+                    _eventAggregator.GetEvent<StoryMarkAsSpamEvent>().Publish(new StoryMarkAsSpamEventArgs(theStory, byUser, storyUrl));
+
+                    unitOfWork.Commit();
+                }
             }
         }
 
@@ -237,9 +269,14 @@ namespace Kigg.Service
             Check.Argument.IsNotNull(theStory, "theStory");
             Check.Argument.IsNotNull(byUser, "byUser");
 
-            if (theStory.UnmarkAsSpam(SystemTime.Now(), byUser))
+            using(IUnitOfWork unitOfWork = UnitOfWork.Begin())
             {
-                _userScoreService.StoryUnmarkedAsSpam(theStory, byUser);
+                if (theStory.UnmarkAsSpam(SystemTime.Now(), byUser))
+                {
+                    _eventAggregator.GetEvent<StoryUnmarkAsSpamEvent>().Publish(new StoryUnmarkAsSpamEventArgs(theStory, byUser));
+
+                    unitOfWork.Commit();
+                }
             }
         }
 
@@ -261,28 +298,32 @@ namespace Kigg.Service
                     }
                 }
 
-                IComment comment = forStory.PostComment(content, SystemTime.Now(), byUser, userIPAddress);
-
-                if (subscribe)
+                using(IUnitOfWork unitOfWork = UnitOfWork.Begin())
                 {
-                    forStory.SubscribeComment(byUser);
+                    IComment comment = forStory.PostComment(content, SystemTime.Now(), byUser, userIPAddress);
+
+                    if (subscribe)
+                    {
+                        forStory.SubscribeComment(byUser);
+                    }
+                    else
+                    {
+                        forStory.UnsubscribeComment(byUser);
+                    }
+
+                    if (_settings.AllowPossibleSpamCommentSubmit && _settings.SendMailWhenPossibleSpamCommentSubmitted)
+                    {
+                        unitOfWork.Commit();
+                        _spamProtection.IsSpam(CreateSpamCheckContent(byUser, userIPAddress, userAgent, storyUrl, urlReferer, content, "comment", serverVariables), (source, isSpam) => _spamPostprocessor.Process(source, isSpam, storyUrl, comment));
+                    }
+                    else
+                    {
+                        _eventAggregator.GetEvent<CommentSubmitEvent>().Publish(new CommentSubmitEventArgs(comment, storyUrl));
+                        unitOfWork.Commit();
+                    }
+
+                    result = new CommentCreateResult();
                 }
-                else
-                {
-                    forStory.UnsubscribeComment(byUser);
-                }
-
-                _userScoreService.StoryCommented(forStory, byUser);
-
-                // Notify the Comment Subscribers that a new comment is posted
-                _emailSender.SendComment(storyUrl, comment, forStory.Subscribers);
-
-                if (_settings.AllowPossibleSpamCommentSubmit && _settings.SendMailWhenPossibleSpamCommentSubmitted)
-                {
-                    _spamProtection.IsSpam(CreateSpamCheckContent(byUser, userIPAddress, userAgent, storyUrl, urlReferer, content, "comment", serverVariables), (source, isSpam) => _spamPostprocessor.Process(source, isSpam, storyUrl, comment));
-                }
-
-                result = new CommentCreateResult();
             }
 
             return result;
@@ -296,9 +337,14 @@ namespace Kigg.Service
 
             if (!theStory.IsPublished())
             {
-                _userScoreService.StorySpammed(theStory);
-                _storyRepository.Remove(theStory);
-                _emailSender.NotifyConfirmSpamStory(storyUrl, theStory, byUser);
+                using(IUnitOfWork unitOfWork = UnitOfWork.Begin())
+                {
+                    _storyRepository.Remove(theStory);
+
+                    _eventAggregator.GetEvent<StorySpamEvent>().Publish(new StorySpamEventArgs(theStory, byUser, storyUrl));
+
+                    unitOfWork.Commit();
+                }
             }
         }
 
@@ -306,9 +352,14 @@ namespace Kigg.Service
         {
             Check.Argument.IsNotNull(theComment, "theComment");
 
-            theComment.ForStory.DeleteComment(theComment);
-            _userScoreService.CommentSpammed(theComment.ByUser);
-            _emailSender.NotifyConfirmSpamComment(storyUrl, theComment, byUser);
+            using(IUnitOfWork unitOfWork = UnitOfWork.Begin())
+            {
+                theComment.ForStory.DeleteComment(theComment);
+
+                _eventAggregator.GetEvent<CommentSpamEvent>().Publish(new CommentSpamEventArgs(theComment, byUser, storyUrl));
+
+                unitOfWork.Commit();
+            }
         }
 
         public virtual void MarkAsOffended(IComment theComment, string storyUrl, IUser byUser)
@@ -319,27 +370,37 @@ namespace Kigg.Service
 
             if (!theComment.IsOffended)
             {
-                theComment.MarkAsOffended();
-                _userScoreService.CommentMarkedAsOffended(theComment.ByUser);
-                _emailSender.NotifyCommentAsOffended(storyUrl, theComment, byUser);
+                using(IUnitOfWork unitOfWork = UnitOfWork.Begin())
+                {
+                    theComment.MarkAsOffended();
+
+                    _eventAggregator.GetEvent<CommentMarkAsOffendedEvent>().Publish(new CommentMarkAsOffendedEventArgs(theComment, byUser, storyUrl));
+
+                    unitOfWork.Commit();
+                }
             }
         }
 
         public virtual void Publish()
         {
-            DateTime currentTime = SystemTime.Now();
-
-            IList<PublishedStory> publishableStories = GetPublishableStories(currentTime);
-
-            if (!publishableStories.IsNullOrEmpty())
+            using(IUnitOfWork unitOfWork = UnitOfWork.Begin())
             {
-                // First penalty the user for marking the story as spam;
-                // It is obvious that the Moderator has already reviewed the story
-                // before it gets this far.
-                PenaltyUsersForIncorrectlyMarkingStoriesAsSpam(publishableStories);
+                DateTime currentTime = SystemTime.Now();
 
-                //Then Publish the stories
-                PublishStories(currentTime, publishableStories);
+                IList<PublishedStory> publishableStories = GetPublishableStories(currentTime);
+
+                if (!publishableStories.IsNullOrEmpty())
+                {
+                    // First penalty the user for marking the story as spam;
+                    // It is obvious that the Moderator has already reviewed the story
+                    // before it gets this far.
+                    PenaltyUsersForIncorrectlyMarkingStoriesAsSpam(publishableStories);
+
+                    //Then Publish the stories
+                    PublishStories(currentTime, publishableStories);
+
+                    unitOfWork.Commit();
+                }
             }
         }
 
@@ -351,8 +412,14 @@ namespace Kigg.Service
 
             if (!theStory.IsApproved())
             {
-                theStory.Approve(SystemTime.Now());
-                _emailSender.NotifyStoryApprove(storyUrl, theStory, byUser);
+                using (IUnitOfWork unitOfWork = UnitOfWork.Begin())
+                {
+                    theStory.Approve(SystemTime.Now());
+
+                    _eventAggregator.GetEvent<StoryApproveEvent>().Publish(new StoryApproveEventArgs(theStory, byUser, storyUrl));
+
+                    unitOfWork.Commit();
+                }
             }
         }
 
@@ -511,14 +578,6 @@ namespace Kigg.Service
             }
         }
 
-        private void PingStory(StoryContent content, IStory story, string detailUrl)
-        {
-            if (_settings.SendPing && !string.IsNullOrEmpty(content.TrackBackUrl))
-            {
-                _contentService.Ping(content.TrackBackUrl, story.Title, detailUrl, "Thank you for submitting this cool story - Trackback from {0}".FormatWith(_settings.SiteTitle), _settings.SiteTitle);
-            }
-        }
-
         private IList<PublishedStory> GetPublishableStories(DateTime currentTime)
         {
             List<PublishedStory> publishableStories = new List<PublishedStory>();
@@ -556,7 +615,7 @@ namespace Kigg.Service
 
                 foreach (IMarkAsSpam markedAsSpam in markedAsSpams)
                 {
-                    _userScoreService.StoryIncorrectlyMarkedAsSpam(markedAsSpam.ByUser);
+                    _eventAggregator.GetEvent<StoryIncorrectlyMarkedAsSpamEvent>().Publish(new StoryIncorrectlyMarkedAsSpamEventArgs(publishableStory.Story, markedAsSpam.ByUser));
                 }
             }
         }
@@ -577,12 +636,12 @@ namespace Kigg.Service
                 foreach (PublishedStory ps in frontPageStories)
                 {
                     //Increase user score
-                    _userScoreService.StoryPublished(ps.Story);
+                    //_userScoreService.StoryPublished(ps.Story);
+
                     ps.Story.Publish(currentTime, ps.Rank);
                 }
 
-                //Send mail to support
-                _emailSender.NotifyPublishedStories(currentTime, frontPageStories);
+                _eventAggregator.GetEvent<StoryPublishEvent>().Publish(new StoryPublishEventArgs(frontPageStories, currentTime));
             }
 
             // Mark the Story that it has been processed

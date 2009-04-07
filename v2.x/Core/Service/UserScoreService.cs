@@ -3,13 +3,30 @@ namespace Kigg.Service
     using System;
 
     using DomainObjects;
+    using Infrastructure;
 
-    public class UserScoreService : IUserScoreService
+    public class UserScoreService : BaseBackgroundTask
     {
         private readonly IConfigurationSettings _settings;
         private readonly IUserScoreTable _userScoreTable;
 
-        public UserScoreService(IConfigurationSettings settings, IUserScoreTable userScoreTable)
+        private SubscriptionToken _userActivatedToken;
+        private SubscriptionToken _storySubmitToken;
+        private SubscriptionToken _storyViewToken;
+        private SubscriptionToken _storyPromoteToken;
+        private SubscriptionToken _storyDemoteToken;
+        private SubscriptionToken _storyMarkAsSpamToken;
+        private SubscriptionToken _storyUnmarkAsSpamToken;
+        private SubscriptionToken _commentSubmitToken;
+        private SubscriptionToken _storySpamToken;
+        private SubscriptionToken _commentSpamToken;
+        private SubscriptionToken _storyDeleteToken;
+        private SubscriptionToken _commentMarkedAsOffendedToken;
+        private SubscriptionToken _storyApproveToken;
+        private SubscriptionToken _storyPublishToken;
+        private SubscriptionToken _storyIncorrectlyMarkedAsSpamToken;
+
+        public UserScoreService(IConfigurationSettings settings, IUserScoreTable userScoreTable, IEventAggregator eventAggregator) : base(eventAggregator)
         {
             Check.Argument.IsNotNull(settings, "settings");
             Check.Argument.IsNotNull(userScoreTable, "userScoreTable");
@@ -18,48 +35,82 @@ namespace Kigg.Service
             _userScoreTable = userScoreTable;
         }
 
-        public virtual void AccountActivated(IUser ofUser)
+        protected override void OnStart()
         {
-            Check.Argument.IsNotNull(ofUser, "ofUser");
-
-            if (ofUser.IsPublicUser())
+            if (!IsRunning)
             {
-                ofUser.IncreaseScoreBy(_userScoreTable.AccountActivated, UserAction.AccountActivated);
+                _userActivatedToken = Subscribe<UserActivateEvent, UserActivateEventArgs>(UserActivated);
+                _storySubmitToken = Subscribe<StorySubmitEvent, StorySubmitEventArgs>(StorySubmitted);
+                _storyViewToken = Subscribe<StoryViewEvent, StoryViewEventArgs>(StoryViewed);
+                _storyPromoteToken = Subscribe<StoryPromoteEvent, StoryPromoteEventArgs>(StoryPromoted);
+                _storyDemoteToken = Subscribe<StoryDemoteEvent, StoryDemoteEventArgs>(StoryDemoted);
+                _storyMarkAsSpamToken = Subscribe<StoryMarkAsSpamEvent, StoryMarkAsSpamEventArgs>(StoryMarkedAsSpam);
+                _storyUnmarkAsSpamToken = Subscribe<StoryUnmarkAsSpamEvent, StoryUnmarkAsSpamEventArgs>(StoryUnmarkedAsSpam);
+                _commentSubmitToken = Subscribe<CommentSubmitEvent, CommentSubmitEventArgs>(CommentSubmitted);
+                _storySpamToken = Subscribe<StorySpamEvent, StorySpamEventArgs>(StorySpammed);
+                _commentSpamToken = Subscribe<CommentSpamEvent, CommentSpamEventArgs>(CommentSpammed);
+                _storyDeleteToken = Subscribe<StoryDeleteEvent, StoryDeleteEventArgs>(StoryDeleted);
+                _commentMarkedAsOffendedToken = Subscribe<CommentMarkAsOffendedEvent, CommentMarkAsOffendedEventArgs>(CommentMarkedAsOffended);
+                _storyApproveToken = Subscribe<StoryApproveEvent, StoryApproveEventArgs>(StoryApproved);
+                _storyPublishToken = Subscribe<StoryPublishEvent, StoryPublishEventArgs>(StoryPublished);
+                _storyIncorrectlyMarkedAsSpamToken = Subscribe<StoryIncorrectlyMarkedAsSpamEvent, StoryIncorrectlyMarkedAsSpamEventArgs>(StoryIncorrectlyMarkedAsSpam);
             }
         }
 
-        public virtual void StorySubmitted(IUser byUser)
+        protected override void OnStop()
         {
-            Check.Argument.IsNotNull(byUser, "byUser");
-
-            if (byUser.IsPublicUser())
+            if (IsRunning)
             {
-                byUser.IncreaseScoreBy(_userScoreTable.StorySubmitted, UserAction.StorySubmitted);
+                Unsubscribe<UserActivateEvent>(_userActivatedToken);
+                Unsubscribe<StorySubmitEvent>(_storySubmitToken);
+                Unsubscribe<StoryViewEvent>(_storyViewToken);
+                Unsubscribe<StoryPromoteEvent>(_storyPromoteToken);
+                Unsubscribe<StoryDemoteEvent>(_storyDemoteToken);
+                Unsubscribe<StoryMarkAsSpamEvent>(_storyMarkAsSpamToken);
+                Unsubscribe<StoryUnmarkAsSpamEvent>(_storyUnmarkAsSpamToken);
+                Unsubscribe<CommentSubmitEvent>(_commentSubmitToken);
+                Unsubscribe<StorySpamEvent>(_storySpamToken);
+                Unsubscribe<CommentSpamEvent>(_commentSpamToken);
+                Unsubscribe<StoryDeleteEvent>(_storyDeleteToken);
+                Unsubscribe<CommentMarkAsOffendedEvent>(_commentMarkedAsOffendedToken);
+                Unsubscribe<StoryApproveEvent>(_storyApproveToken);
+                Unsubscribe<StoryPublishEvent>(_storyPublishToken);
+                Unsubscribe<StoryIncorrectlyMarkedAsSpamEvent>(_storyIncorrectlyMarkedAsSpamToken);
             }
         }
 
-        public virtual void StoryViewed(IStory theStory, IUser byUser)
+        internal void UserActivated(UserActivateEventArgs eventArgs)
         {
-            Check.Argument.IsNotNull(theStory, "theStory");
-            Check.Argument.IsNotNull(byUser, "byUser");
-
-            if (CanChangeScoreForStory(theStory, byUser))
+            if (eventArgs.User.IsPublicUser())
             {
-                byUser.IncreaseScoreBy(_userScoreTable.StoryViewed, UserAction.StoryViewed);
+                eventArgs.User.IncreaseScoreBy(_userScoreTable.AccountActivated, UserAction.AccountActivated);
             }
         }
 
-        public virtual void StoryPromoted(IStory theStory, IUser byUser)
+        internal void StorySubmitted(StorySubmitEventArgs eventArgs)
         {
-            Check.Argument.IsNotNull(theStory, "theStory");
-            Check.Argument.IsNotNull(byUser, "byUser");
+            StorySubmitted(eventArgs.Story.PostedBy);
+        }
 
-            if (CanChangeScoreForStory(theStory, byUser))
+        internal void StoryViewed(StoryViewEventArgs eventArgs)
+        {
+            if (eventArgs.User != null)
+            {
+                if (CanChangeScoreForStory(eventArgs.Story, eventArgs.User))
+                {
+                    eventArgs.User.IncreaseScoreBy(_userScoreTable.StoryViewed, UserAction.StoryViewed);
+                }
+            }
+        }
+
+        internal void StoryPromoted(StoryPromoteEventArgs eventArgs)
+        {
+            if (CanChangeScoreForStory(eventArgs.Story, eventArgs.User))
             {
                 UserAction reason;
                 decimal score;
 
-                if (theStory.IsPublished())
+                if (eventArgs.Story.IsPublished())
                 {
                     score = _userScoreTable.PublishedStoryPromoted;
                     reason = UserAction.PublishedStoryPromoted;
@@ -70,23 +121,20 @@ namespace Kigg.Service
                     reason = UserAction.UpcomingStoryPromoted;
                 }
 
-                byUser.IncreaseScoreBy(score, reason);
+                eventArgs.User.IncreaseScoreBy(score, reason);
             }
         }
 
-        public virtual void StoryDemoted(IStory theStory, IUser byUser)
+        internal void StoryDemoted(StoryDemoteEventArgs eventArgs)
         {
-            Check.Argument.IsNotNull(theStory, "theStory");
-            Check.Argument.IsNotNull(byUser, "byUser");
-
-            if (CanChangeScoreForStory(theStory, byUser))
+            if (CanChangeScoreForStory(eventArgs.Story, eventArgs.User))
             {
                 // It might not decrease the same value which was increased when promoting the story
                 // depending upon the story status(e.g. published/upcoming), but who cares!!!
                 UserAction reason;
                 decimal score;
 
-                if (theStory.IsPublished())
+                if (eventArgs.Story.IsPublished())
                 {
                     score = _userScoreTable.PublishedStoryPromoted;
                     reason = UserAction.PublishedStoryDemoted;
@@ -97,98 +145,91 @@ namespace Kigg.Service
                     reason = UserAction.UpcomingStoryDemoted;
                 }
 
-                byUser.DecreaseScoreBy(score, reason);
+                eventArgs.User.DecreaseScoreBy(score, reason);
             }
         }
 
-        public virtual void StoryMarkedAsSpam(IStory theStory, IUser byUser)
+        internal void StoryMarkedAsSpam(StoryMarkAsSpamEventArgs eventArgs)
         {
-            Check.Argument.IsNotNull(theStory, "theStory");
-            Check.Argument.IsNotNull(byUser, "byUser");
-
-            if (CanChangeScoreForStory(theStory, byUser))
+            if (CanChangeScoreForStory(eventArgs.Story, eventArgs.User))
             {
-                byUser.IncreaseScoreBy(_userScoreTable.StoryMarkedAsSpam, UserAction.StoryMarkedAsSpam);
+                eventArgs.User.IncreaseScoreBy(_userScoreTable.StoryMarkedAsSpam, UserAction.StoryMarkedAsSpam);
             }
         }
 
-        public virtual void StoryUnmarkedAsSpam(IStory theStory, IUser byUser)
+        internal void StoryUnmarkedAsSpam(StoryUnmarkAsSpamEventArgs eventArgs)
         {
-            Check.Argument.IsNotNull(byUser, "byUser");
-
-            if (CanChangeScoreForStory(theStory, byUser))
+            if (CanChangeScoreForStory(eventArgs.Story, eventArgs.User))
             {
-                byUser.DecreaseScoreBy(_userScoreTable.StoryMarkedAsSpam, UserAction.StoryUnmarkedAsSpam);
+                eventArgs.User.DecreaseScoreBy(_userScoreTable.StoryMarkedAsSpam, UserAction.StoryUnmarkedAsSpam);
             }
         }
 
-        public virtual void StoryCommented(IStory theStory, IUser byUser)
+        internal void CommentSubmitted(CommentSubmitEventArgs eventArgs)
         {
-            Check.Argument.IsNotNull(theStory, "theStory");
-            Check.Argument.IsNotNull(byUser, "byUser");
-
-            if (CanChangeScoreForStory(theStory, byUser))
+            if (CanChangeScoreForStory(eventArgs.Comment.ForStory, eventArgs.Comment.ByUser))
             {
-                byUser.IncreaseScoreBy(_userScoreTable.StoryCommented, UserAction.StoryCommented);
+                eventArgs.Comment.ByUser.IncreaseScoreBy(_userScoreTable.StoryCommented, UserAction.StoryCommented);
             }
         }
 
-        public virtual void StoryDeleted(IStory theStory)
+        internal void StorySpammed(StorySpamEventArgs eventArgs)
         {
-            Check.Argument.IsNotNull(theStory, "theStory");
+            StoryRemoved(eventArgs.Story, UserAction.SpamStorySubmitted);
 
-            StoryRemoved(theStory, UserAction.StoryDeleted);
-        }
-
-        public virtual void StoryPublished(IStory theStory)
-        {
-            Check.Argument.IsNotNull(theStory, "theStory");
-
-            if (theStory.PostedBy.IsPublicUser())
+            if (eventArgs.Story.PostedBy.IsPublicUser())
             {
-                theStory.PostedBy.IncreaseScoreBy(_userScoreTable.StoryPublished, UserAction.StoryPublished);
+                eventArgs.Story.PostedBy.DecreaseScoreBy(_userScoreTable.SpamStorySubmitted, UserAction.SpamStorySubmitted);
             }
         }
 
-        public virtual void StorySpammed(IStory theStory)
+        internal void CommentSpammed(CommentSpamEventArgs eventArgs)
         {
-            Check.Argument.IsNotNull(theStory, "theStory");
-
-            StoryRemoved(theStory, UserAction.SpamStorySubmitted);
-
-            if (theStory.PostedBy.IsPublicUser())
+            if (eventArgs.User.IsPublicUser())
             {
-                theStory.PostedBy.DecreaseScoreBy(_userScoreTable.SpamStorySubmitted, UserAction.SpamStorySubmitted);
+                eventArgs.User.DecreaseScoreBy(_userScoreTable.StoryCommented + _userScoreTable.SpamCommentSubmitted, UserAction.SpamCommentSubmitted);
             }
         }
 
-        public virtual void StoryIncorrectlyMarkedAsSpam(IUser byUser)
+        internal void StoryDeleted(StoryDeleteEventArgs eventArgs)
         {
-            Check.Argument.IsNotNull(byUser, "ofUser");
+            StoryRemoved(eventArgs.Story, UserAction.StoryDeleted);
 
-            if (byUser.IsPublicUser())
+            if (eventArgs.Story.PostedBy.IsPublicUser())
             {
-                byUser.DecreaseScoreBy((_userScoreTable.StoryIncorrectlyMarkedAsSpam + _userScoreTable.StoryMarkedAsSpam), UserAction.StoryIncorrectlyMarkedAsSpam);
+                eventArgs.Story.PostedBy.DecreaseScoreBy(_userScoreTable.StorySubmitted, UserAction.StoryDeleted);
             }
         }
 
-        public virtual void CommentSpammed(IUser ofUser)
+        internal void CommentMarkedAsOffended(CommentMarkAsOffendedEventArgs eventArgs)
         {
-            Check.Argument.IsNotNull(ofUser, "ofUser");
-
-            if (ofUser.IsPublicUser())
+            if (eventArgs.User.IsPublicUser())
             {
-                ofUser.DecreaseScoreBy(_userScoreTable.StoryCommented + _userScoreTable.SpamCommentSubmitted, UserAction.SpamCommentSubmitted);
+                eventArgs.User.DecreaseScoreBy(_userScoreTable.StoryCommented, UserAction.CommentMarkedAsOffended);
             }
         }
 
-        public virtual void CommentMarkedAsOffended(IUser ofUser)
+        internal void StoryApproved(StoryApproveEventArgs eventArgs)
         {
-            Check.Argument.IsNotNull(ofUser, "ofUser");
+            StorySubmitted(eventArgs.Story.PostedBy);
+        }
 
-            if (ofUser.IsPublicUser())
+        internal void StoryPublished(StoryPublishEventArgs eventArgs)
+        {
+            foreach(PublishedStory publishedStory in eventArgs.PublishedStories)
             {
-                ofUser.DecreaseScoreBy(_userScoreTable.StoryCommented, UserAction.CommentMarkedAsOffended);
+                if (publishedStory.Story.PostedBy.IsPublicUser())
+                {
+                    publishedStory.Story.PostedBy.IncreaseScoreBy(_userScoreTable.StoryPublished, UserAction.StoryPublished);
+                }
+            }
+        }
+
+        internal void StoryIncorrectlyMarkedAsSpam(StoryIncorrectlyMarkedAsSpamEventArgs eventArgs)
+        {
+            if (eventArgs.User.IsPublicUser())
+            {
+                eventArgs.User.DecreaseScoreBy((_userScoreTable.StoryIncorrectlyMarkedAsSpam + _userScoreTable.StoryMarkedAsSpam), UserAction.StoryIncorrectlyMarkedAsSpam);
             }
         }
 
@@ -233,10 +274,13 @@ namespace Kigg.Service
                     }
                 }
             }
+        }
 
-            if (theStory.PostedBy.IsPublicUser())
+        private void StorySubmitted(IUser ofUser)
+        {
+            if (ofUser.IsPublicUser())
             {
-                theStory.PostedBy.DecreaseScoreBy(_userScoreTable.StorySubmitted, action);
+                ofUser.IncreaseScoreBy(_userScoreTable.StorySubmitted, UserAction.StorySubmitted);
             }
         }
     }

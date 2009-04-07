@@ -275,7 +275,13 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         }
 
         [Fact]
-        public void CanPromote_Should_Return_True_When_Story_Has_Not_Been_Promoted_Or_MarkedAsSpam_By_The_User()
+        public void CanPromote_Should_Return_True_When_Story_Has_Not_Been_Promoted_By_The_User()
+        {
+            Assert.True(_story.CanPromote(new User { Id = Guid.NewGuid() }));
+        }
+
+        [Fact]
+        public void CanPromote_Should_Return_True_When_Story_Has_Not_Been_MarkedAsSpam_By_The_User()
         {
             Assert.True(_story.CanPromote(new User { Id = Guid.NewGuid() }));
         }
@@ -492,13 +498,20 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         }
 
         [Fact]
-        public void CanMarkAsSpam_Should_Return_True_When_Story_Has_Not_Been_Promoted_And_MarkedAsSpam_By_The_User()
+        public void CanMarkAsSpam_Should_Return_True_When_Story_Has_Not_Been_Promoted_By_The_User()
         {
             _story.User = new User { Id = Guid.NewGuid() };
 
             Assert.True(_story.CanMarkAsSpam(new User { Id = Guid.NewGuid() }));
         }
 
+        [Fact]
+        public void CanMarkAsSpam_Should_Return_True_When_Story_Has_Not_Been_MarkedAsSpam_By_The_User()
+        {
+            _story.User = new User { Id = Guid.NewGuid() };
+
+            Assert.True(_story.CanMarkAsSpam(new User { Id = Guid.NewGuid() }));
+        }
         [Fact]
         public void MarkAsSpam_Should_Return_True_When_User_Can_Mark_As_Spam()
         {

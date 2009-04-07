@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
 
     using DomainObjects;
 
@@ -16,26 +17,31 @@
             _innerRepository = innerRepository;
         }
 
+        [DebuggerStepThrough]
         public virtual void Add(ICategory entity)
         {
             _innerRepository.Add(entity);
         }
 
+        [DebuggerStepThrough]
         public virtual void Remove(ICategory entity)
         {
             _innerRepository.Remove(entity);
         }
 
+        [DebuggerStepThrough]
         public virtual ICategory FindById(Guid id)
         {
             return _innerRepository.FindById(id);
         }
 
+        [DebuggerStepThrough]
         public virtual ICategory FindByUniqueName(string uniqueName)
         {
             return _innerRepository.FindByUniqueName(uniqueName);
         }
 
+        [DebuggerStepThrough]
         public virtual ICollection<ICategory> FindAll()
         {
             return _innerRepository.FindAll();

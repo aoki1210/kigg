@@ -22,7 +22,9 @@ foreach (ITag tag in tags)
 
     string cssClass = cssClasses[index];
 %>
-    <%= Html.ActionLink(tag.Name, "Tags", "Story", new { name = tag.UniqueName }, new { rel = "tag directory", @class = cssClass })%>
+    <strong>
+        <%= Html.ActionLink(tag.Name, "Tags", "Story", new { name = tag.UniqueName }, new { rel = "tag directory", @class = cssClass })%>
+    </strong>
 <%
 }
 %>

@@ -22,6 +22,7 @@ namespace Kigg.Web
             get { return _categoryRepository.FindAll(); }
         }
 
+        [ValidateInput(false)]
         public ActionResult Menu()
         {
             return View(Categories);

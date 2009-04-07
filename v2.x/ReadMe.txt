@@ -1,4 +1,4 @@
-﻿Version 2.1
+﻿Version 2.2
 ============
 
 Clean Install
@@ -25,7 +25,13 @@ Additional Notes
 4. You can also use websnapr.com for the Thumbnail instead of PageGlimpse. Just create an account in http://www.websnapr.com/ and repalce with your value.
 
 
+Upgrading from 2.1
+------------------
+1. Backup  your exisiting code base.
+2. Run the Upgrade-From-2.1.sql from Database folder (e.g. C:\Projects\KiGG\Database\Upgrade-From-2.1.sql).
+
+
 Upgrading from 2.0
 ------------------
 1. Backup  your exisiting code base.
-2. Run the Upgrade-From-2.0.sql from Database folder (e.g. C:\Projects\KiGG\Database\Upgrade-From-2.0.sql) it will drop the version column which is no longer required.
+2. Run the Upgrade-From-2.0.sql from Database folder (e.g. C:\Projects\KiGG\Database\Upgrade-From-2.0.sql).
