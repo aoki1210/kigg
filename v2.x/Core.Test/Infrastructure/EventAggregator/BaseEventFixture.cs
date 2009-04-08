@@ -53,8 +53,8 @@ namespace Kigg.Core.Test
 
             bool isRaised = false;
 
-            subscription.Expect(s => s.GetExecutionStrategy()).Returns(delegate { isRaised = true; });
-            subscription.Expect(s => s.SubscriptionToken).Returns(new SubscriptionToken());
+            subscription.Setup(s => s.GetExecutionStrategy()).Returns(delegate { isRaised = true; });
+            subscription.Setup(s => s.SubscriptionToken).Returns(new SubscriptionToken());
 
             _event.Subscribe(subscription.Object);
             _event.Publish();
@@ -67,7 +67,7 @@ namespace Kigg.Core.Test
         {
             Mock<IEventSubscription> subscription = new Mock<IEventSubscription>();
 
-            subscription.Expect(s => s.GetExecutionStrategy()).Returns((Action<object[]>)null);
+            subscription.Setup(s => s.GetExecutionStrategy()).Returns((Action<object[]>)null);
 
             _event.Subscribe(subscription.Object);
             _event.Publish();

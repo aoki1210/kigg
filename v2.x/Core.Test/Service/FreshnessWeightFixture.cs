@@ -23,8 +23,8 @@ namespace Kigg.Core.Test
             var story2 = new Mock<IStory>();
             var now = SystemTime.Now();
 
-            story1.ExpectGet(s => s.CreatedAt).Returns(now.AddDays(-FreshNessThresholdInDays).AddHours(-6));
-            story2.ExpectGet(s => s.CreatedAt).Returns(now.AddDays(-FreshNessThresholdInDays).AddHours(-12));
+            story1.SetupGet(s => s.CreatedAt).Returns(now.AddDays(-FreshNessThresholdInDays).AddHours(-6));
+            story2.SetupGet(s => s.CreatedAt).Returns(now.AddDays(-FreshNessThresholdInDays).AddHours(-12));
 
             Assert.Equal(_strategy.Calculate(now, story1.Object), _strategy.Calculate(now, story2.Object));
         }
@@ -36,8 +36,8 @@ namespace Kigg.Core.Test
             var story2 = new Mock<IStory>();
             var now = SystemTime.Now();
 
-            story1.ExpectGet(s => s.CreatedAt).Returns(now.AddDays(-FreshNessThresholdInDays).AddHours(-6));
-            story2.ExpectGet(s => s.CreatedAt).Returns(now.AddDays(-FreshNessThresholdInDays).AddHours(12));
+            story1.SetupGet(s => s.CreatedAt).Returns(now.AddDays(-FreshNessThresholdInDays).AddHours(-6));
+            story2.SetupGet(s => s.CreatedAt).Returns(now.AddDays(-FreshNessThresholdInDays).AddHours(12));
 
             Assert.NotEqual(_strategy.Calculate(now, story1.Object), _strategy.Calculate(now, story2.Object));
         }

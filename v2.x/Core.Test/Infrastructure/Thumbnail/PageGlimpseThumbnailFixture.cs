@@ -32,7 +32,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Capture_Should_Use_HttpForm()
         {
-            _httpForm.Expect(h => h.GetAsync(It.IsAny<HttpFormGetRequest>())).Verifiable();
+            _httpForm.Setup(h => h.GetAsync(It.IsAny<HttpFormGetRequest>())).Verifiable();
 
             _thumbnail.Capture(Url);
 

@@ -17,7 +17,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void HasTags_Should_Be_True_When_TagCount_Is_Greater_Than_Zero()
         {
-            _tagContainer.ExpectGet(c => c.TagCount).Returns(1);
+            _tagContainer.SetupGet(c => c.TagCount).Returns(1);
 
             Assert.True(_tagContainer.Object.HasTags());
         }

@@ -26,7 +26,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Get_Should_Use_InnerService()
         {
-            _innerContentService.Expect(s => s.Get(It.IsAny<string>()));
+            _innerContentService.Setup(s => s.Get(It.IsAny<string>()));
 
             _contentService.Get("http://aurl.com");
         }
@@ -34,7 +34,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void ShortUrl_Should_Use_InnerService()
         {
-            _innerContentService.Expect(s => s.ShortUrl(It.IsAny<string>()));
+            _innerContentService.Setup(s => s.ShortUrl(It.IsAny<string>()));
 
             _contentService.ShortUrl("http://aurl.com");
         }

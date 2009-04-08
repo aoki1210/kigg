@@ -35,9 +35,9 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsSpam_Should_Return_True_For_Comment_When_Weight_Calculators_Return_More_Than_CommentThresold()
         {
-            _calculator1.Expect(c => c.Calculate(It.IsAny<string>())).Returns(2);
-            _calculator2.Expect(c => c.Calculate(It.IsAny<string>())).Returns(2);
-            _calculator3.Expect(c => c.Calculate(It.IsAny<string>())).Returns(2);
+            _calculator1.Setup(c => c.Calculate(It.IsAny<string>())).Returns(2);
+            _calculator2.Setup(c => c.Calculate(It.IsAny<string>())).Returns(2);
+            _calculator3.Setup(c => c.Calculate(It.IsAny<string>())).Returns(2);
 
             var result = _spamProtection.IsSpam(CreateDummyContent(settings.Object.RootUrl + "\\A-Story"));
 
@@ -47,9 +47,9 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsSpam_Should_Return_False_For_Comment_When_Weight_Calculators_Return_Less_Than_CommentThresold()
         {
-            _calculator1.Expect(c => c.Calculate(It.IsAny<string>())).Returns(0);
-            _calculator2.Expect(c => c.Calculate(It.IsAny<string>())).Returns(0);
-            _calculator3.Expect(c => c.Calculate(It.IsAny<string>())).Returns(0);
+            _calculator1.Setup(c => c.Calculate(It.IsAny<string>())).Returns(0);
+            _calculator2.Setup(c => c.Calculate(It.IsAny<string>())).Returns(0);
+            _calculator3.Setup(c => c.Calculate(It.IsAny<string>())).Returns(0);
 
             _spamProtection.NextHandler = new Mock<ISpamProtection>().Object;
             var result = _spamProtection.IsSpam(CreateDummyContent(settings.Object.RootUrl + "\\A-Story"));
@@ -60,11 +60,11 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsSpam_Should_Return_True_For_Story_When_Weight_Calculators_Return_More_Than_StoryThresold()
         {
-            _calculator1.Expect(c => c.Calculate(It.IsAny<string>())).Returns(1);
-            _calculator2.Expect(c => c.Calculate(It.IsAny<string>())).Returns(0);
-            _calculator3.Expect(c => c.Calculate(It.IsAny<string>())).Returns(1);
+            _calculator1.Setup(c => c.Calculate(It.IsAny<string>())).Returns(1);
+            _calculator2.Setup(c => c.Calculate(It.IsAny<string>())).Returns(0);
+            _calculator3.Setup(c => c.Calculate(It.IsAny<string>())).Returns(1);
 
-            _httpForm.Expect(h => h.Get(It.IsAny<HttpFormGetRequest>())).Returns(new HttpFormResponse { Response = "Dummy Content"});
+            _httpForm.Setup(h => h.Get(It.IsAny<HttpFormGetRequest>())).Returns(new HttpFormResponse { Response = "Dummy Content"});
 
             var result = _spamProtection.IsSpam(CreateDummyContent("http://asp.net"));
 
@@ -74,11 +74,11 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsSpam_Async_Should_Return_True_For_Story_When_Weight_Calculators_Return_More_Than_StoryThresold()
         {
-            _calculator1.Expect(c => c.Calculate(It.IsAny<string>())).Returns(1);
-            _calculator2.Expect(c => c.Calculate(It.IsAny<string>())).Returns(0);
-            _calculator3.Expect(c => c.Calculate(It.IsAny<string>())).Returns(1);
+            _calculator1.Setup(c => c.Calculate(It.IsAny<string>())).Returns(1);
+            _calculator2.Setup(c => c.Calculate(It.IsAny<string>())).Returns(0);
+            _calculator3.Setup(c => c.Calculate(It.IsAny<string>())).Returns(1);
 
-            _httpForm.Expect(h => h.GetAsync(It.IsAny<HttpFormGetRequest>(), It.IsAny<Action<HttpFormResponse>>(), It.IsAny<Action<Exception>>())).Callback((HttpFormGetRequest response, Action<HttpFormResponse> onComplete, Action<Exception> onException) => onComplete(new HttpFormResponse{Response = "This is a dummy response"}));
+            _httpForm.Setup(h => h.GetAsync(It.IsAny<HttpFormGetRequest>(), It.IsAny<Action<HttpFormResponse>>(), It.IsAny<Action<Exception>>())).Callback((HttpFormGetRequest response, Action<HttpFormResponse> onComplete, Action<Exception> onException) => onComplete(new HttpFormResponse{Response = "This is a dummy response"}));
 
             _spamProtection.IsSpam(CreateDummyContent("http://asp.net"), (source, isSpam) => Assert.True(isSpam));
         }
@@ -86,11 +86,11 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsSpam_Async_Should_Forward_To_Next_Handler_For_Story_When_Weight_Calculators_Return_Less_Than_StoryThresold()
         {
-            _calculator1.Expect(c => c.Calculate(It.IsAny<string>())).Returns(0);
-            _calculator2.Expect(c => c.Calculate(It.IsAny<string>())).Returns(0);
-            _calculator3.Expect(c => c.Calculate(It.IsAny<string>())).Returns(0);
+            _calculator1.Setup(c => c.Calculate(It.IsAny<string>())).Returns(0);
+            _calculator2.Setup(c => c.Calculate(It.IsAny<string>())).Returns(0);
+            _calculator3.Setup(c => c.Calculate(It.IsAny<string>())).Returns(0);
 
-            _httpForm.Expect(h => h.GetAsync(It.IsAny<HttpFormGetRequest>(), It.IsAny<Action<HttpFormResponse>>(), It.IsAny<Action<Exception>>())).Callback((HttpFormGetRequest request, Action<HttpFormResponse> onComplete, Action<Exception> onException) => onComplete(new HttpFormResponse{Response = "This is a dummy response"}));
+            _httpForm.Setup(h => h.GetAsync(It.IsAny<HttpFormGetRequest>(), It.IsAny<Action<HttpFormResponse>>(), It.IsAny<Action<Exception>>())).Callback((HttpFormGetRequest request, Action<HttpFormResponse> onComplete, Action<Exception> onException) => onComplete(new HttpFormResponse{Response = "This is a dummy response"}));
 
             var nextHandler = new Mock<ISpamProtection>();
 
@@ -104,11 +104,11 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsSpam_Async_Should_Return_False_When_Weight_Calculators_Return_Less_Than_StoryThresold()
         {
-            _calculator1.Expect(c => c.Calculate(It.IsAny<string>())).Returns(0);
-            _calculator2.Expect(c => c.Calculate(It.IsAny<string>())).Returns(0);
-            _calculator3.Expect(c => c.Calculate(It.IsAny<string>())).Returns(0);
+            _calculator1.Setup(c => c.Calculate(It.IsAny<string>())).Returns(0);
+            _calculator2.Setup(c => c.Calculate(It.IsAny<string>())).Returns(0);
+            _calculator3.Setup(c => c.Calculate(It.IsAny<string>())).Returns(0);
 
-            _httpForm.Expect(h => h.GetAsync(It.IsAny<HttpFormGetRequest>(), It.IsAny<Action<HttpFormResponse>>(), It.IsAny<Action<Exception>>())).Callback((HttpFormGetRequest request, Action<HttpFormResponse> onComplete, Action<Exception> onException) => onComplete(new HttpFormResponse { Response = "This is a dummy response" }));
+            _httpForm.Setup(h => h.GetAsync(It.IsAny<HttpFormGetRequest>(), It.IsAny<Action<HttpFormResponse>>(), It.IsAny<Action<Exception>>())).Callback((HttpFormGetRequest request, Action<HttpFormResponse> onComplete, Action<Exception> onException) => onComplete(new HttpFormResponse { Response = "This is a dummy response" }));
 
             _spamProtection.IsSpam(CreateDummyContent("http://asp.net"), (respone, isSpam) => Assert.False(isSpam));
         }
@@ -116,11 +116,11 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsSpam_Async_Should_Forward_To_Next_Handler_For_Story_When_Exception_Occurs()
         {
-            _calculator1.Expect(c => c.Calculate(It.IsAny<string>())).Returns(0);
-            _calculator2.Expect(c => c.Calculate(It.IsAny<string>())).Returns(0);
-            _calculator3.Expect(c => c.Calculate(It.IsAny<string>())).Returns(0);
+            _calculator1.Setup(c => c.Calculate(It.IsAny<string>())).Returns(0);
+            _calculator2.Setup(c => c.Calculate(It.IsAny<string>())).Returns(0);
+            _calculator3.Setup(c => c.Calculate(It.IsAny<string>())).Returns(0);
 
-            _httpForm.Expect(h => h.GetAsync(It.IsAny<HttpFormGetRequest>(), It.IsAny<Action<HttpFormResponse>>(), It.IsAny<Action<Exception>>())).Callback((HttpFormGetRequest request, Action<HttpFormResponse> onComplete, Action<Exception> onException) => onException(new Exception()));
+            _httpForm.Setup(h => h.GetAsync(It.IsAny<HttpFormGetRequest>(), It.IsAny<Action<HttpFormResponse>>(), It.IsAny<Action<Exception>>())).Callback((HttpFormGetRequest request, Action<HttpFormResponse> onComplete, Action<Exception> onException) => onException(new Exception()));
 
             var nextHandler = new Mock<ISpamProtection>();
 
@@ -134,11 +134,11 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsSpam_Async_Should_Return_False_For_Story_When_Exception_Occurs()
         {
-            _calculator1.Expect(c => c.Calculate(It.IsAny<string>())).Returns(0);
-            _calculator2.Expect(c => c.Calculate(It.IsAny<string>())).Returns(0);
-            _calculator3.Expect(c => c.Calculate(It.IsAny<string>())).Returns(0);
+            _calculator1.Setup(c => c.Calculate(It.IsAny<string>())).Returns(0);
+            _calculator2.Setup(c => c.Calculate(It.IsAny<string>())).Returns(0);
+            _calculator3.Setup(c => c.Calculate(It.IsAny<string>())).Returns(0);
 
-            _httpForm.Expect(h => h.GetAsync(It.IsAny<HttpFormGetRequest>(), It.IsAny<Action<HttpFormResponse>>(), It.IsAny<Action<Exception>>())).Callback((HttpFormGetRequest request, Action<HttpFormResponse> onComplete, Action<Exception> onException) => onException(new Exception()));
+            _httpForm.Setup(h => h.GetAsync(It.IsAny<HttpFormGetRequest>(), It.IsAny<Action<HttpFormResponse>>(), It.IsAny<Action<Exception>>())).Callback((HttpFormGetRequest request, Action<HttpFormResponse> onComplete, Action<Exception> onException) => onException(new Exception()));
 
             _spamProtection.IsSpam(CreateDummyContent("http://asp.net"), (source, isSpam) => Assert.False(isSpam));
         }
@@ -146,9 +146,9 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsSpam_Async_Should_Not_Run_Remote_Weight_Calculators_For_Story_When_Local_Calculators_Return_More_Than_StoryThresold()
         {
-            _calculator1.Expect(c => c.Calculate(It.IsAny<string>())).Returns(2);
-            _calculator2.Expect(c => c.Calculate(It.IsAny<string>())).Returns(2);
-            _calculator3.Expect(c => c.Calculate(It.IsAny<string>())).Returns(2);
+            _calculator1.Setup(c => c.Calculate(It.IsAny<string>())).Returns(2);
+            _calculator2.Setup(c => c.Calculate(It.IsAny<string>())).Returns(2);
+            _calculator3.Setup(c => c.Calculate(It.IsAny<string>())).Returns(2);
 
             _spamProtection.IsSpam(CreateDummyContent("http://asp.net"), (source, isSpam) => Assert.True(isSpam));
         }
@@ -156,9 +156,9 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsSpam_Async_Should_Return_True_For_Comment_When_Weight_Calculators_Return_More_Than_CommentThresold()
         {
-            _calculator1.Expect(c => c.Calculate(It.IsAny<string>())).Returns(2);
-            _calculator2.Expect(c => c.Calculate(It.IsAny<string>())).Returns(2);
-            _calculator3.Expect(c => c.Calculate(It.IsAny<string>())).Returns(2);
+            _calculator1.Setup(c => c.Calculate(It.IsAny<string>())).Returns(2);
+            _calculator2.Setup(c => c.Calculate(It.IsAny<string>())).Returns(2);
+            _calculator3.Setup(c => c.Calculate(It.IsAny<string>())).Returns(2);
 
             _spamProtection.IsSpam(CreateDummyContent(settings.Object.RootUrl + "\\A-Story"), (source, isSpam) => Assert.True(isSpam));
         }
@@ -166,9 +166,9 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsSpam_Async_Should_Forward_To_Next_Handler_For_Comment_When_Weight_Calculators_Return_Less_Than_CommentThresold()
         {
-            _calculator1.Expect(c => c.Calculate(It.IsAny<string>())).Returns(0);
-            _calculator2.Expect(c => c.Calculate(It.IsAny<string>())).Returns(0);
-            _calculator3.Expect(c => c.Calculate(It.IsAny<string>())).Returns(0);
+            _calculator1.Setup(c => c.Calculate(It.IsAny<string>())).Returns(0);
+            _calculator2.Setup(c => c.Calculate(It.IsAny<string>())).Returns(0);
+            _calculator3.Setup(c => c.Calculate(It.IsAny<string>())).Returns(0);
 
             var nextHandler = new Mock<ISpamProtection>();
 
@@ -182,9 +182,9 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsSpam_Async_Should_Return_False_For_Comment_When_Weight_Calculators_Return_Less_Than_CommentThresold()
         {
-            _calculator1.Expect(c => c.Calculate(It.IsAny<string>())).Returns(0);
-            _calculator2.Expect(c => c.Calculate(It.IsAny<string>())).Returns(0);
-            _calculator3.Expect(c => c.Calculate(It.IsAny<string>())).Returns(0);
+            _calculator1.Setup(c => c.Calculate(It.IsAny<string>())).Returns(0);
+            _calculator2.Setup(c => c.Calculate(It.IsAny<string>())).Returns(0);
+            _calculator3.Setup(c => c.Calculate(It.IsAny<string>())).Returns(0);
 
             _spamProtection.IsSpam(CreateDummyContent(settings.Object.RootUrl + "\\A-Story"), (source, isSpam) => Assert.False(isSpam));
         }

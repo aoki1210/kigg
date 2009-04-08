@@ -19,7 +19,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void StoryCount_Should_Use_Story_Repository()
         {
-            storyRepository.Expect(r => r.CountByCategory(It.IsAny<Guid>())).Returns(1);
+            storyRepository.Setup(r => r.CountByCategory(It.IsAny<Guid>())).Returns(1);
 
             Assert.Equal(1, _category.StoryCount);
 

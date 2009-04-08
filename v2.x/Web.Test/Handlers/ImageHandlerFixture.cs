@@ -19,15 +19,15 @@ namespace Kigg.Web.Test
         public ImageHandlerFixture()
         {
             _httpContext = MvcTestHelper.GetHttpContext();
-            _httpContext.HttpResponse.Expect(r => r.OutputStream).Returns(new Mock<Stream>().Object);
+            _httpContext.HttpResponse.Setup(r => r.OutputStream).Returns(new Mock<Stream>().Object);
 
             var story = new Mock<IStory>();
 
-            story.ExpectGet(s => s.VoteCount).Returns(10);
-            story.ExpectGet(s => s.CreatedAt).Returns(SystemTime.Now().AddDays(-8));
+            story.SetupGet(s => s.VoteCount).Returns(10);
+            story.SetupGet(s => s.CreatedAt).Returns(SystemTime.Now().AddDays(-8));
 
             var repository = new Mock<IStoryRepository>();
-            repository.Expect(r => r.FindByUrl(It.IsAny<string>())).Returns(story.Object);
+            repository.Setup(r => r.FindByUrl(It.IsAny<string>())).Returns(story.Object);
 
             _handler = new ImageHandler
                            {
@@ -98,14 +98,14 @@ namespace Kigg.Web.Test
         [Fact]
         public void ProcessRequest_Should_Render_Cached_Image()
         {
-            _httpContext.HttpRequest.ExpectGet(r => r.QueryString).Returns(new NameValueCollection{{"url", "http://asp.net"}});
+            _httpContext.HttpRequest.SetupGet(r => r.QueryString).Returns(new NameValueCollection{{"url", "http://asp.net"}});
             _handler.ProcessRequest(_httpContext.Object);
         }
 
         [Fact]
         public void ProcessRequest_Should_Render_NonCached_Image()
         {
-            _httpContext.HttpRequest.ExpectGet(r => r.QueryString).Returns(new NameValueCollection { { "url", "http://asp.net" }, { "noCache", "true" } });
+            _httpContext.HttpRequest.SetupGet(r => r.QueryString).Returns(new NameValueCollection { { "url", "http://asp.net" }, { "noCache", "true" } });
             _handler.ProcessRequest(_httpContext.Object);
         }
     }

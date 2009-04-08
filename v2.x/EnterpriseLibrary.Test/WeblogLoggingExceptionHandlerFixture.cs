@@ -24,7 +24,7 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
         [Fact]
         public void HandleException_Should_Use_Logger()
         {
-            _logger.Expect(l => l.Write(It.IsAny<WeblogEntry>())).Verifiable();
+            _logger.Setup(l => l.Write(It.IsAny<WeblogEntry>())).Verifiable();
 
             _handler.HandleException(new Exception("A dummy exception"), Guid.NewGuid());
         }

@@ -58,11 +58,11 @@ namespace Moq.Mvc
 			this.HttpServerUtility = new HttpServerUtilityMock();
 			this.HttpSessionState = new HttpSessionStateMock();
 
-			this.ExpectGet(c => c.Application).Returns(this.HttpApplicationState.Object);
-			this.ExpectGet(c => c.Request).Returns(this.HttpRequest.Object);
-			this.ExpectGet(c => c.Response).Returns(this.HttpResponse.Object);
-			this.ExpectGet(c => c.Server).Returns(this.HttpServerUtility.Object);
-			this.ExpectGet(c => c.Session).Returns(this.HttpSessionState.Object);
+			this.SetupGet(c => c.Application).Returns(this.HttpApplicationState.Object);
+			this.SetupGet(c => c.Request).Returns(this.HttpRequest.Object);
+			this.SetupGet(c => c.Response).Returns(this.HttpResponse.Object);
+			this.SetupGet(c => c.Server).Returns(this.HttpServerUtility.Object);
+			this.SetupGet(c => c.Session).Returns(this.HttpSessionState.Object);
 		}
 
 		/// <summary>
@@ -93,7 +93,7 @@ namespace Moq.Mvc
 		/// <summary>
 		/// Verify only the mock expectations marked as Verifiable
 		/// </summary>
-		public override void Verify()
+		public new void Verify()
 		{
 			this.HttpApplicationState.Verify();
 			this.HttpRequest.Verify();
@@ -107,7 +107,7 @@ namespace Moq.Mvc
 		/// <summary>
 		/// Very all the mock expectations
 		/// </summary>
-		public override void VerifyAll()
+		public new void VerifyAll()
 		{
 			this.HttpApplicationState.VerifyAll();
 			this.HttpRequest.VerifyAll();

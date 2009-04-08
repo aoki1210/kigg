@@ -23,8 +23,8 @@ namespace Kigg.Core.Test
         [Fact]
         public void Exceute_Should_Start_Tasks()
         {
-            _task1.Expect(t => t.Start()).Verifiable();
-            _task2.Expect(t => t.Start()).Verifiable();
+            _task1.Setup(t => t.Start()).Verifiable();
+            _task2.Setup(t => t.Start()).Verifiable();
 
             _startTasks.Execute();
 

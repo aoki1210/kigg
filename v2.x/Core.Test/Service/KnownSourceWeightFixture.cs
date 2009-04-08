@@ -22,12 +22,12 @@ namespace Kigg.Core.Test
         public void Calculate_Should_Return_Known_Source_Grade_As_Weight_When_Url_Matched()
         {
             var story = new Mock<IStory>();
-            story.ExpectGet(s => s.Url).Returns("http://dummystory.com");
+            story.SetupGet(s => s.Url).Returns("http://dummystory.com");
 
             var knownSource = new Mock<IKnownSource>();
-            knownSource.ExpectGet(ks => ks.Grade).Returns(KnownSourceGrade.A);
+            knownSource.SetupGet(ks => ks.Grade).Returns(KnownSourceGrade.A);
 
-            _repository.Expect(r => r.FindMatching(It.IsAny<string>())).Returns(knownSource.Object);
+            _repository.Setup(r => r.FindMatching(It.IsAny<string>())).Returns(knownSource.Object);
 
             var weight = _strategy.Calculate(SystemTime.Now(), story.Object);
 
@@ -38,9 +38,9 @@ namespace Kigg.Core.Test
         public void Calculate_Should_Return_Zero_When_Url_Do_Not_Match()
         {
             var story = new Mock<IStory>();
-            story.ExpectGet(s => s.Url).Returns("http://dummystory.com");
+            story.SetupGet(s => s.Url).Returns("http://dummystory.com");
 
-            _repository.Expect(r => r.FindMatching(It.IsAny<string>())).Returns((IKnownSource) null);
+            _repository.Setup(r => r.FindMatching(It.IsAny<string>())).Returns((IKnownSource) null);
 
             var weight = _strategy.Calculate(SystemTime.Now(), story.Object);
 

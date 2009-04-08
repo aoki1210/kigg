@@ -215,28 +215,28 @@ namespace Kigg.Core.Test
 
         private void Add()
         {
-            _innerRepository.Expect(r => r.Add(It.IsAny<IUser>())).Verifiable();
-            log.Expect(l => l.Info(It.IsAny<string>())).Verifiable();
+            _innerRepository.Setup(r => r.Add(It.IsAny<IUser>())).Verifiable();
+            log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
             _loggingRepository.Add(CreateStubUser());
         }
 
         private void Remove()
         {
-            _innerRepository.Expect(r => r.Remove(It.IsAny<IUser>())).Verifiable();
-            log.Expect(l => l.Warning(It.IsAny<string>())).Verifiable();
+            _innerRepository.Setup(r => r.Remove(It.IsAny<IUser>())).Verifiable();
+            log.Setup(l => l.Warning(It.IsAny<string>())).Verifiable();
 
             _loggingRepository.Remove(CreateStubUser());
         }
 
         private void FindById(IUser result)
         {
-            _innerRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns(result).Verifiable();
-            log.Expect(l => l.Info(It.IsAny<string>())).Verifiable();
+            _innerRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns(result).Verifiable();
+            log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
             if (result == null)
             {
-                log.Expect(l => l.Warning(It.IsAny<string>())).Verifiable();
+                log.Setup(l => l.Warning(It.IsAny<string>())).Verifiable();
             }
 
             _loggingRepository.FindById(Guid.NewGuid());
@@ -244,12 +244,12 @@ namespace Kigg.Core.Test
 
         private void FindByUserName(IUser result)
         {
-            _innerRepository.Expect(r => r.FindByUserName(It.IsAny<string>())).Returns(result).Verifiable();
-            log.Expect(l => l.Info(It.IsAny<string>())).Verifiable();
+            _innerRepository.Setup(r => r.FindByUserName(It.IsAny<string>())).Returns(result).Verifiable();
+            log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
             if (result == null)
             {
-                log.Expect(l => l.Warning(It.IsAny<string>())).Verifiable();
+                log.Setup(l => l.Warning(It.IsAny<string>())).Verifiable();
             }
 
             _loggingRepository.FindByUserName("dummy");
@@ -257,12 +257,12 @@ namespace Kigg.Core.Test
 
         private void FindByEmail(IUser result)
         {
-            _innerRepository.Expect(r => r.FindByEmail(It.IsAny<string>())).Returns(result).Verifiable();
-            log.Expect(l => l.Info(It.IsAny<string>())).Verifiable();
+            _innerRepository.Setup(r => r.FindByEmail(It.IsAny<string>())).Returns(result).Verifiable();
+            log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
             if (result == null)
             {
-                log.Expect(l => l.Warning(It.IsAny<string>())).Verifiable();
+                log.Setup(l => l.Warning(It.IsAny<string>())).Verifiable();
             }
 
             _loggingRepository.FindByEmail("xxx@xxx.com");
@@ -270,20 +270,20 @@ namespace Kigg.Core.Test
 
         private void FindScoreById()
         {
-            _innerRepository.Expect(r => r.FindScoreById(It.IsAny<Guid>(), It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(100).Verifiable();
-            log.Expect(l => l.Info(It.IsAny<string>())).Verifiable();
+            _innerRepository.Setup(r => r.FindScoreById(It.IsAny<Guid>(), It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(100).Verifiable();
+            log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
             _loggingRepository.FindScoreById(Guid.NewGuid(), SystemTime.Now().AddHours(-4), SystemTime.Now());
         }
 
         private void FindTop(ICollection<IUser> result)
         {
-            _innerRepository.Expect(r => r.FindTop(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>(), It.IsAny<int>())).Returns((result == null) ? new PagedResult<IUser>() : new PagedResult<IUser>(result, result.Count)).Verifiable();
-            log.Expect(l => l.Info(It.IsAny<string>())).Verifiable();
+            _innerRepository.Setup(r => r.FindTop(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>(), It.IsAny<int>())).Returns((result == null) ? new PagedResult<IUser>() : new PagedResult<IUser>(result, result.Count)).Verifiable();
+            log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
             if (result.IsNullOrEmpty())
             {
-                log.Expect(l => l.Warning(It.IsAny<string>())).Verifiable();
+                log.Setup(l => l.Warning(It.IsAny<string>())).Verifiable();
             }
 
             _loggingRepository.FindTop(SystemTime.Now().AddHours(-4), SystemTime.Now(), 0, 10);
@@ -291,12 +291,12 @@ namespace Kigg.Core.Test
 
         private void FindAll(ICollection<IUser> result)
         {
-            _innerRepository.Expect(r => r.FindAll(It.IsAny<int>(), It.IsAny<int>())).Returns((result == null) ? new PagedResult<IUser>() : new PagedResult<IUser>(result, result.Count)).Verifiable();
-            log.Expect(l => l.Info(It.IsAny<string>())).Verifiable();
+            _innerRepository.Setup(r => r.FindAll(It.IsAny<int>(), It.IsAny<int>())).Returns((result == null) ? new PagedResult<IUser>() : new PagedResult<IUser>(result, result.Count)).Verifiable();
+            log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
             if (result.IsNullOrEmpty())
             {
-                log.Expect(l => l.Warning(It.IsAny<string>())).Verifiable();
+                log.Setup(l => l.Warning(It.IsAny<string>())).Verifiable();
             }
 
             _loggingRepository.FindAll(0, 10);
@@ -304,12 +304,12 @@ namespace Kigg.Core.Test
 
         private void FindIPAddresses(ICollection<string> result)
         {
-            _innerRepository.Expect(r => r.FindIPAddresses(It.IsAny<Guid>())).Returns(result).Verifiable();
-            log.Expect(l => l.Info(It.IsAny<string>())).Verifiable();
+            _innerRepository.Setup(r => r.FindIPAddresses(It.IsAny<Guid>())).Returns(result).Verifiable();
+            log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
             if (result.IsNullOrEmpty())
             {
-                log.Expect(l => l.Warning(It.IsAny<string>())).Verifiable();
+                log.Setup(l => l.Warning(It.IsAny<string>())).Verifiable();
             }
 
             _loggingRepository.FindIPAddresses(Guid.NewGuid());

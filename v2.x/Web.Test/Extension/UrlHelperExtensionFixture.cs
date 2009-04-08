@@ -30,7 +30,7 @@ namespace Kigg.Web.Test
 
             assetSettings.Assets.Add(new AssetElement { Name = "js" });
 
-            configurationManager.Expect(c => c.GetSection<AssetSettingsSection>(It.IsAny<string>())).Returns(assetSettings);
+            configurationManager.Setup(c => c.GetSection<AssetSettingsSection>(It.IsAny<string>())).Returns(assetSettings);
 
             var url = _urlHelper.Asset("js");
 

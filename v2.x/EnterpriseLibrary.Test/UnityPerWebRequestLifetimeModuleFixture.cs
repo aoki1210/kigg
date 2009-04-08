@@ -18,7 +18,7 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
         public UnityPerWebRequestLifetimeModuleFixture()
         {
             _httpContext = new Mock<HttpContextBase>();
-            _httpContext.ExpectGet(c => c.Items).Returns(new Hashtable());
+            _httpContext.SetupGet(c => c.Items).Returns(new Hashtable());
 
             _module = new UnityPerWebRequestLifetimeModule(_httpContext.Object);
         }
@@ -40,10 +40,10 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
         {
             var items = new Mock<IDictionary>();
 
-            items.Expect(i => i.Contains(It.IsAny<object>())).Returns(true);
-            items.ExpectGet(i => i[It.IsAny<Object>()]).Returns(new Dictionary<UnityPerWebRequestLifetimeManager, object>());
+            items.Setup(i => i.Contains(It.IsAny<object>())).Returns(true);
+            items.SetupGet(i => i[It.IsAny<Object>()]).Returns(new Dictionary<UnityPerWebRequestLifetimeManager, object>());
 
-            _httpContext.Expect(h => h.Items).Returns(items.Object);
+            _httpContext.Setup(h => h.Items).Returns(items.Object);
 
             Assert.NotNull(UnityPerWebRequestLifetimeModule.GetInstances(_httpContext.Object));
         }
@@ -65,7 +65,7 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
         {
             var disposable = new Mock<IDisposable>();
 
-            disposable.Expect(d => d.Dispose()).Verifiable();
+            disposable.Setup(d => d.Dispose()).Verifiable();
 
             _module.Instances.Add(new UnityPerWebRequestLifetimeManager(_httpContext.Object), disposable.Object);
             _module.RemoveAllInstances();

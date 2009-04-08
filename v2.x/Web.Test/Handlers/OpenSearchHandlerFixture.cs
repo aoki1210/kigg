@@ -26,7 +26,7 @@ namespace Kigg.Web.Test
         {
             string xml;
 
-            cache.Expect(c => c.TryGet(It.IsAny<string>(), out xml)).Returns(false);
+            cache.Setup(c => c.TryGet(It.IsAny<string>(), out xml)).Returns(false);
 
             var handler = new OpenSearchHandler
                               {
@@ -36,7 +36,7 @@ namespace Kigg.Web.Test
                                   GenerateETag = true
                               };
 
-            _httpContext.HttpResponse.Expect(r => r.Write(It.IsAny<string>())).Verifiable();
+            _httpContext.HttpResponse.Setup(r => r.Write(It.IsAny<string>())).Verifiable();
 
             handler.ProcessRequest(_httpContext.Object);
 
@@ -48,7 +48,7 @@ namespace Kigg.Web.Test
         {
             string xml;
 
-            cache.Expect(c => c.TryGet(It.IsAny<string>(), out xml)).Returns(false);
+            cache.Setup(c => c.TryGet(It.IsAny<string>(), out xml)).Returns(false);
 
             var handler = new OpenSearchHandler
                               {
@@ -58,8 +58,10 @@ namespace Kigg.Web.Test
                                   GenerateETag = true
                               };
 
-            _httpContext.HttpRequest.ExpectGet(r => r.Headers).Returns(new NameValueCollection { { "If-None-Match", "5uSN9UoD5sU4x6sV+nD0ww==" } });
-            _httpContext.HttpResponse.Expect(r => r.Write(It.IsAny<string>())).Never();
+            _httpContext.HttpRequest.SetupGet(r => r.Headers).Returns(new NameValueCollection { { "If-None-Match", "5uSN9UoD5sU4x6sV+nD0ww==" } });
+            
+            //_httpContext.HttpResponse.Setup(r => r.Write(It.IsAny<string>())).Never();
+            _httpContext.HttpResponse.Verify(r => r.Write(It.IsAny<string>()),Times.Never());
 
             handler.ProcessRequest(_httpContext.Object);
 
@@ -71,9 +73,9 @@ namespace Kigg.Web.Test
         {
             string xml;
 
-            cache.Expect(c => c.TryGet(It.IsAny<string>(), out xml)).Returns(false);
-            cache.Expect(c => c.Contains(It.IsAny<string>())).Returns(false);
-            cache.Expect(c => c.Set(It.IsAny<string>(), It.IsAny<HandlerCacheItem>(), It.IsAny<DateTime>())).Verifiable();
+            cache.Setup(c => c.TryGet(It.IsAny<string>(), out xml)).Returns(false);
+            cache.Setup(c => c.Contains(It.IsAny<string>())).Returns(false);
+            cache.Setup(c => c.Set(It.IsAny<string>(), It.IsAny<HandlerCacheItem>(), It.IsAny<DateTime>())).Verifiable();
 
             var handler = new OpenSearchHandler
                               {

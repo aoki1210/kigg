@@ -27,7 +27,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Get_Should_Use_InnerHttpForm()
         {
-            _innerHttpForm.Expect(h => h.Get(It.IsAny<HttpFormGetRequest>())).Returns(new HttpFormResponse()).Verifiable();
+            _innerHttpForm.Setup(h => h.Get(It.IsAny<HttpFormGetRequest>())).Returns(new HttpFormResponse()).Verifiable();
 
             _httpForm.Get(new HttpFormGetRequest { Url = "http://aurl.com" });
         }
@@ -35,7 +35,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void GetAsync_Should_Use_InnerHttpForm()
         {
-            _innerHttpForm.Expect(h => h.GetAsync(It.IsAny<HttpFormGetRequest>())).Verifiable();
+            _innerHttpForm.Setup(h => h.GetAsync(It.IsAny<HttpFormGetRequest>())).Verifiable();
 
             _httpForm.GetAsync(new HttpFormGetRequest{ Url = "http://aurl.com" });
         }
@@ -43,7 +43,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void GetAsync_With_Callback_Should_Use_InnerHttpForm()
         {
-            _innerHttpForm.Expect(h => h.GetAsync(It.IsAny<HttpFormGetRequest>(), It.IsAny<Action<HttpFormResponse>>(), It.IsAny<Action<Exception>>())).Verifiable();
+            _innerHttpForm.Setup(h => h.GetAsync(It.IsAny<HttpFormGetRequest>(), It.IsAny<Action<HttpFormResponse>>(), It.IsAny<Action<Exception>>())).Verifiable();
 
             _httpForm.GetAsync(new HttpFormGetRequest { Url = "http://aurl.com" }, delegate { }, delegate { });
         }
@@ -51,7 +51,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Post_With_FormFields_Should_Use_InnerHttpForm()
         {
-            _innerHttpForm.Expect(h => h.Post(It.IsAny<HttpFormPostRequest>())).Returns(new HttpFormResponse()).Verifiable();
+            _innerHttpForm.Setup(h => h.Post(It.IsAny<HttpFormPostRequest>())).Returns(new HttpFormResponse()).Verifiable();
 
             _httpForm.Post(new HttpFormPostRequest{ Url = "http://astory.com", FormFields = new NameValueCollection { { "foo", "bar" } } });
         }
@@ -59,7 +59,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Post_With_RawData_Should_Use_InnerHttpForm()
         {
-            _innerHttpForm.Expect(h => h.Post(It.IsAny<HttpFormPostRawRequest>())).Returns(new HttpFormResponse()).Verifiable();
+            _innerHttpForm.Setup(h => h.Post(It.IsAny<HttpFormPostRawRequest>())).Returns(new HttpFormResponse()).Verifiable();
 
             _httpForm.Post(new HttpFormPostRawRequest { Url = "http://astory.com", Data = "foo=bar"});
         }
@@ -67,7 +67,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void PostAsync_With_FormFields_Should_Use_InnerHttpForm()
         {
-            _innerHttpForm.Expect(h => h.PostAsync(It.IsAny<HttpFormPostRequest>())).Verifiable();
+            _innerHttpForm.Setup(h => h.PostAsync(It.IsAny<HttpFormPostRequest>())).Verifiable();
 
             _httpForm.PostAsync(new HttpFormPostRequest{Url = "http://astory.com"});
         }
@@ -75,7 +75,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void PostAsync_With_FormFields_And_Callback_Should_Use_InnerHttpForm()
         {
-            _innerHttpForm.Expect(h => h.PostAsync(It.IsAny<HttpFormPostRequest>(), It.IsAny<Action<HttpFormResponse>>(), It.IsAny<Action<Exception>>())).Verifiable();
+            _innerHttpForm.Setup(h => h.PostAsync(It.IsAny<HttpFormPostRequest>(), It.IsAny<Action<HttpFormResponse>>(), It.IsAny<Action<Exception>>())).Verifiable();
 
             _httpForm.PostAsync(new HttpFormPostRequest { Url = "http://astory.com" }, delegate {}, delegate {});
         }
@@ -83,7 +83,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void PostAsync_With_RawData_Should_Use_InnerHttpForm()
         {
-            _innerHttpForm.Expect(h => h.PostAsync(It.IsAny<HttpFormPostRawRequest>())).Verifiable();
+            _innerHttpForm.Setup(h => h.PostAsync(It.IsAny<HttpFormPostRawRequest>())).Verifiable();
 
             _httpForm.PostAsync(new HttpFormPostRawRequest { Url = "http://astory.com" });
         }
@@ -91,7 +91,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void PostAsync_With_RawData_And_Callback_Should_Use_InnerHttpForm()
         {
-            _innerHttpForm.Expect(h => h.PostAsync(It.IsAny<HttpFormPostRawRequest>(), It.IsAny<Action<HttpFormResponse>>(), It.IsAny<Action<Exception>>())).Verifiable();
+            _innerHttpForm.Setup(h => h.PostAsync(It.IsAny<HttpFormPostRawRequest>(), It.IsAny<Action<HttpFormResponse>>(), It.IsAny<Action<Exception>>())).Verifiable();
 
             _httpForm.PostAsync(new HttpFormPostRawRequest { Url = "http://astory.com" }, delegate { }, delegate { });
         }

@@ -59,7 +59,7 @@ namespace Kigg.Web.Test
                               };
 
             _httpContext = _controller.MockHttpContext("/Kigg", null, null);
-            _httpContext.HttpRequest.ExpectGet(r => r.UserHostAddress).Returns("192.168.0.1");
+            _httpContext.HttpRequest.SetupGet(r => r.UserHostAddress).Returns("192.168.0.1");
         }
 
         [Fact]
@@ -159,7 +159,7 @@ namespace Kigg.Web.Test
         [Fact]
         public void Category_Should_Throw_NotFound_Error_When_Specifed_Category_Does_Not_Exist()
         {
-            _categoryRepository.Expect(r => r.FindByUniqueName(It.IsAny<string>())).Returns((ICategory) null);
+            _categoryRepository.Setup(r => r.FindByUniqueName(It.IsAny<string>())).Returns((ICategory) null);
 
             Assert.Throws<HttpException>(() => _controller.Category(CategoryName, 1));
         }
@@ -366,7 +366,7 @@ namespace Kigg.Web.Test
         [Fact]
         public void Tags_Should_Throw_NotFound_Error_When_Specifed_Tag_Does_Not_Exist()
         {
-            _tagRepository.Expect(r => r.FindByUniqueName(It.IsAny<string>())).Returns((ITag)null);
+            _tagRepository.Setup(r => r.FindByUniqueName(It.IsAny<string>())).Returns((ITag)null);
 
             Assert.Throws<HttpException>(() => _controller.Tags(TagName, 1));
         }
@@ -423,7 +423,7 @@ namespace Kigg.Web.Test
         [Fact]
         public void Detail_Should_Throw_NotFound_Error_When_Specifed_Story_Does_Not_Exist()
         {
-            _storyRepository.Expect(r => r.FindByUniqueName(It.IsAny<string>())).Returns((IStory) null);
+            _storyRepository.Setup(r => r.FindByUniqueName(It.IsAny<string>())).Returns((IStory) null);
 
             Assert.Throws<HttpException>(() => _controller.Detail("Dummy-Story"));
         }
@@ -467,9 +467,9 @@ namespace Kigg.Web.Test
         {
             var story = new Mock<IStory>();
 
-            story.ExpectGet(s => s.UniqueName).Returns("Dummy-Story");
+            story.SetupGet(s => s.UniqueName).Returns("Dummy-Story");
 
-            _storyRepository.Expect(r => r.FindByUrl(It.IsAny<string>())).Returns(story.Object);
+            _storyRepository.Setup(r => r.FindByUrl(It.IsAny<string>())).Returns(story.Object);
 
             var result = (RedirectToRouteResult) _controller.Submit("http://story.com", null);
 
@@ -513,8 +513,8 @@ namespace Kigg.Web.Test
         [Fact]
         public void Retrive_Should_Log_Exception()
         {
-            _storyRepository.Expect(r => r.FindByUrl(It.IsAny<string>())).Throws<InvalidOperationException>();
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            _storyRepository.Setup(r => r.FindByUrl(It.IsAny<string>())).Throws<InvalidOperationException>();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
             _controller.Retrieve("http://astory.com");
 
@@ -525,9 +525,9 @@ namespace Kigg.Web.Test
         public void Retrive_Should_Return_Error_When_Story_Already_Exists()
         {
             var story = new Mock<IStory>();
-            story.ExpectGet(s => s.UniqueName).Returns("Dummy-Story");
+            story.SetupGet(s => s.UniqueName).Returns("Dummy-Story");
 
-            _storyRepository.Expect(r => r.FindByUrl(It.IsAny<string>())).Returns(story.Object);
+            _storyRepository.Setup(r => r.FindByUrl(It.IsAny<string>())).Returns(story.Object);
 
             var viewData = (JsonContentViewData) ((JsonResult) _controller.Retrieve("http://astory.com")).Data;
 
@@ -582,9 +582,9 @@ namespace Kigg.Web.Test
             SetCurrentUser(new Mock<IUser>(), Roles.User);
 
             SetupCaptcha();
-            _storyService.Expect(s => s.Create(It.IsAny<IUser>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<NameValueCollection>(), It.IsAny<Func<IStory, string>>())).Throws<InvalidOperationException>();
+            _storyService.Setup(s => s.Create(It.IsAny<IUser>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<NameValueCollection>(), It.IsAny<Func<IStory, string>>())).Throws<InvalidOperationException>();
 
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
             _controller.Submit("http://astory.com", "Dummy story", "Dummy", "Dummy Story Description", "Dummy, Test");
 
             log.Verify();
@@ -596,7 +596,7 @@ namespace Kigg.Web.Test
             SetCurrentUser(new Mock<IUser>(), Roles.User);
             SetupCaptcha();
 
-            _reCAPTCHA.Expect(c => c.Validate(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(false);
+            _reCAPTCHA.Setup(c => c.Validate(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(false);
 
             var result = (JsonViewData)((JsonResult)_controller.Submit("http://astory.com", "Dummy story", "Dummy", "Dummy Story Description", "Dummy, Test")).Data;
 
@@ -618,7 +618,7 @@ namespace Kigg.Web.Test
         [Fact]
         public void Submit_Should_Return_Error_When_Captcha_Response_Is_Blank()
         {
-            _httpContext.HttpRequest.ExpectGet(r => r.Form).Returns(new NameValueCollection { { _reCAPTCHA.Object.ChallengeInputName, "foo" } });
+            _httpContext.HttpRequest.SetupGet(r => r.Form).Returns(new NameValueCollection { { _reCAPTCHA.Object.ChallengeInputName, "foo" } });
 
             var result = (JsonViewData)((JsonResult)_controller.Submit("http://astory.com", "Dummy story", "Dummy", "Dummy Story Description", "Dummy, Test")).Data;
 
@@ -629,7 +629,7 @@ namespace Kigg.Web.Test
         [Fact]
         public void Post_Should_Return_Error_When_Captcha_Challenge_Is_Blank()
         {
-            _httpContext.HttpRequest.ExpectGet(r => r.Form).Returns(new NameValueCollection());
+            _httpContext.HttpRequest.SetupGet(r => r.Form).Returns(new NameValueCollection());
 
             var result = (JsonViewData)((JsonResult)_controller.Submit("http://astory.com", "Dummy story", "Dummy", "Dummy Story Description", "Dummy, Test")).Data;
 
@@ -666,8 +666,8 @@ namespace Kigg.Web.Test
         {
             SetCurrentUser(new Mock<IUser>(), Roles.User);
 
-            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Throws<InvalidOperationException>();
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            _storyRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Throws<InvalidOperationException>();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
             _controller.Click(Guid.NewGuid().Shrink());
 
@@ -705,7 +705,7 @@ namespace Kigg.Web.Test
         public void Promote_Should_Promote_Story()
         {
             var story = new Mock<IStory>();
-            story.Expect(s => s.CanPromote(It.IsAny<IUser>())).Returns(true);
+            story.Setup(s => s.CanPromote(It.IsAny<IUser>())).Returns(true);
 
             var result = Promote(story.Object);
 
@@ -716,7 +716,7 @@ namespace Kigg.Web.Test
         public void Promote_Should_Use_StoryRepository()
         {
             var story = new Mock<IStory>();
-            story.Expect(s => s.CanPromote(It.IsAny<IUser>())).Returns(true);
+            story.Setup(s => s.CanPromote(It.IsAny<IUser>())).Returns(true);
 
             Promote(story.Object);
 
@@ -727,7 +727,7 @@ namespace Kigg.Web.Test
         public void Promote_Should_Use_StoryService()
         {
             var story = new Mock<IStory>();
-            story.Expect(s => s.CanPromote(It.IsAny<IUser>())).Returns(true);
+            story.Setup(s => s.CanPromote(It.IsAny<IUser>())).Returns(true);
 
             Promote(story.Object);
 
@@ -739,8 +739,8 @@ namespace Kigg.Web.Test
         {
             SetCurrentUser(new Mock<IUser>(), Roles.User);
 
-            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Throws<InvalidOperationException>();
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            _storyRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Throws<InvalidOperationException>();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
             _controller.Promote(Guid.NewGuid().Shrink());
 
@@ -763,7 +763,7 @@ namespace Kigg.Web.Test
         {
             var story = new Mock<IStory>();
 
-            story.Expect(s => s.HasPromoted(It.IsAny<IUser>())).Returns(true);
+            story.Setup(s => s.HasPromoted(It.IsAny<IUser>())).Returns(true);
 
             var result = Promote(story.Object);
 
@@ -811,7 +811,7 @@ namespace Kigg.Web.Test
         public void Demote_Should_Demote_Story()
         {
             var story = new Mock<IStory>();
-            story.Expect(s => s.CanDemote(It.IsAny<IUser>())).Returns(true);
+            story.Setup(s => s.CanDemote(It.IsAny<IUser>())).Returns(true);
 
             var result = Demote(story.Object);
 
@@ -822,7 +822,7 @@ namespace Kigg.Web.Test
         public void Demote_Should_Use_StoryRepository()
         {
             var story = new Mock<IStory>();
-            story.Expect(s => s.CanDemote(It.IsAny<IUser>())).Returns(true);
+            story.Setup(s => s.CanDemote(It.IsAny<IUser>())).Returns(true);
 
             Demote(story.Object);
 
@@ -833,7 +833,7 @@ namespace Kigg.Web.Test
         public void Demote_Should_Use_StoryService()
         {
             var story = new Mock<IStory>();
-            story.Expect(s => s.CanDemote(It.IsAny<IUser>())).Returns(true);
+            story.Setup(s => s.CanDemote(It.IsAny<IUser>())).Returns(true);
 
             Demote(story.Object);
 
@@ -845,8 +845,8 @@ namespace Kigg.Web.Test
         {
             SetCurrentUser(new Mock<IUser>(), Roles.User);
 
-            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Throws<InvalidOperationException>();
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            _storyRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Throws<InvalidOperationException>();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
             _controller.Demote(Guid.NewGuid().Shrink());
 
@@ -904,7 +904,7 @@ namespace Kigg.Web.Test
         public void MarkAsSpam_Should_Mark_Story_As_Spam()
         {
             var story = new Mock<IStory>();
-            story.Expect(s => s.CanMarkAsSpam(It.IsAny<IUser>())).Returns(true);
+            story.Setup(s => s.CanMarkAsSpam(It.IsAny<IUser>())).Returns(true);
 
             var result = MarkAsSpam(story.Object);
 
@@ -915,7 +915,7 @@ namespace Kigg.Web.Test
         public void MarkAsSpam_Should_Use_StoryRepository()
         {
             var story = new Mock<IStory>();
-            story.Expect(s => s.CanMarkAsSpam(It.IsAny<IUser>())).Returns(true);
+            story.Setup(s => s.CanMarkAsSpam(It.IsAny<IUser>())).Returns(true);
 
             MarkAsSpam(story.Object);
 
@@ -926,7 +926,7 @@ namespace Kigg.Web.Test
         public void MarkAsSpam_Should_Use_StoryService()
         {
             var story = new Mock<IStory>();
-            story.Expect(s => s.CanMarkAsSpam(It.IsAny<IUser>())).Returns(true);
+            story.Setup(s => s.CanMarkAsSpam(It.IsAny<IUser>())).Returns(true);
 
             MarkAsSpam(story.Object);
 
@@ -938,8 +938,8 @@ namespace Kigg.Web.Test
         {
             SetCurrentUser(new Mock<IUser>(), Roles.User);
 
-            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Throws<InvalidOperationException>();
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            _storyRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Throws<InvalidOperationException>();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
             _controller.MarkAsSpam(Guid.NewGuid().Shrink());
 
@@ -962,7 +962,7 @@ namespace Kigg.Web.Test
         {
             var story = new Mock<IStory>();
 
-            story.Expect(s => s.HasMarkedAsSpam(It.IsAny<IUser>())).Returns(true);
+            story.Setup(s => s.HasMarkedAsSpam(It.IsAny<IUser>())).Returns(true);
 
             var result = MarkAsSpam(story.Object);
 
@@ -1027,8 +1027,8 @@ namespace Kigg.Web.Test
         {
             SetCurrentUser(new Mock<IUser>(), Roles.Administrator);
 
-            _storyService.Expect(s => s.Publish()).Throws<InvalidOperationException>();
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            _storyService.Setup(s => s.Publish()).Throws<InvalidOperationException>();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
             _controller.Publish();
 
@@ -1076,8 +1076,8 @@ namespace Kigg.Web.Test
         {
             SetCurrentUser(new Mock<IUser>(), Roles.Moderator);
 
-            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Throws<InvalidOperationException>();
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            _storyRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Throws<InvalidOperationException>();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
             _controller.GetStory(Guid.NewGuid().Shrink());
 
@@ -1089,7 +1089,7 @@ namespace Kigg.Web.Test
         {
             SetCurrentUser(new Mock<IUser>(), Roles.Moderator);
 
-            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns((IStory) null);
+            _storyRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns((IStory) null);
 
             var result = (JsonViewData) ((JsonResult) _controller.GetStory(Guid.NewGuid().Shrink())).Data;
 
@@ -1148,9 +1148,9 @@ namespace Kigg.Web.Test
         {
             SetCurrentUser(new Mock<IUser>(), Roles.Moderator);
 
-            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Throws<InvalidOperationException>();
+            _storyRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Throws<InvalidOperationException>();
 
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
             _controller.Update(Guid.NewGuid().Shrink(), "Dummy-Story", SystemTime.Now(), "Dummy Story", "Dummy", "Dummy Description", "foo,bar");
 
@@ -1217,9 +1217,9 @@ namespace Kigg.Web.Test
         {
             SetCurrentUser(new Mock<IUser>(), Roles.Moderator);
 
-            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Throws<InvalidOperationException>();
+            _storyRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Throws<InvalidOperationException>();
 
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
             _controller.Delete(Guid.NewGuid().Shrink());
 
@@ -1302,8 +1302,8 @@ namespace Kigg.Web.Test
         {
             SetCurrentUser(new Mock<IUser>(), Roles.Moderator);
 
-            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Throws<InvalidOperationException>();
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            _storyRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Throws<InvalidOperationException>();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
             _controller.Approve(Guid.NewGuid().Shrink());
 
@@ -1315,7 +1315,7 @@ namespace Kigg.Web.Test
         {
             var story = new Mock<IStory>();
 
-            story.ExpectGet(s => s.ApprovedAt).Returns(SystemTime.Now().AddDays(-1));
+            story.SetupGet(s => s.ApprovedAt).Returns(SystemTime.Now().AddDays(-1));
 
             var result = Approve(story.Object);
 
@@ -1399,8 +1399,8 @@ namespace Kigg.Web.Test
         {
             SetCurrentUser(new Mock<IUser>(), Roles.Moderator);
 
-            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Throws<InvalidOperationException>();
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            _storyRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Throws<InvalidOperationException>();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
             _controller.ConfirmSpam(Guid.NewGuid().Shrink());
 
@@ -1543,7 +1543,7 @@ namespace Kigg.Web.Test
 
         private ViewResult Published()
         {
-            _storyRepository.Expect(r => r.FindPublished(It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
+            _storyRepository.Setup(r => r.FindPublished(It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
 
             return (ViewResult)_controller.Published(1);
         }
@@ -1552,29 +1552,29 @@ namespace Kigg.Web.Test
         {
             var story1 = new Mock<IStory>();
 
-            story1.ExpectGet(s => s.Title).Returns("TestStory1");
-            story1.ExpectGet(s => s.UniqueName).Returns("TestStory1");
-            story1.ExpectGet(s => s.Url).Returns("http://story1.com");
-            story1.ExpectGet(s => s.TextDescription).Returns("TestStory1 Description");
+            story1.SetupGet(s => s.Title).Returns("TestStory1");
+            story1.SetupGet(s => s.UniqueName).Returns("TestStory1");
+            story1.SetupGet(s => s.Url).Returns("http://story1.com");
+            story1.SetupGet(s => s.TextDescription).Returns("TestStory1 Description");
 
             var story2 = new Mock<IStory>();
 
-            story2.ExpectGet(s => s.Title).Returns("TestStory2");
-            story2.ExpectGet(s => s.UniqueName).Returns("TestStory2");
-            story2.ExpectGet(s => s.Url).Returns("http://story2.com");
-            story2.ExpectGet(s => s.TextDescription).Returns("TestStory2 Description");
+            story2.SetupGet(s => s.Title).Returns("TestStory2");
+            story2.SetupGet(s => s.UniqueName).Returns("TestStory2");
+            story2.SetupGet(s => s.Url).Returns("http://story2.com");
+            story2.SetupGet(s => s.TextDescription).Returns("TestStory2 Description");
 
-            _httpContext.HttpRequest.ExpectGet(r => r.QueryString).Returns(new NameValueCollection { { "start", "20" }, { "max", "60" } });
-            _storyRepository.Expect(r => r.FindPublished(It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>(new List<IStory> { story1.Object, story2.Object }, 10)).Verifiable();
+            _httpContext.HttpRequest.SetupGet(r => r.QueryString).Returns(new NameValueCollection { { "start", "20" }, { "max", "60" } });
+            _storyRepository.Setup(r => r.FindPublished(It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>(new List<IStory> { story1.Object, story2.Object }, 10)).Verifiable();
 
             return (PagedResult<StorySummary>)((JsonResult)_controller.GetPublished(null, 70)).Data;
         }
 
         private PagedResult<StorySummary> GetPublishedOnException()
         {
-            _storyRepository.Expect(r => r.FindPublished(It.IsAny<int>(), It.IsAny<int>())).Throws<InvalidOperationException>();
+            _storyRepository.Setup(r => r.FindPublished(It.IsAny<int>(), It.IsAny<int>())).Throws<InvalidOperationException>();
 
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
             return (PagedResult<StorySummary>)((JsonResult)_controller.GetPublished(10, 70)).Data;
         }
@@ -1583,19 +1583,19 @@ namespace Kigg.Web.Test
         {
             var category = new Mock<ICategory>();
 
-            category.ExpectGet(c => c.Id).Returns(Guid.NewGuid());
-            category.ExpectGet(c => c.Name).Returns(CategoryName);
-            category.ExpectGet(c => c.UniqueName).Returns(CategoryName);
+            category.SetupGet(c => c.Id).Returns(Guid.NewGuid());
+            category.SetupGet(c => c.Name).Returns(CategoryName);
+            category.SetupGet(c => c.UniqueName).Returns(CategoryName);
 
-            _categoryRepository.Expect(r => r.FindByUniqueName(It.IsAny<string>())).Returns(category.Object).Verifiable();
-            _storyRepository.Expect(r => r.FindPublishedByCategory(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
+            _categoryRepository.Setup(r => r.FindByUniqueName(It.IsAny<string>())).Returns(category.Object).Verifiable();
+            _storyRepository.Setup(r => r.FindPublishedByCategory(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
 
             return (ViewResult) _controller.Category(CategoryName, 1);
         }
 
         private ViewResult Upcoming()
         {
-            _storyRepository.Expect(r => r.FindUpcoming(It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
+            _storyRepository.Setup(r => r.FindUpcoming(It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
 
             return (ViewResult)_controller.Upcoming(1);
         }
@@ -1604,49 +1604,49 @@ namespace Kigg.Web.Test
         {
             var story1 = new Mock<IStory>();
 
-            story1.ExpectGet(s => s.Title).Returns("TestStory1");
-            story1.ExpectGet(s => s.UniqueName).Returns("TestStory1");
-            story1.ExpectGet(s => s.Url).Returns("http://story1.com");
-            story1.ExpectGet(s => s.TextDescription).Returns("TestStory1 Description");
+            story1.SetupGet(s => s.Title).Returns("TestStory1");
+            story1.SetupGet(s => s.UniqueName).Returns("TestStory1");
+            story1.SetupGet(s => s.Url).Returns("http://story1.com");
+            story1.SetupGet(s => s.TextDescription).Returns("TestStory1 Description");
 
             var story2 = new Mock<IStory>();
 
-            story2.ExpectGet(s => s.Title).Returns("TestStory2");
-            story2.ExpectGet(s => s.UniqueName).Returns("TestStory2");
-            story2.ExpectGet(s => s.Url).Returns("http://story2.com");
-            story2.ExpectGet(s => s.TextDescription).Returns("TestStory2 Description");
+            story2.SetupGet(s => s.Title).Returns("TestStory2");
+            story2.SetupGet(s => s.UniqueName).Returns("TestStory2");
+            story2.SetupGet(s => s.Url).Returns("http://story2.com");
+            story2.SetupGet(s => s.TextDescription).Returns("TestStory2 Description");
 
-            _storyRepository.Expect(r => r.FindUpcoming(It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>(new List<IStory> { story1.Object, story2.Object }, 10)).Verifiable();
+            _storyRepository.Setup(r => r.FindUpcoming(It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>(new List<IStory> { story1.Object, story2.Object }, 10)).Verifiable();
 
             return (PagedResult<StorySummary>)((JsonResult)_controller.GetUpcoming(null, null)).Data;
         }
 
         private PagedResult<StorySummary> GetUpcomingOnException()
         {
-            _storyRepository.Expect(r => r.FindUpcoming(It.IsAny<int>(), It.IsAny<int>())).Throws<InvalidOperationException>();
+            _storyRepository.Setup(r => r.FindUpcoming(It.IsAny<int>(), It.IsAny<int>())).Throws<InvalidOperationException>();
 
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
             return (PagedResult<StorySummary>)((JsonResult)_controller.GetUpcoming(10, 70)).Data;
         }
 
         private ViewResult New()
         {
-            _storyRepository.Expect(r => r.FindNew(It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
+            _storyRepository.Setup(r => r.FindNew(It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
 
             return (ViewResult)_controller.New(1);
         }
 
         private ViewResult Unapproved()
         {
-            _storyRepository.Expect(r => r.FindUnapproved(It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
+            _storyRepository.Setup(r => r.FindUnapproved(It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
 
             return (ViewResult)_controller.Unapproved(1);
         }
 
         private ViewResult Publishable()
         {
-            _storyRepository.Expect(r => r.FindPublishable(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
+            _storyRepository.Setup(r => r.FindPublishable(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
 
             return (ViewResult) _controller.Publishable(1);
         }
@@ -1655,19 +1655,19 @@ namespace Kigg.Web.Test
         {
             var tag = new Mock<ITag>();
 
-            tag.ExpectGet(c => c.Id).Returns(Guid.NewGuid());
-            tag.ExpectGet(c => c.Name).Returns(TagName);
-            tag.ExpectGet(c => c.UniqueName).Returns(TagName);
+            tag.SetupGet(c => c.Id).Returns(Guid.NewGuid());
+            tag.SetupGet(c => c.Name).Returns(TagName);
+            tag.SetupGet(c => c.UniqueName).Returns(TagName);
 
-            _tagRepository.Expect(r => r.FindByUniqueName(It.IsAny<string>())).Returns(tag.Object).Verifiable();
-            _storyRepository.Expect(r => r.FindByTag(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
+            _tagRepository.Setup(r => r.FindByUniqueName(It.IsAny<string>())).Returns(tag.Object).Verifiable();
+            _storyRepository.Setup(r => r.FindByTag(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
 
             return (ViewResult)_controller.Tags(TagName, 1);
         }
 
         private ViewResult Search()
         {
-            _storyRepository.Expect(r => r.Search(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
+            _storyRepository.Setup(r => r.Search(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
 
             return (ViewResult) _controller.Search("Linq", 1);
         }
@@ -1675,26 +1675,26 @@ namespace Kigg.Web.Test
         private ViewResult Detail()
         {
             var story = new Mock<IStory>();
-            story.Expect(s => s.Title).Returns("Dummy Story");
-            story.Expect(s => s.TextDescription).Returns("This is the dummy description of the dummy story");
+            story.Setup(s => s.Title).Returns("Dummy Story");
+            story.Setup(s => s.TextDescription).Returns("This is the dummy description of the dummy story");
 
-            _storyRepository.Expect(r => r.FindByUniqueName(It.IsAny<string>())).Returns(story.Object).Verifiable();
+            _storyRepository.Setup(r => r.FindByUniqueName(It.IsAny<string>())).Returns(story.Object).Verifiable();
 
             return (ViewResult) _controller.Detail("Dummy-Story");
         }
 
         private ViewResult SubmitNew()
         {
-            _storyRepository.Expect(r => r.FindByUrl(It.IsAny<string>())).Returns((IStory) null).Verifiable();
-            _contentService.Expect(s => s.Get(It.IsAny<string>())).Returns(new StoryContent("Dummy Story", "Dummy Description", "http://trackback.com")).Verifiable();
+            _storyRepository.Setup(r => r.FindByUrl(It.IsAny<string>())).Returns((IStory) null).Verifiable();
+            _contentService.Setup(s => s.Get(It.IsAny<string>())).Returns(new StoryContent("Dummy Story", "Dummy Description", "http://trackback.com")).Verifiable();
 
             return (ViewResult) _controller.Submit("http://astory.com", string.Empty);
         }
 
         private JsonViewData Retrieve(StoryContent content)
         {
-            _storyRepository.Expect(r => r.FindByUrl(It.IsAny<string>())).Returns((IStory) null).Verifiable();
-            _contentService.Expect(s => s.Get(It.IsAny<string>())).Returns(content).Verifiable();
+            _storyRepository.Setup(r => r.FindByUrl(It.IsAny<string>())).Returns((IStory) null).Verifiable();
+            _contentService.Setup(s => s.Get(It.IsAny<string>())).Returns(content).Verifiable();
 
             return (JsonViewData) ((JsonResult) _controller.Retrieve("http://astory.com")).Data;
         }
@@ -1704,15 +1704,15 @@ namespace Kigg.Web.Test
             SetCurrentUser(new Mock<IUser>(), Roles.User);
             SetupCaptcha();
 
-            _storyService.Expect(s => s.Create(It.IsAny<IUser>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<NameValueCollection>(), It.IsAny<Func<IStory, string>>())).Returns(new StoryCreateResult { DetailUrl = "/Dummy-Story" }).Verifiable();
+            _storyService.Setup(s => s.Create(It.IsAny<IUser>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<NameValueCollection>(), It.IsAny<Func<IStory, string>>())).Returns(new StoryCreateResult { DetailUrl = "/Dummy-Story" }).Verifiable();
 
             return (JsonCreateViewData) ((JsonResult) _controller.Submit("http://astory.com", "Dummy story", "Dummy", "Dummy Story Description", "Dummy, Test")).Data;
         }
 
         private JsonViewData Click(IStory story)
         {
-            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns(story).Verifiable();
-            _storyService.Expect(s => s.View(It.IsAny<IStory>(), It.IsAny<IUser>(), It.IsAny<string>())).Verifiable();
+            _storyRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns(story).Verifiable();
+            _storyService.Setup(s => s.View(It.IsAny<IStory>(), It.IsAny<IUser>(), It.IsAny<string>())).Verifiable();
 
             return (JsonViewData) ((JsonResult) _controller.Click(Guid.NewGuid().Shrink())).Data;
         }
@@ -1721,8 +1721,8 @@ namespace Kigg.Web.Test
         {
             SetCurrentUser(new Mock<IUser>(), Roles.User);
 
-            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns(story).Verifiable();
-            _storyService.Expect(s => s.Promote(It.IsAny<IStory>(), It.IsAny<IUser>(), It.IsAny<string>())).Verifiable();
+            _storyRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns(story).Verifiable();
+            _storyService.Setup(s => s.Promote(It.IsAny<IStory>(), It.IsAny<IUser>(), It.IsAny<string>())).Verifiable();
 
             return (JsonViewData)((JsonResult)_controller.Promote(Guid.NewGuid().Shrink())).Data;
         }
@@ -1731,8 +1731,8 @@ namespace Kigg.Web.Test
         {
             SetCurrentUser(new Mock<IUser>(), Roles.User);
 
-            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns(story).Verifiable();
-            _storyService.Expect(s => s.Demote(It.IsAny<IStory>(), It.IsAny<IUser>())).Verifiable();
+            _storyRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns(story).Verifiable();
+            _storyService.Setup(s => s.Demote(It.IsAny<IStory>(), It.IsAny<IUser>())).Verifiable();
 
             return (JsonViewData)((JsonResult)_controller.Demote(Guid.NewGuid().Shrink())).Data;
         }
@@ -1741,8 +1741,8 @@ namespace Kigg.Web.Test
         {
             SetCurrentUser(new Mock<IUser>(), Roles.User);
 
-            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns(story).Verifiable();
-            _storyService.Expect(s => s.MarkAsSpam(It.IsAny<IStory>(), It.IsAny<string>(), It.IsAny<IUser>(), It.IsAny<string>())).Verifiable();
+            _storyRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns(story).Verifiable();
+            _storyService.Setup(s => s.MarkAsSpam(It.IsAny<IStory>(), It.IsAny<string>(), It.IsAny<IUser>(), It.IsAny<string>())).Verifiable();
 
             return (JsonViewData)((JsonResult)_controller.MarkAsSpam(Guid.NewGuid().Shrink())).Data;
         }
@@ -1750,7 +1750,7 @@ namespace Kigg.Web.Test
         private JsonViewData Publish()
         {
             SetCurrentUser(new Mock<IUser>(), Roles.Administrator);
-            _storyService.Expect(s => s.Publish()).Verifiable();
+            _storyService.Setup(s => s.Publish()).Verifiable();
 
             return (JsonViewData) ((JsonResult) _controller.Publish()).Data;
         }
@@ -1761,26 +1761,26 @@ namespace Kigg.Web.Test
 
             var category = new Mock<ICategory>();
 
-            category.ExpectGet(c => c.UniqueName).Returns("Dummy");
+            category.SetupGet(c => c.UniqueName).Returns("Dummy");
 
             var tag1 = new Mock<ITag>();
 
-            tag1.ExpectGet(t => t.Name).Returns("Dummy1");
+            tag1.SetupGet(t => t.Name).Returns("Dummy1");
 
             var tag2 = new Mock<ITag>();
 
-            tag2.ExpectGet(t => t.Name).Returns("Dummy2");
+            tag2.SetupGet(t => t.Name).Returns("Dummy2");
 
             var story = new Mock<IStory>();
 
-            story.ExpectGet(s => s.Id).Returns(Guid.NewGuid());
-            story.ExpectGet(s => s.UniqueName).Returns("Dummy-Stroy");
-            story.ExpectGet(s => s.CreatedAt).Returns(SystemTime.Now());
-            story.ExpectGet(s => s.HtmlDescription).Returns("<p>This is a summy description</p>");
-            story.ExpectGet(s => s.BelongsTo).Returns(category.Object);
-            story.ExpectGet(s => s.Tags).Returns(new[] { tag1.Object, tag2.Object });
+            story.SetupGet(s => s.Id).Returns(Guid.NewGuid());
+            story.SetupGet(s => s.UniqueName).Returns("Dummy-Stroy");
+            story.SetupGet(s => s.CreatedAt).Returns(SystemTime.Now());
+            story.SetupGet(s => s.HtmlDescription).Returns("<p>This is a summy description</p>");
+            story.SetupGet(s => s.BelongsTo).Returns(category.Object);
+            story.SetupGet(s => s.Tags).Returns(new[] { tag1.Object, tag2.Object });
 
-            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns(story.Object).Verifiable();
+            _storyRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns(story.Object).Verifiable();
 
             return ((JsonResult) _controller.GetStory(Guid.NewGuid().Shrink())).Data;
         }
@@ -1789,8 +1789,8 @@ namespace Kigg.Web.Test
         {
             SetCurrentUser(new Mock<IUser>(), Roles.Moderator);
 
-            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns(story).Verifiable();
-            _storyService.Expect(s => s.Update(It.IsAny<IStory>(), It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Verifiable();
+            _storyRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns(story).Verifiable();
+            _storyService.Setup(s => s.Update(It.IsAny<IStory>(), It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Verifiable();
 
             return (JsonViewData)((JsonResult)_controller.Update(Guid.NewGuid().Shrink(), "Dummy-Story", SystemTime.Now(), "Dummy Story", "Dummy", "Dummy Description", "foo,bar")).Data;
         }
@@ -1799,8 +1799,8 @@ namespace Kigg.Web.Test
         {
             SetCurrentUser(new Mock<IUser>(), Roles.Moderator);
 
-            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns(story).Verifiable();
-            _storyService.Expect(s => s.Delete(It.IsAny<IStory>(), It.IsAny<IUser>())).Verifiable();
+            _storyRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns(story).Verifiable();
+            _storyService.Setup(s => s.Delete(It.IsAny<IStory>(), It.IsAny<IUser>())).Verifiable();
 
             return (JsonViewData)((JsonResult)_controller.Delete(Guid.NewGuid().Shrink())).Data;
         }
@@ -1809,8 +1809,8 @@ namespace Kigg.Web.Test
         {
             SetCurrentUser(new Mock<IUser>(), Roles.Moderator);
 
-            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns(story).Verifiable();
-            _storyService.Expect(s => s.Approve(It.IsAny<IStory>(), It.IsAny<string>(), It.IsAny<IUser>())).Verifiable();
+            _storyRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns(story).Verifiable();
+            _storyService.Setup(s => s.Approve(It.IsAny<IStory>(), It.IsAny<string>(), It.IsAny<IUser>())).Verifiable();
 
             return (JsonViewData)((JsonResult)_controller.Approve(Guid.NewGuid().Shrink())).Data;
         }
@@ -1819,8 +1819,8 @@ namespace Kigg.Web.Test
         {
             SetCurrentUser(new Mock<IUser>(), Roles.Moderator);
 
-            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns(story).Verifiable();
-            _storyService.Expect(s => s.Spam(It.IsAny<IStory>(), It.IsAny<string>(), It.IsAny<IUser>())).Verifiable();
+            _storyRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns(story).Verifiable();
+            _storyService.Setup(s => s.Spam(It.IsAny<IStory>(), It.IsAny<string>(), It.IsAny<IUser>())).Verifiable();
 
             return (JsonViewData)((JsonResult)_controller.ConfirmSpam(Guid.NewGuid().Shrink())).Data;
         }
@@ -1829,10 +1829,10 @@ namespace Kigg.Web.Test
         {
             var user = new Mock<IUser>();
 
-            user.ExpectGet(u => u.UserName).Returns(UserName);
+            user.SetupGet(u => u.UserName).Returns(UserName);
 
-            _userRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns(user.Object).Verifiable();
-            _storyRepository.Expect(r => r.FindPromotedByUser(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
+            _userRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns(user.Object).Verifiable();
+            _storyRepository.Setup(r => r.FindPromotedByUser(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
 
             return (ViewResult) _controller.PromotedBy(UserName, 1);
         }
@@ -1841,10 +1841,10 @@ namespace Kigg.Web.Test
         {
             var user = new Mock<IUser>();
 
-            user.ExpectGet(u => u.UserName).Returns(UserName);
+            user.SetupGet(u => u.UserName).Returns(UserName);
 
-            _userRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns(user.Object).Verifiable();
-            _storyRepository.Expect(r => r.FindPostedByUser(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
+            _userRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns(user.Object).Verifiable();
+            _storyRepository.Setup(r => r.FindPostedByUser(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
 
             return (ViewResult)_controller.PostedBy(UserName, 1);
         }
@@ -1853,39 +1853,39 @@ namespace Kigg.Web.Test
         {
             var user = new Mock<IUser>();
 
-            user.ExpectGet(u => u.UserName).Returns(UserName);
+            user.SetupGet(u => u.UserName).Returns(UserName);
 
-            _userRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns(user.Object).Verifiable();
-            _storyRepository.Expect(r => r.FindCommentedByUser(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
+            _userRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns(user.Object).Verifiable();
+            _storyRepository.Setup(r => r.FindCommentedByUser(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
 
             return (ViewResult)_controller.CommentedBy(UserName, 1);
         }
 
         private void SetupCaptcha()
         {
-            _httpContext.HttpRequest.ExpectGet(r => r.UserHostAddress).Returns("192.168.0.1");
-            _httpContext.HttpRequest.ExpectGet(r => r.Form).Returns(new NameValueCollection
+            _httpContext.HttpRequest.SetupGet(r => r.UserHostAddress).Returns("192.168.0.1");
+            _httpContext.HttpRequest.SetupGet(r => r.Form).Returns(new NameValueCollection
                                                                         {
                                                                             {_reCAPTCHA.Object.ChallengeInputName, "foo" },
                                                                             {_reCAPTCHA.Object.ResponseInputName, "bar" } 
                                                                         }
                                                                     );
 
-            _reCAPTCHA.Expect(c => c.Validate(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(true);
+            _reCAPTCHA.Setup(c => c.Validate(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(true);
         }
 
         private void SetCurrentUser(Mock<IUser> user, Roles role)
         {
             var userId = Guid.NewGuid();
 
-            user.ExpectGet(u => u.Id).Returns(userId);
-            user.ExpectGet(u => u.UserName).Returns(UserName);
-            user.ExpectGet(u => u.Role).Returns(role);
+            user.SetupGet(u => u.Id).Returns(userId);
+            user.SetupGet(u => u.UserName).Returns(UserName);
+            user.SetupGet(u => u.Role).Returns(role);
 
-            _httpContext.User.Identity.ExpectGet(i => i.Name).Returns(UserName);
-            _httpContext.User.Identity.ExpectGet(i => i.IsAuthenticated).Returns(true);
+            _httpContext.User.Identity.SetupGet(i => i.Name).Returns(UserName);
+            _httpContext.User.Identity.SetupGet(i => i.IsAuthenticated).Returns(true);
 
-            _userRepository.Expect(r => r.FindByUserName(UserName)).Returns(user.Object);
+            _userRepository.Setup(r => r.FindByUserName(UserName)).Returns(user.Object);
         }
     }
 }

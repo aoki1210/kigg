@@ -20,7 +20,7 @@ namespace Kigg.Core.Test
         {
             var action = new Mock<IDelegateReference>();
 
-            action.ExpectGet(a => a.Target).Returns((Action<object>)delegate { });
+            action.SetupGet(a => a.Target).Returns((Action<object>)delegate { });
 
             Assert.Throws<ArgumentException>(() => new EventSubscription<object>(action.Object, new Mock<IDelegateReference>().Object));
         }
@@ -29,10 +29,10 @@ namespace Kigg.Core.Test
         public void Action_Should_Not_Be_Null()
         {
             var action = new Mock<IDelegateReference>();
-            action.ExpectGet(a => a.Target).Returns((Action<object>)delegate { });
+            action.SetupGet(a => a.Target).Returns((Action<object>)delegate { });
 
             var filter = new Mock<IDelegateReference>();
-            filter.ExpectGet(a => a.Target).Returns((Predicate<object>)delegate { return true; });
+            filter.SetupGet(a => a.Target).Returns((Predicate<object>)delegate { return true; });
 
             var subscription = new EventSubscription<object>(action.Object, filter.Object);
 
@@ -43,10 +43,10 @@ namespace Kigg.Core.Test
         public void Filter_Should_Not_be_Null()
         {
             var action = new Mock<IDelegateReference>();
-            action.ExpectGet(a => a.Target).Returns((Action<object>)delegate { });
+            action.SetupGet(a => a.Target).Returns((Action<object>)delegate { });
 
             var filter = new Mock<IDelegateReference>();
-            filter.ExpectGet(a => a.Target).Returns((Predicate<object>)delegate { return true; });
+            filter.SetupGet(a => a.Target).Returns((Predicate<object>)delegate { return true; });
 
             var subscription = new EventSubscription<object>(action.Object, filter.Object);
 
@@ -60,11 +60,11 @@ namespace Kigg.Core.Test
 
             var actionDelegate = new Mock<IDelegateReference>();
 
-            actionDelegate.ExpectGet(d => d.Target).Returns((Action<object>) delegate { executedDelegates.Add("Action"); });
+            actionDelegate.SetupGet(d => d.Target).Returns((Action<object>) delegate { executedDelegates.Add("Action"); });
 
             var filterDelegate = new Mock<IDelegateReference>();
 
-            filterDelegate.ExpectGet(d => d.Target).Returns((Predicate<object>) delegate { executedDelegates.Add("Filter"); return true; });
+            filterDelegate.SetupGet(d => d.Target).Returns((Predicate<object>) delegate { executedDelegates.Add("Filter"); return true; });
 
             var eventSubscription = new EventSubscription<object>(actionDelegate.Object, filterDelegate.Object);
 
@@ -84,11 +84,11 @@ namespace Kigg.Core.Test
         {
             var actionDelegate = new Mock<IDelegateReference>();
 
-            actionDelegate.ExpectGet(d => d.Target).Returns((Action<object>)delegate { });
+            actionDelegate.SetupGet(d => d.Target).Returns((Action<object>)delegate { });
 
             var filterDelegate = new Mock<IDelegateReference>();
 
-            filterDelegate.ExpectGet(d => d.Target).Returns((Predicate<object>)delegate { return true; });
+            filterDelegate.SetupGet(d => d.Target).Returns((Predicate<object>)delegate { return true; });
 
             var eventSubscription = new EventSubscription<object>(actionDelegate.Object, filterDelegate.Object);
 
@@ -96,7 +96,7 @@ namespace Kigg.Core.Test
 
             Assert.NotNull(publishAction);
 
-            actionDelegate.ExpectGet(d => d.Target).Returns(null);
+            actionDelegate.SetupGet(d => d.Target).Returns(null);
 
             publishAction = eventSubscription.GetExecutionStrategy();
 
@@ -108,11 +108,11 @@ namespace Kigg.Core.Test
         {
             var actionDelegate = new Mock<IDelegateReference>();
 
-            actionDelegate.ExpectGet(d => d.Target).Returns((Action<object>)delegate { });
+            actionDelegate.SetupGet(d => d.Target).Returns((Action<object>)delegate { });
 
             var filterDelegate = new Mock<IDelegateReference>();
 
-            filterDelegate.ExpectGet(d => d.Target).Returns((Predicate<object>)delegate { return true; });
+            filterDelegate.SetupGet(d => d.Target).Returns((Predicate<object>)delegate { return true; });
 
             var eventSubscription = new EventSubscription<object>(actionDelegate.Object, filterDelegate.Object);
 
@@ -120,7 +120,7 @@ namespace Kigg.Core.Test
 
             Assert.NotNull(publishAction);
 
-            filterDelegate.ExpectGet(d => d.Target).Returns(null);
+            filterDelegate.SetupGet(d => d.Target).Returns(null);
 
             publishAction = eventSubscription.GetExecutionStrategy();
 
@@ -133,11 +133,11 @@ namespace Kigg.Core.Test
             bool actionExecuted = false;
             var actionDelegate = new Mock<IDelegateReference>();
 
-            actionDelegate.ExpectGet(d => d.Target).Returns((Action<int>)delegate { actionExecuted = true; });
+            actionDelegate.SetupGet(d => d.Target).Returns((Action<int>)delegate { actionExecuted = true; });
 
             var filterDelegate = new Mock<IDelegateReference>();
 
-            filterDelegate.ExpectGet(d => d.Target).Returns((Predicate<int>)delegate { return false; });
+            filterDelegate.SetupGet(d => d.Target).Returns((Predicate<int>)delegate { return false; });
 
             var eventSubscription = new EventSubscription<int>(actionDelegate.Object, filterDelegate.Object);
 
@@ -156,11 +156,11 @@ namespace Kigg.Core.Test
 
             var actionDelegate = new Mock<IDelegateReference>();
 
-            actionDelegate.ExpectGet(d => d.Target).Returns((Action<string>)(obj => passedArgumentToAction = obj));
+            actionDelegate.SetupGet(d => d.Target).Returns((Action<string>)(obj => passedArgumentToAction = obj));
 
             var filterDelegate = new Mock<IDelegateReference>();
 
-            filterDelegate.ExpectGet(d => d.Target).Returns((Predicate<string>)(obj => { passedArgumentToFilter = obj; return true; }));
+            filterDelegate.SetupGet(d => d.Target).Returns((Predicate<string>)(obj => { passedArgumentToFilter = obj; return true; }));
 
             var eventSubscription = new EventSubscription<string>(actionDelegate.Object, filterDelegate.Object);
             var publishAction = eventSubscription.GetExecutionStrategy();

@@ -30,7 +30,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void Add_Should_Use_Database()
         {
-            database.Expect(d => d.Insert(It.IsAny<Story>())).Verifiable();
+            database.Setup(d => d.Insert(It.IsAny<Story>())).Verifiable();
 
             _storyRepository.Add(CreateStory());
         }
@@ -48,7 +48,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         {
             Stories.Add(CreateStory() as Story);
 
-            database.Expect(d => d.Delete(It.IsAny<Story>())).Verifiable();
+            database.Setup(d => d.Delete(It.IsAny<Story>())).Verifiable();
 
             _storyRepository.Remove(Stories[0]);
         }
@@ -207,8 +207,8 @@ namespace Kigg.Infrastructure.LinqToSql.Test
 
             Stories.AddRange(new[] { story1 as Story, story2 as Story });
 
-            database.Expect(db => db.StorySearch(It.IsAny<string>())).Returns((new List<StorySearchResult>{new StorySearchResult{Id = story1.Id }}).AsQueryable());
-            database.Expect(db => db.CommentSearch(It.IsAny<string>())).Returns((new List<CommentSearchResult> { new CommentSearchResult { StoryId = story2.Id } }).AsQueryable());
+            database.Setup(db => db.StorySearch(It.IsAny<string>())).Returns((new List<StorySearchResult>{new StorySearchResult{Id = story1.Id }}).AsQueryable());
+            database.Setup(db => db.CommentSearch(It.IsAny<string>())).Returns((new List<CommentSearchResult> { new CommentSearchResult { StoryId = story2.Id } }).AsQueryable());
 
             var pagedResult = _storyRepository.Search("Test", 0, 10);
 

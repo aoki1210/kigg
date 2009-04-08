@@ -19,7 +19,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void CurrentScore_Should_Use_UserRepository()
         {
-            userRepository.Expect(r => r.FindScoreById(It.IsAny<Guid>(), It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(0).Verifiable();
+            userRepository.Setup(r => r.FindScoreById(It.IsAny<Guid>(), It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(0).Verifiable();
 
             Assert.Equal(0, _user.CurrentScore);
 
@@ -63,7 +63,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void ChangeEmail_Should_Use_UserRepository()
         {
-            userRepository.Expect(r => r.FindByEmail(It.IsAny<string>())).Returns((IUser) null).Verifiable();
+            userRepository.Setup(r => r.FindByEmail(It.IsAny<string>())).Returns((IUser) null).Verifiable();
 
             _user.ChangeEmail("foo@bar.com");
 
@@ -79,7 +79,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
 
             var sameEmailUser = new User{ Id = Guid.NewGuid(), Email = Email };
 
-            userRepository.Expect(r => r.FindByEmail(Email)).Returns(sameEmailUser);
+            userRepository.Setup(r => r.FindByEmail(Email)).Returns(sameEmailUser);
 
             Assert.Throws<InvalidOperationException>(() => _user.ChangeEmail(Email));
         }
@@ -185,7 +185,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void GetScoreBetween_Should_Use_UserRepository()
         {
-            userRepository.Expect(r => r.FindScoreById(It.IsAny<Guid>(), It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(0).Verifiable();
+            userRepository.Setup(r => r.FindScoreById(It.IsAny<Guid>(), It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(0).Verifiable();
 
             _user.GetScoreBetween(SystemTime.Now().AddHours(-6), SystemTime.Now());
 

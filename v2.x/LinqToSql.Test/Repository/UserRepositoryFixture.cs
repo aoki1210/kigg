@@ -29,7 +29,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void Add_Should_Use_Database()
         {
-            database.Expect(d => d.Insert(It.IsAny<User>())).Verifiable();
+            database.Setup(d => d.Insert(It.IsAny<User>())).Verifiable();
 
             _userRepository.Add(_factory.CreateUser("dummy", "dummy@users.com", "xxxx"));
         }
@@ -55,7 +55,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         {
             Users.Add(_factory.CreateUser("demo", "demo@users.com", "xxxx") as User);
 
-            database.Expect(d => d.Delete(It.IsAny<User>())).Verifiable();
+            database.Setup(d => d.Delete(It.IsAny<User>())).Verifiable();
 
             _userRepository.Remove(Users[0]);
         }

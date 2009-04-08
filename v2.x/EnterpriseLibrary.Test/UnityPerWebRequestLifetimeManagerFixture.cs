@@ -18,7 +18,7 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
         public UnityPerWebRequestLifetimeManagerFixture()
         {
             _httpContext = new Mock<HttpContextBase>();
-            _httpContext.ExpectGet(c => c.Items).Returns(new Hashtable());
+            _httpContext.SetupGet(c => c.Items).Returns(new Hashtable());
             _lifetimeManager = new UnityPerWebRequestLifetimeManager(_httpContext.Object);
 
             _disposable = new Mock<IDisposable>();
@@ -52,7 +52,7 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
         {
             var newValue = new Mock<IDisposable>();
 
-            _disposable.Expect(d => d.Dispose()).Verifiable();
+            _disposable.Setup(d => d.Dispose()).Verifiable();
 
             _lifetimeManager.SetValue(_disposable.Object);
             _lifetimeManager.SetValue(newValue.Object);

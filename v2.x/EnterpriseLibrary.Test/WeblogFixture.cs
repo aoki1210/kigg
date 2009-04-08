@@ -29,7 +29,7 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
         [Fact]
         public void Info_Should_Use_Logger()
         {
-            _logger.Expect(l => l.Write(It.IsAny<LogEntry>())).Verifiable();
+            _logger.Setup(l => l.Write(It.IsAny<LogEntry>())).Verifiable();
 
             _Log.Info(Message);
         }
@@ -37,7 +37,7 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
         [Fact]
         public void Warning_Should_Use_Logger()
         {
-            _logger.Expect(l => l.Write(It.IsAny<LogEntry>())).Verifiable();
+            _logger.Setup(l => l.Write(It.IsAny<LogEntry>())).Verifiable();
 
             _Log.Warning(Message);
         }
@@ -45,7 +45,7 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
         [Fact]
         public void Error_Should_Use_Logger()
         {
-            _logger.Expect(l => l.Write(It.IsAny<LogEntry>())).Verifiable();
+            _logger.Setup(l => l.Write(It.IsAny<LogEntry>())).Verifiable();
 
             _Log.Error(Message);
         }
@@ -56,7 +56,7 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
             Exception exceptionToHandle = new Exception();
             Exception exceptionToThrow;
 
-            _exceptionPolicy.Expect(ep => ep.HandleException(exceptionToHandle, It.IsAny<string>(), out exceptionToThrow)).Returns(true);
+            _exceptionPolicy.Setup(ep => ep.HandleException(exceptionToHandle, It.IsAny<string>(), out exceptionToThrow)).Returns(true);
 
             Assert.Throws<Exception>(() => _Log.Exception(exceptionToHandle));
         }
@@ -67,7 +67,7 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
             Exception exceptionToHandle = new Exception();
             Exception exceptionToThrow;
 
-            _exceptionPolicy.Expect(ep => ep.HandleException(exceptionToHandle, It.IsAny<string>(), out exceptionToThrow)).Returns(false);
+            _exceptionPolicy.Setup(ep => ep.HandleException(exceptionToHandle, It.IsAny<string>(), out exceptionToThrow)).Returns(false);
 
             Assert.DoesNotThrow(() => _Log.Exception(exceptionToHandle));
         }

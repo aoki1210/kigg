@@ -34,17 +34,17 @@ namespace Kigg.Core.Test
             var moderator = new Mock<IUser>();
             var admin = new Mock<IUser>();
 
-            user1.ExpectGet(u => u.Id).Returns(Guid.NewGuid());
-            user2.ExpectGet(u => u.Id).Returns(Guid.NewGuid());
-            user3.ExpectGet(u => u.Id).Returns(Guid.NewGuid());
-            user1.ExpectGet(u => u.CurrentScore).Returns(100);
-            user2.ExpectGet(u => u.CurrentScore).Returns(200);
-            user3.ExpectGet(u => u.CurrentScore).Returns(300);
+            user1.SetupGet(u => u.Id).Returns(Guid.NewGuid());
+            user2.SetupGet(u => u.Id).Returns(Guid.NewGuid());
+            user3.SetupGet(u => u.Id).Returns(Guid.NewGuid());
+            user1.SetupGet(u => u.CurrentScore).Returns(100);
+            user2.SetupGet(u => u.CurrentScore).Returns(200);
+            user3.SetupGet(u => u.CurrentScore).Returns(300);
 
-            moderator.ExpectGet(u => u.Id).Returns(Guid.NewGuid());
-            admin.ExpectGet(u => u.Id).Returns(Guid.NewGuid());
-            moderator.ExpectGet(u => u.Role).Returns(Roles.Moderator);
-            admin.ExpectGet(u => u.Role).Returns(Roles.Administrator);
+            moderator.SetupGet(u => u.Id).Returns(Guid.NewGuid());
+            admin.SetupGet(u => u.Id).Returns(Guid.NewGuid());
+            moderator.SetupGet(u => u.Role).Returns(Roles.Moderator);
+            admin.SetupGet(u => u.Role).Returns(Roles.Administrator);
 
             var user1Vote = new Mock<IVote>();
             var user2Vote = new Mock<IVote>();
@@ -53,16 +53,16 @@ namespace Kigg.Core.Test
             var moderatorVote = new Mock<IVote>();
             var adminVote = new Mock<IVote>();
 
-            user1Vote.Expect(v => v.ByUser).Returns(user1.Object);
-            user2Vote.Expect(v => v.ByUser).Returns(user2.Object);
-            user3Vote.Expect(v => v.ByUser).Returns(user3.Object);
+            user1Vote.Setup(v => v.ByUser).Returns(user1.Object);
+            user2Vote.Setup(v => v.ByUser).Returns(user2.Object);
+            user3Vote.Setup(v => v.ByUser).Returns(user3.Object);
 
-            moderatorVote.Expect(v => v.ByUser).Returns(moderator.Object);
-            adminVote.Expect(v => v.ByUser).Returns(admin.Object);
+            moderatorVote.Setup(v => v.ByUser).Returns(moderator.Object);
+            adminVote.Setup(v => v.ByUser).Returns(admin.Object);
 
             var story = new Mock<IStory>();
 
-            _repository.Expect(r => r.FindAfter(It.IsAny<Guid>(), It.IsAny<DateTime>())).Returns(new[] { user1Vote.Object, user2Vote.Object, user3Vote.Object, moderatorVote.Object, adminVote.Object }).Verifiable();
+            _repository.Setup(r => r.FindAfter(It.IsAny<Guid>(), It.IsAny<DateTime>())).Returns(new[] { user1Vote.Object, user2Vote.Object, user3Vote.Object, moderatorVote.Object, adminVote.Object }).Verifiable();
 
             Assert.Equal(
                             (

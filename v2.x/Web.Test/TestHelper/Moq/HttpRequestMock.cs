@@ -53,10 +53,10 @@ namespace Moq.Mvc
 		/// </summary>
 		public HttpRequestMock()
 		{
-            ExpectGet(f => f.Form).Returns(new NameValueCollection());
-            ExpectGet(f => f.Headers).Returns(new NameValueCollection());
-            ExpectGet(r => r.QueryString).Returns(new NameValueCollection());
-		    ExpectGet(r => r.Cookies).Returns(new HttpCookieCollection());
+            SetupGet(f => f.Form).Returns(new NameValueCollection());
+            SetupGet(f => f.Headers).Returns(new NameValueCollection());
+            SetupGet(r => r.QueryString).Returns(new NameValueCollection());
+		    SetupGet(r => r.Cookies).Returns(new HttpCookieCollection());
 		}
 	}
 }

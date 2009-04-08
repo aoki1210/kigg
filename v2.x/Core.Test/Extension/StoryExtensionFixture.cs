@@ -21,7 +21,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsNew_Should_Be_True_When_LastProcessedAt_Is_Null()
         {
-            _story.ExpectGet(s => s.LastProcessedAt).Returns((DateTime?) null);
+            _story.SetupGet(s => s.LastProcessedAt).Returns((DateTime?) null);
 
             Assert.True(_story.Object.IsNew());
         }
@@ -29,7 +29,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsPublished_Should_Be_True_When_PublishedAt_Is_Not_Null()
         {
-            _story.ExpectGet(s => s.PublishedAt).Returns(SystemTime.Now());
+            _story.SetupGet(s => s.PublishedAt).Returns(SystemTime.Now());
 
             Assert.True(_story.Object.IsPublished());
         }
@@ -39,7 +39,7 @@ namespace Kigg.Core.Test
         {
             var date = SystemTime.Now().AddHours(- (settings.Object.MaximumAgeOfStoryInHoursToPublish + 1));
 
-            _story.ExpectGet(s => s.CreatedAt).Returns(date);
+            _story.SetupGet(s => s.CreatedAt).Returns(date);
 
             Assert.True(_story.Object.HasExpired());
         }
@@ -47,7 +47,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsApproved_Should_Be_True_When_Aapproved_Is_Not_Null()
         {
-            _story.ExpectGet(s => s.ApprovedAt).Returns(SystemTime.Now());
+            _story.SetupGet(s => s.ApprovedAt).Returns(SystemTime.Now());
 
             Assert.True(_story.Object.IsApproved());
         }
@@ -55,7 +55,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void HasComments_Should_Be_True_When_CommentCount_Is_Greater_Than_Zero()
         {
-            _story.ExpectGet(s => s.CommentCount).Returns(1);
+            _story.SetupGet(s => s.CommentCount).Returns(1);
 
             Assert.True(_story.Object.HasComments());
         }
@@ -67,11 +67,11 @@ namespace Kigg.Core.Test
 
             var postedByUser = new Mock<IUser>();
 
-            postedByUser.ExpectGet(u => u.Id).Returns(userId);
-            _story.ExpectGet(s => s.PostedBy).Returns(postedByUser.Object);
+            postedByUser.SetupGet(u => u.Id).Returns(userId);
+            _story.SetupGet(s => s.PostedBy).Returns(postedByUser.Object);
 
             var checkingUser = new Mock<IUser>();
-            checkingUser.ExpectGet(u => u.Id).Returns(userId);
+            checkingUser.SetupGet(u => u.Id).Returns(userId);
 
             Assert.True(_story.Object.IsPostedBy(checkingUser.Object));
         }
@@ -79,7 +79,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Host_Returns_The_Domain_Name_From_The_Story_Url()
         {
-            _story.ExpectGet(s => s.Url).Returns("http://weblogs.asp.net/rashid");
+            _story.SetupGet(s => s.Url).Returns("http://weblogs.asp.net/rashid");
 
             Assert.Equal("weblogs.asp.net", _story.Object.Host());
         }
@@ -87,9 +87,9 @@ namespace Kigg.Core.Test
         [Fact]
         public void SmallThumbnail_Uses_Thumbnail_To_Build_Url()
         {
-            thumbnail.Expect(t => t.For(It.IsAny<string>(), ThumbnailSize.Small)).Returns("http://thumbnail.com").Verifiable();
+            thumbnail.Setup(t => t.For(It.IsAny<string>(), ThumbnailSize.Small)).Returns("http://thumbnail.com").Verifiable();
 
-            _story.ExpectGet(s => s.Url).Returns("http://dotnetshoutout.com");
+            _story.SetupGet(s => s.Url).Returns("http://dotnetshoutout.com");
 
             _story.Object.SmallThumbnail();
 
@@ -99,9 +99,9 @@ namespace Kigg.Core.Test
         [Fact]
         public void MediumThumbnail_Uses_Thumbnail_To_Build_Url()
         {
-            thumbnail.Expect(t => t.For(It.IsAny<string>(), ThumbnailSize.Medium)).Returns("http://thumbnail.com").Verifiable();
+            thumbnail.Setup(t => t.For(It.IsAny<string>(), ThumbnailSize.Medium)).Returns("http://thumbnail.com").Verifiable();
 
-            _story.ExpectGet(s => s.Url).Returns("http://dotnetshoutout.com");
+            _story.SetupGet(s => s.Url).Returns("http://dotnetshoutout.com");
 
             _story.Object.MediumThumbnail();
 

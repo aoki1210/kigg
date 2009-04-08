@@ -53,14 +53,14 @@ namespace Kigg.Core.Test
             var categories = new List<ICategory>();
 
             var category1 = new Mock<ICategory>();
-            category1.ExpectGet(c => c.Name).Returns("C#");
+            category1.SetupGet(c => c.Name).Returns("C#");
 
             var category2 = new Mock<ICategory>();
-            category2.ExpectGet(c => c.Name).Returns("ASP.NET");
+            category2.SetupGet(c => c.Name).Returns("ASP.NET");
 
             categories.AddRange(new[] { category1.Object, category2.Object });
 
-            _categoryRepository.Expect(r => r.FindAll()).Returns(categories).Verifiable();
+            _categoryRepository.Setup(r => r.FindAll()).Returns(categories).Verifiable();
         }
     }
 }

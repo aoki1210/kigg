@@ -53,14 +53,14 @@ namespace Kigg.Core.Test
             var tags = new List<ITag>();
 
             var tag1 = new Mock<ITag>();
-            tag1.ExpectGet(t => t.Name).Returns("ASPNETMVC");
+            tag1.SetupGet(t => t.Name).Returns("ASPNETMVC");
 
             var tag2 = new Mock<ITag>();
-            tag2.ExpectGet(t => t.Name).Returns("IoC/DI");
+            tag2.SetupGet(t => t.Name).Returns("IoC/DI");
 
             tags.AddRange(new[] { tag1.Object, tag2.Object });
 
-            _tagRepository.Expect(r => r.FindByUsage(It.IsAny<int>())).Returns(tags).Verifiable();
+            _tagRepository.Setup(r => r.FindByUsage(It.IsAny<int>())).Returns(tags).Verifiable();
         }
     }
 }

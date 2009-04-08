@@ -65,13 +65,13 @@ namespace Kigg.Core.Test
         {
             var storySubmitEvent = new Mock<StorySubmitEvent>();
 
-            _eventAggregator.Expect(ea => ea.GetEvent<StorySubmitEvent>()).Returns(storySubmitEvent.Object).Verifiable();
-            storySubmitEvent.Expect(e => e.Subscribe(It.IsAny<Action<StorySubmitEventArgs>>(), true)).Returns(new SubscriptionToken()).Verifiable();
+            _eventAggregator.Setup(ea => ea.GetEvent<StorySubmitEvent>()).Returns(storySubmitEvent.Object).Verifiable();
+            storySubmitEvent.Setup(e => e.Subscribe(It.IsAny<Action<StorySubmitEventArgs>>(), true)).Returns(new SubscriptionToken()).Verifiable();
 
             var storyApproveEvent = new Mock<StoryApproveEvent>();
 
-            _eventAggregator.Expect(ea => ea.GetEvent<StoryApproveEvent>()).Returns(storyApproveEvent.Object).Verifiable();
-            storyApproveEvent.Expect(e => e.Subscribe(It.IsAny<Action<StoryApproveEventArgs>>(), true)).Returns(new SubscriptionToken());
+            _eventAggregator.Setup(ea => ea.GetEvent<StoryApproveEvent>()).Returns(storyApproveEvent.Object).Verifiable();
+            storyApproveEvent.Setup(e => e.Subscribe(It.IsAny<Action<StoryApproveEventArgs>>(), true)).Returns(new SubscriptionToken());
 
             _pingStory.Start();
 
@@ -85,15 +85,15 @@ namespace Kigg.Core.Test
         {
             var storySubmitEvent = new Mock<StorySubmitEvent>();
 
-            _eventAggregator.Expect(ea => ea.GetEvent<StorySubmitEvent>()).Returns(storySubmitEvent.Object).Verifiable();
-            storySubmitEvent.Expect(e => e.Subscribe(It.IsAny<Action<StorySubmitEventArgs>>(), true)).Returns(new SubscriptionToken());
-            storySubmitEvent.Expect(e => e.Unsubscribe(It.IsAny<SubscriptionToken>())).Verifiable();
+            _eventAggregator.Setup(ea => ea.GetEvent<StorySubmitEvent>()).Returns(storySubmitEvent.Object).Verifiable();
+            storySubmitEvent.Setup(e => e.Subscribe(It.IsAny<Action<StorySubmitEventArgs>>(), true)).Returns(new SubscriptionToken());
+            storySubmitEvent.Setup(e => e.Unsubscribe(It.IsAny<SubscriptionToken>())).Verifiable();
 
             var storyApproveEvent = new Mock<StoryApproveEvent>();
 
-            _eventAggregator.Expect(ea => ea.GetEvent<StoryApproveEvent>()).Returns(storyApproveEvent.Object).Verifiable();
-            storyApproveEvent.Expect(e => e.Subscribe(It.IsAny<Action<StoryApproveEventArgs>>(), true)).Returns(new SubscriptionToken());
-            storyApproveEvent.Expect(e => e.Unsubscribe(It.IsAny<SubscriptionToken>())).Verifiable();
+            _eventAggregator.Setup(ea => ea.GetEvent<StoryApproveEvent>()).Returns(storyApproveEvent.Object).Verifiable();
+            storyApproveEvent.Setup(e => e.Subscribe(It.IsAny<Action<StoryApproveEventArgs>>(), true)).Returns(new SubscriptionToken());
+            storyApproveEvent.Setup(e => e.Unsubscribe(It.IsAny<SubscriptionToken>())).Verifiable();
 
             _pingStory.Start();
             _pingStory.Stop();
@@ -121,12 +121,12 @@ namespace Kigg.Core.Test
         {
             var story = new Mock<IStory>();
 
-            story.ExpectGet(s => s.Title).Returns("Dummy Title");
+            story.SetupGet(s => s.Title).Returns("Dummy Title");
 
             var content = new StoryContent("Dummy story", "Dummy content", "http://dummyurl.com");
 
-            _contentService.Expect(cs => cs.Get(It.IsAny<string>())).Returns(content).Verifiable();
-            _httpForm.Expect(h => h.PostAsync(It.IsAny<HttpFormPostRequest>())).Verifiable();
+            _contentService.Setup(cs => cs.Get(It.IsAny<string>())).Returns(content).Verifiable();
+            _httpForm.Setup(h => h.PostAsync(It.IsAny<HttpFormPostRequest>())).Verifiable();
 
             return story;
         }

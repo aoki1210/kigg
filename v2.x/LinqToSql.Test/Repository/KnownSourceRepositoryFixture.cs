@@ -29,7 +29,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void Add_Should_Use_Database()
         {
-            database.Expect(d => d.Insert(It.IsAny<KnownSource>())).Verifiable();
+            database.Setup(d => d.Insert(It.IsAny<KnownSource>())).Verifiable();
 
             _knownSourceRepository.Add(_factory.CreateKnownSource("http://weblog.asp.net"));
         }
@@ -47,7 +47,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         {
             KnownSources.Add(_factory.CreateKnownSource("http://weblogs.asp.net") as KnownSource);
 
-            database.Expect(db => db.ExecuteQuery<KnownSource>(It.IsAny<string>(), It.IsAny<object[]>())).Returns(new List<KnownSource> { KnownSources[0] }).Verifiable();
+            database.Setup(db => db.ExecuteQuery<KnownSource>(It.IsAny<string>(), It.IsAny<object[]>())).Returns(new List<KnownSource> { KnownSources[0] }).Verifiable();
 
             var knownSource = _knownSourceRepository.FindMatching("http://weblogs.asp.net/ScottGu");
 

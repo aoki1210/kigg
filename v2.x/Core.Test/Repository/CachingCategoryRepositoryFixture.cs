@@ -36,8 +36,8 @@ namespace Kigg.Core.Test
         {
             var repository = new CachingCategoryRepository(_innerRepository.Object, 10);
 
-            cache.Expect(c => c.Set(It.IsAny<string>(), It.IsAny<ICollection<ICategory>>(), It.IsAny<DateTime>())).Verifiable();
-            _innerRepository.Expect(r => r.FindAll()).Returns(new List<ICategory> { CreateStubCategory() }).Verifiable();
+            cache.Setup(c => c.Set(It.IsAny<string>(), It.IsAny<ICollection<ICategory>>(), It.IsAny<DateTime>())).Verifiable();
+            _innerRepository.Setup(r => r.FindAll()).Returns(new List<ICategory> { CreateStubCategory() }).Verifiable();
 
             repository.FindAll();
         }

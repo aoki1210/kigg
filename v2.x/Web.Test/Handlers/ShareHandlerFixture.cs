@@ -27,7 +27,7 @@ namespace Kigg.Web.Test
             _redirector = new Mock<ISocialServiceRedirector>();
             _storyRepository = new Mock<IStoryRepository>();
 
-            resolver.Expect(r => r.Resolve<ISocialServiceRedirector>(It.IsAny<string>())).Returns(_redirector.Object);
+            resolver.Setup(r => r.Resolve<ISocialServiceRedirector>(It.IsAny<string>())).Returns(_redirector.Object);
 
             _handler = new ShareHandler { StoryRepository = _storyRepository.Object };
         }
@@ -40,8 +40,8 @@ namespace Kigg.Web.Test
         [Fact]
         public void RedirectToPrevious_Should_Redirect_To_Referrer()
         {
-            _httpContext.HttpRequest.ExpectGet(r => r.UrlReferrer).Returns(new Uri("http://dotnetshoutout.com/Upcoming"));
-            _httpContext.HttpResponse.Expect(r => r.Redirect(It.IsAny<string>())).Verifiable();
+            _httpContext.HttpRequest.SetupGet(r => r.UrlReferrer).Returns(new Uri("http://dotnetshoutout.com/Upcoming"));
+            _httpContext.HttpResponse.Setup(r => r.Redirect(It.IsAny<string>())).Verifiable();
 
             ShareHandler.RedirectToPrevious(_httpContext.Object);
         }
@@ -49,14 +49,14 @@ namespace Kigg.Web.Test
         [Fact]
         public void ProcessRequest_Should_Redirect_Successfully()
         {
-            _httpContext.HttpRequest.ExpectGet(r => r.UrlReferrer).Returns(new Uri("http://dotnetshoutout.com/Upcoming"));
-            _httpContext.HttpRequest.ExpectGet(r => r.QueryString).Returns(new NameValueCollection { { "id", Guid.NewGuid().Shrink() }, { "srv", "twitter" } });
+            _httpContext.HttpRequest.SetupGet(r => r.UrlReferrer).Returns(new Uri("http://dotnetshoutout.com/Upcoming"));
+            _httpContext.HttpRequest.SetupGet(r => r.QueryString).Returns(new NameValueCollection { { "id", Guid.NewGuid().Shrink() }, { "srv", "twitter" } });
 
-            _httpContext.HttpResponse.Expect(r => r.Redirect(It.IsAny<string>()));
+            _httpContext.HttpResponse.Setup(r => r.Redirect(It.IsAny<string>()));
 
-            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns(new Mock<IStory>().Object);
+            _storyRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns(new Mock<IStory>().Object);
 
-            _redirector.Expect(r => r.Redirect(It.IsAny<HttpContextBase>(), It.IsAny<IStory>()));
+            _redirector.Setup(r => r.Redirect(It.IsAny<HttpContextBase>(), It.IsAny<IStory>()));
 
             _handler.ProcessRequest(_httpContext.Object);
 
@@ -66,8 +66,8 @@ namespace Kigg.Web.Test
         [Fact]
         public void ProcessRequest_Should_Redirect_To_Referrer_When_Id_Is_Not_Valid()
         {
-            _httpContext.HttpRequest.ExpectGet(r => r.QueryString).Returns(new NameValueCollection { { "id", "abc" }, { "srv", "twitter" } });
-            _httpContext.HttpResponse.Expect(r => r.Redirect(It.IsAny<string>())).Verifiable();
+            _httpContext.HttpRequest.SetupGet(r => r.QueryString).Returns(new NameValueCollection { { "id", "abc" }, { "srv", "twitter" } });
+            _httpContext.HttpResponse.Setup(r => r.Redirect(It.IsAny<string>())).Verifiable();
 
             _handler.ProcessRequest(_httpContext.Object);
         }
@@ -75,10 +75,10 @@ namespace Kigg.Web.Test
         [Fact]
         public void ProcessRequest_Should_Redirect_To_Referrer_When_Story_Does_Not_Exist()
         {
-            _httpContext.HttpRequest.ExpectGet(r => r.QueryString).Returns(new NameValueCollection { { "id", Guid.NewGuid().Shrink() }, { "srv", "twitter" } });
-            _httpContext.HttpResponse.Expect(r => r.Redirect(It.IsAny<string>())).Verifiable();
+            _httpContext.HttpRequest.SetupGet(r => r.QueryString).Returns(new NameValueCollection { { "id", Guid.NewGuid().Shrink() }, { "srv", "twitter" } });
+            _httpContext.HttpResponse.Setup(r => r.Redirect(It.IsAny<string>())).Verifiable();
 
-            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns((IStory) null).Verifiable();
+            _storyRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns((IStory) null).Verifiable();
 
             _handler.ProcessRequest(_httpContext.Object);
         }
@@ -86,15 +86,15 @@ namespace Kigg.Web.Test
         [Fact]
         public void ProcessRequest_Should_Redirect_To_Default_Service_When_Invalid_Service_Is_Specified()
         {
-            _httpContext.HttpRequest.ExpectGet(r => r.QueryString).Returns(new NameValueCollection { { "id", Guid.NewGuid().Shrink() }, { "srv", "google" } });
-            _httpContext.HttpResponse.Expect(r => r.Redirect(It.IsAny<string>()));
+            _httpContext.HttpRequest.SetupGet(r => r.QueryString).Returns(new NameValueCollection { { "id", Guid.NewGuid().Shrink() }, { "srv", "google" } });
+            _httpContext.HttpResponse.Setup(r => r.Redirect(It.IsAny<string>()));
 
-            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns(new Mock<IStory>().Object);
+            _storyRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns(new Mock<IStory>().Object);
 
-            resolver.Expect(r => r.Resolve<ISocialServiceRedirector>("google")).Throws<Exception>();
-            resolver.Expect(r => r.Resolve<ISocialServiceRedirector>("msdn")).Returns(_redirector.Object);
+            resolver.Setup(r => r.Resolve<ISocialServiceRedirector>("google")).Throws<Exception>();
+            resolver.Setup(r => r.Resolve<ISocialServiceRedirector>("msdn")).Returns(_redirector.Object);
 
-            _redirector.Expect(r => r.Redirect(It.IsAny<HttpContextBase>(), It.IsAny<IStory>()));
+            _redirector.Setup(r => r.Redirect(It.IsAny<HttpContextBase>(), It.IsAny<IStory>()));
 
             _handler.ProcessRequest(_httpContext.Object);
 
@@ -104,15 +104,15 @@ namespace Kigg.Web.Test
         [Fact]
         public void ProcessRequest_Should_Log_When_Invalid_Service_Is_Specified()
         {
-            _httpContext.HttpRequest.ExpectGet(r => r.QueryString).Returns(new NameValueCollection { { "id", Guid.NewGuid().Shrink() }, { "srv", "google" } });
-            _httpContext.HttpResponse.Expect(r => r.Redirect(It.IsAny<string>()));
+            _httpContext.HttpRequest.SetupGet(r => r.QueryString).Returns(new NameValueCollection { { "id", Guid.NewGuid().Shrink() }, { "srv", "google" } });
+            _httpContext.HttpResponse.Setup(r => r.Redirect(It.IsAny<string>()));
 
-            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns(new Mock<IStory>().Object);
+            _storyRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns(new Mock<IStory>().Object);
 
-            resolver.Expect(r => r.Resolve<ISocialServiceRedirector>("google")).Throws<Exception>();
-            resolver.Expect(r => r.Resolve<ISocialServiceRedirector>("msdn")).Returns(_redirector.Object);
+            resolver.Setup(r => r.Resolve<ISocialServiceRedirector>("google")).Throws<Exception>();
+            resolver.Setup(r => r.Resolve<ISocialServiceRedirector>("msdn")).Returns(_redirector.Object);
 
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
             _handler.ProcessRequest(_httpContext.Object);
 

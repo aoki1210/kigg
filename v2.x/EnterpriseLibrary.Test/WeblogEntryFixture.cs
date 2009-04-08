@@ -47,7 +47,7 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
         [Fact]
         public void Is_Request_Available_Should_Be_False_When_Application_Start()
         {
-            _context.ExpectGet(c => c.Request).Throws<HttpException>();
+            _context.SetupGet(c => c.Request).Throws<HttpException>();
 
             Assert.False(CreateEntry(_context.Object).IsRequestAvailable);
         }
@@ -56,7 +56,7 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
         public void Is_Request_Available_Should_Be_True_When_Application_Is_Running()
         {
             var request = new Mock<HttpRequestBase>();
-            _context.ExpectGet(c => c.Request).Returns(request.Object);
+            _context.SetupGet(c => c.Request).Returns(request.Object);
 
             Assert.True(CreateEntry(_context.Object).IsRequestAvailable);
         }
@@ -86,14 +86,14 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
 
             var identity = new Mock<IIdentity>();
 
-            identity.ExpectGet(i => i.IsAuthenticated).Returns(true);
-            identity.ExpectGet(i => i.Name).Returns(UserName);
+            identity.SetupGet(i => i.IsAuthenticated).Returns(true);
+            identity.SetupGet(i => i.Name).Returns(UserName);
 
             var user =  new Mock<IPrincipal>();
 
-            user.ExpectGet(u => u.Identity).Returns(identity.Object);
+            user.SetupGet(u => u.Identity).Returns(identity.Object);
 
-            _context.ExpectGet(c => c.User).Returns(user.Object);
+            _context.SetupGet(c => c.User).Returns(user.Object);
 
             Assert.Equal(UserName, CreateEntry(_context.Object).CurrentUserName);
         }
@@ -110,10 +110,10 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
             var serverVariables = new NameValueCollection { { "HTTP_X_FORWARDED_FOR", "192.168.1.0" } };
             var request = new Mock<HttpRequestBase>();
 
-            request.ExpectGet(r => r.UserHostAddress).Returns("202.192.168.1");
-            request.ExpectGet(r => r.ServerVariables).Returns(serverVariables);
+            request.SetupGet(r => r.UserHostAddress).Returns("202.192.168.1");
+            request.SetupGet(r => r.ServerVariables).Returns(serverVariables);
 
-            _context.ExpectGet(c => c.Request).Returns(request.Object);
+            _context.SetupGet(c => c.Request).Returns(request.Object);
 
             Assert.Equal("202.192.168.1->192.168.1.0", CreateEntry(_context.Object).CurrentUserIPAddress);
         }
@@ -130,8 +130,8 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
             const string UserAgent = "Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.9) Gecko/2008052906 Firefox/3.0";
             var request = new Mock<HttpRequestBase>();
 
-            request.ExpectGet(r => r.UserAgent).Returns(UserAgent);
-            _context.ExpectGet(c => c.Request).Returns(request.Object);
+            request.SetupGet(r => r.UserAgent).Returns(UserAgent);
+            _context.SetupGet(c => c.Request).Returns(request.Object);
 
             Assert.Equal(UserAgent, CreateEntry(_context.Object).CurrentUserAgent);
         }
@@ -149,8 +149,8 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
 
             var request = new Mock<HttpRequestBase>();
 
-            request.ExpectGet(r => r.RawUrl).Returns(Url);
-            _context.ExpectGet(c => c.Request).Returns(request.Object);
+            request.SetupGet(r => r.RawUrl).Returns(Url);
+            _context.SetupGet(c => c.Request).Returns(request.Object);
 
             Assert.Equal(Url, CreateEntry(_context.Object).CurrentUrl);
         }
@@ -170,8 +170,8 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
 
             var request = new Mock<HttpRequestBase>();
 
-            request.ExpectGet(r => r.UrlReferrer).Returns(url);
-            _context.ExpectGet(c => c.Request).Returns(request.Object);
+            request.SetupGet(r => r.UrlReferrer).Returns(url);
+            _context.SetupGet(c => c.Request).Returns(request.Object);
 
             Assert.Equal(Url, CreateEntry(_context.Object).CurrentUrlReferrer);
         }

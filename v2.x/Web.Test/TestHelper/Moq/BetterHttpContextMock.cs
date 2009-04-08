@@ -7,8 +7,8 @@ namespace Kigg.Web.Test
         public HttpContextMock()
         {
             User = new HttpPrincipalMock();
-            ExpectGet(c => c.User).Returns(User.Object);
-            ExpectGet(c => c.Items).Returns(new Hashtable());
+            SetupGet(c => c.User).Returns(User.Object);
+            SetupGet(c => c.Items).Returns(new Hashtable());
         }
 
         public HttpPrincipalMock User
@@ -17,13 +17,13 @@ namespace Kigg.Web.Test
             private set;
         }
 
-        public override void Verify()
+        public new void Verify()
         {
             User.Verify();
             base.Verify();
         }
 
-        public override void VerifyAll()
+        public new void VerifyAll()
         {
             User.VerifyAll();
             base.VerifyAll();

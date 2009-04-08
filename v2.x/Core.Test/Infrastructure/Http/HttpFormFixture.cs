@@ -30,7 +30,7 @@ namespace Kigg.Core.Test
 
             Mock<WebRequest> request = MockRequest(Response);
 
-            _httpForm.Expect(f => f.CreateRequest(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<NameValueCollection>(), It.IsAny<NameValueCollection>(), false)).Returns(request.Object);
+            _httpForm.Setup(f => f.CreateRequest(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<NameValueCollection>(), It.IsAny<NameValueCollection>(), false)).Returns(request.Object);
 
             var result = _httpForm.Object.Get(new HttpFormGetRequest { Url = "http://www.test.com" });
 
@@ -43,8 +43,8 @@ namespace Kigg.Core.Test
             Mock<WebRequest> request = new Mock<WebRequest>();
             Mock<IAsyncResult> result = new Mock<IAsyncResult>();
 
-            request.Expect(r => r.BeginGetResponse(It.IsAny<AsyncCallback>(), It.IsAny<object>())).Returns(result.Object);
-            _httpForm.Expect(f => f.CreateRequest(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<NameValueCollection>(), It.IsAny<NameValueCollection>(), false)).Returns(request.Object);
+            request.Setup(r => r.BeginGetResponse(It.IsAny<AsyncCallback>(), It.IsAny<object>())).Returns(result.Object);
+            _httpForm.Setup(f => f.CreateRequest(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<NameValueCollection>(), It.IsAny<NameValueCollection>(), false)).Returns(request.Object);
 
             Assert.DoesNotThrow(() => _httpForm.Object.GetAsync(new HttpFormGetRequest { Url = "http://www.test.com" }));
         }
@@ -54,8 +54,8 @@ namespace Kigg.Core.Test
         {
             Mock<WebRequest> request = new Mock<WebRequest>();
 
-            request.Expect(r => r.BeginGetResponse(It.IsAny<AsyncCallback>(), It.IsAny<HttpForm.StateContainer>())).Throws<WebException>();
-            _httpForm.Expect(f => f.CreateRequest(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<NameValueCollection>(), It.IsAny<NameValueCollection>(), false)).Returns(request.Object);
+            request.Setup(r => r.BeginGetResponse(It.IsAny<AsyncCallback>(), It.IsAny<HttpForm.StateContainer>())).Throws<WebException>();
+            _httpForm.Setup(f => f.CreateRequest(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<NameValueCollection>(), It.IsAny<NameValueCollection>(), false)).Returns(request.Object);
 
             bool exceptionOccurred = false;
 
@@ -71,7 +71,7 @@ namespace Kigg.Core.Test
 
             Mock<WebRequest> request = MockRequest(Response);
 
-            _httpForm.Expect(f => f.CreateRequest(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<NameValueCollection>(), It.IsAny<NameValueCollection>(), true)).Returns(request.Object);
+            _httpForm.Setup(f => f.CreateRequest(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<NameValueCollection>(), It.IsAny<NameValueCollection>(), true)).Returns(request.Object);
 
             var result = _httpForm.Object.Post(new HttpFormPostRequest { Url =  "http://www.test.com", FormFields = new NameValueCollection{ { "foo", "bar" }}});
 
@@ -85,7 +85,7 @@ namespace Kigg.Core.Test
 
             Mock<WebRequest> request = MockRequest(Response);
 
-            _httpForm.Expect(f => f.CreateRequest(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<NameValueCollection>(), It.IsAny<NameValueCollection>(), true)).Returns(request.Object);
+            _httpForm.Setup(f => f.CreateRequest(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<NameValueCollection>(), It.IsAny<NameValueCollection>(), true)).Returns(request.Object);
 
             var result = _httpForm.Object.Post(new HttpFormPostRawRequest { Url = "http://www.test.com", Data = "foo=bar"});
 
@@ -98,8 +98,8 @@ namespace Kigg.Core.Test
             Mock<WebRequest> request = new Mock<WebRequest>();
             Mock<IAsyncResult> result = new Mock<IAsyncResult>();
 
-            request.Expect(r => r.BeginGetRequestStream(It.IsAny<AsyncCallback>(), It.IsAny<HttpForm.StateContainer>())).Returns(result.Object);
-            _httpForm.Expect(f => f.CreateRequest(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<NameValueCollection>(), It.IsAny<NameValueCollection>(), true)).Returns(request.Object);
+            request.Setup(r => r.BeginGetRequestStream(It.IsAny<AsyncCallback>(), It.IsAny<HttpForm.StateContainer>())).Returns(result.Object);
+            _httpForm.Setup(f => f.CreateRequest(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<NameValueCollection>(), It.IsAny<NameValueCollection>(), true)).Returns(request.Object);
 
             Assert.DoesNotThrow(() => _httpForm.Object.PostAsync(new HttpFormPostRequest { Url = "http://www.test.com", FormFields = new NameValueCollection { { "foo", "bar" } } }));
         }
@@ -110,8 +110,8 @@ namespace Kigg.Core.Test
             Mock<WebRequest> request = new Mock<WebRequest>();
             Mock<IAsyncResult> result = new Mock<IAsyncResult>();
 
-            request.Expect(r => r.BeginGetRequestStream(It.IsAny<AsyncCallback>(), It.IsAny<HttpForm.StateContainer>())).Returns(result.Object);
-            _httpForm.Expect(f => f.CreateRequest(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<NameValueCollection>(), It.IsAny<NameValueCollection>(), true)).Returns(request.Object);
+            request.Setup(r => r.BeginGetRequestStream(It.IsAny<AsyncCallback>(), It.IsAny<HttpForm.StateContainer>())).Returns(result.Object);
+            _httpForm.Setup(f => f.CreateRequest(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<NameValueCollection>(), It.IsAny<NameValueCollection>(), true)).Returns(request.Object);
 
             Assert.DoesNotThrow(() => _httpForm.Object.PostAsync(new HttpFormPostRequest { Url = "http://www.test.com", FormFields = new NameValueCollection { { "foo", "bar" } } }, delegate {}, delegate {}));
         }
@@ -122,8 +122,8 @@ namespace Kigg.Core.Test
             Mock<WebRequest> request = new Mock<WebRequest>();
             Mock<IAsyncResult> result = new Mock<IAsyncResult>();
 
-            request.Expect(r => r.BeginGetRequestStream(It.IsAny<AsyncCallback>(), It.IsAny<HttpForm.StateContainer>())).Returns(result.Object);
-            _httpForm.Expect(f => f.CreateRequest(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<NameValueCollection>(), It.IsAny<NameValueCollection>(), true)).Returns(request.Object);
+            request.Setup(r => r.BeginGetRequestStream(It.IsAny<AsyncCallback>(), It.IsAny<HttpForm.StateContainer>())).Returns(result.Object);
+            _httpForm.Setup(f => f.CreateRequest(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<NameValueCollection>(), It.IsAny<NameValueCollection>(), true)).Returns(request.Object);
 
             Assert.DoesNotThrow(() => _httpForm.Object.PostAsync(new HttpFormPostRawRequest { Url = "http://www.test.com", Data = "foo=bar" }));
         }
@@ -134,8 +134,8 @@ namespace Kigg.Core.Test
             Mock<WebRequest> request = new Mock<WebRequest>();
             Mock<IAsyncResult> result = new Mock<IAsyncResult>();
 
-            request.Expect(r => r.BeginGetRequestStream(It.IsAny<AsyncCallback>(), It.IsAny<HttpForm.StateContainer>())).Returns(result.Object);
-            _httpForm.Expect(f => f.CreateRequest(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<NameValueCollection>(), It.IsAny<NameValueCollection>(), true)).Returns(request.Object);
+            request.Setup(r => r.BeginGetRequestStream(It.IsAny<AsyncCallback>(), It.IsAny<HttpForm.StateContainer>())).Returns(result.Object);
+            _httpForm.Setup(f => f.CreateRequest(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<NameValueCollection>(), It.IsAny<NameValueCollection>(), true)).Returns(request.Object);
 
             Assert.DoesNotThrow(() => _httpForm.Object.PostAsync(new HttpFormPostRawRequest { Url = "http://www.test.com", Data = "foo=bar" }, delegate {}, delegate {}));
         }
@@ -145,8 +145,8 @@ namespace Kigg.Core.Test
         {
             Mock<WebRequest> request = new Mock<WebRequest>();
 
-            request.Expect(r => r.BeginGetRequestStream(It.IsAny<AsyncCallback>(), It.IsAny<HttpForm.StateContainer>())).Throws<WebException>();
-            _httpForm.Expect(f => f.CreateRequest(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<NameValueCollection>(), It.IsAny<NameValueCollection>(), true)).Returns(request.Object);
+            request.Setup(r => r.BeginGetRequestStream(It.IsAny<AsyncCallback>(), It.IsAny<HttpForm.StateContainer>())).Throws<WebException>();
+            _httpForm.Setup(f => f.CreateRequest(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<NameValueCollection>(), It.IsAny<NameValueCollection>(), true)).Returns(request.Object);
 
             bool exceptionOccurred = false;
 
@@ -189,7 +189,7 @@ namespace Kigg.Core.Test
 
             Mock<WebRequest> request = MockRequest(Response);
 
-            request.Expect(r => r.GetResponse()).Throws<WebException>();
+            request.Setup(r => r.GetResponse()).Throws<WebException>();
 
             var result = HttpForm.ReadResponse(request.Object);
 
@@ -203,7 +203,7 @@ namespace Kigg.Core.Test
 
             Mock<WebRequest> request = MockRequest(Response);
 
-            request.Expect(r => r.GetResponse()).Throws<WebException>();
+            request.Setup(r => r.GetResponse()).Throws<WebException>();
 
             var result = HttpForm.ReadResponse(request.Object);
 
@@ -242,9 +242,9 @@ namespace Kigg.Core.Test
 
             var result = new Mock<IAsyncResult>();
 
-            result.ExpectGet(r => r.AsyncState).Returns(state);
-            request.Expect(r => r.EndGetRequestStream(It.IsAny<IAsyncResult>())).Returns(stream.Object);
-            stream.Expect(s => s.BeginWrite(It.IsAny<byte[]>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<AsyncCallback>(), It.IsAny<HttpForm.StateContainer>()));
+            result.SetupGet(r => r.AsyncState).Returns(state);
+            request.Setup(r => r.EndGetRequestStream(It.IsAny<IAsyncResult>())).Returns(stream.Object);
+            stream.Setup(s => s.BeginWrite(It.IsAny<byte[]>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<AsyncCallback>(), It.IsAny<HttpForm.StateContainer>()));
 
             HttpForm.RequestCallback(result.Object);
         }
@@ -267,9 +267,9 @@ namespace Kigg.Core.Test
 
             var result = new Mock<IAsyncResult>();
 
-            result.ExpectGet(r => r.AsyncState).Returns(state);
-            request.Expect(r => r.EndGetRequestStream(It.IsAny<IAsyncResult>())).Returns(stream.Object);
-            stream.Expect(s => s.BeginWrite(It.IsAny<byte[]>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<AsyncCallback>(), It.IsAny<HttpForm.StateContainer>())).Throws<WebException>();
+            result.SetupGet(r => r.AsyncState).Returns(state);
+            request.Setup(r => r.EndGetRequestStream(It.IsAny<IAsyncResult>())).Returns(stream.Object);
+            stream.Setup(s => s.BeginWrite(It.IsAny<byte[]>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<AsyncCallback>(), It.IsAny<HttpForm.StateContainer>())).Throws<WebException>();
 
             HttpForm.RequestCallback(result.Object);
         }
@@ -290,10 +290,10 @@ namespace Kigg.Core.Test
 
             var result = new Mock<IAsyncResult>();
 
-            result.ExpectGet(r => r.AsyncState).Returns(state);
-            stream.Expect(s => s.EndWrite(It.IsAny<IAsyncResult>()));
-            stream.Expect(s => s.Close());
-            request.Expect(r => r.BeginGetResponse(It.IsAny<AsyncCallback>(), It.IsAny<HttpForm.StateContainer>())).Throws<Exception>();
+            result.SetupGet(r => r.AsyncState).Returns(state);
+            stream.Setup(s => s.EndWrite(It.IsAny<IAsyncResult>()));
+            stream.Setup(s => s.Close());
+            request.Setup(r => r.BeginGetResponse(It.IsAny<AsyncCallback>(), It.IsAny<HttpForm.StateContainer>())).Throws<Exception>();
 
             HttpForm.WriteCallback(result.Object);
         }
@@ -314,10 +314,10 @@ namespace Kigg.Core.Test
 
             var result = new Mock<IAsyncResult>();
 
-            result.ExpectGet(r => r.AsyncState).Returns(state);
-            stream.Expect(s => s.EndWrite(It.IsAny<IAsyncResult>()));
-            stream.Expect(s => s.Close());
-            request.Expect(r => r.BeginGetResponse(It.IsAny<AsyncCallback>(), It.IsAny<HttpForm.StateContainer>())).Throws<WebException>();
+            result.SetupGet(r => r.AsyncState).Returns(state);
+            stream.Setup(s => s.EndWrite(It.IsAny<IAsyncResult>()));
+            stream.Setup(s => s.Close());
+            request.Setup(r => r.BeginGetResponse(It.IsAny<AsyncCallback>(), It.IsAny<HttpForm.StateContainer>())).Throws<WebException>();
 
             HttpForm.WriteCallback(result.Object);
         }
@@ -335,13 +335,13 @@ namespace Kigg.Core.Test
                             };
 
             var result = new Mock<IAsyncResult>();
-            result.ExpectGet(r => r.AsyncState).Returns(state);
+            result.SetupGet(r => r.AsyncState).Returns(state);
 
             var ms = new MemoryStream(Encoding.Default.GetBytes("This is a dummy response"));
             var response = new Mock<WebResponse>();
-            response.Expect(r => r.GetResponseStream()).Returns(ms);
+            response.Setup(r => r.GetResponseStream()).Returns(ms);
 
-            request.Expect(r => r.EndGetResponse(It.IsAny<IAsyncResult>())).Returns(response.Object);
+            request.Setup(r => r.EndGetResponse(It.IsAny<IAsyncResult>())).Returns(response.Object);
 
             HttpForm.ResponseCallback(result.Object);
         }
@@ -360,8 +360,8 @@ namespace Kigg.Core.Test
 
             var result = new Mock<IAsyncResult>();
 
-            result.ExpectGet(r => r.AsyncState).Returns(state);
-            request.Expect(r => r.GetResponse()).Throws<WebException>();
+            result.SetupGet(r => r.AsyncState).Returns(state);
+            request.Setup(r => r.GetResponse()).Throws<WebException>();
 
             HttpForm.ResponseCallback(result.Object);
         }
@@ -393,12 +393,12 @@ namespace Kigg.Core.Test
             var ms = new MemoryStream(data);
 
             var response = new Mock<WebResponse>();
-            response.Expect(r => r.GetResponseStream()).Returns(ms);
-            response.ExpectGet(r => r.Headers).Returns(new WebHeaderCollection { { "foo", "bar" } });
+            response.Setup(r => r.GetResponseStream()).Returns(ms);
+            response.SetupGet(r => r.Headers).Returns(new WebHeaderCollection { { "foo", "bar" } });
 
             var request = new Mock<WebRequest>();
-            request.Expect(r => r.GetRequestStream()).Returns(new MemoryStream());
-            request.Expect(r => r.GetResponse()).Returns(response.Object);
+            request.Setup(r => r.GetRequestStream()).Returns(new MemoryStream());
+            request.Setup(r => r.GetResponse()).Returns(response.Object);
 
             return request;
         }

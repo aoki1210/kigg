@@ -16,11 +16,11 @@ namespace Kigg.Core.Test
             var task2 = new Mock<IBootstrapperTask>();
             var task3 = new Mock<IBootstrapperTask>();
 
-            task1.Expect(t => t.Execute()).Verifiable();
-            task2.Expect(t => t.Execute()).Verifiable();
-            task3.Expect(t => t.Execute()).Verifiable();
+            task1.Setup(t => t.Execute()).Verifiable();
+            task2.Setup(t => t.Execute()).Verifiable();
+            task3.Setup(t => t.Execute()).Verifiable();
 
-            resolver.Expect(r => r.ResolveAll<IBootstrapperTask>()).Returns(new[] { task1.Object, task2.Object, task3.Object });
+            resolver.Setup(r => r.ResolveAll<IBootstrapperTask>()).Returns(new[] { task1.Object, task2.Object, task3.Object });
 
             Bootstrapper.Run();
 

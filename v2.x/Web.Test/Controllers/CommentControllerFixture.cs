@@ -95,9 +95,9 @@ namespace Kigg.Web.Test
             SetCurrentUser(new Mock<IUser>(), Roles.Administrator);
             SetupCaptcha();
 
-            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Throws<InvalidOperationException>();
+            _storyRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Throws<InvalidOperationException>();
 
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
             _controller.Post(Guid.NewGuid().Shrink(), "This is a dummy comment", true);
 
@@ -110,7 +110,7 @@ namespace Kigg.Web.Test
             SetCurrentUser(new Mock<IUser>(), Roles.User);
             SetupCaptcha();
 
-            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns((IStory) null);
+            _storyRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns((IStory) null);
 
             var result = (JsonViewData) ((JsonResult) _controller.Post(Guid.NewGuid().Shrink(), "This is a dummy comment", true)).Data;
 
@@ -124,7 +124,7 @@ namespace Kigg.Web.Test
             SetCurrentUser(new Mock<IUser>(), Roles.User);
             SetupCaptcha();
 
-            _reCAPTCHA.Expect(c => c.Validate(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(false);
+            _reCAPTCHA.Setup(c => c.Validate(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(false);
 
             var result = (JsonViewData)((JsonResult)_controller.Post(Guid.NewGuid().Shrink(), "This is a dummy comment", true)).Data;
 
@@ -146,7 +146,7 @@ namespace Kigg.Web.Test
         [Fact]
         public void Post_Should_Return_Error_When_Captcha_Response_Is_Blank()
         {
-            _httpContext.HttpRequest.ExpectGet(r => r.Form).Returns(new NameValueCollection { { _reCAPTCHA.Object.ChallengeInputName, "foo" } });
+            _httpContext.HttpRequest.SetupGet(r => r.Form).Returns(new NameValueCollection { { _reCAPTCHA.Object.ChallengeInputName, "foo" } });
 
             var result = (JsonViewData)((JsonResult)_controller.Post(Guid.NewGuid().Shrink(), "This is a dummy comment", true)).Data;
 
@@ -157,7 +157,7 @@ namespace Kigg.Web.Test
         [Fact]
         public void Post_Should_Return_Error_When_Captcha_Challenge_Is_Blank()
         {
-            _httpContext.HttpRequest.ExpectGet(r => r.Form).Returns(new NameValueCollection());
+            _httpContext.HttpRequest.SetupGet(r => r.Form).Returns(new NameValueCollection());
 
             var result = (JsonViewData)((JsonResult)_controller.Post(Guid.NewGuid().Shrink(), "This is a dummy comment", true)).Data;
 
@@ -231,9 +231,9 @@ namespace Kigg.Web.Test
         {
             SetCurrentUser(new Mock<IUser>(), Roles.Administrator);
 
-            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Throws<InvalidOperationException>();
+            _storyRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Throws<InvalidOperationException>();
 
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
             _controller.ConfirmSpam(Guid.NewGuid().Shrink(), Guid.NewGuid().Shrink());
 
@@ -247,8 +247,8 @@ namespace Kigg.Web.Test
 
             var story = new Mock<IStory>();
 
-            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns(story.Object);
-            story.Expect(s => s.FindComment(It.IsAny<Guid>())).Returns((IComment) null);
+            _storyRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns(story.Object);
+            story.Setup(s => s.FindComment(It.IsAny<Guid>())).Returns((IComment) null);
 
             var result = (JsonViewData) ((JsonResult) _controller.ConfirmSpam(Guid.NewGuid().Shrink(), Guid.NewGuid().Shrink())).Data;
 
@@ -261,7 +261,7 @@ namespace Kigg.Web.Test
         {
             SetCurrentUser(new Mock<IUser>(), Roles.Administrator);
 
-            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns((IStory) null);
+            _storyRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns((IStory) null);
 
             var result = (JsonViewData)((JsonResult)_controller.ConfirmSpam(Guid.NewGuid().Shrink(), Guid.NewGuid().Shrink())).Data;
 
@@ -364,9 +364,9 @@ namespace Kigg.Web.Test
         {
             SetCurrentUser(new Mock<IUser>(), Roles.Administrator);
 
-            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Throws<InvalidOperationException>();
+            _storyRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Throws<InvalidOperationException>();
 
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
             _controller.MarkAsOffended(Guid.NewGuid().Shrink(), Guid.NewGuid().Shrink());
 
@@ -380,8 +380,8 @@ namespace Kigg.Web.Test
 
             var story = new Mock<IStory>();
 
-            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns(story.Object);
-            story.Expect(s => s.FindComment(It.IsAny<Guid>())).Returns((IComment)null);
+            _storyRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns(story.Object);
+            story.Setup(s => s.FindComment(It.IsAny<Guid>())).Returns((IComment)null);
 
             var result = (JsonViewData)((JsonResult)_controller.MarkAsOffended(Guid.NewGuid().Shrink(), Guid.NewGuid().Shrink())).Data;
 
@@ -394,7 +394,7 @@ namespace Kigg.Web.Test
         {
             SetCurrentUser(new Mock<IUser>(), Roles.Administrator);
 
-            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns((IStory)null);
+            _storyRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns((IStory)null);
 
             var result = (JsonViewData)((JsonResult)_controller.MarkAsOffended(Guid.NewGuid().Shrink(), Guid.NewGuid().Shrink())).Data;
 
@@ -460,15 +460,15 @@ namespace Kigg.Web.Test
 
         private void SetupCaptcha()
         {
-            _httpContext.HttpRequest.ExpectGet(r => r.UserHostAddress).Returns("192.168.0.1");
-            _httpContext.HttpRequest.ExpectGet(r => r.Form).Returns(new NameValueCollection
+            _httpContext.HttpRequest.SetupGet(r => r.UserHostAddress).Returns("192.168.0.1");
+            _httpContext.HttpRequest.SetupGet(r => r.Form).Returns(new NameValueCollection
                                                                         {
                                                                             {_reCAPTCHA.Object.ChallengeInputName, "foo" },
                                                                             {_reCAPTCHA.Object.ResponseInputName, "bar" } 
                                                                         }
                                                                     );
 
-            _reCAPTCHA.Expect(c => c.Validate(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(true).Verifiable();
+            _reCAPTCHA.Setup(c => c.Validate(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(true).Verifiable();
         }
 
         private JsonViewData Post()
@@ -477,8 +477,8 @@ namespace Kigg.Web.Test
 
             var story = new Mock<IStory>();
 
-            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns(story.Object).Verifiable();
-            _storyService.Expect(s => s.Comment(It.IsAny<IStory>(), It.IsAny<string>(), It.IsAny<IUser>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<NameValueCollection>())).Returns(new CommentCreateResult()).Verifiable();
+            _storyRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns(story.Object).Verifiable();
+            _storyService.Setup(s => s.Comment(It.IsAny<IStory>(), It.IsAny<string>(), It.IsAny<IUser>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<NameValueCollection>())).Returns(new CommentCreateResult()).Verifiable();
 
             return (JsonViewData) ((JsonResult) _controller.Post(Guid.NewGuid().Shrink(), "This is a dummy comment", true)).Data;
         }
@@ -489,9 +489,9 @@ namespace Kigg.Web.Test
 
             var comment = new Mock<IComment>();
 
-            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns(story.Object).Verifiable();
-            story.Expect(s => s.FindComment(It.IsAny<Guid>())).Returns(comment.Object).Verifiable();
-            _storyService.Expect(s => s.Spam(It.IsAny<IComment>(), It.IsAny<string>(), It.IsAny<IUser>())).Verifiable();
+            _storyRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns(story.Object).Verifiable();
+            story.Setup(s => s.FindComment(It.IsAny<Guid>())).Returns(comment.Object).Verifiable();
+            _storyService.Setup(s => s.Spam(It.IsAny<IComment>(), It.IsAny<string>(), It.IsAny<IUser>())).Verifiable();
 
             return (JsonViewData)((JsonResult)_controller.ConfirmSpam(Guid.NewGuid().Shrink(), Guid.NewGuid().Shrink())).Data;
         }
@@ -502,9 +502,9 @@ namespace Kigg.Web.Test
 
             var comment = new Mock<IComment>();
 
-            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns(story.Object).Verifiable();
-            story.Expect(s => s.FindComment(It.IsAny<Guid>())).Returns(comment.Object).Verifiable();
-            _storyService.Expect(s => s.MarkAsOffended(It.IsAny<IComment>(), It.IsAny<string>(), It.IsAny<IUser>())).Verifiable();
+            _storyRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns(story.Object).Verifiable();
+            story.Setup(s => s.FindComment(It.IsAny<Guid>())).Returns(comment.Object).Verifiable();
+            _storyService.Setup(s => s.MarkAsOffended(It.IsAny<IComment>(), It.IsAny<string>(), It.IsAny<IUser>())).Verifiable();
 
             return (JsonViewData)((JsonResult)_controller.MarkAsOffended(Guid.NewGuid().Shrink(), Guid.NewGuid().Shrink())).Data;
         }
@@ -514,14 +514,14 @@ namespace Kigg.Web.Test
             const string UserName = "DummyUser";
             var userId = Guid.NewGuid();
 
-            user.ExpectGet(u => u.Id).Returns(userId);
-            user.ExpectGet(u => u.UserName).Returns(UserName);
-            user.ExpectGet(u => u.Role).Returns(role);
+            user.SetupGet(u => u.Id).Returns(userId);
+            user.SetupGet(u => u.UserName).Returns(UserName);
+            user.SetupGet(u => u.Role).Returns(role);
 
-            _httpContext.User.Identity.ExpectGet(i => i.Name).Returns(UserName);
-            _httpContext.User.Identity.ExpectGet(i => i.IsAuthenticated).Returns(true);
+            _httpContext.User.Identity.SetupGet(i => i.Name).Returns(UserName);
+            _httpContext.User.Identity.SetupGet(i => i.IsAuthenticated).Returns(true);
 
-            _userRepository.Expect(r => r.FindByUserName(UserName)).Returns(user.Object);
+            _userRepository.Setup(r => r.FindByUserName(UserName)).Returns(user.Object);
         }
     }
 }

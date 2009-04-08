@@ -93,10 +93,10 @@ namespace Kigg.Core.Test
             var comment = new Mock<IComment>();
             var story = new Mock<IStory>();
 
-            comment.ExpectGet(c => c.ForStory).Returns(story.Object);
+            comment.SetupGet(c => c.ForStory).Returns(story.Object);
 
-            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns(story.Object);
-            _eventAggregator.Expect(ea => ea.GetEvent<CommentSubmitEvent>()).Returns(new CommentSubmitEvent()).Verifiable();
+            _storyRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns(story.Object);
+            _eventAggregator.Setup(ea => ea.GetEvent<CommentSubmitEvent>()).Returns(new CommentSubmitEvent()).Verifiable();
 
             _spamPostprocessor.Process("foo", false, "http://test.com", comment.Object);
 
@@ -113,20 +113,20 @@ namespace Kigg.Core.Test
 
         private void Process_For_Story_When_Spam()
         {
-            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns(new Mock<IStory>().Object).Verifiable();
+            _storyRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns(new Mock<IStory>().Object).Verifiable();
 
-            log.Expect(l => l.Warning(It.IsAny<string>())).Verifiable();
-            _eventAggregator.Expect(ea => ea.GetEvent<PossibleSpamStoryEvent>()).Returns(new PossibleSpamStoryEvent()).Verifiable();
+            log.Setup(l => l.Warning(It.IsAny<string>())).Verifiable();
+            _eventAggregator.Setup(ea => ea.GetEvent<PossibleSpamStoryEvent>()).Returns(new PossibleSpamStoryEvent()).Verifiable();
 
             _spamPostprocessor.Process("foo", true, "http://test.com", new Mock<IStory>().Object);
         }
 
         private void Process_For_Story_When_Not_Spam(Mock<IStory> story)
         {
-            story.ExpectGet(s => s.PostedBy).Returns(new Mock<IUser>().Object);
+            story.SetupGet(s => s.PostedBy).Returns(new Mock<IUser>().Object);
 
-            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns(story.Object).Verifiable();
-            _eventAggregator.Expect(ea => ea.GetEvent<StorySubmitEvent>()).Returns(new StorySubmitEvent()).Verifiable();
+            _storyRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns(story.Object).Verifiable();
+            _eventAggregator.Setup(ea => ea.GetEvent<StorySubmitEvent>()).Returns(new StorySubmitEvent()).Verifiable();
 
             _spamPostprocessor.Process("foo", false, "http://test.com", new Mock<IStory>().Object);
         }
@@ -137,16 +137,16 @@ namespace Kigg.Core.Test
 
             var comment = new Mock<IComment>();
 
-            comment.ExpectGet(c => c.ForStory).Returns(new Mock<IStory>().Object);
-            comment.ExpectGet(c => c.ByUser).Returns(new Mock<IUser>().Object);
-            comment.ExpectGet(c => c.ForStory).Returns(story.Object);
+            comment.SetupGet(c => c.ForStory).Returns(new Mock<IStory>().Object);
+            comment.SetupGet(c => c.ByUser).Returns(new Mock<IUser>().Object);
+            comment.SetupGet(c => c.ForStory).Returns(story.Object);
 
-            _storyRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns(story.Object);
+            _storyRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns(story.Object);
 
-            story.Expect(s => s.FindComment(It.IsAny<Guid>())).Returns(comment.Object);
+            story.Setup(s => s.FindComment(It.IsAny<Guid>())).Returns(comment.Object);
 
-            log.Expect(l => l.Warning(It.IsAny<string>())).Verifiable();
-            _eventAggregator.Expect(ea => ea.GetEvent<PossibleSpamCommentEvent>()).Returns(new PossibleSpamCommentEvent()).Verifiable();
+            log.Setup(l => l.Warning(It.IsAny<string>())).Verifiable();
+            _eventAggregator.Setup(ea => ea.GetEvent<PossibleSpamCommentEvent>()).Returns(new PossibleSpamCommentEvent()).Verifiable();
 
             _spamPostprocessor.Process("foo", true, "http://test.com", comment.Object);
         }

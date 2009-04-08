@@ -58,11 +58,11 @@ namespace Moq.Mvc
 			this.OutputStream = new Mock<Stream>();
 			this.Cache = new HttpCachePolicyBaseMock();
 
-			ExpectGet(m => m.Output).Returns(this.Output.Object);
-			ExpectGet(m => m.OutputStream).Returns(this.OutputStream.Object);
-			ExpectGet(m => m.Cache).Returns(this.Cache.Object);
-		    ExpectGet(m => m.Cookies).Returns(new HttpCookieCollection());
-		    ExpectGet(m => m.Headers).Returns(new NameValueCollection());
+			SetupGet(m => m.Output).Returns(this.Output.Object);
+			SetupGet(m => m.OutputStream).Returns(this.OutputStream.Object);
+			SetupGet(m => m.Cache).Returns(this.Cache.Object);
+		    SetupGet(m => m.Cookies).Returns(new HttpCookieCollection());
+		    SetupGet(m => m.Headers).Returns(new NameValueCollection());
 		}
 
 		// TODO: mock other properties.
@@ -85,7 +85,7 @@ namespace Moq.Mvc
 		/// <summary>
 		/// 
 		/// </summary>
-		public override void Verify()
+		public new void Verify()
 		{
 			this.Cache.Verify();
 			this.Output.Verify();
@@ -97,7 +97,7 @@ namespace Moq.Mvc
 		/// <summary>
 		/// 
 		/// </summary>
-		public override void VerifyAll()
+		public new void VerifyAll()
 		{
 			this.Cache.VerifyAll();
 			this.Output.VerifyAll();

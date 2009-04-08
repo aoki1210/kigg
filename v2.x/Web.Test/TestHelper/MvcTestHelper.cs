@@ -35,22 +35,22 @@ namespace Kigg.Web.Test
 
             if (!string.IsNullOrEmpty(appPath))
             {
-                httpContext.HttpRequest.ExpectGet(r => r.ApplicationPath).Returns(appPath);
+                httpContext.HttpRequest.SetupGet(r => r.ApplicationPath).Returns(appPath);
             }
 
             if (!string.IsNullOrEmpty(requestPath))
             {
-                httpContext.HttpRequest.ExpectGet(r => r.AppRelativeCurrentExecutionFilePath).Returns(requestPath);
+                httpContext.HttpRequest.SetupGet(r => r.AppRelativeCurrentExecutionFilePath).Returns(requestPath);
             }
 
-            httpContext.HttpRequest.ExpectGet(r => r.PathInfo).Returns(string.Empty);
+            httpContext.HttpRequest.SetupGet(r => r.PathInfo).Returns(string.Empty);
 
             if (!string.IsNullOrEmpty(httpMethod))
             {
-                httpContext.HttpRequest.ExpectGet(r => r.HttpMethod).Returns(httpMethod);
+                httpContext.HttpRequest.SetupGet(r => r.HttpMethod).Returns(httpMethod);
             }
 
-            httpContext.HttpResponse.Expect(r => r.ApplyAppPathModifier(It.IsAny<string>())).Returns<string>(r => r.Contains(AppPathModifier) ? r : AppPathModifier + r);
+            httpContext.HttpResponse.Setup(r => r.ApplyAppPathModifier(It.IsAny<string>())).Returns<string>(r => r.Contains(AppPathModifier) ? r : AppPathModifier + r);
 
             return httpContext;
         }

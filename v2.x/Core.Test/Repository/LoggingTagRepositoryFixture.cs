@@ -198,28 +198,28 @@ namespace Kigg.Core.Test
 
         private void Add()
         {
-            _innerRepository.Expect(r => r.Add(It.IsAny<ITag>())).Verifiable();
-            log.Expect(l => l.Info(It.IsAny<string>())).Verifiable();
+            _innerRepository.Setup(r => r.Add(It.IsAny<ITag>())).Verifiable();
+            log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
             _loggingRepository.Add(CreateStubTag());
         }
 
         private void Remove()
         {
-            _innerRepository.Expect(r => r.Remove(It.IsAny<ITag>())).Verifiable();
-            log.Expect(l => l.Warning(It.IsAny<string>())).Verifiable();
+            _innerRepository.Setup(r => r.Remove(It.IsAny<ITag>())).Verifiable();
+            log.Setup(l => l.Warning(It.IsAny<string>())).Verifiable();
 
             _loggingRepository.Remove(CreateStubTag());
         }
 
         private void FindById(ITag result)
         {
-            _innerRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns(result).Verifiable();
-            log.Expect(l => l.Info(It.IsAny<string>())).Verifiable();
+            _innerRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns(result).Verifiable();
+            log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
             if (result == null)
             {
-                log.Expect(l => l.Warning(It.IsAny<string>())).Verifiable();
+                log.Setup(l => l.Warning(It.IsAny<string>())).Verifiable();
             }
 
             _loggingRepository.FindById(Guid.NewGuid());
@@ -227,12 +227,12 @@ namespace Kigg.Core.Test
 
         private void FindByUniqueName(ITag result)
         {
-            _innerRepository.Expect(r => r.FindByUniqueName(It.IsAny<string>())).Returns(result).Verifiable();
-            log.Expect(l => l.Info(It.IsAny<string>())).Verifiable();
+            _innerRepository.Setup(r => r.FindByUniqueName(It.IsAny<string>())).Returns(result).Verifiable();
+            log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
             if (result == null)
             {
-                log.Expect(l => l.Warning(It.IsAny<string>())).Verifiable();
+                log.Setup(l => l.Warning(It.IsAny<string>())).Verifiable();
             }
 
             _loggingRepository.FindByUniqueName("atag");
@@ -240,12 +240,12 @@ namespace Kigg.Core.Test
 
         private void FindByName(ITag result)
         {
-            _innerRepository.Expect(r => r.FindByName(It.IsAny<string>())).Returns(result).Verifiable();
-            log.Expect(l => l.Info(It.IsAny<string>())).Verifiable();
+            _innerRepository.Setup(r => r.FindByName(It.IsAny<string>())).Returns(result).Verifiable();
+            log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
             if (result == null)
             {
-                log.Expect(l => l.Warning(It.IsAny<string>())).Verifiable();
+                log.Setup(l => l.Warning(It.IsAny<string>())).Verifiable();
             }
 
             _loggingRepository.FindByName("atag");
@@ -253,12 +253,12 @@ namespace Kigg.Core.Test
 
         private void FindMatching(ICollection<ITag> result)
         {
-            _innerRepository.Expect(r => r.FindMatching(It.IsAny<string>(), It.IsAny<int>())).Returns(result).Verifiable();
-            log.Expect(l => l.Info(It.IsAny<string>())).Verifiable();
+            _innerRepository.Setup(r => r.FindMatching(It.IsAny<string>(), It.IsAny<int>())).Returns(result).Verifiable();
+            log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
             if (result == null)
             {
-                log.Expect(l => l.Warning(It.IsAny<string>())).Verifiable();
+                log.Setup(l => l.Warning(It.IsAny<string>())).Verifiable();
             }
 
             _loggingRepository.FindMatching("xxx", 100);
@@ -266,12 +266,12 @@ namespace Kigg.Core.Test
 
         private void FindByUsage(ICollection<ITag> result)
         {
-            _innerRepository.Expect(r => r.FindByUsage(It.IsAny<int>())).Returns(result).Verifiable();
-            log.Expect(l => l.Info(It.IsAny<string>())).Verifiable();
+            _innerRepository.Setup(r => r.FindByUsage(It.IsAny<int>())).Returns(result).Verifiable();
+            log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
             if (result == null)
             {
-                log.Expect(l => l.Warning(It.IsAny<string>())).Verifiable();
+                log.Setup(l => l.Warning(It.IsAny<string>())).Verifiable();
             }
 
             _loggingRepository.FindByUsage(50);
@@ -279,12 +279,12 @@ namespace Kigg.Core.Test
 
         private void FindAll(ICollection<ITag> result)
         {
-            _innerRepository.Expect(r => r.FindAll()).Returns(result).Verifiable();
-            log.Expect(l => l.Info(It.IsAny<string>())).Verifiable();
+            _innerRepository.Setup(r => r.FindAll()).Returns(result).Verifiable();
+            log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
             if (result == null)
             {
-                log.Expect(l => l.Warning(It.IsAny<string>())).Verifiable();
+                log.Setup(l => l.Warning(It.IsAny<string>())).Verifiable();
             }
 
             _loggingRepository.FindAll();

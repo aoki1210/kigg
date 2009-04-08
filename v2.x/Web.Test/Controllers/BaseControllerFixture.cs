@@ -39,7 +39,7 @@ namespace Kigg.Web.Test
         [Fact]
         public void CurrentUserName_Should_Return_The_Current_User_Name()
         {
-            _httpContext.User.Identity.ExpectGet(i => i.Name).Returns(UserName);
+            _httpContext.User.Identity.SetupGet(i => i.Name).Returns(UserName);
 
             Assert.Equal(UserName, _controller.CurrentUserName);
         }
@@ -47,8 +47,8 @@ namespace Kigg.Web.Test
         [Fact]
         public void CurrentUser_Should_Return_Non_Null_User_When_CurrentUserName_Is_Not_Blank()
         {
-            _httpContext.User.Identity.ExpectGet(i => i.Name).Returns(UserName);
-            _userRepository.Expect(r => r.FindByUserName(It.IsAny<string>())).Returns(new Mock<IUser>().Object);
+            _httpContext.User.Identity.SetupGet(i => i.Name).Returns(UserName);
+            _userRepository.Setup(r => r.FindByUserName(It.IsAny<string>())).Returns(new Mock<IUser>().Object);
 
             Assert.NotNull(_controller.CurrentUser);
         }
@@ -56,7 +56,7 @@ namespace Kigg.Web.Test
         [Fact]
         public void CurrentUser_Should_Return_Null_User_When_CurrentUserName_Is_Blank()
         {
-            _httpContext.User.Identity.ExpectGet(i => i.Name).Returns(string.Empty);
+            _httpContext.User.Identity.SetupGet(i => i.Name).Returns(string.Empty);
 
             Assert.Null(_controller.CurrentUser);
         }
@@ -66,11 +66,11 @@ namespace Kigg.Web.Test
         {
             var user = new Mock<IUser>();
 
-            _httpContext.User.Identity.ExpectGet(i => i.Name).Returns(UserName);
-            _userRepository.Expect(r => r.FindByUserName(It.IsAny<string>())).Returns(user.Object);
+            _httpContext.User.Identity.SetupGet(i => i.Name).Returns(UserName);
+            _userRepository.Setup(r => r.FindByUserName(It.IsAny<string>())).Returns(user.Object);
 
-            user.ExpectSet(u => u.LastActivityAt).Verifiable();
-            unitOfWork.Expect(uow => uow.Commit()).Verifiable();
+            user.SetupSet(u => u.LastActivityAt = It.IsAny<DateTime>()).Verifiable();
+            unitOfWork.Setup(uow => uow.Commit()).Verifiable();
 
             #pragma warning disable 168
             var currentUser = _controller.CurrentUser;
@@ -83,11 +83,11 @@ namespace Kigg.Web.Test
         [Fact]
         public void CurrentUser_Should_Log_Exception_When_Exception_Occurrs()
         {
-            _httpContext.User.Identity.ExpectGet(i => i.Name).Returns(UserName);
-            _userRepository.Expect(r => r.FindByUserName(It.IsAny<string>())).Returns(new Mock<IUser>().Object);
-            unitOfWork.Expect(uow => uow.Commit()).Throws<Exception>();
+            _httpContext.User.Identity.SetupGet(i => i.Name).Returns(UserName);
+            _userRepository.Setup(r => r.FindByUserName(It.IsAny<string>())).Returns(new Mock<IUser>().Object);
+            unitOfWork.Setup(uow => uow.Commit()).Throws<Exception>();
 
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
             #pragma warning disable 168
             var currentUser = _controller.CurrentUser;
@@ -101,10 +101,10 @@ namespace Kigg.Web.Test
         {
             var user = new Mock<IUser>();
 
-            _httpContext.User.Identity.ExpectGet(i => i.Name).Returns(UserName);
-            _httpContext.User.Identity.ExpectGet(i => i.IsAuthenticated).Returns(true);
+            _httpContext.User.Identity.SetupGet(i => i.Name).Returns(UserName);
+            _httpContext.User.Identity.SetupGet(i => i.IsAuthenticated).Returns(true);
 
-            _userRepository.Expect(r => r.FindByUserName(It.IsAny<string>())).Returns(user.Object);
+            _userRepository.Setup(r => r.FindByUserName(It.IsAny<string>())).Returns(user.Object);
 
             Assert.True(_controller.IsCurrentUserAuthenticated);
         }
@@ -114,10 +114,10 @@ namespace Kigg.Web.Test
         {
             var user = new Mock<IUser>();
 
-            _httpContext.User.Identity.ExpectGet(i => i.Name).Returns(UserName);
-            _httpContext.User.Identity.ExpectGet(i => i.IsAuthenticated).Returns(true);
+            _httpContext.User.Identity.SetupGet(i => i.Name).Returns(UserName);
+            _httpContext.User.Identity.SetupGet(i => i.IsAuthenticated).Returns(true);
 
-            _userRepository.Expect(r => r.FindByUserName(It.IsAny<string>())).Returns(user.Object);
+            _userRepository.Setup(r => r.FindByUserName(It.IsAny<string>())).Returns(user.Object);
 
             Assert.True(_controller.IsCurrentUserAuthenticated);
         }
@@ -127,13 +127,13 @@ namespace Kigg.Web.Test
         {
             var user = new Mock<IUser>();
 
-            user.ExpectGet(u => u.IsLockedOut).Returns(true);
+            user.SetupGet(u => u.IsLockedOut).Returns(true);
 
-            _httpContext.User.Identity.ExpectGet(i => i.Name).Returns(UserName);
-            _httpContext.User.Identity.ExpectGet(i => i.IsAuthenticated).Returns(true);
+            _httpContext.User.Identity.SetupGet(i => i.Name).Returns(UserName);
+            _httpContext.User.Identity.SetupGet(i => i.IsAuthenticated).Returns(true);
 
-            _userRepository.Expect(r => r.FindByUserName(It.IsAny<string>())).Returns(user.Object);
-            _formsAuthentication.Expect(fa => fa.SignOut()).Verifiable();
+            _userRepository.Setup(r => r.FindByUserName(It.IsAny<string>())).Returns(user.Object);
+            _formsAuthentication.Setup(fa => fa.SignOut()).Verifiable();
 
             Assert.False(_controller.IsCurrentUserAuthenticated);
 
@@ -143,7 +143,7 @@ namespace Kigg.Web.Test
         [Fact]
         public void CurrentUserIPAddress_Should_Return_User_IPAddress()
         {
-            _httpContext.HttpRequest.ExpectGet(r => r.UserHostAddress).Returns("192.168.0.1");
+            _httpContext.HttpRequest.SetupGet(r => r.UserHostAddress).Returns("192.168.0.1");
 
             Assert.Equal("192.168.0.1", _controller.CurrentUserIPAddress);
         }
@@ -164,10 +164,10 @@ namespace Kigg.Web.Test
         {
             var user = new Mock<IUser>();
 
-            _httpContext.User.Identity.ExpectGet(i => i.Name).Returns(UserName);
-            _httpContext.User.Identity.ExpectGet(i => i.IsAuthenticated).Returns(true);
+            _httpContext.User.Identity.SetupGet(i => i.Name).Returns(UserName);
+            _httpContext.User.Identity.SetupGet(i => i.IsAuthenticated).Returns(true);
 
-            _userRepository.Expect(r => r.FindByUserName(It.IsAny<string>())).Returns(user.Object);
+            _userRepository.Setup(r => r.FindByUserName(It.IsAny<string>())).Returns(user.Object);
 
             var viewData = _controller.CreateViewData<SupportViewData>();
 

@@ -1,5 +1,5 @@
 using System;
-
+using System.Net;
 using Xunit;
 
 namespace Kigg.Web.Test
@@ -11,12 +11,12 @@ namespace Kigg.Web.Test
         {
             var httpContext = MvcTestHelper.GetHttpContext();
 
-            httpContext.HttpRequest.ExpectGet(r => r.Url).Returns(new Uri("http://www.dotnetshoutout.com/Upcoming"));
+            httpContext.HttpRequest.SetupGet(r => r.Url).Returns(new Uri("http://www.dotnetshoutout.com/Upcoming"));
 
-            httpContext.HttpResponse.ExpectSet(r => r.StatusCode).Verifiable();
-            httpContext.HttpResponse.ExpectSet(r => r.Status).Verifiable();
-            httpContext.HttpResponse.ExpectSet(r => r.RedirectLocation).Verifiable();
-            httpContext.HttpResponse.Expect(r => r.End()).Verifiable();
+            httpContext.HttpResponse.SetupSet(r => r.StatusCode = (int)HttpStatusCode.MovedPermanently).Verifiable();
+            httpContext.HttpResponse.SetupSet(r => r.Status = "301 Moved Permanently").Verifiable();
+            httpContext.HttpResponse.SetupSet(r => r.RedirectLocation = "http://dotnetshoutout.com/Upcoming").Verifiable();
+            httpContext.HttpResponse.Setup(r => r.End()).Verifiable();
 
             var module = new RemoveWwwRedirector();
 

@@ -35,7 +35,7 @@ namespace Kigg.Web.Test
                               };
 
             _httpContext = _controller.MockHttpContext("/Kigg", null, null);
-            _httpContext.HttpRequest.ExpectGet(r => r.UserHostAddress).Returns("192.168.0.1");
+            _httpContext.HttpRequest.SetupGet(r => r.UserHostAddress).Returns("192.168.0.1");
         }
 
         [Fact]
@@ -65,7 +65,7 @@ namespace Kigg.Web.Test
         [Fact]
         public void Contact_Should_Use_EmailSender_To_Send_Email()
         {
-            _emailSender.Expect(s => s.NotifyFeedback(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Verifiable();
+            _emailSender.Setup(s => s.NotifyFeedback(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Verifiable();
 
             _controller.Contact("xxx@xxx.com", new string('x', 4), new string('x', 16));
 
@@ -162,9 +162,9 @@ namespace Kigg.Web.Test
         {
             SetCurrentUser(new Mock<IUser>(), permitted ? Roles.Moderator : Roles.User);
 
-            _storyRepository.Expect(r => r.CountByUnapproved()).Returns(10).Verifiable();
-            _storyRepository.Expect(r => r.CountByNew()).Returns(10).Verifiable();
-            _storyRepository.Expect(r => r.CountByPublishable(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(10).Verifiable();
+            _storyRepository.Setup(r => r.CountByUnapproved()).Returns(10).Verifiable();
+            _storyRepository.Setup(r => r.CountByNew()).Returns(10).Verifiable();
+            _storyRepository.Setup(r => r.CountByPublishable(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(10).Verifiable();
 
             return (ViewResult) _controller.ControlPanel();
         }
@@ -173,14 +173,14 @@ namespace Kigg.Web.Test
         {
             var userId = Guid.NewGuid();
 
-            user.ExpectGet(u => u.Id).Returns(userId);
-            user.ExpectGet(u => u.UserName).Returns(UserName);
-            user.ExpectGet(u => u.Role).Returns(role);
+            user.SetupGet(u => u.Id).Returns(userId);
+            user.SetupGet(u => u.UserName).Returns(UserName);
+            user.SetupGet(u => u.Role).Returns(role);
 
-            _httpContext.User.Identity.ExpectGet(i => i.Name).Returns(UserName);
-            _httpContext.User.Identity.ExpectGet(i => i.IsAuthenticated).Returns(true);
+            _httpContext.User.Identity.SetupGet(i => i.Name).Returns(UserName);
+            _httpContext.User.Identity.SetupGet(i => i.IsAuthenticated).Returns(true);
 
-            _userRepository.Expect(r => r.FindByUserName(UserName)).Returns(user.Object);
+            _userRepository.Setup(r => r.FindByUserName(UserName)).Returns(user.Object);
         }
     }
 }

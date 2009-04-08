@@ -39,7 +39,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Get_Async_Should_Use_Use_InnerHttpFrom()
         {
-            _httpForm.Expect(f => f.GetAsync(It.IsAny<HttpFormGetRequest>(), It.IsAny<Action<HttpFormResponse>>(), It.IsAny<Action<Exception>>())).Callback((HttpFormGetRequest getRequest, Action<HttpFormResponse> onComplete, Action<Exception> onError) => onComplete(new HttpFormResponse { Response = "This is a dummy response" })).Verifiable();
+            _httpForm.Setup(f => f.GetAsync(It.IsAny<HttpFormGetRequest>(), It.IsAny<Action<HttpFormResponse>>(), It.IsAny<Action<Exception>>())).Callback((HttpFormGetRequest getRequest, Action<HttpFormResponse> onComplete, Action<Exception> onError) => onComplete(new HttpFormResponse { Response = "This is a dummy response" })).Verifiable();
 
             _cachingHttpForm.GetAsync(new HttpFormGetRequest { Url = "http://www.test.com" });
 
@@ -69,24 +69,24 @@ namespace Kigg.Core.Test
             HttpFormResponse httpResponse =  new HttpFormResponse{ Response = "This is dummy response"};
             // ReSharper restore RedundantAssignment
 
-            cache.Expect(c => c.TryGet(It.IsAny<string>(), out httpResponse)).Returns(true);
+            cache.Setup(c => c.TryGet(It.IsAny<string>(), out httpResponse)).Returns(true);
 
             _cachingHttpForm.GetAsync(new HttpFormGetRequest { Url = "http://www.test.com"}, h => Assert.True(h.Response.Length > 0), delegate { });
         }
 
         private void Get()
         {
-            _httpForm.Expect(f => f.Get(It.IsAny<HttpFormGetRequest>())).Returns(new HttpFormResponse { Response = "A dummy response" });
-            cache.Expect(c => c.Set(It.IsAny<string>(), It.IsAny<HttpFormResponse>(), It.IsAny<DateTime>())).Verifiable();
+            _httpForm.Setup(f => f.Get(It.IsAny<HttpFormGetRequest>())).Returns(new HttpFormResponse { Response = "A dummy response" });
+            cache.Setup(c => c.Set(It.IsAny<string>(), It.IsAny<HttpFormResponse>(), It.IsAny<DateTime>())).Verifiable();
 
             _cachingHttpForm.Get(BuildRequest());
         }
 
         private void GetAsync()
         {
-            _httpForm.Expect(f => f.GetAsync(It.IsAny<HttpFormGetRequest>(), It.IsAny<Action<HttpFormResponse>>(), It.IsAny<Action<Exception>>())).Callback((HttpFormGetRequest getRequest, Action<HttpFormResponse> onComplete, Action<Exception> onError) => onComplete(new HttpFormResponse { Response = "This is a dummy response"})).Verifiable();
+            _httpForm.Setup(f => f.GetAsync(It.IsAny<HttpFormGetRequest>(), It.IsAny<Action<HttpFormResponse>>(), It.IsAny<Action<Exception>>())).Callback((HttpFormGetRequest getRequest, Action<HttpFormResponse> onComplete, Action<Exception> onError) => onComplete(new HttpFormResponse { Response = "This is a dummy response"})).Verifiable();
 
-            cache.Expect(c => c.Set(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime>())).Verifiable();
+            cache.Setup(c => c.Set(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime>())).Verifiable();
 
             _cachingHttpForm.GetAsync(BuildRequest(), delegate { }, delegate { });
         }

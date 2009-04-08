@@ -28,7 +28,7 @@ namespace Kigg.Web.Test
 
             var httpContext = MvcTestHelper.GetHttpContext();
 
-            httpContext.HttpRequest.ExpectGet(r => r.Headers).Returns(new NameValueCollection { { "If-None-Match", ETag } });
+            httpContext.HttpRequest.SetupGet(r => r.Headers).Returns(new NameValueCollection { { "If-None-Match", ETag } });
 
             Assert.True(BaseHandler.HandleIfNotModified(httpContext.Object, ETag));
         }
@@ -40,7 +40,7 @@ namespace Kigg.Web.Test
 
             var httpContext = MvcTestHelper.GetHttpContext();
 
-            httpContext.HttpRequest.ExpectGet(r => r.Headers).Returns(new NameValueCollection { { "If-None-Match", "foobar" } });
+            httpContext.HttpRequest.SetupGet(r => r.Headers).Returns(new NameValueCollection { { "If-None-Match", "foobar" } });
 
             Assert.False(BaseHandler.HandleIfNotModified(httpContext.Object, ETag));
         }
@@ -60,8 +60,8 @@ namespace Kigg.Web.Test
 
             var httpContext = MvcTestHelper.GetHttpContext();
 
-            httpContext.HttpRequest.ExpectGet(r => r.Headers).Returns(new NameValueCollection { { "If-None-Match", ETag } });
-            httpContext.HttpResponse.ExpectSet(r => r.StatusCode);
+            httpContext.HttpRequest.SetupGet(r => r.Headers).Returns(new NameValueCollection { { "If-None-Match", ETag } });
+            httpContext.HttpResponse.SetupSet(r => r.StatusCode = Moq.It.IsAny<int>());
 
             httpContext.Verify();
         }

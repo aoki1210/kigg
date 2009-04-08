@@ -54,7 +54,7 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
         public void TraceData_Should_Not_Do_Aanything_When_Filter_Is_Set_To_Should_Not_Trace()
         {
             var filter = new Mock<TraceFilter>();
-            filter.Expect(f => f.ShouldTrace(It.IsAny<TraceEventCache>(), It.IsAny<string>(), It.IsAny<TraceEventType>(), It.IsAny<int>(), null, null, It.IsAny<LogEntry>(), null)).Returns(false);
+            filter.Setup(f => f.ShouldTrace(It.IsAny<TraceEventCache>(), It.IsAny<string>(), It.IsAny<TraceEventType>(), It.IsAny<int>(), null, null, It.IsAny<LogEntry>(), null)).Returns(false);
 
             _emailListner.Filter = filter.Object;
 
