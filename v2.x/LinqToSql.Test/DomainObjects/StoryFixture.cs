@@ -89,7 +89,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         {
             var votes = new List<StoryVote>();
 
-            database.ExpectGet(db => db.VoteDataSource).Returns(votes.AsQueryable());
+            database.SetupGet(db => db.VoteDataSource).Returns(votes.AsQueryable());
 
             Assert.True(_story.VoteCount == 0);
         }
@@ -97,7 +97,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void VoteCount_Should_Use_VoteRepository()
         {
-            voteRepository.Expect(r => r.CountByStory(It.IsAny<Guid>())).Returns(0).Verifiable();
+            voteRepository.Setup(r => r.CountByStory(It.IsAny<Guid>())).Returns(0).Verifiable();
 
             #pragma warning disable 168
             var count = _story.VoteCount;
@@ -111,7 +111,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         {
             var markAsSpams = new List<StoryMarkAsSpam>();
 
-            database.ExpectGet(db => db.MarkAsSpamDataSource).Returns(markAsSpams.AsQueryable());
+            database.SetupGet(db => db.MarkAsSpamDataSource).Returns(markAsSpams.AsQueryable());
 
             Assert.True(_story.MarkAsSpamCount == 0);
         }
@@ -119,7 +119,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void MarkAsSpamCount_Should_Use_MarkAsSpamaRepository()
         {
-            markAsSpamRepository.Expect(r => r.CountByStory(It.IsAny<Guid>())).Returns(0).Verifiable();
+            markAsSpamRepository.Setup(r => r.CountByStory(It.IsAny<Guid>())).Returns(0).Verifiable();
 
             #pragma warning disable 168
             var count = _story.MarkAsSpamCount;
@@ -133,7 +133,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         {
             var storyViews = new List<StoryView>();
 
-            database.ExpectGet(db => db.StoryViewDataSource).Returns(storyViews.AsQueryable());
+            database.SetupGet(db => db.StoryViewDataSource).Returns(storyViews.AsQueryable());
 
             Assert.True(_story.MarkAsSpamCount == 0);
         }
@@ -141,7 +141,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void ViewCount_Should_Use_StoryViewRepository()
         {
-            storyViewRepository.Expect(r => r.CountByStory(It.IsAny<Guid>())).Returns(0).Verifiable();
+            storyViewRepository.Setup(r => r.CountByStory(It.IsAny<Guid>())).Returns(0).Verifiable();
 
             #pragma warning disable 168
             var count = _story.ViewCount;
@@ -155,7 +155,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         {
             var comments = new List<StoryComment>();
 
-            database.ExpectGet(db => db.CommentDataSource).Returns(comments.AsQueryable());
+            database.SetupGet(db => db.CommentDataSource).Returns(comments.AsQueryable());
 
             Assert.True(_story.CommentCount == 0);
         }
@@ -163,7 +163,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void CommentCount_Should_Use_CommentRepository()
         {
-            commentRepository.Expect(r => r.CountByStory(It.IsAny<Guid>())).Returns(0).Verifiable();
+            commentRepository.Setup(r => r.CountByStory(It.IsAny<Guid>())).Returns(0).Verifiable();
 
             #pragma warning disable 168
             var count = _story.CommentCount;
@@ -177,7 +177,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         {
             var commentSubscribtions = new List<CommentSubscribtion>();
 
-            database.ExpectGet(db => db.CommentSubscribtionDataSource).Returns(commentSubscribtions.AsQueryable());
+            database.SetupGet(db => db.CommentSubscribtionDataSource).Returns(commentSubscribtions.AsQueryable());
 
             Assert.True(_story.SubscriberCount == 0);
         }
@@ -185,7 +185,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void SubscriberCount_Should_Use_CommentSubscribtionRepository()
         {
-            commentSubscribtionRepository.Expect(r => r.CountByStory(It.IsAny<Guid>())).Returns(0).Verifiable();
+            commentSubscribtionRepository.Setup(r => r.CountByStory(It.IsAny<Guid>())).Returns(0).Verifiable();
 
             #pragma warning disable 168
             var count = _story.SubscriberCount;
@@ -267,7 +267,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void View_Should_Use_StoryViewRepository()
         {
-            storyViewRepository.Expect(r => r.Add(It.IsAny<IStoryView>())).Verifiable();
+            storyViewRepository.Setup(r => r.Add(It.IsAny<IStoryView>())).Verifiable();
 
             _story.View(SystemTime.Now(), "192.168.0.1");
 
@@ -289,7 +289,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void CanPromote_Should_Return_False_When_Story_Has_Been_Promoted_By_User()
         {
-            voteRepository.Expect(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(new StoryVote());
+            voteRepository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(new StoryVote());
 
             Assert.False(_story.CanPromote(new User { Id = Guid.NewGuid() }));
         }
@@ -297,7 +297,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void CanPromote_Should_Return_False_When_Story_Has_Been_Marked_As_Spam_By_The_User()
         {
-            markAsSpamRepository.Expect(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(new StoryMarkAsSpam());
+            markAsSpamRepository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(new StoryMarkAsSpam());
 
             Assert.False(_story.CanPromote(new User { Id = Guid.NewGuid() }));
         }
@@ -313,7 +313,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void Promote_Should_Return_False_When_User_Can_Not_Promote()
         {
-            markAsSpamRepository.Expect(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(new StoryMarkAsSpam());
+            markAsSpamRepository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(new StoryMarkAsSpam());
 
             Assert.False(_story.Promote(SystemTime.Now(), new User { Id = Guid.NewGuid() }, "192.168.0.1"));
         }
@@ -321,7 +321,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void Promote_Should_Use_VoteRepository()
         {
-            voteRepository.Expect(r => r.Add(It.IsAny<StoryVote>())).Verifiable();
+            voteRepository.Setup(r => r.Add(It.IsAny<StoryVote>())).Verifiable();
 
             _story.Promote(SystemTime.Now(), new User { Id = Guid.NewGuid() }, "192.168.0.1");
 
@@ -355,7 +355,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void HasPromoted_Should_Use_VoteRepository()
         {
-            voteRepository.Expect(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns((IVote) null).Verifiable();
+            voteRepository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns((IVote) null).Verifiable();
 
             _story.HasPromoted(new User { Id = Guid.NewGuid() });
 
@@ -385,7 +385,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         {
             _story.User = new User { Id = Guid.NewGuid() };
 
-            voteRepository.Expect(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(new StoryVote());
+            voteRepository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(new StoryVote());
 
             Assert.True(_story.CanDemote(new User { Id = Guid.NewGuid() }));
         }
@@ -395,7 +395,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         {
             _story.User = new User { Id = Guid.NewGuid() };
 
-            voteRepository.Expect(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(new StoryVote());
+            voteRepository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(new StoryVote());
 
             Assert.True(_story.Demote(SystemTime.Now(), new User { Id = Guid.NewGuid() }));
         }
@@ -415,8 +415,8 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         {
             _story.User = new User { Id = Guid.NewGuid() };
 
-            voteRepository.Expect(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(new StoryVote());
-            voteRepository.Expect(r => r.Remove(It.IsAny<StoryVote>())).Verifiable();
+            voteRepository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(new StoryVote());
+            voteRepository.Setup(r => r.Remove(It.IsAny<StoryVote>())).Verifiable();
 
             _story.Demote(SystemTime.Now(), new User { Id = Guid.NewGuid() });
 
@@ -431,7 +431,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
             _story.User = new User { Id = Guid.NewGuid() };
             _story.Promote(SystemTime.Now(), user, "192.168.0.1");
 
-            voteRepository.Expect(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(_story.Votes.ElementAt(0));
+            voteRepository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(_story.Votes.ElementAt(0));
 
             _story.Demote(SystemTime.Now(), user);
 
@@ -446,7 +446,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
             _story.User = new User { Id = Guid.NewGuid() };
             _story.Promote(SystemTime.Now().AddDays(-5), user, "192.168.0.1");
 
-            voteRepository.Expect(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(_story.Votes.ElementAt(0));
+            voteRepository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(_story.Votes.ElementAt(0));
 
             DateTime lastValue = _story.LastActivityAt;
 
@@ -480,7 +480,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
 
             _story.User = user;
 
-            voteRepository.Expect(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(new StoryVote());
+            voteRepository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(new StoryVote());
 
             Assert.False(_story.CanMarkAsSpam(new User{Id = Guid.NewGuid() }));
         }
@@ -492,7 +492,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
 
             _story.User = user;
 
-            markAsSpamRepository.Expect(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(new StoryMarkAsSpam());
+            markAsSpamRepository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(new StoryMarkAsSpam());
 
             Assert.False(_story.CanMarkAsSpam(new User { Id = Guid.NewGuid() }));
         }
@@ -533,7 +533,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         {
             _story.User = new User { Id = Guid.NewGuid() };
 
-            markAsSpamRepository.Expect(r => r.Add(It.IsAny<IMarkAsSpam>())).Verifiable();
+            markAsSpamRepository.Setup(r => r.Add(It.IsAny<IMarkAsSpam>())).Verifiable();
 
             _story.MarkAsSpam(SystemTime.Now(), new User { Id = Guid.NewGuid() }, "192.168.0.1");
 
@@ -571,7 +571,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void HasMarkedAsSpam_Should_Use_MarkAsSpamRepository()
         {
-            markAsSpamRepository.Expect(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns((IMarkAsSpam) null).Verifiable();
+            markAsSpamRepository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns((IMarkAsSpam) null).Verifiable();
 
             _story.HasMarkedAsSpam(new User { Id = Guid.NewGuid() });
 
@@ -599,7 +599,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         {
             _story.User = new User { Id = Guid.NewGuid() };
 
-            markAsSpamRepository.Expect(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(new StoryMarkAsSpam());
+            markAsSpamRepository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(new StoryMarkAsSpam());
 
             Assert.True(_story.UnmarkAsSpam(SystemTime.Now(), new User { Id = Guid.NewGuid() }));
         }
@@ -617,8 +617,8 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         {
             _story.User = new User { Id = Guid.NewGuid() };
 
-            markAsSpamRepository.Expect(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(new StoryMarkAsSpam());
-            markAsSpamRepository.Expect(r => r.Remove(It.IsAny<StoryMarkAsSpam>())).Verifiable();
+            markAsSpamRepository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(new StoryMarkAsSpam());
+            markAsSpamRepository.Setup(r => r.Remove(It.IsAny<StoryMarkAsSpam>())).Verifiable();
 
             _story.UnmarkAsSpam(SystemTime.Now(), new User { Id = Guid.NewGuid() });
 
@@ -633,7 +633,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
             _story.User = new User { Id = Guid.NewGuid() };
             _story.MarkAsSpam(SystemTime.Now(), user, "192.168.0.1");
 
-            markAsSpamRepository.Expect(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(_story.StoryMarkAsSpams.ElementAt(0));
+            markAsSpamRepository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(_story.StoryMarkAsSpams.ElementAt(0));
 
             _story.UnmarkAsSpam(SystemTime.Now(), user);
 
@@ -648,7 +648,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
             _story.User = new User { Id = Guid.NewGuid() };
             _story.MarkAsSpam(SystemTime.Now().AddDays(-5), user, "192.168.0.1");
 
-            markAsSpamRepository.Expect(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(_story.MarkAsSpams.ElementAt(0));
+            markAsSpamRepository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(_story.MarkAsSpams.ElementAt(0));
 
             DateTime lastValue = _story.LastActivityAt;
 
@@ -669,7 +669,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void PostComment_Should_Use_CommentRepository()
         {
-            commentRepository.Expect(r => r.Add(It.IsAny<IComment>())).Verifiable();
+            commentRepository.Setup(r => r.Add(It.IsAny<IComment>())).Verifiable();
 
             var user = new User { Id = Guid.NewGuid() };
 
@@ -707,7 +707,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void FindComment_Should_Use_CommentRepository()
         {
-            commentRepository.Expect(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns((IComment) null).Verifiable();
+            commentRepository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns((IComment) null).Verifiable();
 
             #pragma warning disable 168
             var comment = _story.FindComment(Guid.NewGuid());
@@ -721,7 +721,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         {
             var comment = _story.PostComment("This is a comment", SystemTime.Now(), new User { Id = Guid.NewGuid() }, "192.168.0.1");
 
-            commentRepository.Expect(r => r.Remove(It.IsAny<IComment>())).Verifiable();
+            commentRepository.Setup(r => r.Remove(It.IsAny<IComment>())).Verifiable();
 
             _story.DeleteComment(comment);
 
@@ -747,7 +747,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void ContainsCommentSubscriber_Should_Use_CommentSubscribtionRepository()
         {
-            commentSubscribtionRepository.Expect(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns((ICommentSubscribtion) null).Verifiable();
+            commentSubscribtionRepository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns((ICommentSubscribtion) null).Verifiable();
 
             #pragma warning disable 168
             var exists = _story.ContainsCommentSubscriber(new User { Id = Guid.NewGuid() });
@@ -759,8 +759,8 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void SubscribeComment_Should_Use_CommentSubscribtionRepository()
         {
-            commentSubscribtionRepository.Expect(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns((ICommentSubscribtion) null).Verifiable();
-            commentSubscribtionRepository.Expect(r => r.Add(It.IsAny<ICommentSubscribtion>())).Verifiable();
+            commentSubscribtionRepository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns((ICommentSubscribtion) null).Verifiable();
+            commentSubscribtionRepository.Setup(r => r.Add(It.IsAny<ICommentSubscribtion>())).Verifiable();
 
             _story.SubscribeComment(new User { Id = Guid.NewGuid() });
 
@@ -770,7 +770,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void SubscribeComment_Should_Increase_Subscribers_Collection()
         {
-            commentSubscribtionRepository.Expect(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns((ICommentSubscribtion)null).Verifiable();
+            commentSubscribtionRepository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns((ICommentSubscribtion)null).Verifiable();
 
             _story.SubscribeComment(new User { Id = Guid.NewGuid() });
 
@@ -783,8 +783,8 @@ namespace Kigg.Infrastructure.LinqToSql.Test
             var user = new User { Id = Guid.NewGuid() };
             _story.SubscribeComment(user);
 
-            commentSubscribtionRepository.Expect(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(_story.CommentSubscribtions[0]).Verifiable();
-            commentSubscribtionRepository.Expect(r => r.Remove(It.IsAny<ICommentSubscribtion>())).Verifiable();
+            commentSubscribtionRepository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(_story.CommentSubscribtions[0]).Verifiable();
+            commentSubscribtionRepository.Setup(r => r.Remove(It.IsAny<ICommentSubscribtion>())).Verifiable();
 
             _story.UnsubscribeComment(user);
 
@@ -798,7 +798,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
 
             _story.SubscribeComment(user);
 
-            commentSubscribtionRepository.Expect(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(_story.CommentSubscribtions[0]);
+            commentSubscribtionRepository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(_story.CommentSubscribtions[0]);
 
             _story.UnsubscribeComment(user);
 

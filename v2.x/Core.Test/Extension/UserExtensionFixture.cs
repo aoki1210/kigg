@@ -18,7 +18,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void HasDefaultOpenIDEmail_Should_Be_True_When_User_Email_Is_Same_As_The_Settings_DefaultOpenIDEmail()
         {
-            _user.ExpectGet(u => u.Email).Returns(settings.Object.DefaultEmailOfOpenIdUser);
+            _user.SetupGet(u => u.Email).Returns(settings.Object.DefaultEmailOfOpenIdUser);
 
             Assert.True(_user.Object.HasDefaultOpenIDEmail());
         }
@@ -26,7 +26,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsOpenIDAccount_Should_Be_True_When_Password_Is_Null()
         {
-            _user.ExpectGet(u => u.Password).Returns((string) null);
+            _user.SetupGet(u => u.Password).Returns((string) null);
 
             Assert.True(_user.Object.IsOpenIDAccount());
         }
@@ -34,7 +34,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsAdministrator_Should_Be_True_When_Role_Contains_Administrator()
         {
-            _user.ExpectGet(u => u.Role).Returns(Roles.Administrator);
+            _user.SetupGet(u => u.Role).Returns(Roles.Administrator);
 
             Assert.True(_user.Object.IsAdministrator());
         }
@@ -42,7 +42,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsModerator_Should_Be_True_When_Role_Contains_Modarator()
         {
-            _user.ExpectGet(u => u.Role).Returns(Roles.Moderator);
+            _user.SetupGet(u => u.Role).Returns(Roles.Moderator);
 
             Assert.True(_user.Object.IsModerator());
         }
@@ -50,7 +50,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsBot_Should_Be_True_When_Role_Contains_Bot()
         {
-            _user.ExpectGet(u => u.Role).Returns(Roles.Bot);
+            _user.SetupGet(u => u.Role).Returns(Roles.Bot);
 
             Assert.True(_user.Object.IsBot());
         }
@@ -64,7 +64,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void CanModerate_Should_Be_True_When_User_Is_Either_Administrator_Or_Moderator()
         {
-            _user.ExpectGet(u => u.Role).Returns(Roles.Administrator | Roles.Moderator);
+            _user.SetupGet(u => u.Role).Returns(Roles.Administrator | Roles.Moderator);
 
             Assert.True(_user.Object.CanModerate());
         }
@@ -78,7 +78,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void ShouldHideCaptcha_Should_Be_True_When_Use_Is_Not_Public_User()
         {
-            _user.ExpectGet(u => u.Role).Returns(Roles.Bot);
+            _user.SetupGet(u => u.Role).Returns(Roles.Bot);
 
             Assert.True(_user.Object.ShouldHideCaptcha());
         }
@@ -86,7 +86,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void ShouldHideCaptcha_Should_Be_True_When_User_Score_Is_More_Than_Settings_MaximumUserScoreToShowCaptcha()
         {
-            _user.ExpectGet(u => u.CurrentScore).Returns(settings.Object.MaximumUserScoreToShowCaptcha + 1);
+            _user.SetupGet(u => u.CurrentScore).Returns(settings.Object.MaximumUserScoreToShowCaptcha + 1);
 
             Assert.True(_user.Object.ShouldHideCaptcha());
         }

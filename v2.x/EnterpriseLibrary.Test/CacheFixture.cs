@@ -35,7 +35,7 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
         [Fact]
         public void Count_Should_Use_CacheManager()
         {
-            _cacheManager.ExpectGet(c => c.Count).Returns(0).Verifiable();
+            _cacheManager.SetupGet(c => c.Count).Returns(0).Verifiable();
 
             Assert.Equal(0, _cache.Count);
         }
@@ -43,7 +43,7 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
         [Fact]
         public void Clear_Should_Use_CacheManager()
         {
-            _cacheManager.Expect(c => c.Flush()).Verifiable();
+            _cacheManager.Setup(c => c.Flush()).Verifiable();
 
             _cache.Clear();
         }
@@ -51,7 +51,7 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
         [Fact]
         public void Contains_Should_Use_CacheManager()
         {
-            _cacheManager.Expect(c => c.Contains(It.IsAny<string>())).Returns(true).Verifiable();
+            _cacheManager.Setup(c => c.Contains(It.IsAny<string>())).Returns(true).Verifiable();
 
             Assert.True(_cache.Contains(Key));
         }
@@ -59,7 +59,7 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
         [Fact]
         public void Get_Should_Use_CacheManager()
         {
-            _cacheManager.Expect(c => c.GetData(It.IsAny<string>())).Returns(new object()).Verifiable();
+            _cacheManager.Setup(c => c.GetData(It.IsAny<string>())).Returns(new object()).Verifiable();
 
             _cache.Get<object>(Key);
         }
@@ -67,8 +67,8 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
         [Fact]
         public void TryGet_Should_Use_CacheManager_When_Key_Exists()
         {
-            _cacheManager.Expect(c => c.Contains(It.IsAny<string>())).Returns(true).Verifiable();
-            _cacheManager.Expect(c => c.GetData(It.IsAny<string>())).Returns(1).Verifiable();
+            _cacheManager.Setup(c => c.Contains(It.IsAny<string>())).Returns(true).Verifiable();
+            _cacheManager.Setup(c => c.GetData(It.IsAny<string>())).Returns(1).Verifiable();
 
             int dummy;
 
@@ -78,7 +78,7 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
         [Fact]
         public void TryGet_Should_Return_Default_Value_When_Key_Does_Not_Exist()
         {
-            _cacheManager.Expect(c => c.Contains(It.IsAny<string>())).Returns(false).Verifiable();
+            _cacheManager.Setup(c => c.Contains(It.IsAny<string>())).Returns(false).Verifiable();
 
             int dummy;
 
@@ -90,7 +90,7 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
         [Fact]
         public void Set_Should_Use_CacheManager()
         {
-            _cacheManager.Expect(c => c.Add(It.IsAny<string>(), It.IsAny<object>())).Verifiable();
+            _cacheManager.Setup(c => c.Add(It.IsAny<string>(), It.IsAny<object>())).Verifiable();
 
             _cache.Set(Key, new object());
         }
@@ -98,7 +98,7 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
         [Fact]
         public void Set_With_AbsoluteExpiration_Should_Use_CacheManager()
         {
-            _cacheManager.Expect(c => c.Add(It.IsAny<string>(), It.IsAny<object>(), CacheItemPriority.Normal, null, It.IsAny<SlidingTime>()));
+            _cacheManager.Setup(c => c.Add(It.IsAny<string>(), It.IsAny<object>(), CacheItemPriority.Normal, null, It.IsAny<SlidingTime>()));
 
             _cache.Set(Key, new object(), SystemTime.Now().AddHours(4));
         }
@@ -106,7 +106,7 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
         [Fact]
         public void Set_With_SlidingExpiration_Should_Use_CacheManager()
         {
-            _cacheManager.Expect(c => c.Add(It.IsAny<string>(), It.IsAny<object>(), CacheItemPriority.Normal, null, It.IsAny<AbsoluteTime>()));
+            _cacheManager.Setup(c => c.Add(It.IsAny<string>(), It.IsAny<object>(), CacheItemPriority.Normal, null, It.IsAny<AbsoluteTime>()));
 
             _cache.Set(Key, new object(), TimeSpan.FromHours(4));
         }
@@ -114,8 +114,8 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
         [Fact]
         public void RemoveIfExists_Should_Use_CacheManager()
         {
-            _cacheManager.Expect(c => c.Contains(It.IsAny<string>())).Returns(true).Verifiable();
-            _cacheManager.Expect(c => c.Remove(It.IsAny<string>())).Verifiable();
+            _cacheManager.Setup(c => c.Contains(It.IsAny<string>())).Returns(true).Verifiable();
+            _cacheManager.Setup(c => c.Remove(It.IsAny<string>())).Verifiable();
 
             _cache.RemoveIfExists(Key);
         }
@@ -123,7 +123,7 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
         [Fact]
         public void Remove_Should_Use_CacheManager()
         {
-            _cacheManager.Expect(c => c.Remove(It.IsAny<string>())).Verifiable();
+            _cacheManager.Setup(c => c.Remove(It.IsAny<string>())).Verifiable();
 
             _cache.Remove(Key);
         }

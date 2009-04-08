@@ -19,8 +19,8 @@ namespace Kigg.Web.Test
 
             var settings = new Mock<IConfigurationSettings>();
 
-            settings.ExpectGet(s => s.FeedStoryPerPage).Returns(25);
-            settings.ExpectGet(s => s.CarouselStoryCount).Returns(30);
+            settings.SetupGet(s => s.FeedStoryPerPage).Returns(25);
+            settings.SetupGet(s => s.CarouselStoryCount).Returns(30);
 
             RouteTable.Routes.Clear();
             new RegisterRoutes(settings.Object).Execute();
@@ -135,7 +135,7 @@ namespace Kigg.Web.Test
         {
             var resultContext = BuildResultContext();
 
-            _httpContext.HttpResponse.Expect(r => r.AppendHeader(It.IsAny<string>(), It.IsAny<string>())).Verifiable();
+            _httpContext.HttpResponse.Setup(r => r.AppendHeader(It.IsAny<string>(), It.IsAny<string>())).Verifiable();
 
             var attribute = new AutoRefreshAttribute();
             attribute.OnResultExecuting(resultContext);

@@ -9,7 +9,7 @@ namespace Kigg.Web.Test
         public HttpPrincipalMock()
         {
             Identity = new HttpIdentityMock();
-            ExpectGet(u => u.Identity).Returns(Identity.Object);
+            SetupGet(u => u.Identity).Returns(Identity.Object);
         }
 
         public HttpIdentityMock Identity
@@ -18,13 +18,13 @@ namespace Kigg.Web.Test
             private set;
         }
 
-        public override void Verify()
+        public new void Verify()
         {
             Identity.Verify();
             base.Verify();
         }
 
-        public override void VerifyAll()
+        public new void VerifyAll()
         {
             Identity.VerifyAll();
             base.VerifyAll();

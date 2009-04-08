@@ -30,14 +30,14 @@ namespace Kigg.Web.Test
             var httpResponse = new Mock<HttpResponseBase>();
             var httpCachePolicy = new Mock<HttpCachePolicyBase>();
 
-            _httpContext.ExpectGet(c => c.Timestamp).Returns(SystemTime.Now());
-            _httpContext.ExpectGet(c => c.Response).Returns(httpResponse.Object);
-            httpResponse.ExpectGet(r => r.Cache).Returns(httpCachePolicy.Object);
+            _httpContext.SetupGet(c => c.Timestamp).Returns(SystemTime.Now());
+            _httpContext.SetupGet(c => c.Response).Returns(httpResponse.Object);
+            httpResponse.SetupGet(r => r.Cache).Returns(httpCachePolicy.Object);
 
-            httpCachePolicy.Expect(c => c.SetCacheability(It.IsAny<HttpCacheability>())).Verifiable();
-            httpCachePolicy.Expect(c => c.SetExpires(It.IsAny<DateTime>())).Verifiable();
-            httpCachePolicy.Expect(c => c.SetMaxAge(It.IsAny<TimeSpan>())).Verifiable();
-            httpCachePolicy.Expect(c => c.SetRevalidation(HttpCacheRevalidation.AllCaches)).Verifiable();
+            httpCachePolicy.Setup(c => c.SetCacheability(It.IsAny<HttpCacheability>())).Verifiable();
+            httpCachePolicy.Setup(c => c.SetExpires(It.IsAny<DateTime>())).Verifiable();
+            httpCachePolicy.Setup(c => c.SetMaxAge(It.IsAny<TimeSpan>())).Verifiable();
+            httpCachePolicy.Setup(c => c.SetRevalidation(HttpCacheRevalidation.AllCaches)).Verifiable();
 
             _httpContext.Object.CacheResponseFor(TimeSpan.FromDays(1));
         }
@@ -50,15 +50,15 @@ namespace Kigg.Web.Test
             var httpResponse = new Mock<HttpResponseBase>();
             var httpRequest = new Mock<HttpRequestBase>();
 
-            _httpContext.ExpectGet(c => c.Request).Returns(httpRequest.Object);
-            _httpContext.ExpectGet(c => c.Response).Returns(httpResponse.Object);
+            _httpContext.SetupGet(c => c.Request).Returns(httpRequest.Object);
+            _httpContext.SetupGet(c => c.Response).Returns(httpResponse.Object);
 
-            httpRequest.ExpectGet(r => r.Headers).Returns(new NameValueCollection { { "Accept-Encoding", encoding } });
+            httpRequest.SetupGet(r => r.Headers).Returns(new NameValueCollection { { "Accept-Encoding", encoding } });
 
             Stream filter = new MemoryStream();
 
-            httpResponse.ExpectGet(r => r.Filter).Returns(filter).Verifiable();
-            httpResponse.Expect(r => r.AddHeader("Content-encoding", It.IsAny<string>()));
+            httpResponse.SetupGet(r => r.Filter).Returns(filter).Verifiable();
+            httpResponse.Setup(r => r.AddHeader("Content-encoding", It.IsAny<string>()));
 
             _httpContext.Object.CompressResponse();
         }

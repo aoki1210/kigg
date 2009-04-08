@@ -34,8 +34,8 @@ namespace Kigg.Core.Test
         [Fact]
         public void Api_Key_Should_Be_Valid()
         {
-            _httpForm.Expect(h => h.Post(It.Is<HttpFormPostRequest>(r => r.Url == ApiKeyCheckUrl))).Returns(new HttpFormResponse { Response = ValidApiKeyResponse });
-            _httpForm.Expect(h => h.Post(It.Is<HttpFormPostRequest>(r => r.Url == CommentCheckUrl))).Returns(new HttpFormResponse { Response = NotSpamCommentResponse });
+            _httpForm.Setup(h => h.Post(It.Is<HttpFormPostRequest>(r => r.Url == ApiKeyCheckUrl))).Returns(new HttpFormResponse { Response = ValidApiKeyResponse });
+            _httpForm.Setup(h => h.Post(It.Is<HttpFormPostRequest>(r => r.Url == CommentCheckUrl))).Returns(new HttpFormResponse { Response = NotSpamCommentResponse });
 
             Assert.DoesNotThrow(() => _spamProtection.IsSpam(CreateDummyContent()));
         }
@@ -43,7 +43,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Should_Throw_Exception_When_Api_Key_Is_Not_Valid()
         {
-            _httpForm.Expect(h => h.Post(It.IsAny<HttpFormPostRequest>())).Returns(new HttpFormResponse{ Response = "<defensio-result><status>failure</status></defensio-result>" });
+            _httpForm.Setup(h => h.Post(It.IsAny<HttpFormPostRequest>())).Returns(new HttpFormResponse{ Response = "<defensio-result><status>failure</status></defensio-result>" });
 
             Assert.Throws<InvalidOperationException>(() => _spamProtection.IsSpam(CreateDummyContent()));
         }
@@ -53,8 +53,8 @@ namespace Kigg.Core.Test
         [InlineData(NotSpamCommentResponse, false)]
         public void IsSpam_Should_Return_Correct_Result(string response, bool result)
         {
-            _httpForm.Expect(h => h.Post(It.Is<HttpFormPostRequest>(r => r.Url == ApiKeyCheckUrl))).Returns(new HttpFormResponse { Response = ValidApiKeyResponse });
-            _httpForm.Expect(h => h.Post(It.Is<HttpFormPostRequest>(r => r.Url == CommentCheckUrl))).Returns(new HttpFormResponse { Response = response });
+            _httpForm.Setup(h => h.Post(It.Is<HttpFormPostRequest>(r => r.Url == ApiKeyCheckUrl))).Returns(new HttpFormResponse { Response = ValidApiKeyResponse });
+            _httpForm.Setup(h => h.Post(It.Is<HttpFormPostRequest>(r => r.Url == CommentCheckUrl))).Returns(new HttpFormResponse { Response = response });
 
             var isSpam = _spamProtection.IsSpam(CreateDummyContent());
 
@@ -64,8 +64,8 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsSpam_Should_Return_False_When_Null_Response_Is_Received()
         {
-            _httpForm.Expect(h => h.Post(It.Is<HttpFormPostRequest>(r => r.Url == ApiKeyCheckUrl))).Returns(new HttpFormResponse { Response = ValidApiKeyResponse });
-            _httpForm.Expect(h => h.Post(It.Is<HttpFormPostRequest>(r => r.Url == CommentCheckUrl))).Returns(new HttpFormResponse());
+            _httpForm.Setup(h => h.Post(It.Is<HttpFormPostRequest>(r => r.Url == ApiKeyCheckUrl))).Returns(new HttpFormResponse { Response = ValidApiKeyResponse });
+            _httpForm.Setup(h => h.Post(It.Is<HttpFormPostRequest>(r => r.Url == CommentCheckUrl))).Returns(new HttpFormResponse());
 
             Assert.False(_spamProtection.IsSpam(CreateDummyContent()));
         }
@@ -73,8 +73,8 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsSpam_Should_Should_Use_HttpForm()
         {
-            _httpForm.Expect(h => h.Post(It.Is<HttpFormPostRequest>(r => r.Url == ApiKeyCheckUrl))).Returns(new HttpFormResponse { Response = ValidApiKeyResponse }).Verifiable();
-            _httpForm.Expect(h => h.Post(It.Is<HttpFormPostRequest>(r => r.Url == CommentCheckUrl))).Returns(new HttpFormResponse { Response = NotSpamCommentResponse }).Verifiable();
+            _httpForm.Setup(h => h.Post(It.Is<HttpFormPostRequest>(r => r.Url == ApiKeyCheckUrl))).Returns(new HttpFormResponse { Response = ValidApiKeyResponse }).Verifiable();
+            _httpForm.Setup(h => h.Post(It.Is<HttpFormPostRequest>(r => r.Url == CommentCheckUrl))).Returns(new HttpFormResponse { Response = NotSpamCommentResponse }).Verifiable();
 
             _spamProtection.IsSpam(CreateDummyContent());
 
@@ -88,10 +88,10 @@ namespace Kigg.Core.Test
 
             _spamProtection.NextHandler = next.Object;
 
-            _httpForm.Expect(h => h.Post(It.Is<HttpFormPostRequest>(r => r.Url == ApiKeyCheckUrl))).Returns(new HttpFormResponse { Response = ValidApiKeyResponse });
-            _httpForm.Expect(h => h.Post(It.Is<HttpFormPostRequest>(r => r.Url == CommentCheckUrl))).Returns(new HttpFormResponse { Response = NotSpamCommentResponse });
+            _httpForm.Setup(h => h.Post(It.Is<HttpFormPostRequest>(r => r.Url == ApiKeyCheckUrl))).Returns(new HttpFormResponse { Response = ValidApiKeyResponse });
+            _httpForm.Setup(h => h.Post(It.Is<HttpFormPostRequest>(r => r.Url == CommentCheckUrl))).Returns(new HttpFormResponse { Response = NotSpamCommentResponse });
 
-            next.Expect(sp => sp.IsSpam(It.IsAny<SpamCheckContent>())).Returns(false).Verifiable();
+            next.Setup(sp => sp.IsSpam(It.IsAny<SpamCheckContent>())).Returns(false).Verifiable();
 
             _spamProtection.IsSpam(CreateDummyContent());
 
@@ -103,8 +103,8 @@ namespace Kigg.Core.Test
         [InlineData(NotSpamCommentResponse, false)]
         public void IsSpam_Async_Should_Return_Correct_Result(string response, bool result)
         {
-            _httpForm.Expect(h => h.Post(It.Is<HttpFormPostRequest>(r => r.Url == ApiKeyCheckUrl))).Returns(new HttpFormResponse { Response = ValidApiKeyResponse });
-            _httpForm.Expect(h => h.PostAsync(It.Is<HttpFormPostRequest>(r => r.Url == CommentCheckUrl), It.IsAny<Action<HttpFormResponse>>(), It.IsAny<Action<Exception>>())).Callback((HttpFormPostRequest request, Action<HttpFormResponse> onComplete, Action<Exception> onError) => onComplete(new HttpFormResponse { Response = response}));
+            _httpForm.Setup(h => h.Post(It.Is<HttpFormPostRequest>(r => r.Url == ApiKeyCheckUrl))).Returns(new HttpFormResponse { Response = ValidApiKeyResponse });
+            _httpForm.Setup(h => h.PostAsync(It.Is<HttpFormPostRequest>(r => r.Url == CommentCheckUrl), It.IsAny<Action<HttpFormResponse>>(), It.IsAny<Action<Exception>>())).Callback((HttpFormPostRequest request, Action<HttpFormResponse> onComplete, Action<Exception> onError) => onComplete(new HttpFormResponse { Response = response}));
 
             _spamProtection.IsSpam(CreateDummyContent(), (source, isSpam) => Assert.Equal(result, isSpam));
         }
@@ -116,10 +116,10 @@ namespace Kigg.Core.Test
 
             _spamProtection.NextHandler = next.Object;
 
-            _httpForm.Expect(h => h.Post(It.Is<HttpFormPostRequest>(r => r.Url == ApiKeyCheckUrl))).Returns(new HttpFormResponse { Response = ValidApiKeyResponse });
-            _httpForm.Expect(h => h.PostAsync(It.Is<HttpFormPostRequest>(r => r.Url == CommentCheckUrl), It.IsAny<Action<HttpFormResponse>>(), It.IsAny<Action<Exception>>())).Callback((HttpFormPostRequest request, Action<HttpFormResponse> onComplete, Action<Exception> onError) => onComplete(new HttpFormResponse { Response = NotSpamCommentResponse }));
+            _httpForm.Setup(h => h.Post(It.Is<HttpFormPostRequest>(r => r.Url == ApiKeyCheckUrl))).Returns(new HttpFormResponse { Response = ValidApiKeyResponse });
+            _httpForm.Setup(h => h.PostAsync(It.Is<HttpFormPostRequest>(r => r.Url == CommentCheckUrl), It.IsAny<Action<HttpFormResponse>>(), It.IsAny<Action<Exception>>())).Callback((HttpFormPostRequest request, Action<HttpFormResponse> onComplete, Action<Exception> onError) => onComplete(new HttpFormResponse { Response = NotSpamCommentResponse }));
 
-            next.Expect(sp => sp.IsSpam(It.IsAny<SpamCheckContent>(), It.IsAny<Action<string, bool>>())).Verifiable();
+            next.Setup(sp => sp.IsSpam(It.IsAny<SpamCheckContent>(), It.IsAny<Action<string, bool>>())).Verifiable();
 
             _spamProtection.IsSpam(CreateDummyContent(), delegate{});
 
@@ -129,8 +129,8 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsSpam_Should_Return_False_When_Exception_Occurrs()
         {
-            _httpForm.Expect(h => h.Post(It.Is<HttpFormPostRequest>(r => r.Url == ApiKeyCheckUrl))).Returns(new HttpFormResponse { Response = ValidApiKeyResponse });
-            _httpForm.Expect(h => h.PostAsync(It.Is<HttpFormPostRequest>(r => r.Url == CommentCheckUrl), It.IsAny<Action<HttpFormResponse>>(), It.IsAny<Action<Exception>>())).Callback((HttpFormPostRequest request, Action<HttpFormResponse> onComplete, Action<Exception> onError) => onError(new InvalidOperationException()));
+            _httpForm.Setup(h => h.Post(It.Is<HttpFormPostRequest>(r => r.Url == ApiKeyCheckUrl))).Returns(new HttpFormResponse { Response = ValidApiKeyResponse });
+            _httpForm.Setup(h => h.PostAsync(It.Is<HttpFormPostRequest>(r => r.Url == CommentCheckUrl), It.IsAny<Action<HttpFormResponse>>(), It.IsAny<Action<Exception>>())).Callback((HttpFormPostRequest request, Action<HttpFormResponse> onComplete, Action<Exception> onError) => onError(new InvalidOperationException()));
 
             _spamProtection.IsSpam(CreateDummyContent(), (source, isSpam) => Assert.False(isSpam));
         }
@@ -142,10 +142,10 @@ namespace Kigg.Core.Test
 
             _spamProtection.NextHandler = next.Object;
 
-            _httpForm.Expect(h => h.Post(It.Is<HttpFormPostRequest>(r => r.Url == ApiKeyCheckUrl))).Returns(new HttpFormResponse { Response = ValidApiKeyResponse });
-            _httpForm.Expect(h => h.PostAsync(It.Is<HttpFormPostRequest>(r => r.Url == CommentCheckUrl), It.IsAny<Action<HttpFormResponse>>(), It.IsAny<Action<Exception>>())).Callback((HttpFormPostRequest request, Action<HttpFormResponse> onComplete, Action<Exception> onError) => onError(new InvalidOperationException()));
+            _httpForm.Setup(h => h.Post(It.Is<HttpFormPostRequest>(r => r.Url == ApiKeyCheckUrl))).Returns(new HttpFormResponse { Response = ValidApiKeyResponse });
+            _httpForm.Setup(h => h.PostAsync(It.Is<HttpFormPostRequest>(r => r.Url == CommentCheckUrl), It.IsAny<Action<HttpFormResponse>>(), It.IsAny<Action<Exception>>())).Callback((HttpFormPostRequest request, Action<HttpFormResponse> onComplete, Action<Exception> onError) => onError(new InvalidOperationException()));
 
-            next.Expect(sp => sp.IsSpam(It.IsAny<SpamCheckContent>(), It.IsAny<Action<string, bool>>())).Verifiable();
+            next.Setup(sp => sp.IsSpam(It.IsAny<SpamCheckContent>(), It.IsAny<Action<string, bool>>())).Verifiable();
 
             _spamProtection.IsSpam(CreateDummyContent(), delegate { });
 
@@ -155,8 +155,8 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsSpam_Async_Should_Should_Use_HttpForm()
         {
-            _httpForm.Expect(h => h.Post(It.Is<HttpFormPostRequest>(r => r.Url == ApiKeyCheckUrl))).Returns(new HttpFormResponse { Response = ValidApiKeyResponse });
-            _httpForm.Expect(h => h.PostAsync(It.IsAny<HttpFormPostRequest>(), It.IsAny<Action<HttpFormResponse>>(), It.IsAny<Action<Exception>>())).Verifiable();
+            _httpForm.Setup(h => h.Post(It.Is<HttpFormPostRequest>(r => r.Url == ApiKeyCheckUrl))).Returns(new HttpFormResponse { Response = ValidApiKeyResponse });
+            _httpForm.Setup(h => h.PostAsync(It.IsAny<HttpFormPostRequest>(), It.IsAny<Action<HttpFormResponse>>(), It.IsAny<Action<Exception>>())).Verifiable();
 
             _spamProtection.IsSpam(CreateDummyContent(), delegate{});
 

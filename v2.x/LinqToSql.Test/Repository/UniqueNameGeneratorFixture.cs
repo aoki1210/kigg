@@ -23,7 +23,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         public void Generate_Should_Return_Correct_UniqueName_When_DataSource_Is_Empty()
         {
             var database = new Mock<IDatabase>();
-            database.ExpectGet(d => d.CategoryDataSource).Returns(new List<Category>().AsQueryable());
+            database.SetupGet(d => d.CategoryDataSource).Returns(new List<Category>().AsQueryable());
 
             string uniqueName = UniqueNameGenerator.GenerateFrom(database.Object.CategoryDataSource, "C");
 
@@ -36,7 +36,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
             var categoryList = new List<Category>();
 
             var database = new Mock<IDatabase>();
-            database.ExpectGet(d => d.CategoryDataSource).Returns(categoryList.AsQueryable());
+            database.SetupGet(d => d.CategoryDataSource).Returns(categoryList.AsQueryable());
 
             var category = (Category) _factory.CreateCategory("C");
             category.UniqueName = UniqueNameGenerator.GenerateFrom(database.Object.CategoryDataSource, category.Name);
@@ -54,7 +54,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
             var categoryList = new List<Category>();
 
             var database = new Mock<IDatabase>();
-            database.ExpectGet(d => d.CategoryDataSource).Returns(categoryList.AsQueryable());
+            database.SetupGet(d => d.CategoryDataSource).Returns(categoryList.AsQueryable());
 
             var category1 = (Category) _factory.CreateCategory("C");
             category1.UniqueName = UniqueNameGenerator.GenerateFrom(database.Object.CategoryDataSource, category1.Name);
@@ -77,7 +77,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
             var categoryList = new List<Category>();
 
             var database = new Mock<IDatabase>();
-            database.ExpectGet(d => d.CategoryDataSource).Returns(categoryList.AsQueryable());
+            database.SetupGet(d => d.CategoryDataSource).Returns(categoryList.AsQueryable());
 
             var category1 = (Category) _factory.CreateCategory("IoC-DI");
             category1.UniqueName = UniqueNameGenerator.GenerateFrom(database.Object.CategoryDataSource, category1.Name);

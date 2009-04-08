@@ -24,7 +24,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void Commit_Should_Use_Database_SubmitChanges()
         {
-            database.Expect(d => d.SubmitChanges()).Verifiable();
+            database.Setup(d => d.SubmitChanges()).Verifiable();
 
             _unitOfWork.Commit();
         }

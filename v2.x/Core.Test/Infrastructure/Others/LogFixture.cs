@@ -21,7 +21,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Info_Should_Use_InternalLog()
         {
-            log.Expect(l => l.Info(It.IsAny<string>())).Verifiable();
+            log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
             Log.Info(Message);
         }
@@ -29,7 +29,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Info_With_Formatting_Should_Use_InternalLog()
         {
-            log.Expect(l => l.Info(It.IsAny<string>())).Verifiable();
+            log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
             Log.Info(FormatString, Message);
         }
@@ -37,7 +37,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Warning_Should_Use_InternalLog()
         {
-            log.Expect(l => l.Warning(It.IsAny<string>())).Verifiable();
+            log.Setup(l => l.Warning(It.IsAny<string>())).Verifiable();
 
             Log.Warning(Message);
         }
@@ -45,7 +45,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Warning_With_Formatting_Should_Use_InternalLog()
         {
-            log.Expect(l => l.Warning(It.IsAny<string>())).Verifiable();
+            log.Setup(l => l.Warning(It.IsAny<string>())).Verifiable();
 
             Log.Warning(FormatString, Message);
         }
@@ -53,7 +53,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Error_Should_Use_InternalLog()
         {
-            log.Expect(l => l.Error(It.IsAny<string>())).Verifiable();
+            log.Setup(l => l.Error(It.IsAny<string>())).Verifiable();
 
             Log.Error(Message);
         }
@@ -61,7 +61,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Error_With_Formatting_Should_Use_InternalLog()
         {
-            log.Expect(l => l.Error(It.IsAny<string>())).Verifiable();
+            log.Setup(l => l.Error(It.IsAny<string>())).Verifiable();
 
             Log.Error(FormatString, Message);
         }
@@ -69,7 +69,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Exception_Should_Use_InternalLog()
         {
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
             Log.Exception(new Exception());
         }

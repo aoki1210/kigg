@@ -32,9 +32,9 @@ namespace Kigg.Web.Test
 
             if (!string.IsNullOrEmpty(encoding))
             {
-                httpContext.HttpResponse.ExpectGet(r => r.Filter).Returns(new MemoryStream());
-                httpContext.HttpResponse.Expect(r => r.AppendHeader(It.IsAny<string>(), It.IsAny<string>())).Verifiable();
-                httpContext.HttpResponse.ExpectSet(r => r.Filter);
+                httpContext.HttpResponse.SetupGet(r => r.Filter).Returns(new MemoryStream());
+                httpContext.HttpResponse.Setup(r => r.AppendHeader(It.IsAny<string>(), It.IsAny<string>())).Verifiable();
+                httpContext.HttpResponse.SetupSet(r => r.Filter = It.IsAny<Stream>());
             }
 
             _attribute.OnResultExecuted(executedContext);
@@ -52,8 +52,8 @@ namespace Kigg.Web.Test
             ControllerContext controllerContext = new ControllerContext(httpContext.Object, new RouteData(), new Mock<ControllerBase>().Object);
             ResultExecutedContext executedContext = new ResultExecutedContext(controllerContext, new EmptyResult(), false, new Exception());
 
-            httpContext.HttpResponse.Expect(r => r.AppendHeader(It.IsAny<string>(), It.IsAny<string>())).Never();
-
+            //httpContext.HttpResponse.Setup(r => r.AppendHeader(It.IsAny<string>(), It.IsAny<string>())).Never();
+            httpContext.HttpResponse.Verify(r => r.AppendHeader(It.IsAny<string>(), It.IsAny<string>()), Times.Never());//.Never();
             _attribute.OnResultExecuted(executedContext);
 
             httpContext.Verify();
@@ -70,10 +70,10 @@ namespace Kigg.Web.Test
                                                         };
 
             httpContext.HttpRequest.Object.Headers.Add("Accept-Encoding", "gzip");
-            httpContext.HttpResponse.Expect(r => r.AppendHeader(It.IsAny<string>(), It.IsAny<string>())).Verifiable();
-            httpContext.HttpResponse.ExpectGet(r => r.Filter).Returns(new MemoryStream());
-            httpContext.HttpResponse.Expect(r => r.AppendHeader(It.IsAny<string>(), It.IsAny<string>())).Verifiable();
-            httpContext.HttpResponse.ExpectSet(r => r.Filter);
+            httpContext.HttpResponse.Setup(r => r.AppendHeader(It.IsAny<string>(), It.IsAny<string>())).Verifiable();
+            httpContext.HttpResponse.SetupGet(r => r.Filter).Returns(new MemoryStream());
+            httpContext.HttpResponse.Setup(r => r.AppendHeader(It.IsAny<string>(), It.IsAny<string>())).Verifiable();
+            httpContext.HttpResponse.SetupSet(r => r.Filter = It.IsAny<Stream>());
 
             _attribute.OnResultExecuted(executedContext);
 

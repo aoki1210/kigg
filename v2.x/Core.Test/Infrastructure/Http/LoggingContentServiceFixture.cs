@@ -27,8 +27,8 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsRestricted_Should_Log_Info_When_Url_Is_Not_Restricted()
         {
-            log.Expect(l => l.Info(It.IsAny<string>())).Verifiable();
-            _service.Expect(s => s.IsRestricted(It.IsAny<string>())).Returns(false);
+            log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
+            _service.Setup(s => s.IsRestricted(It.IsAny<string>())).Returns(false);
 
             _loggingService.IsRestricted("http://www.test.com");
         }
@@ -36,8 +36,8 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsRestricted_Should_Log_Warn_When_Url_Is_Restricted()
         {
-            log.Expect(l => l.Warning(It.IsAny<string>())).Verifiable();
-            _service.Expect(s => s.IsRestricted(It.IsAny<string>())).Returns(true);
+            log.Setup(l => l.Warning(It.IsAny<string>())).Verifiable();
+            _service.Setup(s => s.IsRestricted(It.IsAny<string>())).Returns(true);
 
             _loggingService.IsRestricted("http://www.test.com");
         }
@@ -45,8 +45,8 @@ namespace Kigg.Core.Test
         [Fact]
         public void Get_Should_Log_Info_When_Content_Is_Retrieved()
         {
-            log.Expect(l => l.Info(It.IsAny<string>())).Verifiable();
-            _service.Expect(s => s.Get(It.IsAny<string>())).Returns(new StoryContent("A Story Title", "A Story Description", "http://www.test.com/trackback"));
+            log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
+            _service.Setup(s => s.Get(It.IsAny<string>())).Returns(new StoryContent("A Story Title", "A Story Description", "http://www.test.com/trackback"));
 
             _loggingService.Get("http://www.test.com");
         }
@@ -54,8 +54,8 @@ namespace Kigg.Core.Test
         [Fact]
         public void Get_Should_Log_Warn_When_Content_Is_Not_Retrieved()
         {
-            log.Expect(l => l.Warning(It.IsAny<string>())).Verifiable();
-            _service.Expect(s => s.Get(It.IsAny<string>())).Returns(StoryContent.Empty);
+            log.Setup(l => l.Warning(It.IsAny<string>())).Verifiable();
+            _service.Setup(s => s.Get(It.IsAny<string>())).Returns(StoryContent.Empty);
 
             _loggingService.Get("http://www.test.com");
         }
@@ -63,7 +63,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Get_Should_Use_InnerService()
         {
-            _service.Expect(s => s.Get(It.IsAny<string>())).Returns(new StoryContent("A Story Title", "A Story Description", "http://www.test.com/trackback")).Verifiable();
+            _service.Setup(s => s.Get(It.IsAny<string>())).Returns(new StoryContent("A Story Title", "A Story Description", "http://www.test.com/trackback")).Verifiable();
 
             _loggingService.Get("http://www.test.com");
         }
@@ -71,8 +71,8 @@ namespace Kigg.Core.Test
         [Fact]
         public void ShortUrl_Should_Log_Info_When_Url_Is_Shortened()
         {
-            log.Expect(l => l.Info(It.IsAny<string>())).Verifiable();
-            _service.Expect(s => s.ShortUrl(It.IsAny<string>())).Returns("http://tinyurl.com/xyz");
+            log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
+            _service.Setup(s => s.ShortUrl(It.IsAny<string>())).Returns("http://tinyurl.com/xyz");
 
             _loggingService.ShortUrl("http://www.test.com");
         }
@@ -80,8 +80,8 @@ namespace Kigg.Core.Test
         [Fact]
         public void ShortUrl_Should_Log_Warn_When_Url_Is_Not_Shortened()
         {
-            log.Expect(l => l.Warning(It.IsAny<string>())).Verifiable();
-            _service.Expect(s => s.ShortUrl(It.IsAny<string>())).Returns((string)null);
+            log.Setup(l => l.Warning(It.IsAny<string>())).Verifiable();
+            _service.Setup(s => s.ShortUrl(It.IsAny<string>())).Returns((string)null);
 
             _loggingService.ShortUrl("http://www.test.com");
         }
@@ -89,7 +89,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void ShortUrl_Should_Use_InnerService()
         {
-            _service.Expect(s => s.ShortUrl(It.IsAny<string>())).Returns("http://tinyurl.com/xyz").Verifiable();
+            _service.Setup(s => s.ShortUrl(It.IsAny<string>())).Returns("http://tinyurl.com/xyz").Verifiable();
 
             _loggingService.ShortUrl("http://test.com/foobar");
         }

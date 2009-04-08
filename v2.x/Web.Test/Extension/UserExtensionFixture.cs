@@ -12,7 +12,7 @@ namespace Kigg.Web.Test
         {
             Mock<IUser> user = new Mock<IUser>();
 
-            user.ExpectGet(u => u.Email).Returns("dummy@user.com");
+            user.SetupGet(u => u.Email).Returns("dummy@user.com");
 
             string url = user.Object.GravatarUrl(50);
 

@@ -55,8 +55,8 @@ namespace Kigg.Core.Test
         {
             var userActivateEvent = new Mock<UserActivateEvent>();
 
-            _eventAggregator.Expect(ea => ea.GetEvent<UserActivateEvent>()).Returns(userActivateEvent.Object).Verifiable();
-            userActivateEvent.Expect(e => e.Subscribe(It.IsAny<Action<UserActivateEventArgs>>(), true)).Returns(new SubscriptionToken()).Verifiable();
+            _eventAggregator.Setup(ea => ea.GetEvent<UserActivateEvent>()).Returns(userActivateEvent.Object).Verifiable();
+            userActivateEvent.Setup(e => e.Subscribe(It.IsAny<Action<UserActivateEventArgs>>(), true)).Returns(new SubscriptionToken()).Verifiable();
 
             _task.Object.Subscribe<UserActivateEvent, UserActivateEventArgs>(delegate{ });
 
@@ -69,8 +69,8 @@ namespace Kigg.Core.Test
         {
             var userActivateEvent = new Mock<UserActivateEvent>();
 
-            _eventAggregator.Expect(ea => ea.GetEvent<UserActivateEvent>()).Returns(userActivateEvent.Object).Verifiable();
-            userActivateEvent.Expect(e => e.Unsubscribe(It.IsAny<SubscriptionToken>())).Verifiable();
+            _eventAggregator.Setup(ea => ea.GetEvent<UserActivateEvent>()).Returns(userActivateEvent.Object).Verifiable();
+            userActivateEvent.Setup(e => e.Unsubscribe(It.IsAny<SubscriptionToken>())).Verifiable();
 
             _task.Object.Unsubscribe<UserActivateEvent>(new SubscriptionToken());
 

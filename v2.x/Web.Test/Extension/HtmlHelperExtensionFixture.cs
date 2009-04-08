@@ -218,7 +218,7 @@ namespace Kigg.Web.Test
             ViewContext viewContext = new ViewContext(controllerContext, new Mock<IView>().Object, vdd, new TempDataDictionary());
 
             Mock<IViewDataContainer> mockVdc = new Mock<IViewDataContainer>();
-            mockVdc.Expect(vdc => vdc.ViewData).Returns(vdd);
+            mockVdc.Setup(vdc => vdc.ViewData).Returns(vdd);
 
             HtmlHelper htmlHelper = new HtmlHelper(viewContext, mockVdc.Object);
 
@@ -254,7 +254,7 @@ namespace Kigg.Web.Test
             routeData.Values["action"] = "Search";
             routeData.Values["page"] = currentPage;
 
-            _httpContext.HttpRequest.ExpectGet(r => r.QueryString).Returns(new NameValueCollection { { "q", query }, { "page", currentPage.ToString() } });
+            _httpContext.HttpRequest.SetupGet(r => r.QueryString).Returns(new NameValueCollection { { "q", query }, { "page", currentPage.ToString() } });
 
             StoryListSearchViewData model =   new StoryListSearchViewData
                                               {

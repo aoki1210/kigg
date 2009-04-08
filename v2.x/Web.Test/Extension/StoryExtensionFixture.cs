@@ -17,7 +17,7 @@ namespace Kigg.Web.Test
         [Fact]
         public void StripDescription_Should_Return_Trimmed_Description()
         {
-            _story.ExpectGet(s => s.TextDescription).Returns(new string('x', 515));
+            _story.SetupGet(s => s.TextDescription).Returns(new string('x', 515));
 
             var description = _story.Object.StrippedDescription();
 

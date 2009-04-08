@@ -34,27 +34,27 @@ namespace Kigg.Web.Test
             {
                 var user = new Mock<IUser>();
 
-                user.ExpectGet(u => u.Id).Returns(Guid.NewGuid());
-                user.ExpectGet(u => u.UserName).Returns("Top Mover {0}".FormatWith(i));
+                user.SetupGet(u => u.Id).Returns(Guid.NewGuid());
+                user.SetupGet(u => u.UserName).Returns("Top Mover {0}".FormatWith(i));
 
                 topMovers.Add(user.Object);
             }
 
-            userRepository.Expect(r => r.FindTop(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IUser>(topMovers, settings.Object.TopUsers));
+            userRepository.Setup(r => r.FindTop(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IUser>(topMovers, settings.Object.TopUsers));
 
             Func<string, Mock<IStory>> createStory = name =>
                                                      {
                                                          var category = new Mock<ICategory>();
-                                                         category.ExpectGet(c => c.Name).Returns("Dummy");
+                                                         category.SetupGet(c => c.Name).Returns("Dummy");
 
                                                          var tag = new Mock<ITag>();
-                                                         tag.ExpectGet(t => t.Name).Returns("Dummy");
+                                                         tag.SetupGet(t => t.Name).Returns("Dummy");
 
                                                          var story = new Mock<IStory>();
-                                                         story.ExpectGet(s => s.BelongsTo).Returns(category.Object);
-                                                         story.ExpectGet(s => s.UniqueName).Returns(name);
-                                                         story.ExpectGet(s => s.Tags).Returns(new List<ITag>{ tag.Object });
-                                                         story.ExpectGet(s => s.TagCount).Returns(1);
+                                                         story.SetupGet(s => s.BelongsTo).Returns(category.Object);
+                                                         story.SetupGet(s => s.UniqueName).Returns(name);
+                                                         story.SetupGet(s => s.Tags).Returns(new List<ITag>{ tag.Object });
+                                                         story.SetupGet(s => s.TagCount).Returns(1);
 
                                                          return story;
                                                      };
@@ -65,7 +65,7 @@ namespace Kigg.Web.Test
             {
                 var story = createStory("Published Story {0}".FormatWith(i));
 
-                story.ExpectGet(s => s.PublishedAt).Returns(Constants.ProductionDate);
+                story.SetupGet(s => s.PublishedAt).Returns(Constants.ProductionDate);
 
                 publishedStories.Add(story.Object);
             }
@@ -79,11 +79,11 @@ namespace Kigg.Web.Test
                 upcomingStories.Add(story.Object);
             }
 
-            storyRepository.Expect(r => r.FindPublished(It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>(publishedStories, 1000));
-            storyRepository.Expect(r => r.FindUpcoming(It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>(upcomingStories, 1000));
+            storyRepository.Setup(r => r.FindPublished(It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>(publishedStories, 1000));
+            storyRepository.Setup(r => r.FindUpcoming(It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>(upcomingStories, 1000));
 
-            storyRepository.Expect(r => r.CountByPublished()).Returns(300);
-            storyRepository.Expect(r => r.CountByUpcoming()).Returns(100);
+            storyRepository.Setup(r => r.CountByPublished()).Returns(300);
+            storyRepository.Setup(r => r.CountByUpcoming()).Returns(100);
 
             List<ICategory> categories = new List<ICategory>();
 
@@ -91,13 +91,13 @@ namespace Kigg.Web.Test
             {
                 var category = new Mock<ICategory>();
 
-                category.ExpectGet(c => c.UniqueName).Returns("Category {0}".FormatWith(i));
+                category.SetupGet(c => c.UniqueName).Returns("Category {0}".FormatWith(i));
 
                 categories.Add(category.Object);
             }
 
-            categoryRepository.Expect(r => r.FindAll()).Returns(new ReadOnlyCollection<ICategory>(categories));
-            storyRepository.Expect(r => r.CountByCategory(It.IsAny<Guid>())).Returns(5);
+            categoryRepository.Setup(r => r.FindAll()).Returns(new ReadOnlyCollection<ICategory>(categories));
+            storyRepository.Setup(r => r.CountByCategory(It.IsAny<Guid>())).Returns(5);
 
             List<ITag> tags = new List<ITag>();
 
@@ -105,13 +105,13 @@ namespace Kigg.Web.Test
             {
                 var tag = new Mock<ITag>();
 
-                tag.ExpectGet(t => t.UniqueName).Returns("Tag {0}".FormatWith(i));
+                tag.SetupGet(t => t.UniqueName).Returns("Tag {0}".FormatWith(i));
 
                 tags.Add(tag.Object);
             }
 
-            tagRepository.Expect(r => r.FindByUsage(It.IsAny<int>())).Returns(new ReadOnlyCollection<ITag>(tags));
-            storyRepository.Expect(r => r.CountByTag(It.IsAny<Guid>())).Returns(5);
+            tagRepository.Setup(r => r.FindByUsage(It.IsAny<int>())).Returns(new ReadOnlyCollection<ITag>(tags));
+            storyRepository.Setup(r => r.CountByTag(It.IsAny<Guid>())).Returns(5);
 
             _httpContext = MvcTestHelper.GetHttpContext("/Kigg", null, null);
 
@@ -138,8 +138,8 @@ namespace Kigg.Web.Test
         [Fact]
         public void ProcessRequest_Should_Write_Correct_Xml_For_Regular_SiteMap()
         {
-            _httpContext.HttpRequest.ExpectGet(r => r.Path).Returns("sitemap.axd");
-            _httpContext.HttpResponse.Expect(r => r.Write(It.IsAny<string>())).Verifiable();
+            _httpContext.HttpRequest.SetupGet(r => r.Path).Returns("sitemap.axd");
+            _httpContext.HttpResponse.Setup(r => r.Write(It.IsAny<string>())).Verifiable();
 
             _handler.ProcessRequest(_httpContext.Object);
         }
@@ -149,11 +149,11 @@ namespace Kigg.Web.Test
         {
             string xml;
 
-            cache.Expect(c => c.TryGet(It.IsAny<string>(), out xml)).Returns(false);
-            cache.Expect(c => c.Contains(It.IsAny<string>())).Returns(false);
-            cache.Expect(c => c.Set(It.IsAny<string>(), It.IsAny<HandlerCacheItem>(), It.IsAny<DateTime>())).Verifiable();
+            cache.Setup(c => c.TryGet(It.IsAny<string>(), out xml)).Returns(false);
+            cache.Setup(c => c.Contains(It.IsAny<string>())).Returns(false);
+            cache.Setup(c => c.Set(It.IsAny<string>(), It.IsAny<HandlerCacheItem>(), It.IsAny<DateTime>())).Verifiable();
 
-            _httpContext.HttpRequest.ExpectGet(r => r.Path).Returns("sitemap.axd");
+            _httpContext.HttpRequest.SetupGet(r => r.Path).Returns("sitemap.axd");
 
             _handler.ProcessRequest(_httpContext.Object);
 
@@ -163,9 +163,9 @@ namespace Kigg.Web.Test
         [Fact]
         public void ProcessRequest_Should_Log_For_Regular_SiteMap()
         {
-            log.Expect(l => l.Info(It.IsAny<string>())).Verifiable();
+            log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
-            _httpContext.HttpRequest.ExpectGet(r => r.Path).Returns("sitemap.axd");
+            _httpContext.HttpRequest.SetupGet(r => r.Path).Returns("sitemap.axd");
 
             _handler.ProcessRequest(_httpContext.Object);
 
@@ -175,8 +175,8 @@ namespace Kigg.Web.Test
         [Fact]
         public void ProcessRequest_Should_Write_Correct_Xml_For_Mobile_SiteMap()
         {
-            _httpContext.HttpRequest.ExpectGet(r => r.Path).Returns("mobilesitemap.axd");
-            _httpContext.HttpResponse.Expect(r => r.Write(It.IsAny<string>())).Verifiable();
+            _httpContext.HttpRequest.SetupGet(r => r.Path).Returns("mobilesitemap.axd");
+            _httpContext.HttpResponse.Setup(r => r.Write(It.IsAny<string>())).Verifiable();
 
             _handler.ProcessRequest(_httpContext.Object);
         }
@@ -186,11 +186,11 @@ namespace Kigg.Web.Test
         {
             string xml;
 
-            cache.Expect(c => c.TryGet(It.IsAny<string>(), out xml)).Returns(false);
-            cache.Expect(c => c.Contains(It.IsAny<string>())).Returns(false);
-            cache.Expect(c => c.Set(It.IsAny<string>(), It.IsAny<HandlerCacheItem>(), It.IsAny<DateTime>())).Verifiable();
+            cache.Setup(c => c.TryGet(It.IsAny<string>(), out xml)).Returns(false);
+            cache.Setup(c => c.Contains(It.IsAny<string>())).Returns(false);
+            cache.Setup(c => c.Set(It.IsAny<string>(), It.IsAny<HandlerCacheItem>(), It.IsAny<DateTime>())).Verifiable();
 
-            _httpContext.HttpRequest.ExpectGet(r => r.Path).Returns("mobilesitemap.axd");
+            _httpContext.HttpRequest.SetupGet(r => r.Path).Returns("mobilesitemap.axd");
 
             _handler.ProcessRequest(_httpContext.Object);
 
@@ -200,9 +200,9 @@ namespace Kigg.Web.Test
         [Fact]
         public void ProcessRequest_Should_Log_For_Regular_Mobile_SiteMap()
         {
-            log.Expect(l => l.Info(It.IsAny<string>())).Verifiable();
+            log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
-            _httpContext.HttpRequest.ExpectGet(r => r.Path).Returns("mobilesitemap.axd");
+            _httpContext.HttpRequest.SetupGet(r => r.Path).Returns("mobilesitemap.axd");
 
             _handler.ProcessRequest(_httpContext.Object);
 
@@ -212,8 +212,8 @@ namespace Kigg.Web.Test
         [Fact]
         public void ProcessRequest_Should_Write_Correct_Xml_For_News_SiteMap()
         {
-            _httpContext.HttpRequest.ExpectGet(r => r.Path).Returns("newssitemap.axd");
-            _httpContext.HttpResponse.Expect(r => r.Write(It.IsAny<string>())).Verifiable();
+            _httpContext.HttpRequest.SetupGet(r => r.Path).Returns("newssitemap.axd");
+            _httpContext.HttpResponse.Setup(r => r.Write(It.IsAny<string>())).Verifiable();
 
             _handler.ProcessRequest(_httpContext.Object);
         }
@@ -223,11 +223,11 @@ namespace Kigg.Web.Test
         {
             string xml;
 
-            cache.Expect(c => c.TryGet(It.IsAny<string>(), out xml)).Returns(false);
-            cache.Expect(c => c.Contains(It.IsAny<string>())).Returns(false);
-            cache.Expect(c => c.Set(It.IsAny<string>(), It.IsAny<HandlerCacheItem>(), It.IsAny<DateTime>())).Verifiable();
+            cache.Setup(c => c.TryGet(It.IsAny<string>(), out xml)).Returns(false);
+            cache.Setup(c => c.Contains(It.IsAny<string>())).Returns(false);
+            cache.Setup(c => c.Set(It.IsAny<string>(), It.IsAny<HandlerCacheItem>(), It.IsAny<DateTime>())).Verifiable();
 
-            _httpContext.HttpRequest.ExpectGet(r => r.Path).Returns("newssitemap.axd");
+            _httpContext.HttpRequest.SetupGet(r => r.Path).Returns("newssitemap.axd");
 
             _handler.ProcessRequest(_httpContext.Object);
 
@@ -237,9 +237,9 @@ namespace Kigg.Web.Test
         [Fact]
         public void ProcessRequest_Should_Log_For_Regular_News_SiteMap()
         {
-            log.Expect(l => l.Info(It.IsAny<string>())).Verifiable();
+            log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
-            _httpContext.HttpRequest.ExpectGet(r => r.Path).Returns("newssitemap.axd");
+            _httpContext.HttpRequest.SetupGet(r => r.Path).Returns("newssitemap.axd");
 
             _handler.ProcessRequest(_httpContext.Object);
 
@@ -249,10 +249,10 @@ namespace Kigg.Web.Test
         [Fact]
         public void ProcessRequest_Should_Not_Write_Xml_When_Xml_Is_Not_Modified()
         {
-            _httpContext.HttpRequest.ExpectGet(r => r.Path).Returns("newssitemap.axd");
-            _httpContext.HttpRequest.ExpectGet(r => r.Headers).Returns(new NameValueCollection { { "If-None-Match", "U1VbkHgP/G8l8Diz8p8Mdg==" } });
-            _httpContext.HttpResponse.Expect(r => r.Write(It.IsAny<string>())).Never();
-
+            _httpContext.HttpRequest.SetupGet(r => r.Path).Returns("newssitemap.axd");
+            _httpContext.HttpRequest.SetupGet(r => r.Headers).Returns(new NameValueCollection { { "If-None-Match", "U1VbkHgP/G8l8Diz8p8Mdg==" } });
+            //_httpContext.HttpResponse.Setup(r => r.Write(It.IsAny<string>())).Never();
+            _httpContext.HttpResponse.Verify(r => r.Write(It.IsAny<string>()),Times.Never());
             _handler.ProcessRequest(_httpContext.Object);
 
             _httpContext.Verify();

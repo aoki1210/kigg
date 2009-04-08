@@ -16,17 +16,17 @@ namespace Kigg.Web.Test
         {
             const string BlockedIP = "192.168.0.1";
 
-            file.Expect(f => f.ReadAllText(It.IsAny<string>())).Returns(string.Empty);
+            file.Setup(f => f.ReadAllText(It.IsAny<string>())).Returns(string.Empty);
 
             var collection = new Mock<IBlockedIPCollection>();
 
-            collection.Expect(c => c.Contains(BlockedIP)).Returns(true);
-            resolver.Expect(r => r.Resolve<IBlockedIPCollection>()).Returns(collection.Object);
+            collection.Setup(c => c.Contains(BlockedIP)).Returns(true);
+            resolver.Setup(r => r.Resolve<IBlockedIPCollection>()).Returns(collection.Object);
 
             _httpContext = MvcTestHelper.GetHttpContext();
 
-            _httpContext.HttpRequest.ExpectGet(r => r.UserHostAddress).Returns(BlockedIP);
-            _httpContext.HttpRequest.ExpectGet(r => r.Url).Returns(new Uri("http://dotnetshoutout.com/Upcoming"));
+            _httpContext.HttpRequest.SetupGet(r => r.UserHostAddress).Returns(BlockedIP);
+            _httpContext.HttpRequest.SetupGet(r => r.Url).Returns(new Uri("http://dotnetshoutout.com/Upcoming"));
 
             _module = new IPBlock();
         }
@@ -40,7 +40,7 @@ namespace Kigg.Web.Test
         [Fact]
         public void OnBeginRequest_Should_Warn_In_Log_When_Ip_Address_Is_Blocked()
         {
-            log.Expect(l => l.Warning(It.IsAny<string>())).Verifiable();
+            log.Setup(l => l.Warning(It.IsAny<string>())).Verifiable();
 
             Assert.Throws<HttpException>(() => _module.OnBeginRequest(_httpContext.Object));
 
@@ -50,7 +50,7 @@ namespace Kigg.Web.Test
         [Fact]
         public void OnBeginRequest_Should_Not_Block_Assets_Directory()
         {
-            _httpContext.HttpRequest.ExpectGet(r => r.Url).Returns(new Uri("http://dotnetshoutout.com/Assets/a.jpg"));
+            _httpContext.HttpRequest.SetupGet(r => r.Url).Returns(new Uri("http://dotnetshoutout.com/Assets/a.jpg"));
 
             Assert.DoesNotThrow(() => _module.OnBeginRequest(_httpContext.Object));
         }
@@ -58,7 +58,7 @@ namespace Kigg.Web.Test
         [Fact]
         public void OnBeginRequest_Should_Not_Block_Access_Denied_Page()
         {
-            _httpContext.HttpRequest.ExpectGet(r => r.Url).Returns(new Uri("http://dotnetshoutout.com/ErrorPages/AccessDenied.aspx"));
+            _httpContext.HttpRequest.SetupGet(r => r.Url).Returns(new Uri("http://dotnetshoutout.com/ErrorPages/AccessDenied.aspx"));
 
             Assert.DoesNotThrow(() => _module.OnBeginRequest(_httpContext.Object));
         }

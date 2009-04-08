@@ -30,7 +30,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Get_Should_Cache_Content_When_Url_Does_Not_Exist_In_Cache()
         {
-            cache.Expect(c => c.Set(It.IsAny<string>(), It.IsAny<StoryContent>(), It.IsAny<DateTime>())).Verifiable();
+            cache.Setup(c => c.Set(It.IsAny<string>(), It.IsAny<StoryContent>(), It.IsAny<DateTime>())).Verifiable();
 
             Get();
 
@@ -48,7 +48,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void ShortUrl_Should_Cache_When_Url_Does_Not_Exist_In_Cache()
         {
-            cache.Expect(c => c.Set(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime>())).Verifiable();
+            cache.Setup(c => c.Set(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime>())).Verifiable();
 
             ShortUrl();
 
@@ -57,13 +57,13 @@ namespace Kigg.Core.Test
 
         private void Get()
         {
-            _service.Expect(s => s.Get(It.IsAny<string>())).Returns(new StoryContent("A Story", "A Description", null)).Verifiable();
+            _service.Setup(s => s.Get(It.IsAny<string>())).Returns(new StoryContent("A Story", "A Description", null)).Verifiable();
             _cachingService.Get("http://www.test.com");
         }
 
         private void ShortUrl()
         {
-            _service.Expect(s => s.ShortUrl(It.IsAny<string>())).Returns("http://tinyurl.com/abc").Verifiable();
+            _service.Setup(s => s.ShortUrl(It.IsAny<string>())).Returns("http://tinyurl.com/abc").Verifiable();
 
             _cachingService.ShortUrl("http://www.test.com/foobar");
         }

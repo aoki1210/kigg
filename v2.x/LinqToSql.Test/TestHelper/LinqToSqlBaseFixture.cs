@@ -46,7 +46,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
             databaseFactory = new Mock<IDatabaseFactory>();
             database = new Mock<IDatabase>();
 
-            databaseFactory.Expect(f => f.Get()).Returns(database.Object);
+            databaseFactory.Setup(f => f.Get()).Returns(database.Object);
 
             domainObjectFactory = new Mock<IDomainObjectFactory>();
 
@@ -61,18 +61,18 @@ namespace Kigg.Infrastructure.LinqToSql.Test
             storyViewRepository = new Mock<IStoryViewRepository>();
             voteRepository = new Mock<IVoteRepository>();
 
-            resolver.Expect(r => r.Resolve<IDatabaseFactory>()).Returns(databaseFactory.Object);
-            resolver.Expect(r => r.Resolve<IDomainObjectFactory>()).Returns(domainObjectFactory.Object);
-            resolver.Expect(r => r.Resolve<IUserRepository>()).Returns(userRepository.Object);
-            resolver.Expect(r => r.Resolve<ICategoryRepository>()).Returns(categoryRepository.Object);
-            resolver.Expect(r => r.Resolve<ITagRepository>()).Returns(tagRepository.Object);
-            resolver.Expect(r => r.Resolve<IStoryRepository>()).Returns(storyRepository.Object);
-            resolver.Expect(r => r.Resolve<IKnownSourceRepository>()).Returns(knownSourceRepository.Object);
-            resolver.Expect(r => r.Resolve<ICommentRepository>()).Returns(commentRepository.Object);
-            resolver.Expect(r => r.Resolve<ICommentSubscribtionRepository>()).Returns(commentSubscribtionRepository.Object);
-            resolver.Expect(r => r.Resolve<IMarkAsSpamRepository>()).Returns(markAsSpamRepository.Object);
-            resolver.Expect(r => r.Resolve<IStoryViewRepository>()).Returns(storyViewRepository.Object);
-            resolver.Expect(r => r.Resolve<IVoteRepository>()).Returns(voteRepository.Object);
+            resolver.Setup(r => r.Resolve<IDatabaseFactory>()).Returns(databaseFactory.Object);
+            resolver.Setup(r => r.Resolve<IDomainObjectFactory>()).Returns(domainObjectFactory.Object);
+            resolver.Setup(r => r.Resolve<IUserRepository>()).Returns(userRepository.Object);
+            resolver.Setup(r => r.Resolve<ICategoryRepository>()).Returns(categoryRepository.Object);
+            resolver.Setup(r => r.Resolve<ITagRepository>()).Returns(tagRepository.Object);
+            resolver.Setup(r => r.Resolve<IStoryRepository>()).Returns(storyRepository.Object);
+            resolver.Setup(r => r.Resolve<IKnownSourceRepository>()).Returns(knownSourceRepository.Object);
+            resolver.Setup(r => r.Resolve<ICommentRepository>()).Returns(commentRepository.Object);
+            resolver.Setup(r => r.Resolve<ICommentSubscribtionRepository>()).Returns(commentSubscribtionRepository.Object);
+            resolver.Setup(r => r.Resolve<IMarkAsSpamRepository>()).Returns(markAsSpamRepository.Object);
+            resolver.Setup(r => r.Resolve<IStoryViewRepository>()).Returns(storyViewRepository.Object);
+            resolver.Setup(r => r.Resolve<IVoteRepository>()).Returns(voteRepository.Object);
 
             Users = new List<User>();
             Categories = new List<Category>();
@@ -88,19 +88,19 @@ namespace Kigg.Infrastructure.LinqToSql.Test
             Comments = new List<StoryComment>();
             CommentSubscribtions = new List<CommentSubscribtion>();
 
-            database.ExpectGet(db => db.UserDataSource).Returns(Users.AsQueryable());
-            database.ExpectGet(db => db.CategoryDataSource).Returns(Categories.AsQueryable());
-            database.ExpectGet(db => db.TagDataSource).Returns(Tags.AsQueryable());
-            database.ExpectGet(db => db.StoryDataSource).Returns(Stories.AsQueryable());
-            database.ExpectGet(db => db.KnownSourceDataSource).Returns(KnownSources.AsQueryable());
-            database.ExpectGet(db => db.UserScoreDataSource).Returns(UserScores.AsQueryable());
-            database.ExpectGet(db => db.UserTagDataSource).Returns(UserTags.AsQueryable());
-            database.ExpectGet(db => db.StoryTagDataSource).Returns(StoryTags.AsQueryable());
-            database.ExpectGet(db => db.StoryViewDataSource).Returns(Views.AsQueryable());
-            database.ExpectGet(db => db.VoteDataSource).Returns(Votes.AsQueryable());
-            database.ExpectGet(db => db.MarkAsSpamDataSource).Returns(MarkAsSpams.AsQueryable());
-            database.ExpectGet(db => db.CommentDataSource).Returns(Comments.AsQueryable());
-            database.ExpectGet(db => db.CommentSubscribtionDataSource).Returns(CommentSubscribtions.AsQueryable());
+            database.SetupGet(db => db.UserDataSource).Returns(Users.AsQueryable());
+            database.SetupGet(db => db.CategoryDataSource).Returns(Categories.AsQueryable());
+            database.SetupGet(db => db.TagDataSource).Returns(Tags.AsQueryable());
+            database.SetupGet(db => db.StoryDataSource).Returns(Stories.AsQueryable());
+            database.SetupGet(db => db.KnownSourceDataSource).Returns(KnownSources.AsQueryable());
+            database.SetupGet(db => db.UserScoreDataSource).Returns(UserScores.AsQueryable());
+            database.SetupGet(db => db.UserTagDataSource).Returns(UserTags.AsQueryable());
+            database.SetupGet(db => db.StoryTagDataSource).Returns(StoryTags.AsQueryable());
+            database.SetupGet(db => db.StoryViewDataSource).Returns(Views.AsQueryable());
+            database.SetupGet(db => db.VoteDataSource).Returns(Votes.AsQueryable());
+            database.SetupGet(db => db.MarkAsSpamDataSource).Returns(MarkAsSpams.AsQueryable());
+            database.SetupGet(db => db.CommentDataSource).Returns(Comments.AsQueryable());
+            database.SetupGet(db => db.CommentSubscribtionDataSource).Returns(CommentSubscribtions.AsQueryable());
         }
 
         public override void Dispose()

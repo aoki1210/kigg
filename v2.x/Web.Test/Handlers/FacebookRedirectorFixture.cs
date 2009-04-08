@@ -22,11 +22,11 @@ namespace Kigg.Web.Test
             var httpContext = new Mock<HttpContextBase>();
             var httpResponse = new Mock<HttpResponseBase>();
 
-            httpContext.ExpectGet(c => c.Response).Returns(httpResponse.Object);
-            httpResponse.Expect(r => r.Redirect(It.IsAny<string>())).Verifiable();
+            httpContext.SetupGet(c => c.Response).Returns(httpResponse.Object);
+            httpResponse.Setup(r => r.Redirect(It.IsAny<string>())).Verifiable();
 
             var story = new Mock<IStory>();
-            story.ExpectGet(s => s.Url).Returns("http://asp.net");
+            story.SetupGet(s => s.Url).Returns("http://asp.net");
 
             _redirector.Redirect(httpContext.Object, story.Object);
 

@@ -39,7 +39,7 @@ namespace Kigg.Web.Test
             cacheSection.OutputCacheProfiles.Add(cacheProfile);
 
             _configurationManager = new Mock<IConfigurationManager>();
-            _configurationManager.Expect(c => c.GetSection<OutputCacheSettingsSection>(It.IsAny<string>())).Returns(cacheSection);
+            _configurationManager.Setup(c => c.GetSection<OutputCacheSettingsSection>(It.IsAny<string>())).Returns(cacheSection);
 
             _controller = new FeedController(_configurationManager.Object, _categoryRepository.Object,
                                              _tagRepository.Object, _storyRepository.Object)
@@ -71,9 +71,9 @@ namespace Kigg.Web.Test
         [Fact]
         public void Published_Should_Log_Exception()
         {
-            _storyRepository.Expect(r => r.FindPublished(It.IsAny<int>(), It.IsAny<int>())).Throws<Exception>();
+            _storyRepository.Setup(r => r.FindPublished(It.IsAny<int>(), It.IsAny<int>())).Throws<Exception>();
 
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
             _controller.Published("atom", 0, 10);
 
@@ -107,9 +107,9 @@ namespace Kigg.Web.Test
         [Fact]
         public void Category_Should_Log_Exception()
         {
-            _categoryRepository.Expect(r => r.FindByUniqueName(It.IsAny<string>())).Throws<Exception>();
+            _categoryRepository.Setup(r => r.FindByUniqueName(It.IsAny<string>())).Throws<Exception>();
 
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
             _controller.Category("atom", "ASP.NET", 0, 10);
 
@@ -149,9 +149,9 @@ namespace Kigg.Web.Test
         [Fact]
         public void Upcoming_Should_Log_Exception()
         {
-            _storyRepository.Expect(r => r.FindUpcoming(It.IsAny<int>(), It.IsAny<int>())).Throws<Exception>();
+            _storyRepository.Setup(r => r.FindUpcoming(It.IsAny<int>(), It.IsAny<int>())).Throws<Exception>();
 
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
             _controller.Upcoming("atom", 0, 10);
 
@@ -185,9 +185,9 @@ namespace Kigg.Web.Test
         [Fact]
         public void Tags_Should_Log_Exception()
         {
-            _tagRepository.Expect(r => r.FindByUniqueName(It.IsAny<string>())).Throws<Exception>();
+            _tagRepository.Setup(r => r.FindByUniqueName(It.IsAny<string>())).Throws<Exception>();
 
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
             _controller.Tags("atom", "ASPNETMVC", 0, 10);
 
@@ -229,9 +229,9 @@ namespace Kigg.Web.Test
         [Fact]
         public void PromotedBy_Should_Log_Exception()
         {
-            _userRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Throws<Exception>();
+            _userRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Throws<Exception>();
 
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
             _controller.PromotedBy("atom", Guid.NewGuid().Shrink(), 0, 10);
 
@@ -273,9 +273,9 @@ namespace Kigg.Web.Test
         [Fact]
         public void PostedBy_Should_Log_Exception()
         {
-            _userRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Throws<Exception>();
+            _userRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Throws<Exception>();
 
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
             _controller.PostedBy("atom", Guid.NewGuid().Shrink(), 0, 10);
 
@@ -317,9 +317,9 @@ namespace Kigg.Web.Test
         [Fact]
         public void CommentedBy_Should_Log_Exception()
         {
-            _userRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Throws<Exception>();
+            _userRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Throws<Exception>();
 
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
             _controller.CommentedBy("atom", Guid.NewGuid().Shrink(), 0, 10);
 
@@ -361,9 +361,9 @@ namespace Kigg.Web.Test
         [Fact]
         public void Search_Should_Log_Exception()
         {
-            _storyRepository.Expect(r => r.Search(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>())).Throws<Exception>();
+            _storyRepository.Setup(r => r.Search(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>())).Throws<Exception>();
 
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
             _controller.Search("atom", "foobar", 0, 10);
 
@@ -403,7 +403,7 @@ namespace Kigg.Web.Test
 
         private FeedResult Published(string format)
         {
-            _storyRepository.Expect(r => r.FindPublished(It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
+            _storyRepository.Setup(r => r.FindPublished(It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
 
             return (FeedResult)_controller.Published(format, 0, 10);
         }
@@ -412,19 +412,19 @@ namespace Kigg.Web.Test
         {
             var category = new Mock<ICategory>();
 
-            category.ExpectGet(c => c.Id).Returns(Guid.NewGuid());
-            category.ExpectGet(c => c.Name).Returns(categoryName);
-            category.ExpectGet(c => c.UniqueName).Returns(categoryName);
+            category.SetupGet(c => c.Id).Returns(Guid.NewGuid());
+            category.SetupGet(c => c.Name).Returns(categoryName);
+            category.SetupGet(c => c.UniqueName).Returns(categoryName);
 
-            _categoryRepository.Expect(r => r.FindByUniqueName(It.IsAny<string>())).Returns(category.Object).Verifiable();
-            _storyRepository.Expect(r => r.FindPublishedByCategory(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
+            _categoryRepository.Setup(r => r.FindByUniqueName(It.IsAny<string>())).Returns(category.Object).Verifiable();
+            _storyRepository.Setup(r => r.FindPublishedByCategory(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
 
             return (FeedResult)_controller.Category(format, categoryName, 0, 10);
         }
 
         private FeedResult Upcoming(string format)
         {
-            _storyRepository.Expect(r => r.FindUpcoming(It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
+            _storyRepository.Setup(r => r.FindUpcoming(It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
 
             return (FeedResult)_controller.Upcoming(format, 0, 10);
         }
@@ -433,13 +433,13 @@ namespace Kigg.Web.Test
         {
             var tag = new Mock<ITag>();
 
-            tag.ExpectGet(t => t.Id).Returns(Guid.NewGuid());
-            tag.ExpectGet(t => t.Name).Returns(tagName);
-            tag.ExpectGet(t => t.UniqueName).Returns(tagName);
+            tag.SetupGet(t => t.Id).Returns(Guid.NewGuid());
+            tag.SetupGet(t => t.Name).Returns(tagName);
+            tag.SetupGet(t => t.UniqueName).Returns(tagName);
 
-            _tagRepository.Expect(r => r.FindByUniqueName(It.IsAny<string>())).Returns((ITag) null).Verifiable();
-            _tagRepository.Expect(r => r.FindByName(It.IsAny<string>())).Returns(tag.Object).Verifiable();
-            _storyRepository.Expect(r => r.FindByTag(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
+            _tagRepository.Setup(r => r.FindByUniqueName(It.IsAny<string>())).Returns((ITag) null).Verifiable();
+            _tagRepository.Setup(r => r.FindByName(It.IsAny<string>())).Returns(tag.Object).Verifiable();
+            _storyRepository.Setup(r => r.FindByTag(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
 
             return (FeedResult) _controller.Tags(format, tagName, 0, 10);
         }
@@ -448,11 +448,11 @@ namespace Kigg.Web.Test
         {
             var user = new Mock<IUser>();
 
-            user.ExpectGet(u => u.Id).Returns(Guid.NewGuid());
-            user.ExpectGet(u => u.UserName).Returns(userId);
+            user.SetupGet(u => u.Id).Returns(Guid.NewGuid());
+            user.SetupGet(u => u.UserName).Returns(userId);
 
-            _userRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns(user.Object).Verifiable();
-            _storyRepository.Expect(r => r.FindPromotedByUser(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
+            _userRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns(user.Object).Verifiable();
+            _storyRepository.Setup(r => r.FindPromotedByUser(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
 
             return (FeedResult)_controller.PromotedBy(format, userId, 0, 10);
         }
@@ -461,11 +461,11 @@ namespace Kigg.Web.Test
         {
             var user = new Mock<IUser>();
 
-            user.ExpectGet(u => u.Id).Returns(Guid.NewGuid());
-            user.ExpectGet(u => u.UserName).Returns(userId);
+            user.SetupGet(u => u.Id).Returns(Guid.NewGuid());
+            user.SetupGet(u => u.UserName).Returns(userId);
 
-            _userRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns(user.Object).Verifiable();
-            _storyRepository.Expect(r => r.FindPostedByUser(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
+            _userRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns(user.Object).Verifiable();
+            _storyRepository.Setup(r => r.FindPostedByUser(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
 
             return (FeedResult) _controller.PostedBy(format, userId, 0, 10);
         }
@@ -474,18 +474,18 @@ namespace Kigg.Web.Test
         {
             var user = new Mock<IUser>();
 
-            user.ExpectGet(u => u.Id).Returns(Guid.NewGuid());
-            user.ExpectGet(u => u.UserName).Returns(userId);
+            user.SetupGet(u => u.Id).Returns(Guid.NewGuid());
+            user.SetupGet(u => u.UserName).Returns(userId);
 
-            _userRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns(user.Object).Verifiable();
-            _storyRepository.Expect(r => r.FindCommentedByUser(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
+            _userRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns(user.Object).Verifiable();
+            _storyRepository.Setup(r => r.FindCommentedByUser(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
 
             return (FeedResult)_controller.CommentedBy(format, userId, 0, 10);
         }
 
         private FeedResult Search(string format, string query)
         {
-            _storyRepository.Expect(r => r.Search(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
+            _storyRepository.Setup(r => r.Search(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>()).Verifiable();
 
             return (FeedResult) _controller.Search(format, query, 0, 10);
         }

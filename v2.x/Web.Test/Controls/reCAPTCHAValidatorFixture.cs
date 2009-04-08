@@ -107,14 +107,14 @@ namespace Kigg.Web.Test
 
         private bool Validate(string response)
         {
-            _httpForm.Expect(h => h.Post(It.IsAny<HttpFormPostRequest>())).Returns(new HttpFormResponse { Response = response}).Verifiable();
+            _httpForm.Setup(h => h.Post(It.IsAny<HttpFormPostRequest>())).Returns(new HttpFormResponse { Response = response}).Verifiable();
 
             return _validator.Validate("192.168.0.1", "foo", "bar");
         }
 
         private bool ValidateOccurrsException()
         {
-            _httpForm.Expect(h => h.Post(It.IsAny<HttpFormPostRequest>())).Throws<WebException>();
+            _httpForm.Setup(h => h.Post(It.IsAny<HttpFormPostRequest>())).Throws<WebException>();
 
             return _validator.Validate("192.168.0.1", "foo", "bar");
         }

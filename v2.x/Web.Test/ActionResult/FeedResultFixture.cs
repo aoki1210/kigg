@@ -24,7 +24,7 @@ namespace Kigg.Web.Test
             feedViewData = CreateViewData();
             _httpContext = MvcTestHelper.GetHttpContext("/Kigg", null, null);
 
-            _httpContext.HttpRequest.ExpectGet(r => r.Url).Returns(new Uri("http://kigg.com"));
+            _httpContext.HttpRequest.SetupGet(r => r.Url).Returns(new Uri("http://kigg.com"));
         }
 
         [Fact]
@@ -48,8 +48,8 @@ namespace Kigg.Web.Test
         {
             var controllerContext = new ControllerContext(_httpContext.Object, new RouteData(), new Mock<ControllerBase>().Object);
 
-            _httpContext.HttpResponse.ExpectSet(r => r.ContentType).Verifiable();
-            _httpContext.HttpResponse.Expect(r => r.Write(It.IsAny<string>())).Verifiable();
+            _httpContext.HttpResponse.SetupSet(r => r.ContentType = "application/rss+xml").Verifiable();
+            _httpContext.HttpResponse.Setup(r => r.Write(It.IsAny<string>())).Verifiable();
 
             FeedResult result = new FeedResult(feedViewData, "rss");
             result.ExecuteResult(controllerContext);
@@ -62,8 +62,8 @@ namespace Kigg.Web.Test
         {
             var controllerContext = new ControllerContext(_httpContext.Object, new RouteData(), new Mock<ControllerBase>().Object);
 
-            _httpContext.HttpResponse.ExpectSet(r => r.ContentType).Verifiable();
-            _httpContext.HttpResponse.Expect(r => r.Write(It.IsAny<string>())).Verifiable();
+            _httpContext.HttpResponse.SetupSet(r => r.ContentType = "application/atom+xml").Verifiable();
+            _httpContext.HttpResponse.Setup(r => r.Write(It.IsAny<string>())).Verifiable();
 
             FeedResult result = new FeedResult(feedViewData, "atom");
             result.ExecuteResult(controllerContext);
@@ -110,34 +110,34 @@ namespace Kigg.Web.Test
         {
             var category = new Mock<ICategory>();
 
-            category.ExpectGet(c => c.Id).Returns(Guid.NewGuid());
-            category.ExpectGet(c => c.Name).Returns(categoryName);
-            category.ExpectGet(c => c.UniqueName).Returns(categoryName);
+            category.SetupGet(c => c.Id).Returns(Guid.NewGuid());
+            category.SetupGet(c => c.Name).Returns(categoryName);
+            category.SetupGet(c => c.UniqueName).Returns(categoryName);
 
             var user = new Mock<IUser>();
 
-            user.ExpectGet(u => u.Id).Returns(Guid.NewGuid());
-            user.ExpectGet(u => u.UserName).Returns(postedBy);
+            user.SetupGet(u => u.Id).Returns(Guid.NewGuid());
+            user.SetupGet(u => u.UserName).Returns(postedBy);
 
             var tag = new Mock<ITag>();
 
-            tag.ExpectGet(t => t.Id).Returns(tagId);
-            tag.ExpectGet(t => t.Name).Returns(tagName);
-            tag.ExpectGet(t => t.UniqueName).Returns(tagName);
+            tag.SetupGet(t => t.Id).Returns(tagId);
+            tag.SetupGet(t => t.Name).Returns(tagName);
+            tag.SetupGet(t => t.UniqueName).Returns(tagName);
 
             var story = new Mock<IStory>();
 
-            story.ExpectGet(s => s.Id).Returns(Guid.NewGuid());
-            story.ExpectGet(s => s.Title).Returns(storyTitle);
-            story.ExpectGet(s => s.UniqueName).Returns(storyTitle);
-            story.ExpectGet(s => s.HtmlDescription).Returns(storyDescription);
-            story.ExpectGet(s => s.Url).Returns(storyUrl);
-            story.ExpectGet(s => s.CommentCount).Returns(commentCount);
-            story.ExpectGet(s => s.BelongsTo).Returns(category.Object);
-            story.ExpectGet(s => s.PostedBy).Returns(user.Object);
-            story.ExpectGet(s => s.Tags).Returns(new List<ITag> { tag.Object });
-            story.ExpectGet(s => s.TagCount).Returns(story.Object.Tags.Count);
-            story.ExpectGet(s => s.PublishedAt).Returns(SystemTime.Now());
+            story.SetupGet(s => s.Id).Returns(Guid.NewGuid());
+            story.SetupGet(s => s.Title).Returns(storyTitle);
+            story.SetupGet(s => s.UniqueName).Returns(storyTitle);
+            story.SetupGet(s => s.HtmlDescription).Returns(storyDescription);
+            story.SetupGet(s => s.Url).Returns(storyUrl);
+            story.SetupGet(s => s.CommentCount).Returns(commentCount);
+            story.SetupGet(s => s.BelongsTo).Returns(category.Object);
+            story.SetupGet(s => s.PostedBy).Returns(user.Object);
+            story.SetupGet(s => s.Tags).Returns(new List<ITag> { tag.Object });
+            story.SetupGet(s => s.TagCount).Returns(story.Object.Tags.Count);
+            story.SetupGet(s => s.PublishedAt).Returns(SystemTime.Now());
 
             return story.Object;
         }

@@ -47,7 +47,7 @@ namespace Kigg.Web.Test
             _openIdRelyingParty = new Mock<IOpenIdRelyingParty>();
             _userRepository = new Mock<IUserRepository>();
 
-            resolver.Expect(r => r.Resolve<IUserRepository>()).Returns(_userRepository.Object);
+            resolver.Setup(r => r.Resolve<IUserRepository>()).Returns(_userRepository.Object);
 
             _controller = new MembershipController(_factory.Object, _eventAggregator.Object, _emailSender.Object, _blockedIPList.Object)
                               {
@@ -65,8 +65,8 @@ namespace Kigg.Web.Test
         {
             var openIdRequest = new Mock<IAuthenticationRequest>();
 
-            _openIdRelyingParty.Expect(o => o.CreateRequest(It.IsAny<Identifier>(), It.IsAny<Realm>())).Returns(openIdRequest.Object);
-            openIdRequest.Expect(r => r.RedirectToProvider()).Verifiable();
+            _openIdRelyingParty.Setup(o => o.CreateRequest(It.IsAny<Identifier>(), It.IsAny<Realm>())).Returns(openIdRequest.Object);
+            openIdRequest.Setup(r => r.RedirectToProvider()).Verifiable();
 
             _controller.OpenId("http://kazimanzurrashid.myopendid.com", true);
 
@@ -78,7 +78,7 @@ namespace Kigg.Web.Test
         {
             var user = new Mock<IUser>();
 
-            user.ExpectGet(u => u.Email).Returns("kazimanzurrashid@hotmail.com");
+            user.SetupGet(u => u.Email).Returns("kazimanzurrashid@hotmail.com");
             OpenIdForExistingUser(user);
 
             _formsAuthentication.Verify();
@@ -89,8 +89,8 @@ namespace Kigg.Web.Test
         {
             var user = new Mock<IUser>();
 
-            user.ExpectGet(u => u.Email).Returns("kazimanzurrashid@hotmail.com");
-            user.Expect(u => u.ChangeEmail(It.IsAny<string>())).Verifiable();
+            user.SetupGet(u => u.Email).Returns("kazimanzurrashid@hotmail.com");
+            user.Setup(u => u.ChangeEmail(It.IsAny<string>())).Verifiable();
 
             OpenIdForExistingUser(user);
 
@@ -134,8 +134,8 @@ namespace Kigg.Web.Test
         {
             var openIdResponse = new Mock<IAuthenticationResponse>();
 
-            openIdResponse.ExpectGet(r => r.Status).Returns(AuthenticationStatus.Failed);
-            _openIdRelyingParty.ExpectGet(o => o.Response).Returns(openIdResponse.Object);
+            openIdResponse.SetupGet(r => r.Status).Returns(AuthenticationStatus.Failed);
+            _openIdRelyingParty.SetupGet(o => o.Response).Returns(openIdResponse.Object);
 
             _controller.OpenId("http://kazimanzurrashid.myopenid.com", true);
 
@@ -147,7 +147,7 @@ namespace Kigg.Web.Test
         [Fact]
         public void OpenId_Should_Generate_Error_Cookie_When_Exception_Occurrs()
         {
-            _openIdRelyingParty.ExpectGet(o => o.Response).Throws<Exception>();
+            _openIdRelyingParty.SetupGet(o => o.Response).Throws<Exception>();
 
             _controller.OpenId("http://kazimanzurrashid.myopenid.com", true);
 
@@ -161,15 +161,15 @@ namespace Kigg.Web.Test
         {
             var openIdResponse = new Mock<IAuthenticationResponse>();
 
-            openIdResponse.ExpectGet(r => r.Status).Returns(AuthenticationStatus.Authenticated);
-            openIdResponse.ExpectGet(r => r.FriendlyIdentifierForDisplay).Returns("kazimanzurrashid.myopenid.com");
+            openIdResponse.SetupGet(r => r.Status).Returns(AuthenticationStatus.Authenticated);
+            openIdResponse.SetupGet(r => r.FriendlyIdentifierForDisplay).Returns("kazimanzurrashid.myopenid.com");
 
-            _openIdRelyingParty.ExpectGet(o => o.Response).Returns(openIdResponse.Object);
+            _openIdRelyingParty.SetupGet(o => o.Response).Returns(openIdResponse.Object);
 
             var user = new Mock<IUser>();
-            user.ExpectGet(u => u.IsLockedOut).Returns(true);
+            user.SetupGet(u => u.IsLockedOut).Returns(true);
 
-            _userRepository.Expect(r => r.FindByUserName(It.IsAny<string>())).Returns(user.Object);
+            _userRepository.Setup(r => r.FindByUserName(It.IsAny<string>())).Returns(user.Object);
 
             _controller.OpenId("http://kazimanzurrashid.myopenid.com", true);
 
@@ -221,9 +221,9 @@ namespace Kigg.Web.Test
         [Fact]
         public void Signup_Should_Log_Exception()
         {
-            _factory.Expect(f => f.CreateUser(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Throws<InvalidOperationException>();
+            _factory.Setup(f => f.CreateUser(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Throws<InvalidOperationException>();
 
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
             _controller.Signup("dummyuser", "xxxxxx", "foo@bar.com");
 
@@ -233,8 +233,8 @@ namespace Kigg.Web.Test
         [Fact]
         public void Signup_Should_Return_Error_When_Same_User_Already_Exists()
         {
-            _factory.Expect(f => f.CreateUser(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new Mock<IUser>().Object);
-            _userRepository.Expect(r => r.Add(It.IsAny<IUser>())).Throws<ArgumentException>();
+            _factory.Setup(f => f.CreateUser(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new Mock<IUser>().Object);
+            _userRepository.Setup(r => r.Add(It.IsAny<IUser>())).Throws<ArgumentException>();
 
             var data  = (JsonViewData) ((JsonResult) _controller.Signup("dummyuser", "xxxxxx", "foo@bar.com")).Data;
 
@@ -312,9 +312,9 @@ namespace Kigg.Web.Test
         [Fact]
         public void Login_Should_Log_Exception()
         {
-            _userRepository.Expect(r => r.FindByUserName(It.IsAny<string>())).Throws<InvalidOperationException>();
+            _userRepository.Setup(r => r.FindByUserName(It.IsAny<string>())).Throws<InvalidOperationException>();
 
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
             _controller.Login("dummyuser", "xxxxxx", null);
 
@@ -324,7 +324,7 @@ namespace Kigg.Web.Test
         [Fact]
         public void Login_Should_Return_Error_When_Credentials_Are_Invalid()
         {
-            _userRepository.Expect(r => r.FindByUserName(It.IsAny<string>())).Returns((IUser) null);
+            _userRepository.Setup(r => r.FindByUserName(It.IsAny<string>())).Returns((IUser) null);
 
             var result = (JsonViewData)((JsonResult)_controller.Login("dummyuser", "xxxxxx", true)).Data;
 
@@ -337,10 +337,10 @@ namespace Kigg.Web.Test
         {
             var user = new Mock<IUser>();
 
-            user.ExpectGet(u => u.Password).Returns((string) null);
-            user.ExpectGet(u => u.IsActive).Returns(true);
+            user.SetupGet(u => u.Password).Returns((string) null);
+            user.SetupGet(u => u.IsActive).Returns(true);
 
-            _userRepository.Expect(r => r.FindByUserName(It.IsAny<string>())).Returns(user.Object);
+            _userRepository.Setup(r => r.FindByUserName(It.IsAny<string>())).Returns(user.Object);
 
             var result =(JsonViewData)((JsonResult)_controller.Login("dummyuser", "xxxxxx", true)).Data;
 
@@ -353,7 +353,7 @@ namespace Kigg.Web.Test
         {
             var user = new Mock<IUser>();
 
-            _userRepository.Expect(r => r.FindByUserName(It.IsAny<string>())).Returns(user.Object);
+            _userRepository.Setup(r => r.FindByUserName(It.IsAny<string>())).Returns(user.Object);
 
             var result = (JsonViewData)((JsonResult)_controller.Login("dummyuser", "xxxxxx", true)).Data;
 
@@ -366,9 +366,9 @@ namespace Kigg.Web.Test
         {
             var user = new Mock<IUser>();
 
-            user.ExpectGet(u => u.IsLockedOut).Returns(true);
+            user.SetupGet(u => u.IsLockedOut).Returns(true);
 
-            _userRepository.Expect(r => r.FindByUserName(It.IsAny<string>())).Returns(user.Object);
+            _userRepository.Setup(r => r.FindByUserName(It.IsAny<string>())).Returns(user.Object);
 
             var result = (JsonViewData)((JsonResult)_controller.Login("dummyuser", "xxxxxx", true)).Data;
 
@@ -441,8 +441,8 @@ namespace Kigg.Web.Test
 
             SetCurrentUser(user, Roles.User);
 
-            _formsAuthentication.Expect(fa => fa.SignOut()).Throws<InvalidOperationException>();
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            _formsAuthentication.Setup(fa => fa.SignOut()).Throws<InvalidOperationException>();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
             _controller.Logout();
 
@@ -512,9 +512,9 @@ namespace Kigg.Web.Test
         [Fact]
         public void ForgotPassword_Should_Log_Exception()
         {
-            _userRepository.Expect(r => r.FindByEmail(It.IsAny<string>())).Throws<InvalidOperationException>();
+            _userRepository.Setup(r => r.FindByEmail(It.IsAny<string>())).Throws<InvalidOperationException>();
 
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
             _controller.ForgotPassword("foo@bar.com");
 
@@ -524,7 +524,7 @@ namespace Kigg.Web.Test
         [Fact]
         public void ForgotPassword_Should_Return_Error_When_User_With_Specified_Email_Does_Not_Exist()
         {
-            _userRepository.Expect(r => r.FindByEmail(It.IsAny<string>())).Returns((IUser) null);
+            _userRepository.Setup(r => r.FindByEmail(It.IsAny<string>())).Returns((IUser) null);
 
             var result = (JsonResult)_controller.ForgotPassword("foo@bar.com");
             var viewData = (JsonViewData)result.Data;
@@ -538,9 +538,9 @@ namespace Kigg.Web.Test
         {
             var user = new Mock<IUser>();
 
-            user.Expect(u => u.ResetPassword()).Throws<InvalidOperationException>();
+            user.Setup(u => u.ResetPassword()).Throws<InvalidOperationException>();
 
-            _userRepository.Expect(r => r.FindByEmail(It.IsAny<string>())).Returns(user.Object);
+            _userRepository.Setup(r => r.FindByEmail(It.IsAny<string>())).Returns(user.Object);
 
             var result = (JsonResult)_controller.ForgotPassword("foo@bar.com");
             var viewData = (JsonViewData)result.Data;
@@ -595,9 +595,9 @@ namespace Kigg.Web.Test
 
             SetCurrentUser(user, Roles.User);
 
-            user.Expect(u => u.ChangePassword(It.IsAny<string>(), It.IsAny<string>())).Throws<Exception>();
+            user.Setup(u => u.ChangePassword(It.IsAny<string>(), It.IsAny<string>())).Throws<Exception>();
 
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
             _controller.ChangePassword("xxxxxxxx", "yyyyyyyy", "yyyyyyyy");
 
@@ -611,7 +611,7 @@ namespace Kigg.Web.Test
 
             SetCurrentUser(user, Roles.User);
 
-            user.Expect(u => u.ChangePassword(It.IsAny<string>(), It.IsAny<string>())).Throws<InvalidOperationException>();
+            user.Setup(u => u.ChangePassword(It.IsAny<string>(), It.IsAny<string>())).Throws<InvalidOperationException>();
 
             var viewData = (JsonViewData)((JsonResult)_controller.ChangePassword("xxxxxxxx", "yyyyyyyy", "yyyyyyyy")).Data;
 
@@ -695,9 +695,9 @@ namespace Kigg.Web.Test
 
             SetCurrentUser(user, Roles.User);
 
-            user.Expect(u => u.ChangeEmail(It.IsAny<string>())).Throws<Exception>();
+            user.Setup(u => u.ChangeEmail(It.IsAny<string>())).Throws<Exception>();
 
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
             _controller.ChangeEmail("foo@bar.com");
 
@@ -711,7 +711,7 @@ namespace Kigg.Web.Test
 
             SetCurrentUser(user, Roles.User);
 
-            user.Expect(u => u.ChangeEmail(It.IsAny<string>())).Throws<InvalidOperationException>();
+            user.Setup(u => u.ChangeEmail(It.IsAny<string>())).Throws<InvalidOperationException>();
 
             _controller.ChangeEmail("foo@bar.com");
 
@@ -786,9 +786,9 @@ namespace Kigg.Web.Test
         {
             SetAdmin();
 
-            _userRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Throws<Exception>();
+            _userRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Throws<Exception>();
 
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
             _controller.ChangeRole(Guid.NewGuid().Shrink(), Roles.Moderator.ToString());
 
@@ -800,7 +800,7 @@ namespace Kigg.Web.Test
         {
             SetAdmin();
 
-            _userRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns((IUser)null);
+            _userRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns((IUser)null);
 
             var result = (JsonResult) _controller.ChangeRole(Guid.NewGuid().Shrink(), ((int) Roles.Moderator).ToString());
             var viewData = (JsonViewData)result.Data;
@@ -896,7 +896,7 @@ namespace Kigg.Web.Test
         {
             SetAdmin();
 
-            _userRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns((IUser)null);
+            _userRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns((IUser)null);
 
             var result = (JsonResult) _controller.Lock(Guid.NewGuid().Shrink());
             var viewData = (JsonViewData) result.Data;
@@ -952,9 +952,9 @@ namespace Kigg.Web.Test
         {
             SetAdmin();
 
-            _userRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Throws<Exception>();
+            _userRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Throws<Exception>();
 
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
             _controller.Lock(Guid.NewGuid().Shrink());
 
@@ -996,7 +996,7 @@ namespace Kigg.Web.Test
         {
             SetAdmin();
 
-            _userRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns((IUser)null);
+            _userRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns((IUser)null);
 
             var result = (JsonResult)_controller.Unlock(Guid.NewGuid().Shrink());
             var viewData = (JsonViewData)result.Data;
@@ -1052,9 +1052,9 @@ namespace Kigg.Web.Test
         {
             SetAdmin();
 
-            _userRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Throws<Exception>();
+            _userRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Throws<Exception>();
 
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
             _controller.Unlock(Guid.NewGuid().Shrink());
 
@@ -1090,7 +1090,7 @@ namespace Kigg.Web.Test
         {
             SetAdmin();
 
-            _userRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns((IUser) null);
+            _userRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns((IUser) null);
 
             var result = (JsonResult) _controller.AllowIps(Guid.NewGuid().Shrink(), new[] { "192.168.0.1" });
             var viewData = (JsonViewData) result.Data;
@@ -1146,9 +1146,9 @@ namespace Kigg.Web.Test
         {
             SetAdmin();
 
-            _userRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Throws<Exception>();
+            _userRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Throws<Exception>();
 
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
             _controller.AllowIps(Guid.NewGuid().Shrink(), new[] { "192.168.0.1" });
 
@@ -1198,7 +1198,7 @@ namespace Kigg.Web.Test
         [Fact]
         public void Detail_Should_Throw_Not_Found_When_Specified_User_Does_Not_Exist()
         {
-            _userRepository.Expect(r => r.FindByUserName(It.IsAny<string>())).Returns((IUser) null);
+            _userRepository.Setup(r => r.FindByUserName(It.IsAny<string>())).Returns((IUser) null);
 
             Assert.Throws<HttpException>(() => _controller.Detail("foo", null, null));
         }
@@ -1264,9 +1264,9 @@ namespace Kigg.Web.Test
         [Fact]
         public void Active_Should_Log_Exception()
         {
-            _userRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Throws<Exception>();
+            _userRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Throws<Exception>();
 
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
 
             _controller.Activate(Guid.NewGuid().Shrink());
 
@@ -1276,7 +1276,7 @@ namespace Kigg.Web.Test
         [Fact]
         public void Activate_Should_Generate_Error_Cookie_When_Exception_Occur()
         {
-            _userRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Throws<Exception>();
+            _userRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Throws<Exception>();
 
             _controller.Activate(Guid.NewGuid().Shrink());
 
@@ -1286,7 +1286,7 @@ namespace Kigg.Web.Test
         [Fact]
         public void Activate_Should_Generate_Error_Cookie_When_User_Not_Found_Or_User_Account_Is_Already_Activated()
         {
-            _userRepository.Expect(r => r.FindByUserName(It.IsAny<string>())).Returns((IUser) null);
+            _userRepository.Setup(r => r.FindByUserName(It.IsAny<string>())).Returns((IUser) null);
 
             _controller.Activate(Guid.NewGuid().Shrink());
 
@@ -1330,22 +1330,22 @@ namespace Kigg.Web.Test
             var claim = new ClaimsResponse { Email = "kazimanzurrashid@gmail.com" };
             #pragma warning restore 618,612
 
-            openIdResponse.ExpectGet(r => r.Status).Returns(AuthenticationStatus.Authenticated);
-            openIdResponse.ExpectGet(r => r.ClaimedIdentifier).Returns("kazimanzurrashid.myopenid.com");
-            openIdResponse.Expect(r => r.GetExtension<ClaimsResponse>()).Returns(claim);
+            openIdResponse.SetupGet(r => r.Status).Returns(AuthenticationStatus.Authenticated);
+            openIdResponse.SetupGet(r => r.ClaimedIdentifier).Returns("kazimanzurrashid.myopenid.com");
+            openIdResponse.Setup(r => r.GetExtension<ClaimsResponse>()).Returns(claim);
 
-            _openIdRelyingParty.ExpectGet(o => o.Response).Returns(openIdResponse.Object);
+            _openIdRelyingParty.SetupGet(o => o.Response).Returns(openIdResponse.Object);
 
             var user = new Mock<IUser>();
-            user.ExpectGet(u => u.Email).Returns("kazimanzurrashid@hotmail.com");
+            user.SetupGet(u => u.Email).Returns("kazimanzurrashid@hotmail.com");
 
-            _userRepository.Expect(r => r.FindByUserName(It.IsAny<string>())).Returns((IUser)null);
+            _userRepository.Setup(r => r.FindByUserName(It.IsAny<string>())).Returns((IUser)null);
 
-            _factory.Expect(f => f.CreateUser(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(user.Object);
-            _userRepository.Expect(r => r.Add(It.IsAny<IUser>())).Verifiable();
-            _eventAggregator.Expect(ea => ea.GetEvent<UserActivateEvent>()).Returns(new UserActivateEvent()).Verifiable();
+            _factory.Setup(f => f.CreateUser(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(user.Object);
+            _userRepository.Setup(r => r.Add(It.IsAny<IUser>())).Verifiable();
+            _eventAggregator.Setup(ea => ea.GetEvent<UserActivateEvent>()).Returns(new UserActivateEvent()).Verifiable();
 
-            _formsAuthentication.Expect(fa => fa.SetAuthCookie(It.IsAny<string>(), It.IsAny<bool>())).Verifiable();
+            _formsAuthentication.Setup(fa => fa.SetAuthCookie(It.IsAny<string>(), It.IsAny<bool>())).Verifiable();
 
             _httpContext.HttpRequest.Object.Cookies.Add(new HttpCookie("oidr", "foo"));
             _httpContext.HttpResponse.Object.Cookies.Add(new HttpCookie("oidr", bool.TrueString));
@@ -1353,21 +1353,21 @@ namespace Kigg.Web.Test
             return _controller.OpenId("http://kazimanzurrashid.myopenid.com", true);
         }
 
-        private void OpenIdForExistingUser(IMock<IUser> user)
+        private void OpenIdForExistingUser(Mock<IUser> user)
         {
             var openIdResponse = new Mock<IAuthenticationResponse>();
             #pragma warning disable 618,612
             var claim = new ClaimsResponse { Email = "kazimanzurrashid@gmail.com" };
             #pragma warning restore 618,612
 
-            openIdResponse.ExpectGet(r => r.Status).Returns(AuthenticationStatus.Authenticated);
-            openIdResponse.ExpectGet(r => r.ClaimedIdentifier).Returns("kazimanzurrashid.myopenid.com");
-            openIdResponse.Expect(r => r.GetExtension<ClaimsResponse>()).Returns(claim);
+            openIdResponse.SetupGet(r => r.Status).Returns(AuthenticationStatus.Authenticated);
+            openIdResponse.SetupGet(r => r.ClaimedIdentifier).Returns("kazimanzurrashid.myopenid.com");
+            openIdResponse.Setup(r => r.GetExtension<ClaimsResponse>()).Returns(claim);
 
-            _openIdRelyingParty.ExpectGet(o => o.Response).Returns(openIdResponse.Object);
+            _openIdRelyingParty.SetupGet(o => o.Response).Returns(openIdResponse.Object);
 
-            _userRepository.Expect(r => r.FindByUserName(It.IsAny<string>())).Returns(user.Object);
-            _formsAuthentication.Expect(fa => fa.SetAuthCookie(It.IsAny<string>(), It.IsAny<bool>())).Verifiable();
+            _userRepository.Setup(r => r.FindByUserName(It.IsAny<string>())).Returns(user.Object);
+            _formsAuthentication.Setup(fa => fa.SetAuthCookie(It.IsAny<string>(), It.IsAny<bool>())).Verifiable();
 
             _httpContext.HttpRequest.Object.Cookies.Add(new HttpCookie("oidr", "foo"));
             _httpContext.HttpResponse.Object.Cookies.Add(new HttpCookie("oidr", bool.TrueString));
@@ -1379,12 +1379,12 @@ namespace Kigg.Web.Test
         {
             var user = new Mock<IUser>();
 
-            user.ExpectGet(u => u.Id).Returns(Guid.NewGuid());
+            user.SetupGet(u => u.Id).Returns(Guid.NewGuid());
 
-            _factory.Expect(f => f.CreateUser(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(user.Object).Verifiable();
-            _userRepository.Expect(r => r.Add(It.IsAny<IUser>())).Verifiable();
-            _emailSender.Expect(es => es.SendRegistrationInfo(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Verifiable();
-            log.Expect(l => l.Info(It.IsAny<string>())).Verifiable();
+            _factory.Setup(f => f.CreateUser(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(user.Object).Verifiable();
+            _userRepository.Setup(r => r.Add(It.IsAny<IUser>())).Verifiable();
+            _emailSender.Setup(es => es.SendRegistrationInfo(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Verifiable();
+            log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
             RouteTable.Routes.Clear();
             new RegisterRoutes(settings.Object).Execute();
@@ -1394,13 +1394,13 @@ namespace Kigg.Web.Test
 
         private JsonViewData Login(Mock<IUser> user)
         {
-            user.ExpectGet(u => u.Password).Returns("xxxxxx".Hash());
-            user.ExpectGet(u => u.IsActive).Returns(true);
+            user.SetupGet(u => u.Password).Returns("xxxxxx".Hash());
+            user.SetupGet(u => u.IsActive).Returns(true);
 
-            _userRepository.Expect(r => r.FindByUserName(It.IsAny<string>())).Returns(user.Object).Verifiable();
-            user.ExpectSet(u => u.LastActivityAt).Verifiable();
-            _formsAuthentication.Expect(fa => fa.SetAuthCookie(It.IsAny<string>(), It.IsAny<bool>())).Verifiable();
-            log.Expect(l => l.Info(It.IsAny<string>())).Verifiable();
+            _userRepository.Setup(r => r.FindByUserName(It.IsAny<string>())).Returns(user.Object).Verifiable();
+            user.SetupSet(u => u.LastActivityAt = It.IsAny<DateTime>()).Verifiable();
+            _formsAuthentication.Setup(fa => fa.SetAuthCookie(It.IsAny<string>(), It.IsAny<bool>())).Verifiable();
+            log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
             return (JsonViewData) ((JsonResult) _controller.Login("dummyuser", "xxxxxx", true)).Data;
         }
@@ -1409,19 +1409,19 @@ namespace Kigg.Web.Test
         {
             SetCurrentUser(user, Roles.User);
 
-            user.ExpectSet(u => u.LastActivityAt).Verifiable();
-            _formsAuthentication.Expect(fa => fa.SignOut()).Verifiable();
-            log.Expect(l => l.Info(It.IsAny<string>())).Verifiable();
+            user.SetupSet(u => u.LastActivityAt = It.IsAny<DateTime>()).Verifiable();
+            _formsAuthentication.Setup(fa => fa.SignOut()).Verifiable();
+            log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
             return (JsonViewData)((JsonResult)_controller.Logout()).Data;
         }
 
         private JsonViewData ForgotPassword(Mock<IUser> user)
         {
-            _userRepository.Expect(r => r.FindByEmail(It.IsAny<string>())).Returns(user.Object).Verifiable();
-            user.Expect(u => u.ResetPassword()).Returns("xxxxxx").Verifiable();
-            _emailSender.Expect(es => es.SendNewPassword(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Verifiable();
-            log.Expect(l => l.Info(It.IsAny<string>())).Verifiable();
+            _userRepository.Setup(r => r.FindByEmail(It.IsAny<string>())).Returns(user.Object).Verifiable();
+            user.Setup(u => u.ResetPassword()).Returns("xxxxxx").Verifiable();
+            _emailSender.Setup(es => es.SendNewPassword(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Verifiable();
+            log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
             return (JsonViewData) ((JsonResult) _controller.ForgotPassword("foo@bar.com")).Data;
         }
@@ -1430,7 +1430,7 @@ namespace Kigg.Web.Test
         {
             SetCurrentUser(user, Roles.User);
 
-            user.Expect(u => u.ChangePassword(It.IsAny<string>(), It.IsAny<string>())).Verifiable();
+            user.Setup(u => u.ChangePassword(It.IsAny<string>(), It.IsAny<string>())).Verifiable();
 
             return (JsonViewData)((JsonResult)_controller.ChangePassword("xxxxxxxx", "yyyyyyyy", "yyyyyyyy")).Data;
         }
@@ -1439,7 +1439,7 @@ namespace Kigg.Web.Test
         {
             SetCurrentUser(user, Roles.User);
 
-            user.Expect(u => u.ChangeEmail(It.IsAny<string>())).Verifiable();
+            user.Setup(u => u.ChangeEmail(It.IsAny<string>())).Verifiable();
 
             return (JsonViewData)((JsonResult)_controller.ChangeEmail("foo@bar.com")).Data;
         }
@@ -1450,10 +1450,10 @@ namespace Kigg.Web.Test
 
             var userId = Guid.NewGuid();
 
-            user.ExpectGet(u => u.Id).Returns(userId);
-            user.ExpectSet(u => u.Role).Verifiable();
+            user.SetupGet(u => u.Id).Returns(userId);
+            user.SetupSet(u => u.Role = It.IsAny<Roles>()).Verifiable();
 
-            _userRepository.Expect(r => r.FindById(userId)).Returns(user.Object).Verifiable();
+            _userRepository.Setup(r => r.FindById(userId)).Returns(user.Object).Verifiable();
 
             return (JsonViewData) ((JsonResult)_controller.ChangeRole(userId.Shrink(), Roles.Moderator.ToString())).Data;
         }
@@ -1464,10 +1464,10 @@ namespace Kigg.Web.Test
 
             var userId = Guid.NewGuid();
 
-            user.ExpectGet(u => u.Id).Returns(userId);
-            user.Expect(u => u.Unlock()).Verifiable();
+            user.SetupGet(u => u.Id).Returns(userId);
+            user.Setup(u => u.Unlock()).Verifiable();
 
-            _userRepository.Expect(r => r.FindById(userId)).Returns(user.Object).Verifiable();
+            _userRepository.Setup(r => r.FindById(userId)).Returns(user.Object).Verifiable();
 
             return (JsonViewData) ((JsonResult) _controller.Unlock(userId.Shrink())).Data;
         }
@@ -1478,10 +1478,10 @@ namespace Kigg.Web.Test
 
             var userId = Guid.NewGuid();
 
-            user.ExpectGet(u => u.Id).Returns(userId);
-            user.Expect(u => u.Lock()).Verifiable();
+            user.SetupGet(u => u.Id).Returns(userId);
+            user.Setup(u => u.Lock()).Verifiable();
 
-            _userRepository.Expect(r => r.FindById(userId)).Returns(user.Object).Verifiable();
+            _userRepository.Setup(r => r.FindById(userId)).Returns(user.Object).Verifiable();
 
             return (JsonViewData) ((JsonResult)_controller.Lock(userId.Shrink())).Data;
         }
@@ -1493,20 +1493,20 @@ namespace Kigg.Web.Test
             var userId = Guid.NewGuid();
             var user = new Mock<IUser>();
 
-            user.ExpectGet(u => u.Id).Returns(userId);
+            user.SetupGet(u => u.Id).Returns(userId);
 
-            _userRepository.Expect(r => r.FindById(userId)).Returns(user.Object).Verifiable();
-            _userRepository.Expect(r => r.FindIPAddresses(userId)).Returns(new[] { "192.168.0.1", "192.168.0.2" }).Verifiable();
+            _userRepository.Setup(r => r.FindById(userId)).Returns(user.Object).Verifiable();
+            _userRepository.Setup(r => r.FindIPAddresses(userId)).Returns(new[] { "192.168.0.1", "192.168.0.2" }).Verifiable();
 
-            _blockedIPList.Expect(bl => bl.AddRange(It.IsAny<ICollection<string>>())).Verifiable();
-            _blockedIPList.Expect(bl => bl.RemoveRange(It.IsAny<ICollection<string>>())).Verifiable();
+            _blockedIPList.Setup(bl => bl.AddRange(It.IsAny<ICollection<string>>())).Verifiable();
+            _blockedIPList.Setup(bl => bl.RemoveRange(It.IsAny<ICollection<string>>())).Verifiable();
 
             return (JsonViewData) ((JsonResult)_controller.AllowIps(userId.Shrink(), new[] { "192.168.0.1", "192.168.0.3" })).Data;
         }
 
         private ViewResult List()
         {
-            _userRepository.Expect(r => r.FindAll(It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IUser>()).Verifiable();
+            _userRepository.Setup(r => r.FindAll(It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IUser>()).Verifiable();
 
             return (ViewResult) _controller.List(2);
         }
@@ -1517,8 +1517,8 @@ namespace Kigg.Web.Test
 
             SetAdmin();
 
-            _userRepository.Expect(r => r.FindById(userId.ToGuid())).Returns(new Mock<IUser>().Object).Verifiable();
-            _userRepository.Expect(r => r.FindIPAddresses(It.IsAny<Guid>())).Returns(new[] { "192.168.0.1" }).Verifiable();
+            _userRepository.Setup(r => r.FindById(userId.ToGuid())).Returns(new Mock<IUser>().Object).Verifiable();
+            _userRepository.Setup(r => r.FindIPAddresses(It.IsAny<Guid>())).Returns(new[] { "192.168.0.1" }).Verifiable();
 
             return (ViewResult)_controller.Detail(userId, "Promoted", null);
         }
@@ -1527,14 +1527,14 @@ namespace Kigg.Web.Test
         {
             user = new Mock<IUser>();
 
-            user.ExpectSet(u => u.IsActive).Verifiable();
-            user.ExpectSet(u => u.LastActivityAt).Verifiable();
+            user.SetupSet(u => u.IsActive = true).Verifiable();
+            user.SetupSet(u => u.LastActivityAt = It.IsAny<DateTime>()).Verifiable();
 
-            _userRepository.Expect(r => r.FindById(It.IsAny<Guid>())).Returns(user.Object).Verifiable();
+            _userRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns(user.Object).Verifiable();
 
-            _eventAggregator.Expect(ea => ea.GetEvent<UserActivateEvent>()).Returns(new UserActivateEvent()).Verifiable();
+            _eventAggregator.Setup(ea => ea.GetEvent<UserActivateEvent>()).Returns(new UserActivateEvent()).Verifiable();
 
-            log.Expect(l => l.Info(It.IsAny<string>())).Verifiable();
+            log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
             _controller.Activate(Guid.NewGuid().Shrink());
         }
@@ -1542,15 +1542,15 @@ namespace Kigg.Web.Test
         private ViewResult TopTabs()
         {
             var user1 = new Mock<IUser>();
-            user1.ExpectGet(u => u.CurrentScore).Returns(1000);
+            user1.SetupGet(u => u.CurrentScore).Returns(1000);
 
             var user2 = new Mock<IUser>();
-            user2.ExpectGet(u => u.CurrentScore).Returns(1000);
+            user2.SetupGet(u => u.CurrentScore).Returns(1000);
 
             var user3 = new Mock<IUser>();
-            user2.ExpectGet(u => u.CurrentScore).Returns(1000);
+            user2.SetupGet(u => u.CurrentScore).Returns(1000);
 
-            _userRepository.Expect(r => r.FindTop(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IUser>(new List<IUser> { user1.Object, user2.Object, user3.Object }, 10)).Verifiable();
+            _userRepository.Setup(r => r.FindTop(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IUser>(new List<IUser> { user1.Object, user2.Object, user3.Object }, 10)).Verifiable();
 
             return (ViewResult)_controller.TopTabs();
         }
@@ -1565,14 +1565,14 @@ namespace Kigg.Web.Test
             const string UserName = "DummyUser";
             var userId = Guid.NewGuid();
 
-            user.ExpectGet(u => u.Id).Returns(userId);
-            user.ExpectGet(u => u.UserName).Returns(UserName);
-            user.ExpectGet(u => u.Role).Returns(role);
+            user.SetupGet(u => u.Id).Returns(userId);
+            user.SetupGet(u => u.UserName).Returns(UserName);
+            user.SetupGet(u => u.Role).Returns(role);
 
-            _httpContext.User.Identity.ExpectGet(i => i.Name).Returns(UserName);
-            _httpContext.User.Identity.ExpectGet(i => i.IsAuthenticated).Returns(true);
+            _httpContext.User.Identity.SetupGet(i => i.Name).Returns(UserName);
+            _httpContext.User.Identity.SetupGet(i => i.IsAuthenticated).Returns(true);
 
-            _userRepository.Expect(r => r.FindByUserName(UserName)).Returns(user.Object);
+            _userRepository.Setup(r => r.FindByUserName(UserName)).Returns(user.Object);
         }
     }
 }

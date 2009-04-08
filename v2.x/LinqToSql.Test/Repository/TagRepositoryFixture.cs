@@ -29,7 +29,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void Add_Should_Use_Database()
         {
-            database.Expect(d => d.Insert(It.IsAny<Tag>())).Verifiable();
+            database.Setup(d => d.Insert(It.IsAny<Tag>())).Verifiable();
 
             _tagRepository.Add(_factory.CreateTag("Dummy"));
         }
@@ -47,7 +47,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         {
             Tags.Add(_factory.CreateTag("Demo") as Tag);
 
-            database.Expect(d => d.Delete(It.IsAny<Tag>())).Verifiable();
+            database.Setup(d => d.Delete(It.IsAny<Tag>())).Verifiable();
 
             _tagRepository.Remove(Tags[0]);
         }

@@ -14,7 +14,7 @@ namespace Kigg.Core.Test
         {
             _file = new Mock<IFile>();
 
-            _file.Expect(f => f.ReadAllText(It.IsAny<string>())).Returns("<?xml version=\"1.0\" encoding=\"utf-8\" ?><badWords><item><exp>viagra</exp><value>100</value></item><item><exp>blackjack</exp><value>100</value></item><item><exp>casino</exp><value>100</value></item></badWords>");
+            _file.Setup(f => f.ReadAllText(It.IsAny<string>())).Returns("<?xml version=\"1.0\" encoding=\"utf-8\" ?><badWords><item><exp>viagra</exp><value>100</value></item><item><exp>blackjack</exp><value>100</value></item><item><exp>casino</exp><value>100</value></item></badWords>");
 
             _calculator = new BadWordMatchSpamWeightCalculator(_file.Object, "BadWords");
         }

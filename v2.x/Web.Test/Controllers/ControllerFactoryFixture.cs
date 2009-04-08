@@ -21,7 +21,7 @@ namespace Kigg.Web.Test
         [Fact]
         public void CreateController_Should_Use_IoC_To_Create_Controller()
         {
-            resolver.Expect(r => r.Resolve<IController>(It.IsAny<Type>())).Returns((IController) null).Verifiable();
+            resolver.Setup(r => r.Resolve<IController>(It.IsAny<Type>())).Returns((IController) null).Verifiable();
 
             var httpContext = new HttpContextMock();
             var requestContext = new RequestContext(httpContext.Object, new RouteData());

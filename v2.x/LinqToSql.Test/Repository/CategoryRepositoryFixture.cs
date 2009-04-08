@@ -28,7 +28,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void Add_Should_Use_Database()
         {
-            database.Expect(d => d.Insert(It.IsAny<Category>())).Verifiable();
+            database.Setup(d => d.Insert(It.IsAny<Category>())).Verifiable();
 
             _categoryRepository.Add(_factory.CreateCategory("Dummy Category"));
         }
@@ -46,7 +46,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         {
             Categories.Add(_factory.CreateCategory("Demo") as Category);
 
-            database.Expect(d => d.Delete(It.IsAny<Category>())).Verifiable();
+            database.Setup(d => d.Delete(It.IsAny<Category>())).Verifiable();
 
             _categoryRepository.Remove(Categories[0]);
 

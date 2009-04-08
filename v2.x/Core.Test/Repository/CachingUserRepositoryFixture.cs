@@ -55,18 +55,18 @@ namespace Kigg.Core.Test
 
         private void FindByScore()
         {
-            cache.Expect(c => c.Set(It.IsAny<string>(), It.IsAny<decimal>(), It.IsAny<DateTime>())).Verifiable();
+            cache.Setup(c => c.Set(It.IsAny<string>(), It.IsAny<decimal>(), It.IsAny<DateTime>())).Verifiable();
 
-            _innerRepository.Expect(r => r.FindScoreById(It.IsAny<Guid>(), It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(5).Verifiable();
+            _innerRepository.Setup(r => r.FindScoreById(It.IsAny<Guid>(), It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(5).Verifiable();
 
             _repository.FindScoreById(Guid.NewGuid(), SystemTime.Now().AddHours(-4), SystemTime.Now());
         }
 
         private void FindTop()
         {
-            cache.Expect(c => c.Set(It.IsAny<string>(), It.IsAny<PagedResult<IUser>>(), It.IsAny<DateTime>())).Verifiable();
+            cache.Setup(c => c.Set(It.IsAny<string>(), It.IsAny<PagedResult<IUser>>(), It.IsAny<DateTime>())).Verifiable();
 
-            _innerRepository.Expect(r => r.FindTop(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IUser>(new List<IUser> { CreateStubUser() }, 1)).Verifiable();
+            _innerRepository.Setup(r => r.FindTop(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IUser>(new List<IUser> { CreateStubUser() }, 1)).Verifiable();
 
             _repository.FindTop(SystemTime.Now().AddHours(-4), SystemTime.Now(), 0, 10);
         }

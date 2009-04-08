@@ -63,12 +63,12 @@ namespace Kigg.Core.Test
             {
                 var view = new Mock<IStoryView>();
 
-                view.Expect(v => v.FromIPAddress).Returns(ip);
+                view.Setup(v => v.FromIPAddress).Returns(ip);
 
                 views.Add(view.Object);
             }
 
-            _repository.Expect(r => r.FindAfter(It.IsAny<Guid>(), It.IsAny<DateTime>())).Returns(views).Verifiable();
+            _repository.Setup(r => r.FindAfter(It.IsAny<Guid>(), It.IsAny<DateTime>())).Returns(views).Verifiable();
         }
     }
 }

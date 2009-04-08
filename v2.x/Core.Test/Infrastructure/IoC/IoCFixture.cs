@@ -18,7 +18,7 @@ namespace Kigg.Core.Test
         {
             var factory = new Mock<IDependencyResolverFactory>();
 
-            factory.Expect(f => f.CreateInstance()).Returns(resolver.Object).Verifiable();
+            factory.Setup(f => f.CreateInstance()).Returns(resolver.Object).Verifiable();
 
             IoC.InitializeWith(factory.Object);
             factory.Verify();
@@ -27,7 +27,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Register_Should_Use_Resolver()
         {
-            resolver.Expect(r => r.Register<IDummyObject>(It.IsAny<DummyObject>()));
+            resolver.Setup(r => r.Register<IDummyObject>(It.IsAny<DummyObject>()));
 
             IoC.Register(new DummyObject());
         }
@@ -35,7 +35,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Inject_Should_Use_Resolver()
         {
-            resolver.Expect(r => r.Inject(It.IsAny<DummyObject>()));
+            resolver.Setup(r => r.Inject(It.IsAny<DummyObject>()));
 
             IoC.Inject(new DummyObject());
         }
@@ -43,7 +43,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Parameterless_Resolve_Should_Use_Resolver()
         {
-            resolver.Expect(r => r.Resolve<IDummyObject>(typeof(IDummyObject))).Returns((IDummyObject) null).Verifiable();
+            resolver.Setup(r => r.Resolve<IDummyObject>(typeof(IDummyObject))).Returns((IDummyObject) null).Verifiable();
 
             IoC.Resolve<IDummyObject>(typeof(IDummyObject));
         }
@@ -51,7 +51,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Parameterized_Resolve_Should_Use_Resolver()
         {
-            resolver.Expect(r => r.Resolve<IDummyObject>(typeof(IDummyObject), "foo")).Returns((IDummyObject)null).Verifiable();
+            resolver.Setup(r => r.Resolve<IDummyObject>(typeof(IDummyObject), "foo")).Returns((IDummyObject)null).Verifiable();
 
             IoC.Resolve<IDummyObject>(typeof(IDummyObject), "foo");
         }
@@ -59,7 +59,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Parameterless_Generic_Resolve_Should_Use_Resolve()
         {
-            resolver.Expect(r => r.Resolve<IDummyObject>()).Returns((IDummyObject)null).Verifiable();
+            resolver.Setup(r => r.Resolve<IDummyObject>()).Returns((IDummyObject)null).Verifiable();
 
             IoC.Resolve<IDummyObject>();
         }
@@ -67,7 +67,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Parameterized_Generic_Resolve_Should_Use_Resolver()
         {
-            resolver.Expect(r => r.Resolve<IDummyObject>("foo")).Returns((IDummyObject) null).Verifiable();
+            resolver.Setup(r => r.Resolve<IDummyObject>("foo")).Returns((IDummyObject) null).Verifiable();
 
             IoC.Resolve<IDummyObject>("foo");
         }
@@ -75,7 +75,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void ResolveAll_Should_Use_Resolver()
         {
-            resolver.Expect(r => r.ResolveAll<IDummyObject>()).Returns((IDummyObject[]) null).Verifiable();
+            resolver.Setup(r => r.ResolveAll<IDummyObject>()).Returns((IDummyObject[]) null).Verifiable();
 
             IoC.ResolveAll<IDummyObject>();
         }
@@ -83,7 +83,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Reset_Should_Use_Resolver()
         {
-            resolver.Expect(r => r.Dispose()).Verifiable();
+            resolver.Setup(r => r.Dispose()).Verifiable();
 
             IoC.Reset();
         }

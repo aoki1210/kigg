@@ -35,7 +35,7 @@ namespace Kigg.Core.Test
                                         "\r\n" +
                                         "Url:<%=url%>";
 
-            _file.Expect(f => f.ReadAllText(It.IsAny<string>())).Returns(mailTemplate).Verifiable();
+            _file.Setup(f => f.ReadAllText(It.IsAny<string>())).Returns(mailTemplate).Verifiable();
 
             _emailSender.SendRegistrationInfo("dummy@users.com", "dummyUser", "dummyPassword", "http://dotnetshoutout.com/Activate/JKgxzYZ2dEeRQz_D7XlRDw");
             Sleep();
@@ -48,7 +48,7 @@ namespace Kigg.Core.Test
                                         "\r\n" +
                                         "Password:<%=password%>";
 
-            _file.Expect(f => f.ReadAllText(It.IsAny<string>())).Returns(mailTemplate).Verifiable();
+            _file.Setup(f => f.ReadAllText(It.IsAny<string>())).Returns(mailTemplate).Verifiable();
 
             _emailSender.SendNewPassword("dummy@users.com", "dummyUser", "dummyPassword");
             Sleep();
@@ -62,21 +62,21 @@ namespace Kigg.Core.Test
 
             var user = new Mock<IUser>();
 
-            user.ExpectGet(u => u.UserName).Returns("Dummy user");
-            user.ExpectGet(u => u.Email).Returns("dummy@users.com");
+            user.SetupGet(u => u.UserName).Returns("Dummy user");
+            user.SetupGet(u => u.Email).Returns("dummy@users.com");
 
             var story = new Mock<IStory>();
-            story.ExpectGet(s => s.Title).Returns("A dummy story");
+            story.SetupGet(s => s.Title).Returns("A dummy story");
 
             var comment = new Mock<IComment>();
-            comment.ExpectGet(c => c.ByUser).Returns(user.Object);
-            comment.ExpectGet(c => c.TextBody).Returns("The is a dummy comment");
-            comment.ExpectGet(c => c.ForStory).Returns(story.Object);
+            comment.SetupGet(c => c.ByUser).Returns(user.Object);
+            comment.SetupGet(c => c.TextBody).Returns("The is a dummy comment");
+            comment.SetupGet(c => c.ForStory).Returns(story.Object);
 
             var subscriber = new Mock<IUser>();
-            subscriber.ExpectGet(u => u.Email).Returns("seconddummy@users.com");
+            subscriber.SetupGet(u => u.Email).Returns("seconddummy@users.com");
 
-            _file.Expect(f => f.ReadAllText(It.IsAny<string>())).Returns(mailTemplate).Verifiable();
+            _file.Setup(f => f.ReadAllText(It.IsAny<string>())).Returns(mailTemplate).Verifiable();
 
             _emailSender.SendComment("http://dotnetshoutout.com/The-Dummy_Story", comment.Object, new[] { user.Object, subscriber.Object });
 
@@ -93,15 +93,15 @@ namespace Kigg.Core.Test
 
             var user = new Mock<IUser>();
 
-            user.ExpectGet(u => u.UserName).Returns("Dummy user");
+            user.SetupGet(u => u.UserName).Returns("Dummy user");
 
             var story = new Mock<IStory>();
 
-            story.ExpectGet(s => s.Title).Returns("A dummy story");
-            story.ExpectGet(s => s.Url).Returns("http://www.dummystory.com");
-            story.ExpectGet(s => s.PostedBy).Returns(user.Object);
+            story.SetupGet(s => s.Title).Returns("A dummy story");
+            story.SetupGet(s => s.Url).Returns("http://www.dummystory.com");
+            story.SetupGet(s => s.PostedBy).Returns(user.Object);
 
-            _file.Expect(f => f.ReadAllText(It.IsAny<string>())).Returns(mailTemplate).Verifiable();
+            _file.Setup(f => f.ReadAllText(It.IsAny<string>())).Returns(mailTemplate).Verifiable();
 
             _emailSender.NotifySpamStory("http://dotnetshoutout.com/The-Dummy_Story", story.Object, "foo");
 
@@ -118,18 +118,18 @@ namespace Kigg.Core.Test
                                         "User: <%=postedByUserName%>";
 
             var markedBy = new Mock<IUser>();
-            markedBy.ExpectGet(u => u.UserName).Returns("Marked By");
+            markedBy.SetupGet(u => u.UserName).Returns("Marked By");
 
             var postedBy = new Mock<IUser>();
-            postedBy.ExpectGet(u => u.UserName).Returns("Posted By");
+            postedBy.SetupGet(u => u.UserName).Returns("Posted By");
 
             var story = new Mock<IStory>();
 
-            story.ExpectGet(s => s.Title).Returns("A dummy story");
-            story.ExpectGet(s => s.Url).Returns("http://www.dummystory.com");
-            story.ExpectGet(s => s.PostedBy).Returns(postedBy.Object);
+            story.SetupGet(s => s.Title).Returns("A dummy story");
+            story.SetupGet(s => s.Url).Returns("http://www.dummystory.com");
+            story.SetupGet(s => s.PostedBy).Returns(postedBy.Object);
 
-            _file.Expect(f => f.ReadAllText(It.IsAny<string>())).Returns(mailTemplate).Verifiable();
+            _file.Setup(f => f.ReadAllText(It.IsAny<string>())).Returns(mailTemplate).Verifiable();
 
             _emailSender.NotifyStoryMarkedAsSpam("http://dotnetshoutout.com/The-Dummy_Story", story.Object, markedBy.Object);
 
@@ -145,14 +145,14 @@ namespace Kigg.Core.Test
 
             var user = new Mock<IUser>();
 
-            user.ExpectGet(u => u.UserName).Returns("Dummy user");
+            user.SetupGet(u => u.UserName).Returns("Dummy user");
 
             var comment = new Mock<IComment>();
 
-            comment.ExpectGet(c => c.HtmlBody).Returns("<p>A dummy story");
-            comment.ExpectGet(c => c.ByUser).Returns(user.Object);
+            comment.SetupGet(c => c.HtmlBody).Returns("<p>A dummy story");
+            comment.SetupGet(c => c.ByUser).Returns(user.Object);
 
-            _file.Expect(f => f.ReadAllText(It.IsAny<string>())).Returns(mailTemplate).Verifiable();
+            _file.Setup(f => f.ReadAllText(It.IsAny<string>())).Returns(mailTemplate).Verifiable();
 
             _emailSender.NotifySpamComment("http://dotnetshoutout.com/The-Dummy_Story", comment.Object, "foo");
 
@@ -169,18 +169,18 @@ namespace Kigg.Core.Test
                                         "User: <%=postedByUserName%>";
 
             var approvedBy = new Mock<IUser>();
-            approvedBy.ExpectGet(u => u.UserName).Returns("Approved By");
+            approvedBy.SetupGet(u => u.UserName).Returns("Approved By");
 
             var postedBy = new Mock<IUser>();
-            postedBy.ExpectGet(u => u.UserName).Returns("Posted By");
+            postedBy.SetupGet(u => u.UserName).Returns("Posted By");
 
             var story = new Mock<IStory>();
 
-            story.ExpectGet(s => s.Title).Returns("A dummy story");
-            story.ExpectGet(s => s.Url).Returns("http://www.dummystory.com");
-            story.ExpectGet(s => s.PostedBy).Returns(postedBy.Object);
+            story.SetupGet(s => s.Title).Returns("A dummy story");
+            story.SetupGet(s => s.Url).Returns("http://www.dummystory.com");
+            story.SetupGet(s => s.PostedBy).Returns(postedBy.Object);
 
-            _file.Expect(f => f.ReadAllText(It.IsAny<string>())).Returns(mailTemplate).Verifiable();
+            _file.Setup(f => f.ReadAllText(It.IsAny<string>())).Returns(mailTemplate).Verifiable();
 
             _emailSender.NotifyStoryApprove("http://dotnetshoutout.com/The-Dummy_Story", story.Object, approvedBy.Object);
 
@@ -197,18 +197,18 @@ namespace Kigg.Core.Test
                                         "User: <%=postedByUserName%>";
 
             var confirmedBy = new Mock<IUser>();
-            confirmedBy.ExpectGet(u => u.UserName).Returns("Marked By");
+            confirmedBy.SetupGet(u => u.UserName).Returns("Marked By");
 
             var postedBy = new Mock<IUser>();
-            postedBy.ExpectGet(u => u.UserName).Returns("Posted By");
+            postedBy.SetupGet(u => u.UserName).Returns("Posted By");
 
             var story = new Mock<IStory>();
 
-            story.ExpectGet(s => s.Title).Returns("A dummy story");
-            story.ExpectGet(s => s.Url).Returns("http://www.dummystory.com");
-            story.ExpectGet(s => s.PostedBy).Returns(postedBy.Object);
+            story.SetupGet(s => s.Title).Returns("A dummy story");
+            story.SetupGet(s => s.Url).Returns("http://www.dummystory.com");
+            story.SetupGet(s => s.PostedBy).Returns(postedBy.Object);
 
-            _file.Expect(f => f.ReadAllText(It.IsAny<string>())).Returns(mailTemplate).Verifiable();
+            _file.Setup(f => f.ReadAllText(It.IsAny<string>())).Returns(mailTemplate).Verifiable();
 
             _emailSender.NotifyConfirmSpamStory("http://dotnetshoutout.com/The-Dummy_Story", story.Object, confirmedBy.Object);
 
@@ -225,18 +225,18 @@ namespace Kigg.Core.Test
 
             var confirmedBy = new Mock<IUser>();
 
-            confirmedBy.ExpectGet(u => u.UserName).Returns("Confirmed By");
+            confirmedBy.SetupGet(u => u.UserName).Returns("Confirmed By");
 
             var postedBy = new Mock<IUser>();
 
-            postedBy.ExpectGet(u => u.UserName).Returns("Posted By");
+            postedBy.SetupGet(u => u.UserName).Returns("Posted By");
 
             var comment = new Mock<IComment>();
 
-            comment.ExpectGet(c => c.HtmlBody).Returns("<p>A dummy story");
-            comment.ExpectGet(c => c.ByUser).Returns(postedBy.Object);
+            comment.SetupGet(c => c.HtmlBody).Returns("<p>A dummy story");
+            comment.SetupGet(c => c.ByUser).Returns(postedBy.Object);
 
-            _file.Expect(f => f.ReadAllText(It.IsAny<string>())).Returns(mailTemplate).Verifiable();
+            _file.Setup(f => f.ReadAllText(It.IsAny<string>())).Returns(mailTemplate).Verifiable();
 
             _emailSender.NotifyConfirmSpamComment("http://dotnetshoutout.com/The-Dummy_Story", comment.Object, confirmedBy.Object);
 
@@ -253,18 +253,18 @@ namespace Kigg.Core.Test
 
             var offendedBy = new Mock<IUser>();
 
-            offendedBy.ExpectGet(u => u.UserName).Returns("Offended By");
+            offendedBy.SetupGet(u => u.UserName).Returns("Offended By");
 
             var postedBy = new Mock<IUser>();
 
-            postedBy.ExpectGet(u => u.UserName).Returns("Posted By");
+            postedBy.SetupGet(u => u.UserName).Returns("Posted By");
 
             var comment = new Mock<IComment>();
 
-            comment.ExpectGet(c => c.HtmlBody).Returns("<p>A dummy story");
-            comment.ExpectGet(c => c.ByUser).Returns(postedBy.Object);
+            comment.SetupGet(c => c.HtmlBody).Returns("<p>A dummy story");
+            comment.SetupGet(c => c.ByUser).Returns(postedBy.Object);
 
-            _file.Expect(f => f.ReadAllText(It.IsAny<string>())).Returns(mailTemplate).Verifiable();
+            _file.Setup(f => f.ReadAllText(It.IsAny<string>())).Returns(mailTemplate).Verifiable();
 
             _emailSender.NotifyCommentAsOffended("http://dotnetshoutout.com/The-Dummy_Story", comment.Object, offendedBy.Object);
 
@@ -280,18 +280,18 @@ namespace Kigg.Core.Test
                                         "User: <%=postedByUserName%>";
 
             var postedBy = new Mock<IUser>();
-            postedBy.ExpectGet(u => u.UserName).Returns("Posted By");
+            postedBy.SetupGet(u => u.UserName).Returns("Posted By");
 
             var story = new Mock<IStory>();
 
-            story.ExpectGet(s => s.Title).Returns("A dummy story");
-            story.ExpectGet(s => s.Url).Returns("http://www.dummystory.com");
-            story.ExpectGet(s => s.PostedBy).Returns(postedBy.Object);
+            story.SetupGet(s => s.Title).Returns("A dummy story");
+            story.SetupGet(s => s.Url).Returns("http://www.dummystory.com");
+            story.SetupGet(s => s.PostedBy).Returns(postedBy.Object);
 
-            _file.Expect(f => f.ReadAllText(It.IsAny<string>())).Returns(mailTemplate).Verifiable();
+            _file.Setup(f => f.ReadAllText(It.IsAny<string>())).Returns(mailTemplate).Verifiable();
 
             var deletedBy = new Mock<IUser>();
-            deletedBy.ExpectGet(u => u.UserName).Returns("Deleted By");
+            deletedBy.SetupGet(u => u.UserName).Returns("Deleted By");
 
             _emailSender.NotifyStoryDelete(story.Object, deletedBy.Object);
 
@@ -304,12 +304,12 @@ namespace Kigg.Core.Test
             const string mailTemplate = "Story Published: <%=timestamp%>\r\n";
 
             var category = new Mock<ICategory>();
-            category.ExpectGet(c => c.Name).Returns("Dummy");
+            category.SetupGet(c => c.Name).Returns("Dummy");
 
             var story = new Mock<IStory>();
-            story.ExpectGet(s => s.Title).Returns("A dummy story");
-            story.ExpectGet(s => s.BelongsTo).Returns(category.Object);
-            story.ExpectGet(s => s.Url).Returns("http://dummystory.com");
+            story.SetupGet(s => s.Title).Returns("A dummy story");
+            story.SetupGet(s => s.BelongsTo).Returns(category.Object);
+            story.SetupGet(s => s.Url).Returns("http://dummystory.com");
 
             var publishedStory = new PublishedStory(story.Object){ Rank = 1 };
 
@@ -320,7 +320,7 @@ namespace Kigg.Core.Test
             publishedStory.Weights.Add("Known-Source", 5);
             publishedStory.Weights.Add("Freshness", 50);
 
-            _file.Expect(f => f.ReadAllText(It.IsAny<string>())).Returns(mailTemplate).Verifiable();
+            _file.Setup(f => f.ReadAllText(It.IsAny<string>())).Returns(mailTemplate).Verifiable();
 
             _emailSender.NotifyPublishedStories(SystemTime.Now(), new[] { publishedStory });
 
@@ -334,7 +334,7 @@ namespace Kigg.Core.Test
                                         "\r\n\r\n" +
                                         "<%=content%>";
 
-            _file.Expect(f => f.ReadAllText(It.IsAny<string>())).Returns(mailTemplate).Verifiable();
+            _file.Setup(f => f.ReadAllText(It.IsAny<string>())).Returns(mailTemplate).Verifiable();
 
             _emailSender.NotifyFeedback("dummy@users.com", "dummy name", "dummy feedback");
             Sleep();

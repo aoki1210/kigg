@@ -19,7 +19,7 @@ namespace Kigg.Core.Test
             _converter = new Mock<IHtmlToStoryContentConverter>();
             _file = new Mock<IFile>();
 
-            _file.Expect(f => f.ReadAllLine(It.IsAny<string>())).Returns(new[]
+            _file.Setup(f => f.ReadAllLine(It.IsAny<string>())).Returns(new[]
                                                                              {
                                                                                  "http://dotnetkicks.com",
                                                                                  "http://dzone.com",
@@ -73,7 +73,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void ShortUrl_Should_Uses_HttpForm()
         {
-            _httpForm.Expect(h => h.Get(It.IsAny<HttpFormGetRequest>())).Returns(new HttpFormResponse()).Verifiable();
+            _httpForm.Setup(h => h.Get(It.IsAny<HttpFormGetRequest>())).Returns(new HttpFormResponse()).Verifiable();
 
             _contentService.ShortUrl("http://averylongurl.com/foo/bar.aspx");
 
@@ -82,8 +82,8 @@ namespace Kigg.Core.Test
 
         private void Get()
         {
-            _httpForm.Expect(h => h.Get(It.IsAny<HttpFormGetRequest>())).Returns(new HttpFormResponse{ Response = "html snippet"}).Verifiable();
-            _converter.Expect(c => c.Convert(It.IsAny<string>(), It.IsAny<string>())).Returns((StoryContent) null).Verifiable();
+            _httpForm.Setup(h => h.Get(It.IsAny<HttpFormGetRequest>())).Returns(new HttpFormResponse{ Response = "html snippet"}).Verifiable();
+            _converter.Setup(c => c.Convert(It.IsAny<string>(), It.IsAny<string>())).Returns((StoryContent) null).Verifiable();
 
             _contentService.Get("http://weblogs.asp.net/rashid");
         }

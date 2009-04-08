@@ -25,7 +25,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Count_Should_Use_InternalCache()
         {
-            cache.ExpectGet(c => c.Count).Returns(0).Verifiable();
+            cache.SetupGet(c => c.Count).Returns(0).Verifiable();
 
             Assert.Equal(0, Cache.Count);
         }
@@ -33,7 +33,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Clear_Should_Use_InternalCache()
         {
-            cache.Expect(c => c.Clear()).Verifiable();
+            cache.Setup(c => c.Clear()).Verifiable();
 
             Cache.Clear();
         }
@@ -41,7 +41,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Contains_Should_Use_InternalCache()
         {
-            cache.Expect(c => c.Contains(It.IsAny<string>())).Returns(true).Verifiable();
+            cache.Setup(c => c.Contains(It.IsAny<string>())).Returns(true).Verifiable();
 
             Assert.True(Cache.Contains(Key));
         }
@@ -49,7 +49,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Get_Should_Use_InternalCache_Get()
         {
-            cache.Expect(c => c.Get<object>(It.IsAny<string>())).Returns(null).Verifiable();
+            cache.Setup(c => c.Get<object>(It.IsAny<string>())).Returns(null).Verifiable();
 
             Cache.Get<object>(Key);
         }
@@ -59,7 +59,7 @@ namespace Kigg.Core.Test
         {
             object dummy;
 
-            cache.Expect(c => c.TryGet(It.IsAny<string>(), out dummy)).Returns(false).Verifiable();
+            cache.Setup(c => c.TryGet(It.IsAny<string>(), out dummy)).Returns(false).Verifiable();
 
             Cache.TryGet(Key, out dummy);
         }
@@ -67,7 +67,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Set_Should_Use_InternalCache()
         {
-            cache.Expect(c => c.Set(It.IsAny<string>(), It.IsAny<object>())).Verifiable();
+            cache.Setup(c => c.Set(It.IsAny<string>(), It.IsAny<object>())).Verifiable();
 
             Cache.Set(Key, new object());
         }
@@ -75,7 +75,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Set_With_AbsoluteExpiration_Should_Uses_InternalCache()
         {
-            cache.Expect(c => c.Set(It.IsAny<string>(), It.IsAny<object>(), It.IsAny<DateTime>())).Verifiable();
+            cache.Setup(c => c.Set(It.IsAny<string>(), It.IsAny<object>(), It.IsAny<DateTime>())).Verifiable();
 
             Cache.Set(Key, new object(), SystemTime.Now().AddMinutes(5));
         }
@@ -83,7 +83,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Set_With_SlidingExpiration_Should_Use_InternalCache()
         {
-            cache.Expect(c => c.Set(It.IsAny<string>(), It.IsAny<object>(), It.IsAny<TimeSpan>())).Verifiable();
+            cache.Setup(c => c.Set(It.IsAny<string>(), It.IsAny<object>(), It.IsAny<TimeSpan>())).Verifiable();
 
             Cache.Set(Key, new object(), TimeSpan.FromMinutes(5));
         }
@@ -91,7 +91,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Remove_Should_Use_InternalCache()
         {
-            cache.Expect(c => c.Remove(It.IsAny<string>())).Verifiable();
+            cache.Setup(c => c.Remove(It.IsAny<string>())).Verifiable();
 
             Cache.Remove(Key);
         }

@@ -65,29 +65,29 @@ namespace Kigg.Core.Test
             var story = new Mock<IStory>();
             var owner = new Mock<IUser>();
 
-            owner.ExpectGet(u => u.Id).Returns(ownerId);
-            story.ExpectGet(s => s.PostedBy).Returns(owner.Object);
-            story.ExpectGet(s => s.FromIPAddress).Returns(ownerIp);
+            owner.SetupGet(u => u.Id).Returns(ownerId);
+            story.SetupGet(s => s.PostedBy).Returns(owner.Object);
+            story.SetupGet(s => s.FromIPAddress).Returns(ownerIp);
 
             var ownerComment = new Mock<IComment>();
-            ownerComment.ExpectGet(c => c.ByUser).Returns(owner.Object);
-            ownerComment.ExpectGet(c => c.FromIPAddress).Returns(ownerIp);
+            ownerComment.SetupGet(c => c.ByUser).Returns(owner.Object);
+            ownerComment.SetupGet(c => c.FromIPAddress).Returns(ownerIp);
 
             comments.Add(ownerComment.Object);
 
             foreach(string ip in ipAddresses)
             {
                 var user = new Mock<IUser>();
-                user.ExpectGet(u => u.Id).Returns(Guid.NewGuid());
+                user.SetupGet(u => u.Id).Returns(Guid.NewGuid());
 
                 var comment = new Mock<IComment>();
-                comment.ExpectGet(c => c.FromIPAddress).Returns(ip);
-                comment.ExpectGet(c => c.ByUser).Returns(user.Object);
+                comment.SetupGet(c => c.FromIPAddress).Returns(ip);
+                comment.SetupGet(c => c.ByUser).Returns(user.Object);
 
                 comments.Add(comment.Object);
             }
 
-            _repository.Expect(r => r.FindAfter(It.IsAny<Guid>(), It.IsAny<DateTime>())).Returns(comments).Verifiable();
+            _repository.Setup(r => r.FindAfter(It.IsAny<Guid>(), It.IsAny<DateTime>())).Returns(comments).Verifiable();
 
             return story;
         }

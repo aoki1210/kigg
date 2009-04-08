@@ -32,7 +32,7 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
         [Fact]
         public void Dispose_Should_Use_Container()
         {
-            _container.Expect(c => c.Dispose()).Verifiable();
+            _container.Setup(c => c.Dispose()).Verifiable();
 
             _resolver.Dispose();
         }
@@ -40,7 +40,7 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
         [Fact]
         public void Register_Should_Use_Container()
         {
-            _container.Expect(c => c.RegisterInstance<IDummyObject>(It.IsAny<DummyObject>())).Returns(_container.Object);
+            _container.Setup(c => c.RegisterInstance<IDummyObject>(It.IsAny<DummyObject>())).Returns(_container.Object);
 
             _resolver.Register<IDummyObject>(new DummyObject());
         }
@@ -48,7 +48,7 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
         [Fact]
         public void Inject_Should_Use_Container()
         {
-            _container.Expect(c => c.BuildUp(It.IsAny<DummyObject>())).Returns(new DummyObject());
+            _container.Setup(c => c.BuildUp(It.IsAny<DummyObject>())).Returns(new DummyObject());
 
             _resolver.Inject(new DummyObject());
         }
@@ -56,7 +56,7 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
         [Fact]
         public void Parameterized_Generic_Resolve_Should_Use_Container()
         {
-            _container.Expect(c => c.Resolve<IDummyObject>("foo")).Returns((IDummyObject) null).Verifiable();
+            _container.Setup(c => c.Resolve<IDummyObject>("foo")).Returns((IDummyObject) null).Verifiable();
 
             _resolver.Resolve<IDummyObject>("foo");
         }
@@ -64,7 +64,7 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
         [Fact]
         public void Parameterless_Generic_Resolve_Should_Use_Container()
         {
-            _container.Expect(c => c.Resolve<IDummyObject>()).Returns((IDummyObject) null).Verifiable();
+            _container.Setup(c => c.Resolve<IDummyObject>()).Returns((IDummyObject) null).Verifiable();
 
             _resolver.Resolve<IDummyObject>();
         }
@@ -72,7 +72,7 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
         [Fact]
         public void Parameterized_Resolve_Should_Use_Container()
         {
-            _container.Expect(c => c.Resolve(typeof (IDummyObject), "foo")).Returns((IDummyObject) null).Verifiable();
+            _container.Setup(c => c.Resolve(typeof (IDummyObject), "foo")).Returns((IDummyObject) null).Verifiable();
 
             _resolver.Resolve<IDummyObject>(typeof (IDummyObject), "foo");
         }
@@ -80,7 +80,7 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
         [Fact]
         public void Parameterless_Resolve_Should_Use_Container()
         {
-            _container.Expect(c => c.Resolve(typeof (IDummyObject))).Returns((IDummyObject) null).Verifiable();
+            _container.Setup(c => c.Resolve(typeof (IDummyObject))).Returns((IDummyObject) null).Verifiable();
 
             _resolver.Resolve<IDummyObject>(typeof (IDummyObject));
         }
@@ -88,8 +88,8 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
         [Fact]
         public void ResolveAll_Should_Use_Container()
         {
-            _container.Expect(c => c.ResolveAll<IDummyObject>()).Returns((IDummyObject[]) null).Verifiable();
-            _container.Expect(c => c.Resolve<IDummyObject>()).Returns((IDummyObject) null).Verifiable();
+            _container.Setup(c => c.ResolveAll<IDummyObject>()).Returns((IDummyObject[]) null).Verifiable();
+            _container.Setup(c => c.Resolve<IDummyObject>()).Returns((IDummyObject) null).Verifiable();
 
             _resolver.ResolveAll<IDummyObject>();
         }
@@ -100,8 +100,8 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
             var obj1 = new Mock<IDummyObject>();
             var obj2 = new Mock<IDummyObject>();
 
-            _container.Expect(c => c.ResolveAll<IDummyObject>()).Returns((new List<IDummyObject>{ obj1.Object })).Verifiable();
-            _container.Expect(c => c.Resolve<IDummyObject>()).Returns(obj2.Object).Verifiable();
+            _container.Setup(c => c.ResolveAll<IDummyObject>()).Returns((new List<IDummyObject>{ obj1.Object })).Verifiable();
+            _container.Setup(c => c.Resolve<IDummyObject>()).Returns(obj2.Object).Verifiable();
 
             _resolver.ResolveAll<IDummyObject>();
         }
@@ -109,8 +109,8 @@ namespace Kigg.Infrastructure.EnterpriseLibrary.Test
         [Fact]
         public void ResolveAll_Should_Ignore_Resolution_Failed_Exception()
         {
-            _container.Expect(c => c.ResolveAll<IDummyObject>()).Returns((IDummyObject[])null);
-            _container.Expect(c => c.Resolve<IDummyObject>()).Throws<ResolutionFailedExceptionTestDouble>();
+            _container.Setup(c => c.ResolveAll<IDummyObject>()).Returns((IDummyObject[])null);
+            _container.Setup(c => c.Resolve<IDummyObject>()).Throws<ResolutionFailedExceptionTestDouble>();
 
             _resolver.ResolveAll<IDummyObject>();
         }

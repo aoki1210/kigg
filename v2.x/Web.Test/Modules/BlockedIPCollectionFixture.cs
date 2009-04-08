@@ -17,7 +17,7 @@ namespace Kigg.Web.Test
         {
             _file = new Mock<IFile>();
 
-            _file.Expect(f => f.ReadAllLine(It.IsAny<string>())).Returns(new []{"192.168.0.254", "192.168.0.255"}).Verifiable();
+            _file.Setup(f => f.ReadAllLine(It.IsAny<string>())).Returns(new []{"192.168.0.254", "192.168.0.255"}).Verifiable();
 
             _blockedIPCollection = new BlockedIPCollection("BlockedIPList.txt", _file.Object);
         }
@@ -31,7 +31,7 @@ namespace Kigg.Web.Test
         [Fact]
         public void When_Created_Collection_Should_Contain_The_IpAddress_Of_File()
         {
-            _file.Expect(f => f.ReadAllLine(It.IsAny<string>())).Returns(new[] { "192.168.0.1", "192.168.0.2" });
+            _file.Setup(f => f.ReadAllLine(It.IsAny<string>())).Returns(new[] { "192.168.0.1", "192.168.0.2" });
 
             var collection = new BlockedIPCollection("BlockedIPList.txt", _file.Object);
 
@@ -156,7 +156,7 @@ namespace Kigg.Web.Test
         [Fact]
         public void Dispose_Should_Write_The_IpAddresses_In_File()
         {
-            _file.Expect(f => f.WriteAllText(It.IsAny<string>(), It.IsAny<string>())).Verifiable();
+            _file.Setup(f => f.WriteAllText(It.IsAny<string>(), It.IsAny<string>())).Verifiable();
 
             _blockedIPCollection.Dispose();
 

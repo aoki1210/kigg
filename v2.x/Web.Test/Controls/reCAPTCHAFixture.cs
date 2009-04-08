@@ -18,7 +18,7 @@ namespace Kigg.Web.Test
         {
             var validator = new reCAPTCHAValidator("http://api-verify.recaptcha.net/verify", "http://api.recaptcha.net", "https://api-secure.recaptcha.net", "foo", "bar", "hello", "world", new Mock<IHttpForm>().Object);
 
-            resolver.Expect(r => r.Resolve<reCAPTCHAValidator>()).Returns(validator);
+            resolver.Setup(r => r.Resolve<reCAPTCHAValidator>()).Returns(validator);
 
             _reCAPTCHA = new reCAPTCHATestDouble();
         }

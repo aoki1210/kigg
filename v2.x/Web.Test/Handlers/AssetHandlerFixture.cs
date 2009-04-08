@@ -40,9 +40,9 @@ namespace Kigg.Web.Test
         {
             string version;
 
-            cache.Expect(c => c.TryGet(It.IsAny<string>(), out version)).Returns(false);
-            cache.Expect(c => c.Contains(It.IsAny<string>())).Returns(false);
-            cache.Expect(c => c.Set(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime>()));
+            cache.Setup(c => c.TryGet(It.IsAny<string>(), out version)).Returns(false);
+            cache.Setup(c => c.Contains(It.IsAny<string>())).Returns(false);
+            cache.Setup(c => c.Set(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime>()));
 
             var assetSettings = new AssetSettingsSection
                                {
@@ -53,7 +53,7 @@ namespace Kigg.Web.Test
 
             assetSettings.Assets.Add(new AssetElement { Name = "js" });
 
-            configurationManager.Expect(c => c.GetSection<AssetSettingsSection>(It.IsAny<string>())).Returns(assetSettings);
+            configurationManager.Setup(c => c.GetSection<AssetSettingsSection>(It.IsAny<string>())).Returns(assetSettings);
 
             string result = AssetHandler.GetVersion("js");
 
@@ -78,15 +78,15 @@ namespace Kigg.Web.Test
             var responseStream = new MemoryStream();
             var httpContext = MvcTestHelper.GetHttpContext();
 
-            httpContext.HttpRequest.ExpectGet(r => r.QueryString).Returns(new NameValueCollection { { "name", "js" } });
-            httpContext.HttpResponse.ExpectGet(r => r.OutputStream).Returns(responseStream);
+            httpContext.HttpRequest.SetupGet(r => r.QueryString).Returns(new NameValueCollection { { "name", "js" } });
+            httpContext.HttpResponse.SetupGet(r => r.OutputStream).Returns(responseStream);
 
-            configuration.Expect(c => c.GetSection<AssetSettingsSection>(It.IsAny<string>())).Returns(assetSettings);
+            configuration.Setup(c => c.GetSection<AssetSettingsSection>(It.IsAny<string>())).Returns(assetSettings);
 
             string content;
 
-            cache.Expect(c => c.TryGet(It.IsAny<string>(), out content)).Returns(false);
-            file.Expect(f => f.ReadAllText(It.IsAny<string>())).Returns(AssetContent);
+            cache.Setup(c => c.TryGet(It.IsAny<string>(), out content)).Returns(false);
+            file.Setup(f => f.ReadAllText(It.IsAny<string>())).Returns(AssetContent);
 
             var handler = new AssetHandler{ Configuration = configuration.Object, FileReader = file.Object };
 
@@ -111,16 +111,16 @@ namespace Kigg.Web.Test
             var responseStream = new MemoryStream();
             var httpContext = MvcTestHelper.GetHttpContext();
 
-            httpContext.HttpRequest.ExpectGet(r => r.QueryString).Returns(new NameValueCollection { { "name", "js" } });
-            httpContext.HttpRequest.ExpectGet(r => r.Headers).Returns(new NameValueCollection { { "If-None-Match", (AssetContent + "\r\n\r\n").Hash() } });
-            httpContext.HttpResponse.ExpectGet(r => r.OutputStream).Returns(responseStream);
+            httpContext.HttpRequest.SetupGet(r => r.QueryString).Returns(new NameValueCollection { { "name", "js" } });
+            httpContext.HttpRequest.SetupGet(r => r.Headers).Returns(new NameValueCollection { { "If-None-Match", (AssetContent + "\r\n\r\n").Hash() } });
+            httpContext.HttpResponse.SetupGet(r => r.OutputStream).Returns(responseStream);
 
-            configuration.Expect(c => c.GetSection<AssetSettingsSection>(It.IsAny<string>())).Returns(assetSettings);
+            configuration.Setup(c => c.GetSection<AssetSettingsSection>(It.IsAny<string>())).Returns(assetSettings);
 
             string content;
 
-            cache.Expect(c => c.TryGet(It.IsAny<string>(), out content)).Returns(false);
-            file.Expect(f => f.ReadAllText(It.IsAny<string>())).Returns(AssetContent);
+            cache.Setup(c => c.TryGet(It.IsAny<string>(), out content)).Returns(false);
+            file.Setup(f => f.ReadAllText(It.IsAny<string>())).Returns(AssetContent);
 
             var handler = new AssetHandler { Configuration = configuration.Object, FileReader = file.Object };
 
@@ -145,17 +145,17 @@ namespace Kigg.Web.Test
             var responseStream = new MemoryStream();
             var httpContext = MvcTestHelper.GetHttpContext();
 
-            httpContext.HttpRequest.ExpectGet(r => r.QueryString).Returns(new NameValueCollection { { "name", "js" } });
-            httpContext.HttpResponse.ExpectGet(r => r.OutputStream).Returns(responseStream);
+            httpContext.HttpRequest.SetupGet(r => r.QueryString).Returns(new NameValueCollection { { "name", "js" } });
+            httpContext.HttpResponse.SetupGet(r => r.OutputStream).Returns(responseStream);
 
-            configuration.Expect(c => c.GetSection<AssetSettingsSection>(It.IsAny<string>())).Returns(assetSettings);
+            configuration.Setup(c => c.GetSection<AssetSettingsSection>(It.IsAny<string>())).Returns(assetSettings);
 
             string content;
 
-            cache.Expect(c => c.TryGet(It.IsAny<string>(), out content)).Returns(false);
-            cache.Expect(c => c.Contains(It.IsAny<string>())).Returns(false);
-            cache.Expect(c => c.Set(It.IsAny<string>(), It.IsAny<HandlerCacheItem>(), It.IsAny<DateTime>())).Verifiable();
-            file.Expect(f => f.ReadAllText(It.IsAny<string>())).Returns(AssetContent);
+            cache.Setup(c => c.TryGet(It.IsAny<string>(), out content)).Returns(false);
+            cache.Setup(c => c.Contains(It.IsAny<string>())).Returns(false);
+            cache.Setup(c => c.Set(It.IsAny<string>(), It.IsAny<HandlerCacheItem>(), It.IsAny<DateTime>())).Verifiable();
+            file.Setup(f => f.ReadAllText(It.IsAny<string>())).Returns(AssetContent);
 
             var handler = new AssetHandler { Configuration = configuration.Object, FileReader = file.Object };
 

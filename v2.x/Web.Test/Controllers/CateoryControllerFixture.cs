@@ -31,7 +31,7 @@ namespace Kigg.Web.Test
         [Fact]
         public void Menu_Should_Use_Category_Repository()
         {
-            _repository.Expect(r => r.FindAll()).Returns((ICollection<ICategory>) null).Verifiable();
+            _repository.Setup(r => r.FindAll()).Returns((ICollection<ICategory>) null).Verifiable();
             _controller.Menu();
 
             _repository.Verify();
@@ -48,7 +48,7 @@ namespace Kigg.Web.Test
         [Fact]
         public void RadioButtonList_Should_Use_Category_Repository()
         {
-            _repository.Expect(r => r.FindAll()).Returns((ICollection<ICategory>) null).Verifiable();
+            _repository.Setup(r => r.FindAll()).Returns((ICollection<ICategory>) null).Verifiable();
             _controller.RadioButtonList();
 
             _repository.Verify();

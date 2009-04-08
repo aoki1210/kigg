@@ -26,7 +26,7 @@ namespace Kigg.Web.Test
             _user = new Mock<IUser>();
 
             _userRepository = new Mock<IUserRepository>();
-            _userRepository.Expect(r => r.FindByUserName(It.IsAny<string>())).Returns(_user.Object);
+            _userRepository.Setup(r => r.FindByUserName(It.IsAny<string>())).Returns(_user.Object);
 
             _tagRepository = new Mock<ITagRepository>();
             _controller = new TagController(_tagRepository.Object)
@@ -83,8 +83,8 @@ namespace Kigg.Web.Test
         [Fact]
         public void SuggestTags_Should_Log_Exception()
         {
-            log.Expect(l => l.Exception(It.IsAny<Exception>())).Verifiable();
-            _tagRepository.Expect(r => r.FindMatching(It.IsAny<string>(), It.IsAny<int>())).Throws<Exception>();
+            log.Setup(l => l.Exception(It.IsAny<Exception>())).Verifiable();
+            _tagRepository.Setup(r => r.FindMatching(It.IsAny<string>(), It.IsAny<int>())).Throws<Exception>();
 
             _controller.SuggestTags("xxx", null, null);
 
@@ -93,11 +93,11 @@ namespace Kigg.Web.Test
 
         private ViewResult Tabs()
         {
-            _user.ExpectGet(u => u.Tags).Returns(new List<ITag>()).Verifiable();
-            _tagRepository.Expect(r => r.FindByUsage(It.IsAny<int>())).Returns((ICollection<ITag>)null).Verifiable();
+            _user.SetupGet(u => u.Tags).Returns(new List<ITag>()).Verifiable();
+            _tagRepository.Setup(r => r.FindByUsage(It.IsAny<int>())).Returns((ICollection<ITag>)null).Verifiable();
 
-            _httpContext.User.Identity.ExpectGet(i => i.Name).Returns("DummyUser");
-            _httpContext.User.Identity.ExpectGet(i => i.IsAuthenticated).Returns(true);
+            _httpContext.User.Identity.SetupGet(i => i.Name).Returns("DummyUser");
+            _httpContext.User.Identity.SetupGet(i => i.IsAuthenticated).Returns(true);
 
             return (ViewResult)_controller.Tabs();
         }
@@ -108,10 +108,10 @@ namespace Kigg.Web.Test
 
             var tag = new Mock<ITag>();
 
-            tag.ExpectGet(t => t.Id).Returns(Guid.NewGuid());
-            tag.ExpectGet(t => t.Name).Returns(TagName);
+            tag.SetupGet(t => t.Id).Returns(Guid.NewGuid());
+            tag.SetupGet(t => t.Name).Returns(TagName);
 
-            _tagRepository.Expect(r => r.FindMatching(It.IsAny<string>(), It.IsAny<int>())).Returns(new List<ITag> { tag.Object }).Verifiable();
+            _tagRepository.Setup(r => r.FindMatching(It.IsAny<string>(), It.IsAny<int>())).Returns(new List<ITag> { tag.Object }).Verifiable();
 
             return _controller.SuggestTags("ASPNET", null, browser);
         }

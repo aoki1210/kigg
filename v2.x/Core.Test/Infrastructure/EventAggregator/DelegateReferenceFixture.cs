@@ -131,7 +131,7 @@ namespace Kigg.Core.Test
             public static void StaticMethod()
             {
                 #pragma warning disable 168
-                int i = 0;
+                //int i = 0;
                 #pragma warning restore 168
             }
 

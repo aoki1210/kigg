@@ -15,7 +15,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         public DatabaseFactoryFixture()
         {
             var connectionString = new Mock<IConnectionString>();
-            connectionString.ExpectGet(c => c.Value).Returns("foo");
+            connectionString.SetupGet(c => c.Value).Returns("foo");
 
             _factory = new DatabaseFactory(connectionString.Object);
         }

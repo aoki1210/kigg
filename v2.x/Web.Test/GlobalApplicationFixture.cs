@@ -16,7 +16,7 @@ namespace Kigg.Web.Test
         [Fact]
         public void OnEnd_Should_Log_Warning()
         {
-            log.Expect(l => l.Warning(It.IsAny<string>())).Verifiable();
+            log.Setup(l => l.Warning(It.IsAny<string>())).Verifiable();
 
             GlobalApplication.OnEnd();
 
