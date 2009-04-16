@@ -1,11 +1,13 @@
-﻿namespace Kigg.Repository.LinqToSql
+﻿namespace Kigg.LinqToSql.Repository
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
+    using Kigg.DomainObjects;
+    using Kigg.Repository;
     using DomainObjects;
-
+    
     public class TagRepository : BaseRepository<ITag, Tag>, ITagRepository
     {
         public TagRepository(IDatabase database) : base(database)

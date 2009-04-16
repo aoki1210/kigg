@@ -1,8 +1,9 @@
-namespace Kigg.DomainObjects
+namespace Kigg.LinqToSql.DomainObjects
 {
+    using Kigg.DomainObjects;
+    using Kigg.Repository;
     using Infrastructure;
-    using Repository;
-
+    
     public partial class Tag : ITag
     {
         private int _storyCount = -1;

@@ -1,10 +1,12 @@
-namespace Kigg.Repository.LinqToSql
+namespace Kigg.LinqToSql.Repository
 {
     using System;
     using System.Linq;
 
+    using Kigg.DomainObjects;
+    using Kigg.Repository;
     using DomainObjects;
-
+    
     public class CommentSubscribtionRepository : BaseRepository<ICommentSubscribtion, CommentSubscribtion>, ICommentSubscribtionRepository
     {
         public CommentSubscribtionRepository(IDatabase database) : base(database)

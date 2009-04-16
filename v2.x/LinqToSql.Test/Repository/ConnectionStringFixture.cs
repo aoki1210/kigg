@@ -3,8 +3,8 @@ using Xunit;
 
 namespace Kigg.Infrastructure.LinqToSql.Test
 {
-    using Repository.LinqToSql;
-
+    using Kigg.LinqToSql.Repository;
+    
     public class ConnectionStringFixture
     {
         [Fact]

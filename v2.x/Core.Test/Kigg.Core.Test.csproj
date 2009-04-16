@@ -41,6 +41,8 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
     <Reference Include="xunit, Version=1.1.0.1323, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\References\xunit\xunit.dll</HintPath>
@@ -54,6 +56,7 @@
     <Compile Include="..\SharedFiles\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Extension\CategoryExtensionFixture.cs" />
     <Compile Include="Extension\CollectionExtensionFixture.cs" />
     <Compile Include="Extension\DateTimeExtensionFixture.cs" />
     <Compile Include="Extension\EnumerableExtensionFixture.cs" />

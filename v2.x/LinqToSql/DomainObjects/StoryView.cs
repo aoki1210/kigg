@@ -1,6 +1,8 @@
-namespace Kigg.DomainObjects
+namespace Kigg.LinqToSql.DomainObjects
 {
     using System;
+
+    using Kigg.DomainObjects;
 
     public partial class StoryView : IStoryView
     {

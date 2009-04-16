@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Database Name="Kigg2.0" EntityNamespace="Kigg.DomainObjects" ContextNamespace="Kigg.Repository.LinqToSql" Class="Database" Serialization="Unidirectional" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+<Database Name="Kigg2.0" EntityNamespace="Kigg.LinqToSql.DomainObjects" ContextNamespace="Kigg.LinqToSql.Repository" Class="Database" Serialization="Unidirectional" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.Category" Member="Categories">
     <Type Name="Category">
       <Column Name="Id" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
@@ -28,7 +28,7 @@
   <Table Name="dbo.KnownSource" Member="KnownSources">
     <Type Name="KnownSource">
       <Column Name="Url" Type="System.String" DbType="NVarChar(450) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="Grade" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="Grade" Type="global::Kigg.DomainObjects.KnownSourceGrade" DbType="Int NOT NULL" CanBeNull="false" UpdateCheck="Never" />
     </Type>
   </Table>
   <Table Name="dbo.Story" Member="Stories">
@@ -128,7 +128,7 @@
       <Column Name="Email" Type="System.String" DbType="NVarChar(256) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="IsActive" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="IsLockedOut" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="Role" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="Role" Type="global::Kigg.DomainObjects.Roles" DbType="Int NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="LastActivityAt" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="CreatedAt" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Association Name="User_UserTag" Member="UserTags" ThisKey="Id" OtherKey="UserId" Type="UserTag" />
@@ -145,7 +145,7 @@
       <Column Name="Id" Type="System.Int64" DbType="BigInt NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="UserId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="Timestamp" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" UpdateCheck="Never" />
-      <Column Name="ActionType" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" UpdateCheck="Never" />
+      <Column Name="ActionType" Type="global::Kigg.DomainObjects.UserAction" DbType="Int NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Column Name="Score" Type="System.Decimal" DbType="Decimal(5,2) NOT NULL" CanBeNull="false" UpdateCheck="Never" />
       <Association Name="User_UserScore" Member="User" ThisKey="UserId" OtherKey="Id" Type="User" IsForeignKey="true" DeleteOnNull="true" />
     </Type>

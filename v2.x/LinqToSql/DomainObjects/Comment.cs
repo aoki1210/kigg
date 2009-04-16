@@ -1,5 +1,7 @@
-namespace Kigg.DomainObjects
+namespace Kigg.LinqToSql.DomainObjects
 {
+    using Kigg.DomainObjects;
+
     public partial class StoryComment : IComment
     {
         public IUser ByUser

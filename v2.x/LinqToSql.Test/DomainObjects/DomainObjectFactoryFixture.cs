@@ -2,6 +2,7 @@
 
 namespace Kigg.Infrastructure.LinqToSql.Test
 {
+    using Kigg.LinqToSql.DomainObjects;
     using DomainObjects;
 
     public class DomainObjectFactoryFixture
@@ -48,9 +49,25 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void CreateStory_Should_Return_New_Story()
         {
-            var story = _factory.CreateStory(CreateCategory(), CreateUser(), "192.168.0.1", "Dummy Story", "Dummy Description", "http://astory.com");
+            var story = CreateStory();
 
             Assert.NotNull(story);
+        }
+
+        [Fact]
+        public void CreateStoryView_Should_Return_New_StoryView()
+        {
+            var view = _factory.CreateStoryView(CreateStory(), SystemTime.Now(), "192.168.0.1");
+
+            Assert.NotNull(view);
+        }
+
+        [Fact]
+        public void CreateStoryVote_Should_Return_New_StoryVote()
+        {
+            var vote = _factory.CreateStoryVote(CreateStory(), SystemTime.Now(), CreateUser(), "192.168.0.1");
+
+            Assert.NotNull(vote);
         }
 
         private ICategory CreateCategory()
@@ -61,6 +78,11 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         private IUser CreateUser()
         {
             return _factory.CreateUser("dummyUser", "dummy@users.com", "dummyPassword");
+        }
+
+        private IStory CreateStory()
+        {
+            return _factory.CreateStory(CreateCategory(), CreateUser(), "192.168.0.1", "Dummy Story", "Dummy Description", "http://astory.com");
         }
     }
 }

@@ -4,8 +4,8 @@ using Xunit;
 
 namespace Kigg.Infrastructure.LinqToSql.Test
 {
-    using DomainObjects;
-    using Repository.LinqToSql;
+    using Kigg.LinqToSql.Repository;
+    using Kigg.LinqToSql.DomainObjects;
 
     public class StoryViewRepositoryFixture : LinqToSqlBaseFixture
     {

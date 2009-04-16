@@ -1,8 +1,10 @@
-﻿namespace Kigg.Repository.LinqToSql
+﻿namespace Kigg.LinqToSql.Repository
 {
     using System.Collections;
     using System.Diagnostics;
     using System.Linq;
+
+    using Kigg.Repository;
 
     public abstract class BaseRepository<TInterface, TClass> : IRepository<TInterface> where TClass : class
     {

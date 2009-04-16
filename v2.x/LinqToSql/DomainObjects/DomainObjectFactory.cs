@@ -1,6 +1,8 @@
-﻿namespace Kigg.DomainObjects
+﻿namespace Kigg.LinqToSql.DomainObjects
 {
     using System;
+
+    using Kigg.DomainObjects;
 
     public class DomainObjectFactory : IDomainObjectFactory
     {
@@ -68,32 +70,65 @@
                        };
         }
 
-        public virtual IStory CreateStory(ICategory forCategory, IUser byUser, string fromIPAddress, string title, string description, string url)
+        public virtual IStory CreateStory(ICategory forCategory, IUser byUser, string fromIpAddress, string title, string description, string url)
         {
             Check.Argument.IsNotNull(forCategory, "forCategory");
             Check.Argument.IsNotNull(byUser, "byUser");
-            Check.Argument.IsNotEmpty(fromIPAddress, "fromIPAddress");
+            Check.Argument.IsNotEmpty(fromIpAddress, "fromIpAddress");
             Check.Argument.IsNotEmpty(title, "title");
             Check.Argument.IsNotEmpty(description, "description");
             Check.Argument.IsNotInvalidWebUrl(url, "url");
 
             DateTime now = SystemTime.Now();
 
-            Story story = new Story
-                              {
-                                  Id = Guid.NewGuid(),
-                                  UniqueName = title.Trim().ToLegalUrl(),
-                                  Title = title.Trim(),
-                                  HtmlDescription = description.Trim(),
-                                  Url = url,
-                                  IPAddress = fromIPAddress,
-                                  CreatedAt = now,
-                                  LastActivityAt = now,
-                                  UrlHash = url.ToUpperInvariant().Hash(),
-                                  User = (User) byUser,
-                                  Category = (Category)forCategory,
-                              };
+            var story = new Story
+                            {
+                                Id = Guid.NewGuid(),
+                                UniqueName = title.Trim().ToLegalUrl(),
+                                Title = title.Trim(),
+                                HtmlDescription = description.Trim(),
+                                Url = url,
+                                IPAddress = fromIpAddress,
+                                CreatedAt = now,
+                                LastActivityAt = now,
+                                UrlHash = url.ToUpperInvariant().Hash(),
+                                User = (User) byUser,
+                                Category = (Category) forCategory,
+                            };
             return story;
+        }
+
+        public IStoryView CreateStoryView(IStory forStory, DateTime at, string fromIpAddress)
+        {
+            Check.Argument.IsNotNull(forStory, "forStory");
+            Check.Argument.IsNotInvalidDate(at, "at");
+            Check.Argument.IsNotEmpty(fromIpAddress, "fromIpAddress");
+
+            var view = new StoryView
+                           {
+                               Story = (Story) forStory,
+                               IPAddress = fromIpAddress,
+                               Timestamp = at,
+                           };
+            
+            return view;
+        }
+
+        public IVote CreateStoryVote(IStory forStory, DateTime at, IUser byUser, string fromIpAddress)
+        {
+            Check.Argument.IsNotNull(forStory, "forStory");
+            Check.Argument.IsNotInFuture(at, "at");
+            Check.Argument.IsNotNull(byUser, "byUser");
+            Check.Argument.IsNotEmpty(fromIpAddress, "fromIpAddress");
+
+            var vote = new StoryVote
+                           {
+                               Story = (Story) forStory,
+                               User = (User) byUser,
+                               IPAddress = fromIpAddress,
+                               Timestamp = at
+                           };
+            return vote;
         }
     }
 }

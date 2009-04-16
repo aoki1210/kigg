@@ -1,11 +1,13 @@
-﻿namespace Kigg.Repository.LinqToSql
+﻿namespace Kigg.LinqToSql.Repository
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
+    using Kigg.DomainObjects;
+    using Kigg.Repository;
     using DomainObjects;
-
+    
     public class CategoryRepository : BaseRepository<ICategory, Category>, ICategoryRepository
     {
         public CategoryRepository(IDatabase database) : base(database)
@@ -20,7 +22,7 @@
         {
             Check.Argument.IsNotNull(entity, "entity");
 
-            Category category = (Category) entity;
+            var category = (Category) entity;
 
             if (Database.CategoryDataSource.Any(c => c.Name == category.Name))
             {
@@ -36,7 +38,7 @@
         {
             Check.Argument.IsNotNull(entity, "entity");
 
-            Category category = (Category) entity;
+            var category = (Category) entity;
 
             Database.DeleteAll(Database.StoryViewDataSource.Where(v => v.Story.CategoryId == category.Id));
             Database.DeleteAll(Database.CommentSubscribtionDataSource.Where(cs => cs.Story.CategoryId == category.Id));

@@ -5,10 +5,8 @@ namespace Kigg.Repository
 
     using DomainObjects;
 
-    public interface ICommentRepository : IRepository<IComment>
+    public interface ICommentRepository : IRepository<IComment>, ICountByStoryRepository
     {
-        int CountByStory(Guid storyId);
-
         IComment FindById(Guid storyId, Guid commentId);
 
         ICollection<IComment> FindAfter(Guid storyId, DateTime timestamp);

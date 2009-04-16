@@ -5,10 +5,8 @@ namespace Kigg.Repository
 
     using DomainObjects;
 
-    public interface IVoteRepository : IRepository<IVote>
+    public interface IVoteRepository : IRepository<IVote>, ICountByStoryRepository
     {
-        int CountByStory(Guid storyId);
-
         IVote FindById(Guid storyId, Guid userId);
 
         ICollection<IVote> FindAfter(Guid storyId, DateTime timestamp);

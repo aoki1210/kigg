@@ -7,7 +7,8 @@ namespace Kigg.Infrastructure.LinqToSql.Test
 {
     using DomainObjects;
     using Repository;
-    using Repository.LinqToSql;
+    using Kigg.LinqToSql.Repository;
+    using Kigg.LinqToSql.DomainObjects;
     using Kigg.Test.Infrastructure;
 
     public abstract class LinqToSqlBaseFixture : BaseFixture

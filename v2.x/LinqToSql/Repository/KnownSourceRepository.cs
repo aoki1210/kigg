@@ -1,10 +1,12 @@
-namespace Kigg.Repository.LinqToSql
+namespace Kigg.LinqToSql.Repository
 {
     using System;
     using System.Linq;
 
+    using Kigg.DomainObjects;
+    using Kigg.Repository;
     using DomainObjects;
-
+    
     public class KnownSourceRepository : BaseRepository<IKnownSource, KnownSource>, IKnownSourceRepository
     {
         public KnownSourceRepository(IDatabase database) : base(database)

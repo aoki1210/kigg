@@ -5,8 +5,8 @@ using Xunit;
 
 namespace Kigg.Infrastructure.LinqToSql.Test
 {
-    using DomainObjects;
-    using Repository.LinqToSql;
+    using Kigg.LinqToSql.DomainObjects;
+    using Kigg.LinqToSql.Repository;
 
     public class DatabaseFactoryFixture
     {
