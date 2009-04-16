@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Moq;
+using Moq.Language.Flow;
 using Xunit;
 
 namespace Kigg.Infrastructure.LinqToSql.Test
 {
     using DomainObjects;
+    using Kigg.LinqToSql.DomainObjects;
 
     public class StoryFixture : LinqToSqlBaseFixture
     {
@@ -249,7 +251,11 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void View_Should_Increase_Views_Collection()
         {
-            _story.View(SystemTime.Now(), "192.168.0.1");
+            DateTime at = SystemTime.Now();
+            string fromIpAddress = "192.168.0.1";
+            domainObjectFactory.Setup(f => f.CreateStoryView(_story, at, fromIpAddress)).Returns(new StoryView());
+
+            _story.View(at, fromIpAddress);
 
             Assert.Equal(1, _story.Views.Count);
         }
@@ -258,19 +264,25 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         public void View_Should_Update_LastActivityAt()
         {
             DateTime at = SystemTime.Now();
+            string fromIpAddress = "192.168.0.1";
+            domainObjectFactory.Setup(f => f.CreateStoryView(_story, at, fromIpAddress)).Returns(new StoryView());
 
-            _story.View(at, "192.168.0.1");
+            _story.View(at, fromIpAddress);
 
             Assert.Equal(at, _story.LastActivityAt);
         }
 
         [Fact]
-        public void View_Should_Use_StoryViewRepository()
+        public void View_Should_Use_DomainObjectFactory_And_StoryViewRepository()
         {
+            DateTime at = SystemTime.Now();
+            string fromIpAddress = "192.168.0.1";
+
+            domainObjectFactory.Setup(f => f.CreateStoryView(_story, at, fromIpAddress)).Returns(new StoryView()).Verifiable();
             storyViewRepository.Setup(r => r.Add(It.IsAny<IStoryView>())).Verifiable();
 
-            _story.View(SystemTime.Now(), "192.168.0.1");
-
+            _story.View(at, fromIpAddress);
+            domainObjectFactory.Verify();
             storyViewRepository.Verify();
         }
 
@@ -306,32 +318,52 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         public void Promote_Should_Return_True_When_User_Can_Promote()
         {
             var user = new User { Id = Guid.NewGuid() };
+            var at = SystemTime.Now();
+            var fromIpAddress = "192.168.0.1";
 
-            Assert.True(_story.Promote(SystemTime.Now(), user, "192.168.0.1"));
+            domainObjectFactory.Setup(r => r.CreateStoryVote(_story, at, user, fromIpAddress)).Returns(new StoryVote());
+
+            Assert.True(_story.Promote(at, user, fromIpAddress));
         }
 
         [Fact]
         public void Promote_Should_Return_False_When_User_Can_Not_Promote()
         {
+            var user = new User { Id = Guid.NewGuid() };
+            var at = SystemTime.Now();
+            var fromIpAddress = "192.168.0.1";
+
             markAsSpamRepository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(new StoryMarkAsSpam());
 
-            Assert.False(_story.Promote(SystemTime.Now(), new User { Id = Guid.NewGuid() }, "192.168.0.1"));
+            Assert.False(_story.Promote(at, user, fromIpAddress));
         }
 
         [Fact]
-        public void Promote_Should_Use_VoteRepository()
+        public void Promote_Should_Use_DomainObjectFactory_And_VoteRepository()
         {
+            var user = new User { Id = Guid.NewGuid() };
+            var at = SystemTime.Now();
+            var fromIpAddress = "192.168.0.1";
+
+            domainObjectFactory.Setup(r => r.CreateStoryVote(_story, at, user, fromIpAddress)).Returns(new StoryVote()).Verifiable();
             voteRepository.Setup(r => r.Add(It.IsAny<StoryVote>())).Verifiable();
 
-            _story.Promote(SystemTime.Now(), new User { Id = Guid.NewGuid() }, "192.168.0.1");
-
+            _story.Promote(at, user, fromIpAddress);
+            
+            domainObjectFactory.Verify();
             voteRepository.Verify();
         }
 
         [Fact]
         public void Promote_Should_Increase_Votes_Collection()
         {
-            _story.Promote(SystemTime.Now(), new User { Id = Guid.NewGuid() }, "192.168.0.1");
+            var user = new User { Id = Guid.NewGuid() };
+            var at = SystemTime.Now();
+            var fromIpAddress = "192.168.0.1";
+
+            domainObjectFactory.Setup(r => r.CreateStoryVote(_story, at, user, fromIpAddress)).Returns(new StoryVote());
+
+            _story.Promote(at, user, fromIpAddress);
 
             Assert.Equal(1, _story.Votes.Count);
         }
@@ -339,9 +371,13 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void Promote_Should_Update_Last_Activity_At()
         {
+            var user = new User { Id = Guid.NewGuid() };
             var at = SystemTime.Now();
+            var fromIpAddress = "192.168.0.1";
 
-            _story.Promote(at, new User { Id = Guid.NewGuid() }, "192.168.0.1");
+            domainObjectFactory.Setup(r => r.CreateStoryVote(_story, at, user, fromIpAddress)).Returns(new StoryVote());
+
+            _story.Promote(at, user, fromIpAddress);
 
             Assert.Equal(at, _story.LastActivityAt);
         }
@@ -427,12 +463,15 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         public void Demote_Should_Decrease_Votes_Collection()
         {
             var user = new User { Id = Guid.NewGuid() };
-
+            var at = SystemTime.Now();
+            var fromIpAddress = "192.168.0.1";
             _story.User = new User { Id = Guid.NewGuid() };
-            _story.Promote(SystemTime.Now(), user, "192.168.0.1");
+
+            domainObjectFactory.Setup(r => r.CreateStoryVote(_story, at, user, fromIpAddress)).Returns(new StoryVote());
+            
+            _story.Promote(at, user, fromIpAddress);
 
             voteRepository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(_story.Votes.ElementAt(0));
-
             _story.Demote(SystemTime.Now(), user);
 
             Assert.Equal(0, _story.Votes.Count);
@@ -442,9 +481,13 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         public void Demote_Should_Update_Last_Activity_At()
         {
             var user = new User { Id = Guid.NewGuid() };
-
+            var at = SystemTime.Now().AddDays(-5);
+            var fromIpAddress = "192.168.0.1";
             _story.User = new User { Id = Guid.NewGuid() };
-            _story.Promote(SystemTime.Now().AddDays(-5), user, "192.168.0.1");
+
+            domainObjectFactory.Setup(r => r.CreateStoryVote(_story, at, user, fromIpAddress)).Returns(new StoryVote());
+
+            _story.Promote(at, user, fromIpAddress);
 
             voteRepository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(_story.Votes.ElementAt(0));
 

@@ -5,10 +5,8 @@ namespace Kigg.Repository
 
     using DomainObjects;
 
-    public interface IMarkAsSpamRepository : IRepository<IMarkAsSpam>
+    public interface IMarkAsSpamRepository : IRepository<IMarkAsSpam>, ICountByStoryRepository
     {
-        int CountByStory(Guid storyId);
-
         IMarkAsSpam FindById(Guid storyId, Guid userId);
 
         ICollection<IMarkAsSpam> FindAfter(Guid storyId, DateTime timestamp);

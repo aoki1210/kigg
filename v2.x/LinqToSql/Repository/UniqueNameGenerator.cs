@@ -1,10 +1,11 @@
-namespace Kigg.Repository.LinqToSql
+namespace Kigg.LinqToSql.Repository
 {
     using System;
     using System.Linq;
 
+    using Kigg.DomainObjects;
     using DomainObjects;
-
+    
     internal class UniqueNameGenerator
     {
         public static string GenerateFrom<TEntity>(IQueryable<TEntity> dataSource, string target) where TEntity : IUniqueNameEntity

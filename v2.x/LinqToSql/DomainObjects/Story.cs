@@ -1,13 +1,15 @@
-namespace Kigg.DomainObjects
+namespace Kigg.LinqToSql.DomainObjects
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
 
+    using Kigg.DomainObjects;
+    using Kigg.Repository;
     using Infrastructure;
-    using Repository;
-
+    using Infrastructure.DomainRepositoryExtensions;
+    
     public partial class Story : IStory
     {
         private const int NotSet = -1;
@@ -115,7 +117,7 @@ namespace Kigg.DomainObjects
             {
                 if (_voteCount == NotSet)
                 {
-                    _voteCount = IoC.Resolve<IVoteRepository>().CountByStory(Id);
+                    _voteCount = this.GetVoteCount();
                 }
 
                 return _voteCount;
@@ -129,7 +131,7 @@ namespace Kigg.DomainObjects
             {
                 if (_markAsSpamCount == NotSet)
                 {
-                    _markAsSpamCount = IoC.Resolve<IMarkAsSpamRepository>().CountByStory(Id);
+                    _markAsSpamCount = this.GetMarkAsSpamCount();
                 }
 
                 return _markAsSpamCount;
@@ -143,7 +145,7 @@ namespace Kigg.DomainObjects
             {
                 if (_viewCount == NotSet)
                 {
-                    _viewCount = IoC.Resolve<IStoryViewRepository>().CountByStory(Id);
+                    _viewCount = this.GetViewCount();
                 }
 
                 return _viewCount;
@@ -157,7 +159,7 @@ namespace Kigg.DomainObjects
             {
                 if (_commentCount == NotSet)
                 {
-                    _commentCount = IoC.Resolve<ICommentRepository>().CountByStory(Id);
+                    _commentCount = this.GetCommentCount();
                 }
 
                 return _commentCount;
@@ -171,7 +173,7 @@ namespace Kigg.DomainObjects
             {
                 if (_subscriberCount == NotSet)
                 {
-                    _subscriberCount = IoC.Resolve<ICommentSubscribtionRepository>().CountByStory(Id);
+                    _subscriberCount = this.GetSubscriberCount();
                 }
 
                 return _subscriberCount;
@@ -218,21 +220,14 @@ namespace Kigg.DomainObjects
             return StoryTags.Any(st => st.Tag.Name == tag.Name);
         }
 
-        public virtual void View(DateTime at, string fromIPAddress)
+        public virtual void View(DateTime at, string fromIpAddress)
         {
-            Check.Argument.IsNotInvalidDate(at, "at");
-            Check.Argument.IsNotEmpty(fromIPAddress, "fromIPAddress");
+            //Call extension method AddView, it will perform all parameters validation checks
+            var view = this.AddView(at, fromIpAddress);
 
-            StoryView view = new StoryView
-                                 {
-                                     StoryId = Id,
-                                     IPAddress = fromIPAddress,
-                                     Timestamp = at,
-                                 };
-
-            StoryViews.Add(view);
-            IoC.Resolve<IStoryViewRepository>().Add(view);
-
+            //Add created view to StoryViews, this should increment views
+            StoryViews.Add((StoryView)view);
+            
             LastActivityAt = at;
         }
 
@@ -246,25 +241,19 @@ namespace Kigg.DomainObjects
             return !HasPromoted(byUser) && !HasMarkedAsSpam(byUser);
         }
 
-        public virtual bool Promote(DateTime at, IUser byUser, string fromIPAddress)
+        public virtual bool Promote(DateTime at, IUser byUser, string fromIpAddress)
         {
-            Check.Argument.IsNotInFuture(at, "at");
             Check.Argument.IsNotNull(byUser, "byUser");
-            Check.Argument.IsNotEmpty(fromIPAddress, "fromIPAddress");
-
+            
+            //Check if user can promote
             if (CanPromote(byUser))
             {
-                StoryVote vote = new StoryVote
-                                     {
-                                         Story = this,
-                                         User = (User) byUser,
-                                         IPAddress = fromIPAddress,
-                                         Timestamp = at
-                                     };
+                //Call extension method AddVote, it will perform all parameters validation checks
+                var vote = this.AddVote(at, byUser, fromIpAddress);
 
-                StoryVotes.Add(vote);
-                IoC.Resolve<IVoteRepository>().Add(vote);
-
+                //Add created vote to StoryVotes, this should increment votes
+                StoryVotes.Add((StoryVote)vote);
+                
                 LastActivityAt = at;
 
                 return true;
@@ -292,16 +281,13 @@ namespace Kigg.DomainObjects
 
         public virtual bool Demote(DateTime at, IUser byUser)
         {
-            Check.Argument.IsNotInvalidDate(at, "at");
             Check.Argument.IsNotNull(byUser, "byUser");
 
             if (CanDemote(byUser))
             {
-                IVoteRepository repository = IoC.Resolve<IVoteRepository>();
-                StoryVote vote = (StoryVote) repository.FindById(Id, byUser.Id);
-
-                repository.Remove(vote);
-                StoryVotes.Remove(vote);
+                var vote = this.RemoveVote(at, byUser);
+                
+                StoryVotes.Remove((StoryVote)vote);
 
                 LastActivityAt = at;
 
@@ -323,11 +309,11 @@ namespace Kigg.DomainObjects
             return !this.IsPublished() && !this.IsPostedBy(byUser) && !HasPromoted(byUser) && !HasMarkedAsSpam(byUser);
         }
 
-        public virtual bool MarkAsSpam(DateTime at, IUser byUser, string fromIPAddress)
+        public virtual bool MarkAsSpam(DateTime at, IUser byUser, string fromIpAddress)
         {
             Check.Argument.IsNotInFuture(at, "at");
             Check.Argument.IsNotNull(byUser, "byUser");
-            Check.Argument.IsNotEmpty(fromIPAddress, "fromIPAddress");
+            Check.Argument.IsNotEmpty(fromIpAddress, "fromIpAddress");
 
             if (CanMarkAsSpam(byUser))
             {
@@ -335,7 +321,7 @@ namespace Kigg.DomainObjects
                                                  {
                                                      Story = this,
                                                      User = (User) byUser,
-                                                     IPAddress = fromIPAddress,
+                                                     IPAddress = fromIpAddress,
                                                      Timestamp = at
                                                  };
 
@@ -388,12 +374,12 @@ namespace Kigg.DomainObjects
             return false;
         }
 
-        public virtual IComment PostComment(string content, DateTime at, IUser byUser, string fromIPAddress)
+        public virtual IComment PostComment(string content, DateTime at, IUser byUser, string fromIpAddress)
         {
             Check.Argument.IsNotEmpty(content, "content");
             Check.Argument.IsNotInFuture(at, "at");
             Check.Argument.IsNotNull(byUser, "byUser");
-            Check.Argument.IsNotEmpty(fromIPAddress, "fromIPAddress");
+            Check.Argument.IsNotEmpty(fromIpAddress, "fromIpAddress");
 
             StoryComment comment = new StoryComment
                                        {
@@ -402,7 +388,7 @@ namespace Kigg.DomainObjects
                                            TextBody = content.StripHtml().Trim(),
                                            Story = this,
                                            User = (User) byUser,
-                                           IPAddress = fromIPAddress,
+                                           IPAddress = fromIpAddress,
                                            CreatedAt = at
                                        };
 

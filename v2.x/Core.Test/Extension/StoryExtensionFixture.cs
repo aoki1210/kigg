@@ -6,7 +6,9 @@ using Xunit;
 namespace Kigg.Core.Test
 {
     using DomainObjects;
+    using Repository;
     using Infrastructure;
+    using Infrastructure.DomainRepositoryExtensions;
     using Kigg.Test.Infrastructure;
 
     public class StoryExtensionFixture : BaseFixture
@@ -21,7 +23,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsNew_Should_Be_True_When_LastProcessedAt_Is_Null()
         {
-            _story.SetupGet(s => s.LastProcessedAt).Returns((DateTime?) null);
+            _story.SetupGet(s => s.LastProcessedAt).Returns((DateTime?)null);
 
             Assert.True(_story.Object.IsNew());
         }
@@ -37,7 +39,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void HasExpired_Should_Be_True_When_CreatedAt_Is_Greater_Than_MaximumAgeToPublish()
         {
-            var date = SystemTime.Now().AddHours(- (settings.Object.MaximumAgeOfStoryInHoursToPublish + 1));
+            var date = SystemTime.Now().AddHours(-(settings.Object.MaximumAgeOfStoryInHoursToPublish + 1));
 
             _story.SetupGet(s => s.CreatedAt).Returns(date);
 
@@ -106,6 +108,118 @@ namespace Kigg.Core.Test
             _story.Object.MediumThumbnail();
 
             thumbnail.Verify();
+        }
+
+        [Fact]
+        public void GetViewCount_Should_Return_Correct_Value()
+        {
+            SetupCountByStoryRepository<IStoryViewRepository>(10);
+            int i = _story.Object.GetViewCount();
+
+            Assert.True(i == 10);
+        }
+
+        [Fact]
+        public void GetVoteCount_Should_Return_Correct_Value()
+        {
+            SetupCountByStoryRepository<IVoteRepository>(10);
+            int i = _story.Object.GetVoteCount();
+
+            Assert.True(i == 10);
+        }
+
+        [Fact]
+        public void GetMarkAsSpamCount_Should_Return_Correct_Value()
+        {
+            SetupCountByStoryRepository<IMarkAsSpamRepository>(10);
+            int i = _story.Object.GetMarkAsSpamCount();
+
+            Assert.True(i == 10);
+        }
+
+        [Fact]
+        public void GetCommentCount_Should_Return_Correct_Value()
+        {
+            SetupCountByStoryRepository<ICommentRepository>(10);
+            int i = _story.Object.GetCommentCount();
+
+            Assert.True(i == 10);
+        }
+
+        [Fact]
+        public void GetSubscriberCount_Should_Return_Correct_Value()
+        {
+            SetupCountByStoryRepository<ICommentSubscribtionRepository>(10);
+            int i = _story.Object.GetSubscriberCount();
+
+            Assert.True(i == 10);
+        }
+
+        [Fact]
+        public void AddView_Should_Use_DomainObjectFactory_And_StoryViewRepository()
+        {
+            var repository = CreateAndSetupMock<IStoryViewRepository>();
+            var domFactory = CreateAndSetupMock<IDomainObjectFactory>();
+            
+            DateTime now = SystemTime.Now();
+
+            //Create through DomainObjectFactory
+            domFactory.Setup(f => f.CreateStoryView(_story.Object, now, "127.0.0.1")).Returns(It.IsAny<IStoryView>()).Verifiable();
+            
+            //Add through StoryViewRepository
+            repository.Setup(r=>r.Add(It.IsAny<IStoryView>())).Verifiable();
+            
+            _story.Object.AddView(now, "127.0.0.1");
+
+            domFactory.Verify();
+            repository.Verify();
+            
+        }
+        
+        [Fact]
+        public void AddVote_Should_Use_DomainObjectFactory_And_VoteRepository()
+        {
+            var repository = CreateAndSetupMock<IVoteRepository>();
+            var domFactory = CreateAndSetupMock<IDomainObjectFactory>();
+
+            var now = SystemTime.Now();
+
+            //Create through DomainObjectFactory
+            domFactory.Setup(f => f.CreateStoryVote(_story.Object, now, It.IsAny<IUser>(), "127.0.0.1")).Returns(It.IsAny<IVote>()).Verifiable();
+
+            //Add through StoryViewRepository
+            repository.Setup(r => r.Add(It.IsAny<IVote>())).Verifiable();
+
+            _story.Object.AddVote(now, new Mock<IUser>().Object, "127.0.0.1");
+
+            domFactory.Verify();
+            repository.Verify();
+        }
+        
+        [Fact]
+        public void RemoveVote_Should_Use_VoteRepository()
+        {
+            var repository = CreateAndSetupMock<IVoteRepository>();
+
+            repository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(It.IsAny<IVote>());
+            repository.Setup(r => r.Remove(It.IsAny<IVote>()));
+
+            _story.Object.RemoveVote(SystemTime.Now(), new Mock<IUser>().Object);
+
+            repository.VerifyAll();
+        }
+
+        private void SetupCountByStoryRepository<T>(int count) where T : class, ICountByStoryRepository
+        {
+            var repository = CreateAndSetupMock<T>();
+            repository.Setup(r => r.CountByStory(_story.Object.Id)).Returns(count);
+        }
+
+        private Mock<T> CreateAndSetupMock<T>() where T: class
+        {
+            var mock = new Mock<T>();
+            resolver.Setup(r => r.Resolve<T>()).Returns(mock.Object);
+            return mock;
         }
     }
 }

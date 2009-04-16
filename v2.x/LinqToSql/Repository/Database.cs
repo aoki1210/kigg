@@ -1,12 +1,13 @@
-namespace Kigg.Repository.LinqToSql
+namespace Kigg.LinqToSql.Repository
 {
     using System.Collections.Generic;
     using System.Data.Linq;
     using System.Diagnostics;
     using System.Linq;
 
+    using Kigg.DomainObjects;
     using DomainObjects;
-
+    
     public partial class Database : IDatabase
     {
         public IQueryable<Category> CategoryDataSource

@@ -1,11 +1,12 @@
-namespace Kigg.DomainObjects
+namespace Kigg.LinqToSql.DomainObjects
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
+    using Kigg.DomainObjects;
+    using Kigg.Repository;
     using Infrastructure;
-    using Repository;
 
     public partial class User : IUser
     {
@@ -150,15 +151,15 @@ namespace Kigg.DomainObjects
 
         private static string CreateRandomString(int minLegth, int maxLength)
         {
-            const string Characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$&";
-            Random rnd = new Random();
+            const string characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$&";
+            var rnd = new Random();
 
             int length = rnd.Next(minLegth, maxLength);
-            char[] result = new char[length];
+            var result = new char[length];
 
             for (int i = 0; i < length; i++)
             {
-                result[i] = Characters[rnd.Next(0, Characters.Length)];
+                result[i] = characters[rnd.Next(0, characters.Length)];
             }
 
             return new string(result);
@@ -166,7 +167,7 @@ namespace Kigg.DomainObjects
 
         private void AddScore(decimal score, UserAction reason)
         {
-            UserScore userScore = new UserScore
+            var userScore = new UserScore
                                       {
                                           Timestamp = SystemTime.Now(),
                                           Score = score,

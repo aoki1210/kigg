@@ -1,5 +1,7 @@
 ﻿namespace Kigg.DomainObjects
 {
+    using System;
+
     public interface IDomainObjectFactory
     {
         IUser CreateUser(string userName, string email, string password);
@@ -11,5 +13,9 @@
         ITag CreateTag(string name);
 
         IStory CreateStory(ICategory forCategory, IUser byUser, string fromIPAddress, string title, string description, string url);
+
+        IStoryView CreateStoryView(IStory forStory, DateTime at, string fromIpAddress);
+
+        IVote CreateStoryVote(IStory forStory, DateTime at, IUser byUser, string fromIpAddress);
     }
 }

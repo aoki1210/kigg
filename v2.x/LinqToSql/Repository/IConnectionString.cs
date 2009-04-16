@@ -1,4 +1,4 @@
-namespace Kigg.Repository.LinqToSql
+namespace Kigg.LinqToSql.Repository
 {
     public interface IConnectionString
     {

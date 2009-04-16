@@ -1,11 +1,13 @@
-namespace Kigg.Repository.LinqToSql
+namespace Kigg.LinqToSql.Repository
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
+    using Kigg.DomainObjects;
+    using Kigg.Repository;
     using DomainObjects;
-
+    
     public class VoteRepository : BaseRepository<IVote, StoryVote>, IVoteRepository
     {
         public VoteRepository(IDatabase database) : base(database)

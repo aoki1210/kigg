@@ -1,11 +1,13 @@
-namespace Kigg.Repository.LinqToSql
+namespace Kigg.LinqToSql.Repository
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
+    using Kigg.DomainObjects;
+    using Kigg.Repository;
     using DomainObjects;
-
+    
     public class MarkAsSpamRepository : BaseRepository<IMarkAsSpam, StoryMarkAsSpam>, IMarkAsSpamRepository
     {
         public MarkAsSpamRepository(IDatabase database) : base(database)

@@ -1,9 +1,9 @@
-namespace Kigg.Repository.LinqToSql
+namespace Kigg.LinqToSql.Repository
 {
     using System.Data.Linq;
 
     using DomainObjects;
-
+    
     public class DatabaseFactory : DisposableResource, IDatabaseFactory
     {
         private readonly string _connectionString;

@@ -6,6 +6,7 @@ using Xunit;
 namespace Kigg.Infrastructure.LinqToSql.Test
 {
     using DomainObjects;
+    using Kigg.LinqToSql.DomainObjects;
 
     public class UserFixture : LinqToSqlBaseFixture
     {
