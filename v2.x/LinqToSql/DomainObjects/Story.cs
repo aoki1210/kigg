@@ -6,8 +6,6 @@ namespace Kigg.LinqToSql.DomainObjects
     using System.Linq;
 
     using Kigg.DomainObjects;
-    using Kigg.Repository;
-    using Infrastructure;
     using Infrastructure.DomainRepositoryExtensions;
     
     public partial class Story : IStory
@@ -265,8 +263,7 @@ namespace Kigg.LinqToSql.DomainObjects
         public virtual bool HasPromoted(IUser byUser)
         {
             Check.Argument.IsNotNull(byUser, "byUser");
-
-            return IoC.Resolve<IVoteRepository>().FindById(Id, byUser.Id) != null;
+            return this.GetVote(byUser) != null;
         }
 
         public virtual bool CanDemote(IUser byUser)
@@ -285,8 +282,8 @@ namespace Kigg.LinqToSql.DomainObjects
 
             if (CanDemote(byUser))
             {
-                var vote = this.RemoveVote(at, byUser);
-                
+                var vote = this.GetVote(byUser);
+                this.RemoveVote(vote);
                 StoryVotes.Remove((StoryVote)vote);
 
                 LastActivityAt = at;
@@ -317,17 +314,9 @@ namespace Kigg.LinqToSql.DomainObjects
 
             if (CanMarkAsSpam(byUser))
             {
-                StoryMarkAsSpam markAsSpam = new StoryMarkAsSpam
-                                                 {
-                                                     Story = this,
-                                                     User = (User) byUser,
-                                                     IPAddress = fromIpAddress,
-                                                     Timestamp = at
-                                                 };
-
-                StoryMarkAsSpams.Add(markAsSpam);
-                IoC.Resolve<IMarkAsSpamRepository>().Add(markAsSpam);
-
+                var spamStory = this.MarkSpam(at, byUser, fromIpAddress);
+                StoryMarkAsSpams.Add((StoryMarkAsSpam)spamStory);
+                
                 LastActivityAt = at;
 
                 return true;
@@ -340,7 +329,7 @@ namespace Kigg.LinqToSql.DomainObjects
         {
             Check.Argument.IsNotNull(byUser, "byUser");
 
-            return IoC.Resolve<IMarkAsSpamRepository>().FindById(Id, byUser.Id) != null;
+            return this.GetMarkAsSpam(byUser) != null;
         }
 
         public virtual bool CanUnmarkAsSpam(IUser byUser)
@@ -360,11 +349,9 @@ namespace Kigg.LinqToSql.DomainObjects
 
             if (CanUnmarkAsSpam(byUser))
             {
-                IMarkAsSpamRepository repository = IoC.Resolve<IMarkAsSpamRepository>();
-
-                StoryMarkAsSpam spam = (StoryMarkAsSpam) repository.FindById(Id, byUser.Id);
-                repository.Remove(spam);
-                StoryMarkAsSpams.Remove(spam);
+                var spam = this.GetMarkAsSpam(byUser);
+                this.UnmarkSpam(spam);
+                StoryMarkAsSpams.Remove((StoryMarkAsSpam) spam);
 
                 LastActivityAt = at;
 
@@ -381,20 +368,9 @@ namespace Kigg.LinqToSql.DomainObjects
             Check.Argument.IsNotNull(byUser, "byUser");
             Check.Argument.IsNotEmpty(fromIpAddress, "fromIpAddress");
 
-            StoryComment comment = new StoryComment
-                                       {
-                                           Id = Guid.NewGuid(),
-                                           HtmlBody = content.Trim(),
-                                           TextBody = content.StripHtml().Trim(),
-                                           Story = this,
-                                           User = (User) byUser,
-                                           IPAddress = fromIpAddress,
-                                           CreatedAt = at
-                                       };
-
-            StoryComments.Add(comment);
-            IoC.Resolve<ICommentRepository>().Add(comment);
-
+            var comment = this.AddComment(content, at, byUser, fromIpAddress);
+            StoryComments.Add((StoryComment) comment);
+            
             LastActivityAt = at;
 
             return comment;
@@ -404,16 +380,17 @@ namespace Kigg.LinqToSql.DomainObjects
         {
             Check.Argument.IsNotEmpty(id, "id");
 
-            return IoC.Resolve<ICommentRepository>().FindById(Id, id);
+            return this.GetComment(id);
         }
 
         public virtual void DeleteComment(IComment comment)
         {
             Check.Argument.IsNotNull(comment, "comment");
 
-            StoryComment storyComment = (StoryComment) comment;
+            var storyComment = (StoryComment) comment;
 
-            IoC.Resolve<ICommentRepository>().Remove(comment);
+            this.RemoveComment(comment);
+            
             StoryComments.Remove(storyComment);
         }
 
@@ -421,40 +398,23 @@ namespace Kigg.LinqToSql.DomainObjects
         {
             Check.Argument.IsNotNull(theUser, "theUser");
 
-            return IoC.Resolve<ICommentSubscribtionRepository>().FindById(Id, theUser.Id) != null;
+            return this.GetCommentSubscribtion(theUser) != null;
         }
 
         public virtual void SubscribeComment(IUser byUser)
         {
             Check.Argument.IsNotNull(byUser, "byUser");
-
-            ICommentSubscribtionRepository repository = IoC.Resolve<ICommentSubscribtionRepository>();
-            CommentSubscribtion subscribtion = repository.FindById(Id, byUser.Id) as CommentSubscribtion;
-
-            if (subscribtion == null)
-            {
-                subscribtion = new CommentSubscribtion
-                                   {
-                                       Story = this,
-                                       User = (User) byUser
-                                   };
-
-                CommentSubscribtions.Add(subscribtion);
-                repository.Add(subscribtion);
-            }
+            var subscribtion = this.AddCommentSubscribtion(byUser);
+            CommentSubscribtions.Add((CommentSubscribtion)subscribtion);
         }
 
         public virtual void UnsubscribeComment(IUser byUser)
         {
             Check.Argument.IsNotNull(byUser, "byUser");
-
-            ICommentSubscribtionRepository repository = IoC.Resolve<ICommentSubscribtionRepository>();
-            CommentSubscribtion subscribtion = repository.FindById(Id, byUser.Id) as CommentSubscribtion;
-
+            var subscribtion = this.RemoveCommentSubscribtion(byUser);
             if (subscribtion != null)
             {
-                CommentSubscribtions.Remove(subscribtion);
-                repository.Remove(subscribtion);
+                CommentSubscribtions.Remove((CommentSubscribtion) subscribtion);
             }
         }
 

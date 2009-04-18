@@ -156,57 +156,195 @@ namespace Kigg.Core.Test
         }
 
         [Fact]
-        public void AddView_Should_Use_DomainObjectFactory_And_StoryViewRepository()
+        public void AddView_Should_Use_IDomainObjectFactory_And_IStoryViewRepository()
         {
             var repository = CreateAndSetupMock<IStoryViewRepository>();
             var domFactory = CreateAndSetupMock<IDomainObjectFactory>();
             
-            DateTime now = SystemTime.Now();
+            var now = SystemTime.Now();
 
-            //Create through DomainObjectFactory
-            domFactory.Setup(f => f.CreateStoryView(_story.Object, now, "127.0.0.1")).Returns(It.IsAny<IStoryView>()).Verifiable();
-            
-            //Add through StoryViewRepository
-            repository.Setup(r=>r.Add(It.IsAny<IStoryView>())).Verifiable();
+            domFactory.Setup(f => f.CreateStoryView(_story.Object, now, "127.0.0.1")).Returns(
+                It.IsAny<IStoryView>()).Verifiable();
             
             _story.Object.AddView(now, "127.0.0.1");
 
             domFactory.Verify();
-            repository.Verify();
+            repository.Verify(r => r.Add(It.IsAny<IStoryView>()),Times.AtMostOnce());
             
         }
         
         [Fact]
-        public void AddVote_Should_Use_DomainObjectFactory_And_VoteRepository()
+        public void AddVote_Should_Use_IDomainObjectFactory_And_IVoteRepository()
         {
             var repository = CreateAndSetupMock<IVoteRepository>();
             var domFactory = CreateAndSetupMock<IDomainObjectFactory>();
 
             var now = SystemTime.Now();
 
-            //Create through DomainObjectFactory
-            domFactory.Setup(f => f.CreateStoryVote(_story.Object, now, It.IsAny<IUser>(), "127.0.0.1")).Returns(It.IsAny<IVote>()).Verifiable();
-
-            //Add through StoryViewRepository
-            repository.Setup(r => r.Add(It.IsAny<IVote>())).Verifiable();
+            domFactory.Setup(f => f.CreateStoryVote(_story.Object, now, It.IsAny<IUser>(), "127.0.0.1")).Returns(
+                It.IsAny<IVote>()).Verifiable();
 
             _story.Object.AddVote(now, new Mock<IUser>().Object, "127.0.0.1");
 
             domFactory.Verify();
-            repository.Verify();
+            repository.Verify(r => r.Add(It.IsAny<IVote>()),Times.AtMostOnce());
         }
         
         [Fact]
-        public void RemoveVote_Should_Use_VoteRepository()
+        public void RemoveVote_Should_Use_IVoteRepository()
         {
             var repository = CreateAndSetupMock<IVoteRepository>();
 
-            repository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(It.IsAny<IVote>());
-            repository.Setup(r => r.Remove(It.IsAny<IVote>()));
+            var vote = new Mock<IVote>().Object;
 
-            _story.Object.RemoveVote(SystemTime.Now(), new Mock<IUser>().Object);
+            _story.Object.RemoveVote(vote);
 
-            repository.VerifyAll();
+            repository.Verify(r => r.Remove(vote),Times.AtMostOnce());
+        }
+
+        [Fact]
+        public void GetVote_Should_Use_IVoteRepository()
+        {
+            var repository = CreateAndSetupMock<IVoteRepository>();
+
+            var user = new Mock<IUser>().Object;
+            
+            _story.Object.GetVote(user);
+
+            repository.Verify(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>()),Times.AtMostOnce());
+        }
+
+        [Fact]
+        public void MarkSpam_Should_Use_IDomainObjectFactory_And_IMarkAsSpamRepository()
+        {
+            var repository = CreateAndSetupMock<IMarkAsSpamRepository>();
+            var domFactory = CreateAndSetupMock<IDomainObjectFactory>();
+
+            var now = SystemTime.Now();
+
+            domFactory.Setup(f => f.CreateMarkAsSpam(_story.Object, now, It.IsAny<IUser>(), "127.0.0.1")).Returns(It.IsAny<IMarkAsSpam>()).Verifiable();
+
+            _story.Object.MarkSpam(now, new Mock<IUser>().Object, "127.0.0.1");
+
+            domFactory.Verify();
+            repository.Verify(r => r.Add(It.IsAny<IMarkAsSpam>()),Times.AtMostOnce());
+        }
+
+        [Fact]
+        public void GetMarkAsSpam_Should_Use_IMarkAsSpamRepository()
+        {
+            var repository = CreateAndSetupMock<IMarkAsSpamRepository>();
+
+            var user = new Mock<IUser>().Object;
+
+            _story.Object.GetMarkAsSpam(user);
+
+            repository.Verify(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>()),Times.AtMostOnce());
+        }
+
+        [Fact]
+        public void UnmarkSpam_Should_Use_IMarkAsSpamRepository()
+        {
+            var repository = CreateAndSetupMock<IMarkAsSpamRepository>();
+
+            var spam = new Mock<IMarkAsSpam>().Object;
+            
+            _story.Object.UnmarkSpam(spam);
+
+            repository.Verify(r => r.Remove(spam),Times.AtMostOnce());
+        }
+
+        [Fact]
+        public void AddComment_Should_Use_IDomainObjectFactory_And_ICommentRepository()
+        {
+            var repository = CreateAndSetupMock<ICommentRepository>();
+            var domFactory = CreateAndSetupMock<IDomainObjectFactory>();
+
+            var now = SystemTime.Now();
+
+            domFactory.Setup(f => f.CreateComment(_story.Object, "dummy content", now, It.IsAny<IUser>(), "127.0.0.1")).Returns(
+                It.IsAny<IComment>()).Verifiable();
+
+            _story.Object.AddComment("dummy content",now, new Mock<IUser>().Object, "127.0.0.1");
+
+            domFactory.Verify();
+            repository.Verify(r => r.Add(It.IsAny<IComment>()), Times.AtMostOnce());
+        }
+
+        [Fact]
+        public void GetComment_Should_Use_ICommentRepository()
+        {
+            var repository = CreateAndSetupMock<ICommentRepository>();
+
+            _story.Object.FindComment(It.IsAny<Guid>());
+
+            repository.Verify(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>()), Times.AtMostOnce());
+        }
+
+        [Fact]
+        public void DeleteComment_Should_Use_ICommentRepository()
+        {
+            var repository = CreateAndSetupMock<ICommentRepository>();
+
+            var comment = new Mock<IComment>().Object;
+
+            _story.Object.DeleteComment(comment);
+
+            repository.Verify(r => r.Remove(comment), Times.AtMostOnce());
+        }
+
+        [Fact]
+        public void GetCommentSubscribtion_Should_Use_ICommentSubscribtionRepository()
+        {
+            var repository = CreateAndSetupMock<ICommentSubscribtionRepository>();
+
+            var user = new Mock<IUser>().Object;
+
+            _story.Object.GetCommentSubscribtion(user);
+
+            repository.Verify(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>()), Times.AtMostOnce());
+        }
+
+        [Fact]
+        public void AddCommentSubscribtion_Should_Use_ICommentSubscribtionRepository()
+        {
+            var repository = CreateAndSetupMock<ICommentSubscribtionRepository>();
+            
+            repository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(null as ICommentSubscribtion);
+
+            repository.Verify(r => r.Add(It.IsAny<ICommentSubscribtion>()), Times.AtMostOnce());
+        }
+
+        [Fact]
+        public void AddCommentSubscribtion_Should_Never_Call_ICommentSubscribtionRepository_Add()
+        {
+            var repository = CreateAndSetupMock<ICommentSubscribtionRepository>();
+
+            repository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(
+                new Mock<ICommentSubscribtion>().Object);
+
+            repository.Verify(r => r.Add(It.IsAny<ICommentSubscribtion>()), Times.Never());
+        }
+
+        [Fact]
+        public void RemoveCommentSubscribtion_Should_Use_ICommentSubscribtionRepository()
+        {
+            var repository = CreateAndSetupMock<ICommentSubscribtionRepository>();
+            
+            repository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(
+                new Mock<ICommentSubscribtion>().Object);
+
+            repository.Verify(r => r.Remove(It.IsAny<ICommentSubscribtion>()), Times.AtMostOnce());
+        }
+
+        [Fact]
+        public void RemoveCommentSubscribtion_Should_Never_Call_ICommentSubscribtionRepository_Remove()
+        {
+            var repository = CreateAndSetupMock<ICommentSubscribtionRepository>();
+
+            repository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(null as ICommentSubscribtion);
+
+            repository.Verify(r => r.Remove(It.IsAny<ICommentSubscribtion>()), Times.Never());
         }
 
         private void SetupCountByStoryRepository<T>(int count) where T : class, ICountByStoryRepository

@@ -279,11 +279,10 @@ namespace Kigg.Infrastructure.LinqToSql.Test
             string fromIpAddress = "192.168.0.1";
 
             domainObjectFactory.Setup(f => f.CreateStoryView(_story, at, fromIpAddress)).Returns(new StoryView()).Verifiable();
-            storyViewRepository.Setup(r => r.Add(It.IsAny<IStoryView>())).Verifiable();
-
+            
             _story.View(at, fromIpAddress);
             domainObjectFactory.Verify();
-            storyViewRepository.Verify();
+            storyViewRepository.Verify(r => r.Add(It.IsAny<IStoryView>()),Times.AtMostOnce());
         }
 
         [Fact]
@@ -333,9 +332,12 @@ namespace Kigg.Infrastructure.LinqToSql.Test
             var at = SystemTime.Now();
             var fromIpAddress = "192.168.0.1";
 
-            markAsSpamRepository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(new StoryMarkAsSpam());
+            voteRepository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(new StoryVote());
 
             Assert.False(_story.Promote(at, user, fromIpAddress));
+
+            domainObjectFactory.Verify(r => r.CreateStoryVote(_story, at, user, fromIpAddress), Times.Never());
+            voteRepository.Verify(r => r.Add(It.IsAny<StoryVote>()),Times.Never());
         }
 
         [Fact]
@@ -346,12 +348,11 @@ namespace Kigg.Infrastructure.LinqToSql.Test
             var fromIpAddress = "192.168.0.1";
 
             domainObjectFactory.Setup(r => r.CreateStoryVote(_story, at, user, fromIpAddress)).Returns(new StoryVote()).Verifiable();
-            voteRepository.Setup(r => r.Add(It.IsAny<StoryVote>())).Verifiable();
-
+            
             _story.Promote(at, user, fromIpAddress);
             
             domainObjectFactory.Verify();
-            voteRepository.Verify();
+            voteRepository.Verify(r => r.Add(It.IsAny<StoryVote>()),Times.AtMostOnce());
         }
 
         [Fact]
@@ -444,6 +445,8 @@ namespace Kigg.Infrastructure.LinqToSql.Test
             _story.User = user;
 
             Assert.False(_story.Demote(SystemTime.Now(), user));
+
+            voteRepository.Verify(r => r.Remove(It.IsAny<StoryVote>()), Times.Never());
         }
 
         [Fact]
@@ -451,11 +454,11 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         {
             _story.User = new User { Id = Guid.NewGuid() };
 
-            voteRepository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(new StoryVote());
-            voteRepository.Setup(r => r.Remove(It.IsAny<StoryVote>())).Verifiable();
-
+            voteRepository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(new StoryVote()).Verifiable();
+            
             _story.Demote(SystemTime.Now(), new User { Id = Guid.NewGuid() });
 
+            voteRepository.Verify(r => r.Remove(It.IsAny<StoryVote>()),Times.AtMostOnce());
             voteRepository.Verify();
         }
 
@@ -555,12 +558,19 @@ namespace Kigg.Infrastructure.LinqToSql.Test
 
             Assert.True(_story.CanMarkAsSpam(new User { Id = Guid.NewGuid() }));
         }
+        
         [Fact]
         public void MarkAsSpam_Should_Return_True_When_User_Can_Mark_As_Spam()
         {
-            _story.User = new User { Id = Guid.NewGuid() };
+            var at = SystemTime.Now();
+            var user = new User {Id = Guid.NewGuid()};
+            var fromIpAddress = "192.168.0.1";
 
-            Assert.True(_story.MarkAsSpam(SystemTime.Now(), new User { Id = Guid.NewGuid() }, "192.168.0.1"));
+            _story.User = new User {Id = Guid.NewGuid()};
+
+            domainObjectFactory.Setup(r => r.CreateMarkAsSpam(_story, at, user, fromIpAddress)).Returns(new StoryMarkAsSpam());
+
+            Assert.True(_story.MarkAsSpam(at, user, "192.168.0.1"));
         }
 
         [Fact]
@@ -568,27 +578,46 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         {
             _story.PublishedAt = SystemTime.Now().AddDays(-1);
 
-            Assert.False(_story.MarkAsSpam(SystemTime.Now(), new User(), "192.168.0.1"));
+            var at = SystemTime.Now();
+            var user = new User { Id = Guid.NewGuid() };
+            var fromIpAddress = "192.168.0.1";
+
+            Assert.False(_story.MarkAsSpam(at, user, fromIpAddress));
+
+            domainObjectFactory.Verify(r => r.CreateMarkAsSpam(_story, at, user, fromIpAddress), Times.Never());
         }
 
         [Fact]
-        public void MarkAsSpam_Should_Use_MarkAsSpamRepository()
+        public void MarkAsSpam_Should_Use_DomainObjectFactory_And_MarkAsSpamRepository()
         {
-            _story.User = new User { Id = Guid.NewGuid() };
+            var at = SystemTime.Now();
+            var user = new User { Id = Guid.NewGuid() };
+            var fromIpAddress = "192.168.0.1";
 
-            markAsSpamRepository.Setup(r => r.Add(It.IsAny<IMarkAsSpam>())).Verifiable();
+            _story.User = new User{Id = Guid.NewGuid()};
+            
+            domainObjectFactory.Setup(f => f.CreateMarkAsSpam(_story, at, user, fromIpAddress)).Returns(
+                new StoryMarkAsSpam()).Verifiable();
 
-            _story.MarkAsSpam(SystemTime.Now(), new User { Id = Guid.NewGuid() }, "192.168.0.1");
+            _story.MarkAsSpam(at, user, fromIpAddress);
 
-            markAsSpamRepository.Verify();
+            domainObjectFactory.Verify();
+            markAsSpamRepository.Verify(r => r.Add(It.IsAny<IMarkAsSpam>()),Times.AtMostOnce());
         }
 
         [Fact]
         public void MarkAsSpam_Should_Increase_MarkAsSpams_Collection()
         {
+            var at = SystemTime.Now();
+            var user = new User { Id = Guid.NewGuid() };
+            var fromIpAddress = "192.168.0.1";
+
             _story.User = new User { Id = Guid.NewGuid() };
 
-            _story.MarkAsSpam(SystemTime.Now(), new User { Id = Guid.NewGuid() }, "192.168.0.1");
+            domainObjectFactory.Setup(f => f.CreateMarkAsSpam(_story, at, user, fromIpAddress)).Returns(
+                new StoryMarkAsSpam());
+
+            _story.MarkAsSpam(at, user, fromIpAddress);
 
             Assert.Equal(1, _story.MarkAsSpams.Count);
         }
@@ -596,11 +625,18 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void MarkAsSpam_Should_Update_Last_Activity_At()
         {
+            var at = SystemTime.Now();
+            var user = new User { Id = Guid.NewGuid() };
+            var fromIpAddress = "192.168.0.1";
+
             _story.User = new User { Id = Guid.NewGuid() };
 
             var lastValue = _story.LastActivityAt;
 
-            _story.MarkAsSpam(SystemTime.Now(), new User { Id = Guid.NewGuid() }, "192.168.0.1");
+            domainObjectFactory.Setup(f => f.CreateMarkAsSpam(_story, at, user, fromIpAddress)).Returns(
+                new StoryMarkAsSpam());
+
+            _story.MarkAsSpam(at, user, fromIpAddress);
 
             Assert.NotEqual(lastValue, _story.LastActivityAt);
         }
@@ -653,6 +689,8 @@ namespace Kigg.Infrastructure.LinqToSql.Test
             _story.PublishedAt = SystemTime.Now().AddDays(-1);
 
             Assert.False(_story.UnmarkAsSpam(SystemTime.Now(), new User { Id = Guid.NewGuid() }));
+
+            markAsSpamRepository.Verify(r=>r.Add(It.IsAny<IMarkAsSpam>()),Times.AtMostOnce());
         }
 
         [Fact]
@@ -661,35 +699,44 @@ namespace Kigg.Infrastructure.LinqToSql.Test
             _story.User = new User { Id = Guid.NewGuid() };
 
             markAsSpamRepository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(new StoryMarkAsSpam());
-            markAsSpamRepository.Setup(r => r.Remove(It.IsAny<StoryMarkAsSpam>())).Verifiable();
-
+            
             _story.UnmarkAsSpam(SystemTime.Now(), new User { Id = Guid.NewGuid() });
 
-            markAsSpamRepository.Verify();
+            markAsSpamRepository.Verify(r => r.Remove(It.IsAny<StoryMarkAsSpam>()),Times.AtMostOnce());
         }
 
         [Fact]
         public void UnmarkAsSpam_Should_Decrease_MarkAsSpams_Collection()
         {
+            var at = SystemTime.Now();
             var user = new User { Id = Guid.NewGuid() };
+            var fromIpAddress = "192.168.0.1";
 
             _story.User = new User { Id = Guid.NewGuid() };
-            _story.MarkAsSpam(SystemTime.Now(), user, "192.168.0.1");
 
+            domainObjectFactory.Setup(f => f.CreateMarkAsSpam(_story, at, user, fromIpAddress)).Returns(new StoryMarkAsSpam());
+
+            _story.MarkAsSpam(at, user, fromIpAddress);
+            
             markAsSpamRepository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(_story.StoryMarkAsSpams.ElementAt(0));
-
+            
             _story.UnmarkAsSpam(SystemTime.Now(), user);
-
+            
             Assert.Equal(0, _story.StoryMarkAsSpams.Count);
         }
 
         [Fact]
         public void UnmarkAsSpam_Should_Update_Last_Activity_At()
         {
+            var at = SystemTime.Now();
             var user = new User { Id = Guid.NewGuid() };
+            var fromIpAddress = "192.168.0.1";
 
             _story.User = new User { Id = Guid.NewGuid() };
-            _story.MarkAsSpam(SystemTime.Now().AddDays(-5), user, "192.168.0.1");
+
+            domainObjectFactory.Setup(f => f.CreateMarkAsSpam(_story, at, user, fromIpAddress)).Returns(new StoryMarkAsSpam());
+
+            _story.MarkAsSpam(at, user, fromIpAddress);
 
             markAsSpamRepository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(_story.MarkAsSpams.ElementAt(0));
 
@@ -703,8 +750,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void PostComment_Should_Return_New_Comment()
         {
-            var user = new User { Id = Guid.NewGuid() };
-            var comment = _story.PostComment("This is a comment", SystemTime.Now(), user, "192.168.0.1");
+            var comment = SetupAndPostComment();
 
             Assert.NotNull(comment);
         }
@@ -712,20 +758,15 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void PostComment_Should_Use_CommentRepository()
         {
-            commentRepository.Setup(r => r.Add(It.IsAny<IComment>())).Verifiable();
+            var comment = SetupAndPostComment();
 
-            var user = new User { Id = Guid.NewGuid() };
-
-            _story.PostComment("This is a comment", SystemTime.Now(), user, "192.168.0.1");
-
-            commentRepository.Verify();
+            commentRepository.Verify(r => r.Add(comment),Times.AtMostOnce());
         }
 
         [Fact]
         public void PostComment_Should_Increase_Comments_Collection()
         {
-            var user = new User { Id = Guid.NewGuid() };
-            _story.PostComment("This is a comment", SystemTime.Now(), user, "192.168.0.1");
+            SetupAndPostComment();
 
             Assert.Equal(1, _story.Comments.Count);
         }
@@ -735,8 +776,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         {
             var lastValue = _story.LastActivityAt;
 
-            var user = new User { Id = Guid.NewGuid() };
-            _story.PostComment("This is a comment", SystemTime.Now(), user, "192.168.0.1");
+            SetupAndPostComment();
 
             Assert.NotEqual(lastValue, _story.LastActivityAt);
         }
@@ -762,19 +802,17 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void DeleteComment_Should_Use_CommentRepository()
         {
-            var comment = _story.PostComment("This is a comment", SystemTime.Now(), new User { Id = Guid.NewGuid() }, "192.168.0.1");
-
-            commentRepository.Setup(r => r.Remove(It.IsAny<IComment>())).Verifiable();
+            var comment = SetupAndPostComment();
 
             _story.DeleteComment(comment);
 
-            commentRepository.Verify();
+            commentRepository.Verify(r => r.Remove(It.IsAny<IComment>()), Times.AtMostOnce());
         }
 
         [Fact]
         public void DeleteComment_Should_Decrease_Comment_Collection()
         {
-            var comment = _story.PostComment("This is a comment", SystemTime.Now(), new User { Id = Guid.NewGuid() }, "192.168.0.1");
+            var comment = SetupAndPostComment();
 
             _story.DeleteComment(comment);
 
@@ -802,21 +840,16 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         [Fact]
         public void SubscribeComment_Should_Use_CommentSubscribtionRepository()
         {
-            commentSubscribtionRepository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns((ICommentSubscribtion) null).Verifiable();
-            commentSubscribtionRepository.Setup(r => r.Add(It.IsAny<ICommentSubscribtion>())).Verifiable();
-
-            _story.SubscribeComment(new User { Id = Guid.NewGuid() });
-
-            commentSubscribtionRepository.Verify();
+            var user = new User { Id = Guid.NewGuid() };
+            SetupAndSubscribeComment(user);
+            commentSubscribtionRepository.Verify(r => r.Add(It.IsAny<ICommentSubscribtion>()),Times.AtMostOnce());
         }
 
         [Fact]
         public void SubscribeComment_Should_Increase_Subscribers_Collection()
         {
-            commentSubscribtionRepository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns((ICommentSubscribtion)null).Verifiable();
-
-            _story.SubscribeComment(new User { Id = Guid.NewGuid() });
-
+            var user = new User { Id = Guid.NewGuid() };
+            SetupAndSubscribeComment(user);
             Assert.Equal(1, _story.Subscribers.Count);
         }
 
@@ -824,7 +857,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         public void UnsubscribeComment_Should_Use_CommentSubscribtionRepository()
         {
             var user = new User { Id = Guid.NewGuid() };
-            _story.SubscribeComment(user);
+            SetupAndSubscribeComment(user);
 
             commentSubscribtionRepository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(_story.CommentSubscribtions[0]).Verifiable();
             commentSubscribtionRepository.Setup(r => r.Remove(It.IsAny<ICommentSubscribtion>())).Verifiable();
@@ -838,8 +871,7 @@ namespace Kigg.Infrastructure.LinqToSql.Test
         public void UnsubscribeComment_Should_Decrease_Subscribers()
         {
             var user = new User { Id = Guid.NewGuid() };
-
-            _story.SubscribeComment(user);
+            SetupAndSubscribeComment(user);
 
             commentSubscribtionRepository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(_story.CommentSubscribtions[0]);
 
@@ -902,6 +934,31 @@ namespace Kigg.Infrastructure.LinqToSql.Test
             _story.ChangeNameAndCreatedAt("xxx", at);
 
             Assert.Equal(at, _story.CreatedAt);
+        }
+
+        private IComment SetupAndPostComment()
+        {
+            var user = new User { Id = Guid.NewGuid() };
+            var content = "This is a comment";
+            var at = SystemTime.Now();
+            var fromIpAddress = "192.168.0.1";
+
+            domainObjectFactory.Setup(f => f.CreateComment(_story, content, at, user, fromIpAddress)).Returns(
+                new StoryComment());
+
+            var comment = _story.PostComment(content, at, user, fromIpAddress);
+            return comment;
+        }
+
+        private void SetupAndSubscribeComment(IUser user)
+        {
+            
+            commentSubscribtionRepository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(
+                (ICommentSubscribtion)null).Verifiable();
+
+            domainObjectFactory.Setup(f => f.CreateCommentSubscribtion(_story, user)).Returns(new CommentSubscribtion());
+
+            _story.SubscribeComment(user);
         }
     }
 }
