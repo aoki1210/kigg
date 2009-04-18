@@ -6,7 +6,7 @@
 
     public class DomainObjectFactory : IDomainObjectFactory
     {
-        public virtual IUser CreateUser(string userName, string email, string password)
+        public IUser CreateUser(string userName, string email, string password)
         {
             Check.Argument.IsNotEmpty(userName, "userName");
             Check.Argument.IsNotInvalidEmail(email, "email");
@@ -33,7 +33,7 @@
                        };
         }
 
-        public virtual IKnownSource CreateKnownSource(string url)
+        public IKnownSource CreateKnownSource(string url)
         {
             Check.Argument.IsNotInvalidWebUrl(url, "url");
 
@@ -44,7 +44,7 @@
                        };
         }
 
-        public virtual ICategory CreateCategory(string name)
+        public ICategory CreateCategory(string name)
         {
             Check.Argument.IsNotEmpty(name, "name");
 
@@ -57,7 +57,7 @@
                        };
         }
 
-        public virtual ITag CreateTag(string name)
+        public ITag CreateTag(string name)
         {
             Check.Argument.IsNotEmpty(name, "name");
 
@@ -70,7 +70,7 @@
                        };
         }
 
-        public virtual IStory CreateStory(ICategory forCategory, IUser byUser, string fromIpAddress, string title, string description, string url)
+        public IStory CreateStory(ICategory forCategory, IUser byUser, string fromIpAddress, string title, string description, string url)
         {
             Check.Argument.IsNotNull(forCategory, "forCategory");
             Check.Argument.IsNotNull(byUser, "byUser");
@@ -116,10 +116,7 @@
 
         public IVote CreateStoryVote(IStory forStory, DateTime at, IUser byUser, string fromIpAddress)
         {
-            Check.Argument.IsNotNull(forStory, "forStory");
-            Check.Argument.IsNotInFuture(at, "at");
-            Check.Argument.IsNotNull(byUser, "byUser");
-            Check.Argument.IsNotEmpty(fromIpAddress, "fromIpAddress");
+            PerformCheck(forStory, at, byUser, fromIpAddress);
 
             var vote = new StoryVote
                            {
@@ -129,6 +126,61 @@
                                Timestamp = at
                            };
             return vote;
+        }
+
+        public IMarkAsSpam CreateMarkAsSpam(IStory forStory, DateTime at, IUser byUser, string fromIpAddress)
+        {
+            PerformCheck(forStory, at, byUser, fromIpAddress);
+
+            var spamStory = new StoryMarkAsSpam
+                                 {
+                                     Story = (Story) forStory,
+                                     User = (User) byUser,
+                                     IPAddress = fromIpAddress,
+                                     Timestamp = at
+                                 };
+
+            return spamStory;
+
+        }
+
+        public IComment CreateComment(IStory forStory, string content, DateTime at, IUser byUser, string fromIpAddress)
+        {
+            Check.Argument.IsNotEmpty(content, "content");
+            PerformCheck(forStory, at, byUser, fromIpAddress);
+            
+            var comment = new StoryComment
+                              {
+                                  Id = Guid.NewGuid(),
+                                  HtmlBody = content.Trim(),
+                                  TextBody = content.StripHtml().Trim(),
+                                  Story = (Story) forStory,
+                                  User = (User) byUser,
+                                  IPAddress = fromIpAddress,
+                                  CreatedAt = at
+                              };
+            return comment;
+        }
+
+        public ICommentSubscribtion CreateCommentSubscribtion(IStory forStory, IUser byUser)
+        {
+            Check.Argument.IsNotNull(forStory, "forStory");
+            Check.Argument.IsNotNull(byUser, "byUser");
+
+            var subscribtion = new CommentSubscribtion
+                                   {
+                                       Story = (Story)forStory,
+                                       User = (User) byUser
+                                   };
+            return subscribtion;
+        }
+
+        private static void PerformCheck(IStory forStory, DateTime at, IUser byUser, string fromIpAddress)
+        {
+            Check.Argument.IsNotNull(forStory, "forStory");
+            Check.Argument.IsNotInFuture(at, "at");
+            Check.Argument.IsNotNull(byUser, "byUser");
+            Check.Argument.IsNotEmpty(fromIpAddress, "fromIpAddress");
         }
     }
 }

@@ -70,6 +70,30 @@ namespace Kigg.Infrastructure.LinqToSql.Test
             Assert.NotNull(vote);
         }
 
+        [Fact]
+        public void CreateMarkAsSpam_Should_Return_New_StoryMarkAsSpam()
+        {
+            var spamStory = _factory.CreateMarkAsSpam(CreateStory(), SystemTime.Now(), CreateUser(), "192.168.0.1");
+
+            Assert.NotNull(spamStory);
+        }
+
+        [Fact]
+        public void CreateComment_Should_Return_New_StoryComment()
+        {
+            var comment = _factory.CreateComment(CreateStory(), "dummy content", SystemTime.Now(), CreateUser(), "192.168.0.1");
+
+            Assert.NotNull(comment);
+        }
+
+        [Fact]
+        public void CreateCommentSubscribtion_Should_Return_New_CommentSubscribtion()
+        {
+            var subscribtion = _factory.CreateCommentSubscribtion(CreateStory(), CreateUser());
+
+            Assert.NotNull(subscribtion);
+        }
+
         private ICategory CreateCategory()
         {
             return _factory.CreateCategory("Dummy Category");
