@@ -178,14 +178,14 @@ namespace Kigg.LinqToSql.DomainObjects
             }
         }
 
-        public virtual void ChangeCategory(ICategory category)
+        public void ChangeCategory(ICategory category)
         {
             Check.Argument.IsNotNull(category, "category");
 
             Category = (Category) category;
         }
 
-        public virtual void AddTag(ITag tag)
+        public void AddTag(ITag tag)
         {
             Check.Argument.IsNotNull(tag, "tag");
             Check.Argument.IsNotEmpty(tag.Id, "tag.Id");
@@ -197,7 +197,7 @@ namespace Kigg.LinqToSql.DomainObjects
             }
         }
 
-        public virtual void RemoveTag(ITag tag)
+        public void RemoveTag(ITag tag)
         {
             Check.Argument.IsNotNull(tag, "tag");
             Check.Argument.IsNotEmpty(tag.Name, "tag.Name");
@@ -205,12 +205,12 @@ namespace Kigg.LinqToSql.DomainObjects
             StoryTags.Remove(StoryTags.SingleOrDefault(st => st.Tag.Name == tag.Name));
         }
 
-        public virtual void RemoveAllTags()
+        public void RemoveAllTags()
         {
             StoryTags.Clear();
         }
 
-        public virtual bool ContainsTag(ITag tag)
+        public bool ContainsTag(ITag tag)
         {
             Check.Argument.IsNotNull(tag, "tag");
             Check.Argument.IsNotEmpty(tag.Name, "tag.Name");
@@ -218,7 +218,7 @@ namespace Kigg.LinqToSql.DomainObjects
             return StoryTags.Any(st => st.Tag.Name == tag.Name);
         }
 
-        public virtual void View(DateTime at, string fromIpAddress)
+        public void View(DateTime at, string fromIpAddress)
         {
             //Call extension method AddView, it will perform all parameters validation checks
             var view = this.AddView(at, fromIpAddress);
@@ -229,7 +229,7 @@ namespace Kigg.LinqToSql.DomainObjects
             LastActivityAt = at;
         }
 
-        public virtual bool CanPromote(IUser byUser)
+        public bool CanPromote(IUser byUser)
         {
             Check.Argument.IsNotNull(byUser, "byUser");
 
@@ -239,7 +239,7 @@ namespace Kigg.LinqToSql.DomainObjects
             return !HasPromoted(byUser) && !HasMarkedAsSpam(byUser);
         }
 
-        public virtual bool Promote(DateTime at, IUser byUser, string fromIpAddress)
+        public bool Promote(DateTime at, IUser byUser, string fromIpAddress)
         {
             Check.Argument.IsNotNull(byUser, "byUser");
             
@@ -260,13 +260,13 @@ namespace Kigg.LinqToSql.DomainObjects
             return false;
         }
 
-        public virtual bool HasPromoted(IUser byUser)
+        public bool HasPromoted(IUser byUser)
         {
             Check.Argument.IsNotNull(byUser, "byUser");
             return this.GetVote(byUser) != null;
         }
 
-        public virtual bool CanDemote(IUser byUser)
+        public bool CanDemote(IUser byUser)
         {
             Check.Argument.IsNotNull(byUser, "byUser");
 
@@ -276,7 +276,7 @@ namespace Kigg.LinqToSql.DomainObjects
             return !this.IsPostedBy(byUser) && HasPromoted(byUser);
         }
 
-        public virtual bool Demote(DateTime at, IUser byUser)
+        public bool Demote(DateTime at, IUser byUser)
         {
             Check.Argument.IsNotNull(byUser, "byUser");
 
@@ -294,7 +294,7 @@ namespace Kigg.LinqToSql.DomainObjects
             return false;
         }
 
-        public virtual bool CanMarkAsSpam(IUser byUser)
+        public bool CanMarkAsSpam(IUser byUser)
         {
             Check.Argument.IsNotNull(byUser, "byUser");
 
@@ -306,7 +306,7 @@ namespace Kigg.LinqToSql.DomainObjects
             return !this.IsPublished() && !this.IsPostedBy(byUser) && !HasPromoted(byUser) && !HasMarkedAsSpam(byUser);
         }
 
-        public virtual bool MarkAsSpam(DateTime at, IUser byUser, string fromIpAddress)
+        public bool MarkAsSpam(DateTime at, IUser byUser, string fromIpAddress)
         {
             Check.Argument.IsNotInFuture(at, "at");
             Check.Argument.IsNotNull(byUser, "byUser");
@@ -325,14 +325,14 @@ namespace Kigg.LinqToSql.DomainObjects
             return false;
         }
 
-        public virtual bool HasMarkedAsSpam(IUser byUser)
+        public bool HasMarkedAsSpam(IUser byUser)
         {
             Check.Argument.IsNotNull(byUser, "byUser");
 
             return this.GetMarkAsSpam(byUser) != null;
         }
 
-        public virtual bool CanUnmarkAsSpam(IUser byUser)
+        public bool CanUnmarkAsSpam(IUser byUser)
         {
             Check.Argument.IsNotNull(byUser, "byUser");
 
@@ -342,7 +342,7 @@ namespace Kigg.LinqToSql.DomainObjects
             return !this.IsPublished() && HasMarkedAsSpam(byUser);
         }
 
-        public virtual bool UnmarkAsSpam(DateTime at, IUser byUser)
+        public bool UnmarkAsSpam(DateTime at, IUser byUser)
         {
             Check.Argument.IsNotInvalidDate(at, "at");
             Check.Argument.IsNotNull(byUser, "byUser");
@@ -361,7 +361,7 @@ namespace Kigg.LinqToSql.DomainObjects
             return false;
         }
 
-        public virtual IComment PostComment(string content, DateTime at, IUser byUser, string fromIpAddress)
+        public IComment PostComment(string content, DateTime at, IUser byUser, string fromIpAddress)
         {
             Check.Argument.IsNotEmpty(content, "content");
             Check.Argument.IsNotInFuture(at, "at");
@@ -376,14 +376,14 @@ namespace Kigg.LinqToSql.DomainObjects
             return comment;
         }
 
-        public virtual IComment FindComment(Guid id)
+        public IComment FindComment(Guid id)
         {
             Check.Argument.IsNotEmpty(id, "id");
 
             return this.GetComment(id);
         }
 
-        public virtual void DeleteComment(IComment comment)
+        public void DeleteComment(IComment comment)
         {
             Check.Argument.IsNotNull(comment, "comment");
 
@@ -394,21 +394,21 @@ namespace Kigg.LinqToSql.DomainObjects
             StoryComments.Remove(storyComment);
         }
 
-        public virtual bool ContainsCommentSubscriber(IUser theUser)
+        public bool ContainsCommentSubscriber(IUser theUser)
         {
             Check.Argument.IsNotNull(theUser, "theUser");
 
             return this.GetCommentSubscribtion(theUser) != null;
         }
 
-        public virtual void SubscribeComment(IUser byUser)
+        public void SubscribeComment(IUser byUser)
         {
             Check.Argument.IsNotNull(byUser, "byUser");
             var subscribtion = this.AddCommentSubscribtion(byUser);
             CommentSubscribtions.Add((CommentSubscribtion)subscribtion);
         }
 
-        public virtual void UnsubscribeComment(IUser byUser)
+        public void UnsubscribeComment(IUser byUser)
         {
             Check.Argument.IsNotNull(byUser, "byUser");
             var subscribtion = this.RemoveCommentSubscribtion(byUser);
@@ -418,7 +418,7 @@ namespace Kigg.LinqToSql.DomainObjects
             }
         }
 
-        public virtual void Approve(DateTime at)
+        public void Approve(DateTime at)
         {
             if (!this.IsApproved())
             {
@@ -426,7 +426,7 @@ namespace Kigg.LinqToSql.DomainObjects
             }
         }
 
-        public virtual void Publish(DateTime at, int rank)
+        public void Publish(DateTime at, int rank)
         {
             Check.Argument.IsNotInFuture(at, "at");
             Check.Argument.IsNotNegativeOrZero(rank, "rank");
@@ -436,14 +436,14 @@ namespace Kigg.LinqToSql.DomainObjects
             LastActivityAt = at;
         }
 
-        public virtual void LastProcessed(DateTime at)
+        public void LastProcessed(DateTime at)
         {
             Check.Argument.IsNotInFuture(at, "at");
 
             LastProcessedAt = at;
         }
 
-        public virtual void ChangeNameAndCreatedAt(string name, DateTime createdAt)
+        public void ChangeNameAndCreatedAt(string name, DateTime createdAt)
         {
             Check.Argument.IsNotEmpty(name, "name");
             Check.Argument.IsNotInFuture(createdAt, "createdAt");

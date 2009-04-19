@@ -58,6 +58,7 @@
     </Compile>
     <Compile Include="Extension\CategoryExtensionFixture.cs" />
     <Compile Include="Extension\CollectionExtensionFixture.cs" />
+    <Compile Include="Extension\TagExtensionFixture.cs" />
     <Compile Include="Extension\DateTimeExtensionFixture.cs" />
     <Compile Include="Extension\EnumerableExtensionFixture.cs" />
     <Compile Include="Extension\TagContainerFixture.cs" />

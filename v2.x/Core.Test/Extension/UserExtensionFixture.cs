@@ -1,9 +1,12 @@
+using System;
 using Moq;
 using Xunit;
 
 namespace Kigg.Core.Test
 {
     using DomainObjects;
+    using Repository;
+    using Infrastructure.DomainRepositoryExtensions;
     using Kigg.Test.Infrastructure;
 
     public class UserExtensionFixture : BaseFixture
@@ -89,6 +92,64 @@ namespace Kigg.Core.Test
             _user.SetupGet(u => u.CurrentScore).Returns(settings.Object.MaximumUserScoreToShowCaptcha + 1);
 
             Assert.True(_user.Object.ShouldHideCaptcha());
+        }
+
+        [Fact]
+        public void IsUniqueEmail_Should_Return_False_If_Same_Email_Already_Exists()
+        {
+            const string Email = "foo@bar.com";
+            
+            _user.SetupGet(u => u.Id).Returns(Guid.NewGuid());
+            _user.SetupGet(u => u.Email).Returns(Email);
+
+            var sameEmailUser = new Mock<IUser>();
+            sameEmailUser.SetupGet(u => u.Id).Returns(Guid.NewGuid());
+            sameEmailUser.SetupGet(u => u.Email).Returns(Email);
+
+            PrepareFindByEmail(sameEmailUser.Object);
+            
+            Assert.False(_user.Object.IsUniqueEmail(Email));
+        }
+
+        [Fact]
+        public void IsUniqueEmail_Should_Return_True_If_Email_Is_Unique()
+        {
+            const string Email = "foo@bar.com";
+
+            _user.SetupGet(u => u.Id).Returns(Guid.NewGuid());
+            _user.SetupGet(u => u.Email).Returns(Email);
+
+            PrepareFindByEmail(null);
+
+            Assert.True(_user.Object.IsUniqueEmail(Email));
+        }
+
+        [Fact]
+        public void IsUniqueEmail_Should_Use_IUserRepository()
+        {
+            const string Email = "foo@bar.com";
+            var userRepository = SetupResolve<IUserRepository>();
+            _user.Object.IsUniqueEmail(Email);
+            userRepository.Verify(r => r.FindByEmail(Email), Times.AtMostOnce());
+        }
+
+        [Fact]
+        public void GetScore_Should_Use_IUserRepository()
+        {
+            var userRepository = SetupResolve<IUserRepository>();
+            var id = Guid.NewGuid();
+            var start = SystemTime.Now().AddHours(-6);
+            var end = SystemTime.Now();
+            _user.SetupGet(u => u.Id).Returns(id);
+            _user.Object.GetScoreBetween(start, end);
+
+            userRepository.Verify(r => r.FindScoreById(id, start, end), Times.AtMostOnce());
+        }
+
+        private void PrepareFindByEmail(IUser user)
+        {
+            var repository = SetupResolve<IUserRepository>();
+            repository.Setup(r => r.FindByEmail(_user.Object.Email)).Returns(user).Verifiable();
         }
     }
 }

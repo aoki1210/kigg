@@ -1,9 +1,8 @@
 namespace Kigg.LinqToSql.DomainObjects
 {
     using Kigg.DomainObjects;
-    using Kigg.Repository;
-    using Infrastructure;
-    
+    using Infrastructure.DomainRepositoryExtensions;
+
     public partial class Category : ICategory
     {
         private int _storyCount = -1;
@@ -14,7 +13,7 @@ namespace Kigg.LinqToSql.DomainObjects
             {
                 if (_storyCount == -1)
                 {
-                    _storyCount = IoC.Resolve<IStoryRepository>().CountByCategory(Id);
+                    _storyCount = this.GetStoryCount();
                 }
 
                 return _storyCount;

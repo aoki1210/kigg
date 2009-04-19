@@ -76,7 +76,13 @@ namespace Kigg.Test.Infrastructure
             settings.SetupGet(s => s.UpcomingStoriesFeedBurnerUrl).Returns("http://feeds.feedburner.com/Dotnetshoutout-Upcoming");
             settings.SetupGet(s => s.MaximumUserScoreToShowCaptcha).Returns(25);
         }
-
+        
+        protected Mock<T> SetupResolve<T>() where T : class
+        {
+            var repository = new Mock<T>();
+            resolver.Setup(r => r.Resolve<T>()).Returns(repository.Object);
+            return repository;
+        }
         public virtual void Dispose()
         {
         }

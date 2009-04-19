@@ -59,6 +59,8 @@
     <Compile Include="Extension\DateTimeExtension.cs" />
     <Compile Include="Extension\DomainObjectsExplicitExtension\CategoryExtension.cs" />
     <Compile Include="Extension\DomainObjectsExplicitExtension\StoryExtension.cs" />
+    <Compile Include="Extension\DomainObjectsExplicitExtension\TagExtension.cs" />
+    <Compile Include="Extension\DomainObjectsExplicitExtension\UserExtension.cs" />
     <Compile Include="Extension\EnumerableExtension.cs" />
     <Compile Include="DomainObjects\Extension\TagContainerExtension.cs" />
     <Compile Include="GlobalSuppressions.cs" />
