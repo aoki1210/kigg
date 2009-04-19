@@ -8,30 +8,30 @@ namespace Kigg.Core.Test
     using Infrastructure.DomainRepositoryExtensions;
     using Kigg.Test.Infrastructure;
 
-    public class CategoryExtensionFixture : BaseFixture
+    public class TagExtensionFixture : BaseFixture
     {
-        private readonly Mock<ICategory> _category;
+        private readonly Mock<ITag> _tag;
 
-        public CategoryExtensionFixture()
+        public TagExtensionFixture()
         {
-            _category = new Mock<ICategory>();
+            _tag = new Mock<ITag>();
         }
         [Fact]
         public void GetStoryCount_Should_Return_Correct_Value()
         {
-            PrepareCountByCategory<IStoryRepository>(10);
+            PrepareCountByTag<IStoryRepository>(10);
 
-            var i = _category.Object.GetStoryCount();
+            var i = _tag.Object.GetStoryCount();
 
             Assert.True(i == 10);
         }
 
-        private void PrepareCountByCategory<T>(int count) where T : class, IStoryRepository
+        private void PrepareCountByTag<T>(int count) where T : class, IStoryRepository
         {
             var repository = new Mock<T>();
 
             resolver.Setup(r => r.Resolve<T>()).Returns(repository.Object);
-            repository.Setup(r => r.CountByCategory(_category.Object.Id)).Returns(count);
+            repository.Setup(r => r.CountByTag(_tag.Object.Id)).Returns(count);
         }
     }
 }

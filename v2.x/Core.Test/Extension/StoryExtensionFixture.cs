@@ -158,8 +158,8 @@ namespace Kigg.Core.Test
         [Fact]
         public void AddView_Should_Use_IDomainObjectFactory_And_IStoryViewRepository()
         {
-            var repository = CreateAndSetupMock<IStoryViewRepository>();
-            var domFactory = CreateAndSetupMock<IDomainObjectFactory>();
+            var repository = SetupResolve<IStoryViewRepository>();
+            var domFactory = SetupResolve<IDomainObjectFactory>();
             
             var now = SystemTime.Now();
 
@@ -176,8 +176,8 @@ namespace Kigg.Core.Test
         [Fact]
         public void AddVote_Should_Use_IDomainObjectFactory_And_IVoteRepository()
         {
-            var repository = CreateAndSetupMock<IVoteRepository>();
-            var domFactory = CreateAndSetupMock<IDomainObjectFactory>();
+            var repository = SetupResolve<IVoteRepository>();
+            var domFactory = SetupResolve<IDomainObjectFactory>();
 
             var now = SystemTime.Now();
 
@@ -193,7 +193,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void RemoveVote_Should_Use_IVoteRepository()
         {
-            var repository = CreateAndSetupMock<IVoteRepository>();
+            var repository = SetupResolve<IVoteRepository>();
 
             var vote = new Mock<IVote>().Object;
 
@@ -205,7 +205,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void GetVote_Should_Use_IVoteRepository()
         {
-            var repository = CreateAndSetupMock<IVoteRepository>();
+            var repository = SetupResolve<IVoteRepository>();
 
             var user = new Mock<IUser>().Object;
             
@@ -217,8 +217,8 @@ namespace Kigg.Core.Test
         [Fact]
         public void MarkSpam_Should_Use_IDomainObjectFactory_And_IMarkAsSpamRepository()
         {
-            var repository = CreateAndSetupMock<IMarkAsSpamRepository>();
-            var domFactory = CreateAndSetupMock<IDomainObjectFactory>();
+            var repository = SetupResolve<IMarkAsSpamRepository>();
+            var domFactory = SetupResolve<IDomainObjectFactory>();
 
             var now = SystemTime.Now();
 
@@ -233,7 +233,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void GetMarkAsSpam_Should_Use_IMarkAsSpamRepository()
         {
-            var repository = CreateAndSetupMock<IMarkAsSpamRepository>();
+            var repository = SetupResolve<IMarkAsSpamRepository>();
 
             var user = new Mock<IUser>().Object;
 
@@ -245,7 +245,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void UnmarkSpam_Should_Use_IMarkAsSpamRepository()
         {
-            var repository = CreateAndSetupMock<IMarkAsSpamRepository>();
+            var repository = SetupResolve<IMarkAsSpamRepository>();
 
             var spam = new Mock<IMarkAsSpam>().Object;
             
@@ -257,8 +257,8 @@ namespace Kigg.Core.Test
         [Fact]
         public void AddComment_Should_Use_IDomainObjectFactory_And_ICommentRepository()
         {
-            var repository = CreateAndSetupMock<ICommentRepository>();
-            var domFactory = CreateAndSetupMock<IDomainObjectFactory>();
+            var repository = SetupResolve<ICommentRepository>();
+            var domFactory = SetupResolve<IDomainObjectFactory>();
 
             var now = SystemTime.Now();
 
@@ -274,7 +274,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void GetComment_Should_Use_ICommentRepository()
         {
-            var repository = CreateAndSetupMock<ICommentRepository>();
+            var repository = SetupResolve<ICommentRepository>();
 
             _story.Object.FindComment(It.IsAny<Guid>());
 
@@ -284,7 +284,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void DeleteComment_Should_Use_ICommentRepository()
         {
-            var repository = CreateAndSetupMock<ICommentRepository>();
+            var repository = SetupResolve<ICommentRepository>();
 
             var comment = new Mock<IComment>().Object;
 
@@ -296,7 +296,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void GetCommentSubscribtion_Should_Use_ICommentSubscribtionRepository()
         {
-            var repository = CreateAndSetupMock<ICommentSubscribtionRepository>();
+            var repository = SetupResolve<ICommentSubscribtionRepository>();
 
             var user = new Mock<IUser>().Object;
 
@@ -308,7 +308,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void AddCommentSubscribtion_Should_Use_ICommentSubscribtionRepository()
         {
-            var repository = CreateAndSetupMock<ICommentSubscribtionRepository>();
+            var repository = SetupResolve<ICommentSubscribtionRepository>();
             
             repository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(null as ICommentSubscribtion);
 
@@ -318,7 +318,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void AddCommentSubscribtion_Should_Never_Call_ICommentSubscribtionRepository_Add()
         {
-            var repository = CreateAndSetupMock<ICommentSubscribtionRepository>();
+            var repository = SetupResolve<ICommentSubscribtionRepository>();
 
             repository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(
                 new Mock<ICommentSubscribtion>().Object);
@@ -329,7 +329,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void RemoveCommentSubscribtion_Should_Use_ICommentSubscribtionRepository()
         {
-            var repository = CreateAndSetupMock<ICommentSubscribtionRepository>();
+            var repository = SetupResolve<ICommentSubscribtionRepository>();
             
             repository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(
                 new Mock<ICommentSubscribtion>().Object);
@@ -340,7 +340,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void RemoveCommentSubscribtion_Should_Never_Call_ICommentSubscribtionRepository_Remove()
         {
-            var repository = CreateAndSetupMock<ICommentSubscribtionRepository>();
+            var repository = SetupResolve<ICommentSubscribtionRepository>();
 
             repository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(null as ICommentSubscribtion);
 
@@ -349,15 +349,10 @@ namespace Kigg.Core.Test
 
         private void SetupCountByStoryRepository<T>(int count) where T : class, ICountByStoryRepository
         {
-            var repository = CreateAndSetupMock<T>();
+            var repository = SetupResolve<T>();
             repository.Setup(r => r.CountByStory(_story.Object.Id)).Returns(count);
         }
 
-        private Mock<T> CreateAndSetupMock<T>() where T: class
-        {
-            var mock = new Mock<T>();
-            resolver.Setup(r => r.Resolve<T>()).Returns(mock.Object);
-            return mock;
-        }
+        
     }
 }

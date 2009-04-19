@@ -5,8 +5,7 @@ namespace Kigg.LinqToSql.DomainObjects
     using System.Linq;
 
     using Kigg.DomainObjects;
-    using Kigg.Repository;
-    using Infrastructure;
+    using Infrastructure.DomainRepositoryExtensions;
 
     public partial class User : IUser
     {
@@ -34,14 +33,12 @@ namespace Kigg.LinqToSql.DomainObjects
             }
         }
 
-        public virtual void ChangeEmail(string email)
+        public void ChangeEmail(string email)
         {
             Check.Argument.IsNotInvalidEmail(email, "email");
             Check.Argument.IsNotOutOfLength(email, 256, "email");
 
-            IUser sameEmailUser = IoC.Resolve<IUserRepository>().FindByEmail(email.Trim());
-
-            if ((sameEmailUser != null) && (Id != sameEmailUser.Id))
+            if(!this.IsUniqueEmail(email))
             {
                 throw new InvalidOperationException("User with the same email already exists.");
             }
@@ -50,7 +47,7 @@ namespace Kigg.LinqToSql.DomainObjects
             LastActivityAt = SystemTime.Now();
         }
 
-        public virtual void ChangePassword(string oldPassword, string newPassword)
+        public void ChangePassword(string oldPassword, string newPassword)
         {
             if (this.IsOpenIDAccount())
             {
@@ -70,7 +67,7 @@ namespace Kigg.LinqToSql.DomainObjects
             LastActivityAt = SystemTime.Now();
         }
 
-        public virtual string ResetPassword()
+        public string ResetPassword()
         {
             if (this.IsOpenIDAccount())
             {
@@ -84,39 +81,39 @@ namespace Kigg.LinqToSql.DomainObjects
             return password;
         }
 
-        public virtual void Lock()
+        public void Lock()
         {
             IsLockedOut = true;
         }
 
-        public virtual void Unlock()
+        public void Unlock()
         {
             IsLockedOut = false;
         }
 
-        public virtual decimal GetScoreBetween(DateTime startTimestamp, DateTime endTimestamp)
+        public decimal GetScoreBetween(DateTime startTimestamp, DateTime endTimestamp)
         {
             Check.Argument.IsNotInFuture(startTimestamp, "startTimestamp");
             Check.Argument.IsNotInFuture(endTimestamp, "endTimestamp");
 
-            return IoC.Resolve<IUserRepository>().FindScoreById(Id, startTimestamp, endTimestamp);
+            return this.GetScore(startTimestamp, endTimestamp);
         }
 
-        public virtual void IncreaseScoreBy(decimal score, UserAction reason)
+        public void IncreaseScoreBy(decimal score, UserAction reason)
         {
             Check.Argument.IsNotNegativeOrZero(score, "score");
 
             AddScore(score, reason);
         }
 
-        public virtual void DecreaseScoreBy(decimal score, UserAction reason)
+        public void DecreaseScoreBy(decimal score, UserAction reason)
         {
             Check.Argument.IsNotNegativeOrZero(score, "score");
 
             AddScore(-score, reason);
         }
 
-        public virtual void AddTag(ITag tag)
+        public void AddTag(ITag tag)
         {
             Check.Argument.IsNotNull(tag, "tag");
             Check.Argument.IsNotEmpty(tag.Id, "tag.Id");
@@ -128,7 +125,7 @@ namespace Kigg.LinqToSql.DomainObjects
             }
         }
 
-        public virtual void RemoveTag(ITag tag)
+        public void RemoveTag(ITag tag)
         {
             Check.Argument.IsNotNull(tag, "tag");
             Check.Argument.IsNotEmpty(tag.Name, "tag.Name");
@@ -136,12 +133,12 @@ namespace Kigg.LinqToSql.DomainObjects
             UserTags.Remove(UserTags.SingleOrDefault(st => st.Tag.Name == tag.Name));
         }
 
-        public virtual void RemoveAllTags()
+        public void RemoveAllTags()
         {
             UserTags.Clear();
         }
 
-        public virtual bool ContainsTag(ITag tag)
+        public bool ContainsTag(ITag tag)
         {
             Check.Argument.IsNotNull(tag, "tag");
             Check.Argument.IsNotEmpty(tag.Name, "tag.Name");
@@ -168,11 +165,11 @@ namespace Kigg.LinqToSql.DomainObjects
         private void AddScore(decimal score, UserAction reason)
         {
             var userScore = new UserScore
-                                      {
-                                          Timestamp = SystemTime.Now(),
-                                          Score = score,
-                                          ActionType = reason,
-                                      };
+                                {
+                                    Timestamp = SystemTime.Now(),
+                                    Score = score,
+                                    ActionType = reason,
+                                };
 
             UserScores.Add(userScore);
         }
