@@ -119,11 +119,11 @@
 
         void ChangeCategory(ICategory category);
 
-        void View(DateTime at, string fromIPAddress);
+        void View(DateTime at, string fromIpAddress);
 
         bool CanPromote(IUser byUser);
 
-        bool Promote(DateTime at, IUser byUser, string fromIPAddress);
+        bool Promote(DateTime at, IUser byUser, string fromIpAddress);
 
         bool HasPromoted(IUser byUser);
 
@@ -133,7 +133,7 @@
 
         bool CanMarkAsSpam(IUser byUser);
 
-        bool MarkAsSpam(DateTime at, IUser byUser, string fromIPAddress);
+        bool MarkAsSpam(DateTime at, IUser byUser, string fromIpAddress);
 
         bool HasMarkedAsSpam(IUser byUser);
 
@@ -141,7 +141,7 @@
 
         bool UnmarkAsSpam(DateTime at, IUser byUser);
 
-        IComment PostComment(string content, DateTime at, IUser byUser, string fromIPAddress);
+        IComment PostComment(string content, DateTime at, IUser byUser, string fromIpAddress);
 
         IComment FindComment(Guid id);
 
