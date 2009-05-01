@@ -51,7 +51,7 @@ namespace Kigg.Infrastructure.EF.Test
         [Fact]
         public void GetPreloadedMembers_Should_Return_All_Members_Registered_With_LoadWith()
         {
-            _loadOptions.LoadWith<User>(u => u.UserTags);
+            _loadOptions.LoadWith<User>(u => u.UserTagsInternal);
             _loadOptions.LoadWith<Story>(s => s.Category);
             _loadOptions.LoadWith<Story>(s => s.User);
             _loadOptions.LoadWith<Story>(s => s.StoryTags);

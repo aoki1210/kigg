@@ -24,7 +24,7 @@
 [assembly: global::System.Data.Objects.DataClasses.EdmRelationshipAttribute("Kigg.EF.DomainObjects", "UserTag", "Tag", global::System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Kigg.EF.DomainObjects.Tag), "User", global::System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Kigg.EF.DomainObjects.User))]
 
 // Original file name: Models.cs
-// Generation date: 4/25/2009 3:42:15 AM
+// Generation date: 5/1/2009 6:36:46 AM
 namespace Kigg.EF.DomainObjects
 {
     
@@ -317,7 +317,7 @@ namespace Kigg.EF.DomainObjects
             {
                 return this._Id;
             }
-            set
+            internal set
             {
                 this.OnIdChanging(value);
                 this.ReportPropertyChanging("Id");
@@ -340,7 +340,7 @@ namespace Kigg.EF.DomainObjects
             {
                 return this._UniqueName;
             }
-            set
+            internal set
             {
                 this.OnUniqueNameChanging(value);
                 this.ReportPropertyChanging("UniqueName");
@@ -363,7 +363,7 @@ namespace Kigg.EF.DomainObjects
             {
                 return this._Name;
             }
-            set
+            internal set
             {
                 this.OnNameChanging(value);
                 this.ReportPropertyChanging("Name");
@@ -386,7 +386,7 @@ namespace Kigg.EF.DomainObjects
             {
                 return this._CreatedAt;
             }
-            set
+            internal set
             {
                 this.OnCreatedAtChanging(value);
                 this.ReportPropertyChanging("CreatedAt");
@@ -405,7 +405,7 @@ namespace Kigg.EF.DomainObjects
         [global::System.Xml.Serialization.XmlIgnoreAttribute()]
         [global::System.Xml.Serialization.SoapIgnoreAttribute()]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public global::System.Data.Objects.DataClasses.EntityCollection<Story> Stories
+        internal global::System.Data.Objects.DataClasses.EntityCollection<Story> Stories
         {
             get
             {
@@ -856,7 +856,7 @@ namespace Kigg.EF.DomainObjects
         [global::System.Xml.Serialization.XmlIgnoreAttribute()]
         [global::System.Xml.Serialization.SoapIgnoreAttribute()]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public Category Category
+        internal Category Category
         {
             get
             {
@@ -872,7 +872,7 @@ namespace Kigg.EF.DomainObjects
         /// </summary>
         [global::System.ComponentModel.BrowsableAttribute(false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public global::System.Data.Objects.DataClasses.EntityReference<Category> CategoryReference
+        internal global::System.Data.Objects.DataClasses.EntityReference<Category> CategoryReference
         {
             get
             {
@@ -1068,16 +1068,14 @@ namespace Kigg.EF.DomainObjects
         /// <param name="htmlBody">Initial value of HtmlBody.</param>
         /// <param name="textBody">Initial value of TextBody.</param>
         /// <param name="createdAt">Initial value of CreatedAt.</param>
-        /// <param name="iPAddress">Initial value of IPAddress.</param>
         /// <param name="isOffended">Initial value of IsOffended.</param>
-        public static StoryComment CreateStoryComment(global::System.Guid id, string htmlBody, string textBody, global::System.DateTime createdAt, string iPAddress, bool isOffended)
+        public static StoryComment CreateStoryComment(global::System.Guid id, string htmlBody, string textBody, global::System.DateTime createdAt, bool isOffended)
         {
             StoryComment storyComment = new StoryComment();
             storyComment.Id = id;
             storyComment.HtmlBody = htmlBody;
             storyComment.TextBody = textBody;
             storyComment.CreatedAt = createdAt;
-            storyComment.IPAddress = iPAddress;
             storyComment.IsOffended = isOffended;
             return storyComment;
         }
@@ -1161,7 +1159,7 @@ namespace Kigg.EF.DomainObjects
             {
                 return this._CreatedAt;
             }
-            set
+            internal set
             {
                 this.OnCreatedAtChanging(value);
                 this.ReportPropertyChanging("CreatedAt");
@@ -1174,28 +1172,28 @@ namespace Kigg.EF.DomainObjects
         partial void OnCreatedAtChanging(global::System.DateTime value);
         partial void OnCreatedAtChanged();
         /// <summary>
-        /// There are no comments for Property IPAddress in the schema.
+        /// There are no comments for Property IpAddress in the schema.
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public string IPAddress
+        internal string IpAddress
         {
             get
             {
-                return this._IPAddress;
+                return this._IpAddress;
             }
             set
             {
-                this.OnIPAddressChanging(value);
-                this.ReportPropertyChanging("IPAddress");
-                this._IPAddress = global::System.Data.Objects.DataClasses.StructuralObject.SetValidValue(value, false);
-                this.ReportPropertyChanged("IPAddress");
-                this.OnIPAddressChanged();
+                this.OnIpAddressChanging(value);
+                this.ReportPropertyChanging("IpAddress");
+                this._IpAddress = global::System.Data.Objects.DataClasses.StructuralObject.SetValidValue(value, false);
+                this.ReportPropertyChanged("IpAddress");
+                this.OnIpAddressChanged();
             }
         }
-        private string _IPAddress;
-        partial void OnIPAddressChanging(string value);
-        partial void OnIPAddressChanged();
+        private string _IpAddress;
+        partial void OnIpAddressChanging(string value);
+        partial void OnIpAddressChanged();
         /// <summary>
         /// There are no comments for Property IsOffended in the schema.
         /// </summary>
@@ -1207,7 +1205,7 @@ namespace Kigg.EF.DomainObjects
             {
                 return this._IsOffended;
             }
-            set
+            private set
             {
                 this.OnIsOffendedChanging(value);
                 this.ReportPropertyChanging("IsOffended");
@@ -1226,7 +1224,7 @@ namespace Kigg.EF.DomainObjects
         [global::System.Xml.Serialization.XmlIgnoreAttribute()]
         [global::System.Xml.Serialization.SoapIgnoreAttribute()]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public Story Story
+        internal Story Story
         {
             get
             {
@@ -1242,7 +1240,7 @@ namespace Kigg.EF.DomainObjects
         /// </summary>
         [global::System.ComponentModel.BrowsableAttribute(false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public global::System.Data.Objects.DataClasses.EntityReference<Story> StoryReference
+        internal global::System.Data.Objects.DataClasses.EntityReference<Story> StoryReference
         {
             get
             {
@@ -1263,7 +1261,7 @@ namespace Kigg.EF.DomainObjects
         [global::System.Xml.Serialization.XmlIgnoreAttribute()]
         [global::System.Xml.Serialization.SoapIgnoreAttribute()]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public User User
+        internal User User
         {
             get
             {
@@ -1279,7 +1277,7 @@ namespace Kigg.EF.DomainObjects
         /// </summary>
         [global::System.ComponentModel.BrowsableAttribute(false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public global::System.Data.Objects.DataClasses.EntityReference<User> UserReference
+        internal global::System.Data.Objects.DataClasses.EntityReference<User> UserReference
         {
             get
             {
@@ -1311,15 +1309,11 @@ namespace Kigg.EF.DomainObjects
         /// </summary>
         /// <param name="storyId">Initial value of StoryId.</param>
         /// <param name="userId">Initial value of UserId.</param>
-        /// <param name="iPAddress">Initial value of IPAddress.</param>
-        /// <param name="timestamp">Initial value of Timestamp.</param>
-        public static StoryMarkAsSpam CreateStoryMarkAsSpam(global::System.Guid storyId, global::System.Guid userId, string iPAddress, global::System.DateTime timestamp)
+        public static StoryMarkAsSpam CreateStoryMarkAsSpam(global::System.Guid storyId, global::System.Guid userId)
         {
             StoryMarkAsSpam storyMarkAsSpam = new StoryMarkAsSpam();
             storyMarkAsSpam.StoryId = storyId;
             storyMarkAsSpam.UserId = userId;
-            storyMarkAsSpam.IPAddress = iPAddress;
-            storyMarkAsSpam.Timestamp = timestamp;
             return storyMarkAsSpam;
         }
         /// <summary>
@@ -1369,34 +1363,34 @@ namespace Kigg.EF.DomainObjects
         partial void OnUserIdChanging(global::System.Guid value);
         partial void OnUserIdChanged();
         /// <summary>
-        /// There are no comments for Property IPAddress in the schema.
+        /// There are no comments for Property IpAddress in the schema.
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public string IPAddress
+        internal string IpAddress
         {
             get
             {
-                return this._IPAddress;
+                return this._IpAddress;
             }
             set
             {
-                this.OnIPAddressChanging(value);
-                this.ReportPropertyChanging("IPAddress");
-                this._IPAddress = global::System.Data.Objects.DataClasses.StructuralObject.SetValidValue(value, false);
-                this.ReportPropertyChanged("IPAddress");
-                this.OnIPAddressChanged();
+                this.OnIpAddressChanging(value);
+                this.ReportPropertyChanging("IpAddress");
+                this._IpAddress = global::System.Data.Objects.DataClasses.StructuralObject.SetValidValue(value, false);
+                this.ReportPropertyChanged("IpAddress");
+                this.OnIpAddressChanged();
             }
         }
-        private string _IPAddress;
-        partial void OnIPAddressChanging(string value);
-        partial void OnIPAddressChanged();
+        private string _IpAddress;
+        partial void OnIpAddressChanging(string value);
+        partial void OnIpAddressChanged();
         /// <summary>
         /// There are no comments for Property Timestamp in the schema.
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public global::System.DateTime Timestamp
+        internal global::System.DateTime Timestamp
         {
             get
             {
@@ -1421,7 +1415,7 @@ namespace Kigg.EF.DomainObjects
         [global::System.Xml.Serialization.XmlIgnoreAttribute()]
         [global::System.Xml.Serialization.SoapIgnoreAttribute()]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public Story Story
+        internal Story Story
         {
             get
             {
@@ -1437,7 +1431,7 @@ namespace Kigg.EF.DomainObjects
         /// </summary>
         [global::System.ComponentModel.BrowsableAttribute(false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public global::System.Data.Objects.DataClasses.EntityReference<Story> StoryReference
+        internal global::System.Data.Objects.DataClasses.EntityReference<Story> StoryReference
         {
             get
             {
@@ -1458,7 +1452,7 @@ namespace Kigg.EF.DomainObjects
         [global::System.Xml.Serialization.XmlIgnoreAttribute()]
         [global::System.Xml.Serialization.SoapIgnoreAttribute()]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public User User
+        internal User User
         {
             get
             {
@@ -1474,7 +1468,7 @@ namespace Kigg.EF.DomainObjects
         /// </summary>
         [global::System.ComponentModel.BrowsableAttribute(false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public global::System.Data.Objects.DataClasses.EntityReference<User> UserReference
+        internal global::System.Data.Objects.DataClasses.EntityReference<User> UserReference
         {
             get
             {
@@ -1504,14 +1498,10 @@ namespace Kigg.EF.DomainObjects
         /// Create a new StoryView object.
         /// </summary>
         /// <param name="id">Initial value of Id.</param>
-        /// <param name="timestamp">Initial value of Timestamp.</param>
-        /// <param name="iPAddress">Initial value of IPAddress.</param>
-        public static StoryView CreateStoryView(long id, global::System.DateTime timestamp, string iPAddress)
+        public static StoryView CreateStoryView(long id)
         {
             StoryView storyView = new StoryView();
             storyView.Id = id;
-            storyView.Timestamp = timestamp;
-            storyView.IPAddress = iPAddress;
             return storyView;
         }
         /// <summary>
@@ -1525,7 +1515,7 @@ namespace Kigg.EF.DomainObjects
             {
                 return this._Id;
             }
-            set
+            internal set
             {
                 this.OnIdChanging(value);
                 this.ReportPropertyChanging("Id");
@@ -1542,7 +1532,7 @@ namespace Kigg.EF.DomainObjects
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public global::System.DateTime Timestamp
+        internal global::System.DateTime Timestamp
         {
             get
             {
@@ -1561,28 +1551,28 @@ namespace Kigg.EF.DomainObjects
         partial void OnTimestampChanging(global::System.DateTime value);
         partial void OnTimestampChanged();
         /// <summary>
-        /// There are no comments for Property IPAddress in the schema.
+        /// There are no comments for Property IpAddress in the schema.
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public string IPAddress
+        internal string IpAddress
         {
             get
             {
-                return this._IPAddress;
+                return this._IpAddress;
             }
             set
             {
-                this.OnIPAddressChanging(value);
-                this.ReportPropertyChanging("IPAddress");
-                this._IPAddress = global::System.Data.Objects.DataClasses.StructuralObject.SetValidValue(value, false);
-                this.ReportPropertyChanged("IPAddress");
-                this.OnIPAddressChanged();
+                this.OnIpAddressChanging(value);
+                this.ReportPropertyChanging("IpAddress");
+                this._IpAddress = global::System.Data.Objects.DataClasses.StructuralObject.SetValidValue(value, false);
+                this.ReportPropertyChanged("IpAddress");
+                this.OnIpAddressChanged();
             }
         }
-        private string _IPAddress;
-        partial void OnIPAddressChanging(string value);
-        partial void OnIPAddressChanged();
+        private string _IpAddress;
+        partial void OnIpAddressChanging(string value);
+        partial void OnIpAddressChanged();
         /// <summary>
         /// There are no comments for Story in the schema.
         /// </summary>
@@ -1590,7 +1580,7 @@ namespace Kigg.EF.DomainObjects
         [global::System.Xml.Serialization.XmlIgnoreAttribute()]
         [global::System.Xml.Serialization.SoapIgnoreAttribute()]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public Story Story
+        internal Story Story
         {
             get
             {
@@ -1606,7 +1596,7 @@ namespace Kigg.EF.DomainObjects
         /// </summary>
         [global::System.ComponentModel.BrowsableAttribute(false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public global::System.Data.Objects.DataClasses.EntityReference<Story> StoryReference
+        internal global::System.Data.Objects.DataClasses.EntityReference<Story> StoryReference
         {
             get
             {
@@ -1638,15 +1628,11 @@ namespace Kigg.EF.DomainObjects
         /// </summary>
         /// <param name="storyId">Initial value of StoryId.</param>
         /// <param name="userId">Initial value of UserId.</param>
-        /// <param name="iPAddress">Initial value of IPAddress.</param>
-        /// <param name="timestamp">Initial value of Timestamp.</param>
-        public static StoryVote CreateStoryVote(global::System.Guid storyId, global::System.Guid userId, string iPAddress, global::System.DateTime timestamp)
+        public static StoryVote CreateStoryVote(global::System.Guid storyId, global::System.Guid userId)
         {
             StoryVote storyVote = new StoryVote();
             storyVote.StoryId = storyId;
             storyVote.UserId = userId;
-            storyVote.IPAddress = iPAddress;
-            storyVote.Timestamp = timestamp;
             return storyVote;
         }
         /// <summary>
@@ -1696,34 +1682,34 @@ namespace Kigg.EF.DomainObjects
         partial void OnUserIdChanging(global::System.Guid value);
         partial void OnUserIdChanged();
         /// <summary>
-        /// There are no comments for Property IPAddress in the schema.
+        /// There are no comments for Property IpAddress in the schema.
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public string IPAddress
+        internal string IpAddress
         {
             get
             {
-                return this._IPAddress;
+                return this._IpAddress;
             }
             set
             {
-                this.OnIPAddressChanging(value);
-                this.ReportPropertyChanging("IPAddress");
-                this._IPAddress = global::System.Data.Objects.DataClasses.StructuralObject.SetValidValue(value, false);
-                this.ReportPropertyChanged("IPAddress");
-                this.OnIPAddressChanged();
+                this.OnIpAddressChanging(value);
+                this.ReportPropertyChanging("IpAddress");
+                this._IpAddress = global::System.Data.Objects.DataClasses.StructuralObject.SetValidValue(value, false);
+                this.ReportPropertyChanged("IpAddress");
+                this.OnIpAddressChanged();
             }
         }
-        private string _IPAddress;
-        partial void OnIPAddressChanging(string value);
-        partial void OnIPAddressChanged();
+        private string _IpAddress;
+        partial void OnIpAddressChanging(string value);
+        partial void OnIpAddressChanged();
         /// <summary>
         /// There are no comments for Property Timestamp in the schema.
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public global::System.DateTime Timestamp
+        internal global::System.DateTime Timestamp
         {
             get
             {
@@ -1748,7 +1734,7 @@ namespace Kigg.EF.DomainObjects
         [global::System.Xml.Serialization.XmlIgnoreAttribute()]
         [global::System.Xml.Serialization.SoapIgnoreAttribute()]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public Story Story
+        internal Story Story
         {
             get
             {
@@ -1764,7 +1750,7 @@ namespace Kigg.EF.DomainObjects
         /// </summary>
         [global::System.ComponentModel.BrowsableAttribute(false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public global::System.Data.Objects.DataClasses.EntityReference<Story> StoryReference
+        internal global::System.Data.Objects.DataClasses.EntityReference<Story> StoryReference
         {
             get
             {
@@ -1785,7 +1771,7 @@ namespace Kigg.EF.DomainObjects
         [global::System.Xml.Serialization.XmlIgnoreAttribute()]
         [global::System.Xml.Serialization.SoapIgnoreAttribute()]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public User User
+        internal User User
         {
             get
             {
@@ -1801,7 +1787,7 @@ namespace Kigg.EF.DomainObjects
         /// </summary>
         [global::System.ComponentModel.BrowsableAttribute(false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public global::System.Data.Objects.DataClasses.EntityReference<User> UserReference
+        internal global::System.Data.Objects.DataClasses.EntityReference<User> UserReference
         {
             get
             {
@@ -1854,7 +1840,7 @@ namespace Kigg.EF.DomainObjects
             {
                 return this._Id;
             }
-            set
+            internal set
             {
                 this.OnIdChanging(value);
                 this.ReportPropertyChanging("Id");
@@ -1877,7 +1863,7 @@ namespace Kigg.EF.DomainObjects
             {
                 return this._UniqueName;
             }
-            set
+            internal set
             {
                 this.OnUniqueNameChanging(value);
                 this.ReportPropertyChanging("UniqueName");
@@ -1900,7 +1886,7 @@ namespace Kigg.EF.DomainObjects
             {
                 return this._Name;
             }
-            set
+            internal set
             {
                 this.OnNameChanging(value);
                 this.ReportPropertyChanging("Name");
@@ -1923,7 +1909,7 @@ namespace Kigg.EF.DomainObjects
             {
                 return this._CreatedAt;
             }
-            set
+            internal set
             {
                 this.OnCreatedAtChanging(value);
                 this.ReportPropertyChanging("CreatedAt");
@@ -1942,7 +1928,7 @@ namespace Kigg.EF.DomainObjects
         [global::System.Xml.Serialization.XmlIgnoreAttribute()]
         [global::System.Xml.Serialization.SoapIgnoreAttribute()]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public global::System.Data.Objects.DataClasses.EntityCollection<Story> Stories
+        internal global::System.Data.Objects.DataClasses.EntityCollection<Story> Stories
         {
             get
             {
@@ -1963,7 +1949,7 @@ namespace Kigg.EF.DomainObjects
         [global::System.Xml.Serialization.XmlIgnoreAttribute()]
         [global::System.Xml.Serialization.SoapIgnoreAttribute()]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public global::System.Data.Objects.DataClasses.EntityCollection<User> Users
+        internal global::System.Data.Objects.DataClasses.EntityCollection<User> Users
         {
             get
             {
@@ -1997,10 +1983,9 @@ namespace Kigg.EF.DomainObjects
         /// <param name="email">Initial value of Email.</param>
         /// <param name="isActive">Initial value of IsActive.</param>
         /// <param name="isLockedOut">Initial value of IsLockedOut.</param>
-        /// <param name="role">Initial value of Role.</param>
         /// <param name="lastActivityAt">Initial value of LastActivityAt.</param>
         /// <param name="createdAt">Initial value of CreatedAt.</param>
-        public static User CreateUser(global::System.Guid id, string userName, string email, bool isActive, bool isLockedOut, int role, global::System.DateTime lastActivityAt, global::System.DateTime createdAt)
+        public static User CreateUser(global::System.Guid id, string userName, string email, bool isActive, bool isLockedOut, global::System.DateTime lastActivityAt, global::System.DateTime createdAt)
         {
             User user = new User();
             user.Id = id;
@@ -2008,7 +1993,6 @@ namespace Kigg.EF.DomainObjects
             user.Email = email;
             user.IsActive = isActive;
             user.IsLockedOut = isLockedOut;
-            user.Role = role;
             user.LastActivityAt = lastActivityAt;
             user.CreatedAt = createdAt;
             return user;
@@ -2024,7 +2008,7 @@ namespace Kigg.EF.DomainObjects
             {
                 return this._Id;
             }
-            set
+            internal set
             {
                 this.OnIdChanging(value);
                 this.ReportPropertyChanging("Id");
@@ -2047,7 +2031,7 @@ namespace Kigg.EF.DomainObjects
             {
                 return this._UserName;
             }
-            set
+            internal set
             {
                 this.OnUserNameChanging(value);
                 this.ReportPropertyChanging("UserName");
@@ -2070,7 +2054,7 @@ namespace Kigg.EF.DomainObjects
             {
                 return this._Password;
             }
-            set
+            internal set
             {
                 this.OnPasswordChanging(value);
                 this.ReportPropertyChanging("Password");
@@ -2093,7 +2077,7 @@ namespace Kigg.EF.DomainObjects
             {
                 return this._Email;
             }
-            set
+            internal set
             {
                 this.OnEmailChanging(value);
                 this.ReportPropertyChanging("Email");
@@ -2139,7 +2123,7 @@ namespace Kigg.EF.DomainObjects
             {
                 return this._IsLockedOut;
             }
-            set
+            internal set
             {
                 this.OnIsLockedOutChanging(value);
                 this.ReportPropertyChanging("IsLockedOut");
@@ -2152,28 +2136,28 @@ namespace Kigg.EF.DomainObjects
         partial void OnIsLockedOutChanging(bool value);
         partial void OnIsLockedOutChanged();
         /// <summary>
-        /// There are no comments for Property Role in the schema.
+        /// There are no comments for Property AssignedRole in the schema.
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public int Role
+        internal int AssignedRole
         {
             get
             {
-                return this._Role;
+                return this._AssignedRole;
             }
             set
             {
-                this.OnRoleChanging(value);
-                this.ReportPropertyChanging("Role");
-                this._Role = global::System.Data.Objects.DataClasses.StructuralObject.SetValidValue(value);
-                this.ReportPropertyChanged("Role");
-                this.OnRoleChanged();
+                this.OnAssignedRoleChanging(value);
+                this.ReportPropertyChanging("AssignedRole");
+                this._AssignedRole = global::System.Data.Objects.DataClasses.StructuralObject.SetValidValue(value);
+                this.ReportPropertyChanged("AssignedRole");
+                this.OnAssignedRoleChanged();
             }
         }
-        private int _Role;
-        partial void OnRoleChanging(int value);
-        partial void OnRoleChanged();
+        private int _AssignedRole;
+        partial void OnAssignedRoleChanging(int value);
+        partial void OnAssignedRoleChanged();
         /// <summary>
         /// There are no comments for Property LastActivityAt in the schema.
         /// </summary>
@@ -2208,7 +2192,7 @@ namespace Kigg.EF.DomainObjects
             {
                 return this._CreatedAt;
             }
-            set
+            internal set
             {
                 this.OnCreatedAtChanging(value);
                 this.ReportPropertyChanging("CreatedAt");
@@ -2221,13 +2205,13 @@ namespace Kigg.EF.DomainObjects
         partial void OnCreatedAtChanging(global::System.DateTime value);
         partial void OnCreatedAtChanged();
         /// <summary>
-        /// There are no comments for Stories in the schema.
+        /// There are no comments for SubmittedStoriesInternal in the schema.
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmRelationshipNavigationPropertyAttribute("Kigg.EF.DomainObjects", "FK_Story_User", "Story")]
         [global::System.Xml.Serialization.XmlIgnoreAttribute()]
         [global::System.Xml.Serialization.SoapIgnoreAttribute()]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public global::System.Data.Objects.DataClasses.EntityCollection<Story> Stories
+        private global::System.Data.Objects.DataClasses.EntityCollection<Story> SubmittedStoriesInternal
         {
             get
             {
@@ -2242,13 +2226,13 @@ namespace Kigg.EF.DomainObjects
             }
         }
         /// <summary>
-        /// There are no comments for SubmittedComments in the schema.
+        /// There are no comments for SubmittedCommentsInternal in the schema.
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmRelationshipNavigationPropertyAttribute("Kigg.EF.DomainObjects", "FK_StoryComment_User", "StoryComment")]
         [global::System.Xml.Serialization.XmlIgnoreAttribute()]
         [global::System.Xml.Serialization.SoapIgnoreAttribute()]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public global::System.Data.Objects.DataClasses.EntityCollection<StoryComment> SubmittedComments
+        private global::System.Data.Objects.DataClasses.EntityCollection<StoryComment> SubmittedCommentsInternal
         {
             get
             {
@@ -2263,13 +2247,13 @@ namespace Kigg.EF.DomainObjects
             }
         }
         /// <summary>
-        /// There are no comments for Spams in the schema.
+        /// There are no comments for SubmittedSpamsInternal in the schema.
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmRelationshipNavigationPropertyAttribute("Kigg.EF.DomainObjects", "FK_StoryMarkAsSpam_User", "StoryMarkAsSpam")]
         [global::System.Xml.Serialization.XmlIgnoreAttribute()]
         [global::System.Xml.Serialization.SoapIgnoreAttribute()]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public global::System.Data.Objects.DataClasses.EntityCollection<StoryMarkAsSpam> Spams
+        private global::System.Data.Objects.DataClasses.EntityCollection<StoryMarkAsSpam> SubmittedSpamsInternal
         {
             get
             {
@@ -2284,13 +2268,13 @@ namespace Kigg.EF.DomainObjects
             }
         }
         /// <summary>
-        /// There are no comments for StoryVotes in the schema.
+        /// There are no comments for SubmittedStoryVotesInternal in the schema.
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmRelationshipNavigationPropertyAttribute("Kigg.EF.DomainObjects", "FK_StoryVote_User", "StoryVote")]
         [global::System.Xml.Serialization.XmlIgnoreAttribute()]
         [global::System.Xml.Serialization.SoapIgnoreAttribute()]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public global::System.Data.Objects.DataClasses.EntityCollection<StoryVote> StoryVotes
+        private global::System.Data.Objects.DataClasses.EntityCollection<StoryVote> SubmittedStoryVotesInternal
         {
             get
             {
@@ -2305,19 +2289,19 @@ namespace Kigg.EF.DomainObjects
             }
         }
         /// <summary>
-        /// There are no comments for UserScore in the schema.
+        /// There are no comments for UserScoreInternal in the schema.
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmRelationshipNavigationPropertyAttribute("Kigg.EF.DomainObjects", "FK_UserScore_User", "UserScore")]
         [global::System.Xml.Serialization.XmlIgnoreAttribute()]
         [global::System.Xml.Serialization.SoapIgnoreAttribute()]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public global::System.Data.Objects.DataClasses.EntityCollection<UserScore> UserScore
+        internal global::System.Data.Objects.DataClasses.EntityCollection<UserScore> UserScoreInternal
         {
             get
             {
                 return ((global::System.Data.Objects.DataClasses.IEntityWithRelationships)(this)).RelationshipManager.GetRelatedCollection<UserScore>("Kigg.EF.DomainObjects.FK_UserScore_User", "UserScore");
             }
-            set
+            private set
             {
                 if ((value != null))
                 {
@@ -2326,13 +2310,13 @@ namespace Kigg.EF.DomainObjects
             }
         }
         /// <summary>
-        /// There are no comments for CommentSubscribtions in the schema.
+        /// There are no comments for CommentSubscribtionsInternal in the schema.
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmRelationshipNavigationPropertyAttribute("Kigg.EF.DomainObjects", "CommentSubscribtion", "Story")]
         [global::System.Xml.Serialization.XmlIgnoreAttribute()]
         [global::System.Xml.Serialization.SoapIgnoreAttribute()]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public global::System.Data.Objects.DataClasses.EntityCollection<Story> CommentSubscribtions
+        private global::System.Data.Objects.DataClasses.EntityCollection<Story> CommentSubscribtionsInternal
         {
             get
             {
@@ -2347,13 +2331,13 @@ namespace Kigg.EF.DomainObjects
             }
         }
         /// <summary>
-        /// There are no comments for UserTags in the schema.
+        /// There are no comments for UserTagsInternal in the schema.
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmRelationshipNavigationPropertyAttribute("Kigg.EF.DomainObjects", "UserTag", "Tag")]
         [global::System.Xml.Serialization.XmlIgnoreAttribute()]
         [global::System.Xml.Serialization.SoapIgnoreAttribute()]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public global::System.Data.Objects.DataClasses.EntityCollection<Tag> UserTags
+        internal global::System.Data.Objects.DataClasses.EntityCollection<Tag> UserTagsInternal
         {
             get
             {
@@ -2380,27 +2364,11 @@ namespace Kigg.EF.DomainObjects
     public partial class UserScore : global::System.Data.Objects.DataClasses.EntityObject
     {
         /// <summary>
-        /// Create a new UserScore object.
-        /// </summary>
-        /// <param name="id">Initial value of Id.</param>
-        /// <param name="timestamp">Initial value of Timestamp.</param>
-        /// <param name="actionType">Initial value of ActionType.</param>
-        /// <param name="score">Initial value of Score.</param>
-        public static UserScore CreateUserScore(long id, global::System.DateTime timestamp, int actionType, decimal score)
-        {
-            UserScore userScore = new UserScore();
-            userScore.Id = id;
-            userScore.Timestamp = timestamp;
-            userScore.ActionType = actionType;
-            userScore.Score = score;
-            return userScore;
-        }
-        /// <summary>
         /// There are no comments for Property Id in the schema.
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public long Id
+        internal long Id
         {
             get
             {
@@ -2423,7 +2391,7 @@ namespace Kigg.EF.DomainObjects
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public global::System.DateTime Timestamp
+        internal global::System.DateTime Timestamp
         {
             get
             {
@@ -2442,34 +2410,34 @@ namespace Kigg.EF.DomainObjects
         partial void OnTimestampChanging(global::System.DateTime value);
         partial void OnTimestampChanged();
         /// <summary>
-        /// There are no comments for Property ActionType in the schema.
+        /// There are no comments for Property Action in the schema.
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public int ActionType
+        internal int Action
         {
             get
             {
-                return this._ActionType;
+                return this._Action;
             }
             set
             {
-                this.OnActionTypeChanging(value);
-                this.ReportPropertyChanging("ActionType");
-                this._ActionType = global::System.Data.Objects.DataClasses.StructuralObject.SetValidValue(value);
-                this.ReportPropertyChanged("ActionType");
-                this.OnActionTypeChanged();
+                this.OnActionChanging(value);
+                this.ReportPropertyChanging("Action");
+                this._Action = global::System.Data.Objects.DataClasses.StructuralObject.SetValidValue(value);
+                this.ReportPropertyChanged("Action");
+                this.OnActionChanged();
             }
         }
-        private int _ActionType;
-        partial void OnActionTypeChanging(int value);
-        partial void OnActionTypeChanged();
+        private int _Action;
+        partial void OnActionChanging(int value);
+        partial void OnActionChanged();
         /// <summary>
         /// There are no comments for Property Score in the schema.
         /// </summary>
         [global::System.Data.Objects.DataClasses.EdmScalarPropertyAttribute(IsNullable=false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public decimal Score
+        internal decimal Score
         {
             get
             {
@@ -2494,7 +2462,7 @@ namespace Kigg.EF.DomainObjects
         [global::System.Xml.Serialization.XmlIgnoreAttribute()]
         [global::System.Xml.Serialization.SoapIgnoreAttribute()]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public User User
+        internal User User
         {
             get
             {
@@ -2510,7 +2478,7 @@ namespace Kigg.EF.DomainObjects
         /// </summary>
         [global::System.ComponentModel.BrowsableAttribute(false)]
         [global::System.Runtime.Serialization.DataMemberAttribute()]
-        public global::System.Data.Objects.DataClasses.EntityReference<User> UserReference
+        internal global::System.Data.Objects.DataClasses.EntityReference<User> UserReference
         {
             get
             {

@@ -63,6 +63,8 @@
     <Compile Include="DomainObjects\Tag.cs" />
     <Compile Include="DomainObjects\User.cs" />
     <Compile Include="DomainObjects\CommentSubscribtion.cs" />
+    <Compile Include="Helpers\EntityCollection.cs" />
+    <Compile Include="Helpers\IEntityCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\Database.cs" />
     <Compile Include="Repository\Helpers\DataLoadOptions.cs" />

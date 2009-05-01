@@ -155,7 +155,7 @@
 
         public void SubmitChanges()
         {
-            throw new NotImplementedException();
+            SaveChanges(true);
         }
 
         private ObjectQuery<TEntity> ApplyDataLoadOptions<TEntity>(string queryString)

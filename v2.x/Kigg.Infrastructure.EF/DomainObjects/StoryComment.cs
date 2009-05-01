@@ -7,22 +7,31 @@ namespace Kigg.EF.DomainObjects
     {
         public IStory ForStory
         {
-            get { throw new System.NotImplementedException(); }
+            get
+            {
+                return Story;
+            }
         }
 
         public IUser ByUser
         {
-            get { throw new System.NotImplementedException(); }
+            get
+            {
+                return User;
+            }
         }
 
         public string FromIPAddress
         {
-            get { throw new System.NotImplementedException(); }
+            get 
+            {
+                return IpAddress;
+            }
         }
 
         public void MarkAsOffended()
         {
-            throw new System.NotImplementedException();
+            IsOffended = true;
         }
     }
 }

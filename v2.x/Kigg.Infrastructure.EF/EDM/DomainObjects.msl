@@ -48,7 +48,7 @@
           <ScalarProperty Name="HtmlBody" ColumnName="HtmlBody" />
           <ScalarProperty Name="TextBody" ColumnName="TextBody" />
           <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
-          <ScalarProperty Name="IPAddress" ColumnName="IPAddress" />
+          <ScalarProperty Name="IpAddress" ColumnName="IPAddress" />
           <ScalarProperty Name="IsOffended" ColumnName="IsOffended" />
         </MappingFragment>
       </EntityTypeMapping>
@@ -58,7 +58,7 @@
         <MappingFragment StoreEntitySet="StoryMarkAsSpam">
           <ScalarProperty Name="StoryId" ColumnName="StoryId" />
           <ScalarProperty Name="UserId" ColumnName="UserId" />
-          <ScalarProperty Name="IPAddress" ColumnName="IPAddress" />
+          <ScalarProperty Name="IpAddress" ColumnName="IPAddress" />
           <ScalarProperty Name="Timestamp" ColumnName="Timestamp" />
         </MappingFragment>
       </EntityTypeMapping>
@@ -68,7 +68,7 @@
         <MappingFragment StoreEntitySet="StoryView">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Timestamp" ColumnName="Timestamp" />
-          <ScalarProperty Name="IPAddress" ColumnName="IPAddress" />
+          <ScalarProperty Name="IpAddress" ColumnName="IPAddress" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -77,7 +77,7 @@
         <MappingFragment StoreEntitySet="StoryVote">
           <ScalarProperty Name="StoryId" ColumnName="StoryId" />
           <ScalarProperty Name="UserId" ColumnName="UserId" />
-          <ScalarProperty Name="IPAddress" ColumnName="IPAddress" />
+          <ScalarProperty Name="IpAddress" ColumnName="IPAddress" />
           <ScalarProperty Name="Timestamp" ColumnName="Timestamp" />
         </MappingFragment>
       </EntityTypeMapping>
@@ -101,7 +101,7 @@
           <ScalarProperty Name="Email" ColumnName="Email" />
           <ScalarProperty Name="IsActive" ColumnName="IsActive" />
           <ScalarProperty Name="IsLockedOut" ColumnName="IsLockedOut" />
-          <ScalarProperty Name="Role" ColumnName="Role" />
+          <ScalarProperty Name="AssignedRole" ColumnName="Role" />
           <ScalarProperty Name="LastActivityAt" ColumnName="LastActivityAt" />
           <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
         </MappingFragment>
@@ -112,7 +112,7 @@
         <MappingFragment StoreEntitySet="UserScore">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Timestamp" ColumnName="Timestamp" />
-          <ScalarProperty Name="ActionType" ColumnName="ActionType" />
+          <ScalarProperty Name="Action" ColumnName="ActionType" />
           <ScalarProperty Name="Score" ColumnName="Score" />
         </MappingFragment>
       </EntityTypeMapping>

@@ -1,4 +1,5 @@
-﻿
+﻿using System;
+
 namespace Kigg.EF.DomainObjects
 {
     using Kigg.DomainObjects;
@@ -7,22 +8,34 @@ namespace Kigg.EF.DomainObjects
     {
         public IStory ForStory
         {
-            get { throw new System.NotImplementedException(); }
+            get
+            {
+                return Story;
+            }
         }
 
         public IUser ByUser
         {
-            get { throw new System.NotImplementedException(); }
+            get
+            {
+                return User;
+            }
         }
 
         public string FromIPAddress
         {
-            get { throw new System.NotImplementedException(); }
+            get
+            {
+                return IpAddress;
+            }
         }
 
-        public System.DateTime MarkedAt
+        public DateTime MarkedAt
         {
-            get { throw new System.NotImplementedException(); }
+            get
+            {
+                return Timestamp;
+            }
         }
     }
 }
