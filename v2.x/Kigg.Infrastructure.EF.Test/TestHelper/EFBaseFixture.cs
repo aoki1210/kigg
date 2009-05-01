@@ -11,7 +11,7 @@ namespace Kigg.Infrastructure.EF.Test
     using Kigg.EF.DomainObjects;
     using Kigg.Test.Infrastructure;
 
-    public abstract class LinqToSqlBaseFixture : BaseFixture
+    public abstract class EfBaseFixture : BaseFixture
     {
         protected readonly List<User> Users;
         protected readonly List<Category> Categories;
@@ -42,7 +42,7 @@ namespace Kigg.Infrastructure.EF.Test
         protected readonly Mock<IStoryViewRepository> storyViewRepository;
         protected readonly Mock<IVoteRepository> voteRepository;
 
-        protected LinqToSqlBaseFixture()
+        protected EfBaseFixture()
         {
             //databaseFactory = new Mock<IDatabaseFactory>();
             database = new Mock<IDatabase>();

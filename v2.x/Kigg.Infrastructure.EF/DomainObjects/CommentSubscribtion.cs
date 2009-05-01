@@ -4,11 +4,19 @@
 
     public class CommentSubscribtion : ICommentSubscribtion
     {
+        private readonly Story _story;
+        private readonly User _user;
+        public CommentSubscribtion (Story forStory, User byUser)
+        {
+            _story = forStory;
+            _user = byUser;
+        }
+        
         public IStory ForStory
         {
             get
             {
-                throw new System.NotImplementedException();
+                return _story;
             }
         }
 
@@ -16,7 +24,7 @@
         {
             get
             {
-                throw new System.NotImplementedException();
+                return _user;
             }
         }
     }

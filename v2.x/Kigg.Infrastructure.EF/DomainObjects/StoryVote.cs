@@ -1,27 +1,41 @@
 ﻿namespace Kigg.EF.DomainObjects
 {
+    using System;
+
     using Kigg.DomainObjects;
 
     public partial class StoryVote : IVote
     {
         public IStory ForStory
         {
-            get { throw new System.NotImplementedException(); }
+            get
+            {
+                return Story;
+            }
         }
 
         public IUser ByUser
         {
-            get { throw new System.NotImplementedException(); }
+            get
+            {
+                return User;
+            }
         }
 
         public string FromIPAddress
         {
-            get { throw new System.NotImplementedException(); }
+            get
+            {
+                return IpAddress;
+            }
         }
 
-        public System.DateTime PromotedAt
+        public DateTime PromotedAt
         {
-            get { throw new System.NotImplementedException(); }
+            get
+            {
+                return Timestamp;
+            }
         }
     }
 }
