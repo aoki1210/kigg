@@ -137,7 +137,7 @@
 
         }
         
-        public IQueryable<TEntity> GetQueryable<TEntity>(string queryString) where TEntity : EntityObject
+        private IQueryable<TEntity> GetQueryable<TEntity>(string queryString) where TEntity : EntityObject
         {
             return ApplyDataLoadOptions<TEntity>(queryString);
         }

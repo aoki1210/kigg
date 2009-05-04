@@ -95,21 +95,21 @@
     <Property Name="TextDescription" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
     <Property Name="Url" Type="String" Nullable="false" MaxLength="2048" Unicode="true" FixedLength="false" />
     <Property Name="UrlHash" Type="String" Nullable="false" MaxLength="24" Unicode="true" FixedLength="true" />
-    <Property Name="IPAddress" Type="String" Nullable="false" MaxLength="15" Unicode="false" FixedLength="false" />
-    <Property Name="CreatedAt" Type="DateTime" Nullable="false" />
-    <Property Name="LastActivityAt" Type="DateTime" Nullable="false" />
-    <Property Name="ApprovedAt" Type="DateTime" />
-    <Property Name="PublishedAt" Type="DateTime" />
-    <Property Name="Rank" Type="Int32" />
-    <Property Name="LastProcessedAt" Type="DateTime" />
+    <Property a:GetterAccess="Internal" a:SetterAccess="Internal" Name="IpAddress" Type="String" Nullable="false" MaxLength="15" Unicode="false" FixedLength="false" />
+    <Property a:SetterAccess="Internal" Name="CreatedAt" Type="DateTime" Nullable="false" />
+    <Property a:SetterAccess="Internal" Name="LastActivityAt" Type="DateTime" Nullable="false" />
+    <Property a:SetterAccess="Internal" Name="ApprovedAt" Type="DateTime" />
+    <Property a:SetterAccess="Internal" Name="PublishedAt" Type="DateTime" />
+    <Property a:SetterAccess="Internal" Name="Rank" Type="Int32" />
+    <Property a:SetterAccess="Internal" Name="LastProcessedAt" Type="DateTime" />
     <NavigationProperty a:GetterAccess="Internal" a:SetterAccess="Internal" Name="Category" Relationship="Kigg.EF.DomainObjects.FK_Story_Category" FromRole="Story" ToRole="Category" />
-    <NavigationProperty Name="User" Relationship="Kigg.EF.DomainObjects.FK_Story_User" FromRole="Story" ToRole="User" />
-    <NavigationProperty Name="StoryComments" Relationship="Kigg.EF.DomainObjects.FK_StoryComment_Story" FromRole="Story" ToRole="StoryComment" />
-    <NavigationProperty Name="StoryMarkAsSpams" Relationship="Kigg.EF.DomainObjects.FK_StoryMarkAsSpam_Story" FromRole="Story" ToRole="StoryMarkAsSpam" />
-    <NavigationProperty Name="StoryViews" Relationship="Kigg.EF.DomainObjects.FK_StoryView_Story" FromRole="Story" ToRole="StoryView" />
-    <NavigationProperty Name="StoryVotes" Relationship="Kigg.EF.DomainObjects.FK_StoryVote_Story" FromRole="Story" ToRole="StoryVote" />
-    <NavigationProperty Name="CommentSubscribers" Relationship="Kigg.EF.DomainObjects.CommentSubscribtion" FromRole="Story" ToRole="User" />
-    <NavigationProperty Name="StoryTags" Relationship="Kigg.EF.DomainObjects.StoryTag" FromRole="Story" ToRole="Tag" />
+    <NavigationProperty a:GetterAccess="Internal" a:SetterAccess="Internal" Name="User" Relationship="Kigg.EF.DomainObjects.FK_Story_User" FromRole="Story" ToRole="User" />
+    <NavigationProperty a:GetterAccess="Internal" a:SetterAccess="Internal" Name="StoryCommentsInternal" Relationship="Kigg.EF.DomainObjects.FK_StoryComment_Story" FromRole="Story" ToRole="StoryComment" />
+    <NavigationProperty a:GetterAccess="Internal" a:SetterAccess="Internal" Name="StoryMarkAsSpamsInternal" Relationship="Kigg.EF.DomainObjects.FK_StoryMarkAsSpam_Story" FromRole="Story" ToRole="StoryMarkAsSpam" />
+    <NavigationProperty a:GetterAccess="Internal" a:SetterAccess="Internal" Name="StoryViewsInternal" Relationship="Kigg.EF.DomainObjects.FK_StoryView_Story" FromRole="Story" ToRole="StoryView" />
+    <NavigationProperty a:GetterAccess="Internal" a:SetterAccess="Internal" Name="StoryVotesInternal" Relationship="Kigg.EF.DomainObjects.FK_StoryVote_Story" FromRole="Story" ToRole="StoryVote" />
+    <NavigationProperty a:GetterAccess="Internal" a:SetterAccess="Internal" Name="CommentSubscribersInternal" Relationship="Kigg.EF.DomainObjects.CommentSubscribtion" FromRole="Story" ToRole="User" />
+    <NavigationProperty a:GetterAccess="Internal" a:SetterAccess="Internal" Name="StoryTagsInternal" Relationship="Kigg.EF.DomainObjects.StoryTag" FromRole="Story" ToRole="Tag" />
   </EntityType>
   <EntityType Name="StoryComment">
     <Key>

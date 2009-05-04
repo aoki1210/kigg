@@ -1,5 +1,4 @@
 ﻿using System;
-using Kigg.EF;
 using Moq;
 using Xunit;
 

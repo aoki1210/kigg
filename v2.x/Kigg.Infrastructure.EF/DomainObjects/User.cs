@@ -9,6 +9,7 @@
 
     public partial class User : IUser
     {
+        [NonSerialized]
         private EntityCollection<ITag, Tag> _userTags;
         internal IEntityCollection<ITag> UserTags
         {
@@ -23,10 +24,12 @@
             }
             set
             {
-                if (!(value is EntityCollection<ITag, Tag>))
+                var userTags = value as EntityCollection<ITag, Tag>;
+                if (userTags == null)
+                {
                     throw new NotSupportedException("Assigned value must be of type EntityCollection<ITag, Tag>");
-
-                _userTags = (EntityCollection<ITag, Tag>)value;
+                }
+                _userTags = userTags;
             }
         }
         
@@ -62,8 +65,8 @@
         {
             get
             {
-                var tags = (EntityCollection<ITag, Tag>) UserTags;
-                var query = tags.CreateSourceQuery();
+                EnsureUserTags();
+                var query = _userTags.CreateSourceQuery();
                 return query != null ? query.Count() : 0;
             }
         }

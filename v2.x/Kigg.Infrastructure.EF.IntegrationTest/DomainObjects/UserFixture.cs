@@ -13,12 +13,6 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
     
     public class UserFixture : BaseIntegrationFixture
     {
-        private readonly Database _database;
-
-        public UserFixture()
-        {
-            _database = new Database(ConnectionString);
-        }
 
         [Fact]
         public void Tags_Should_Be_Empty_When_New_Instance_Is_Created()
@@ -251,14 +245,14 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         }
         
         
-        private static Tag CraeteTag()
-        {
-            return Tag.CreateTag(Guid.NewGuid(), "DummyTagUniqueName", "DummyTag", SystemTime.Now());
-        }
-        private static User CreateUser()
-        {
-            return User.CreateUser(Guid.NewGuid(), "dummy", "dummy@mail.com",
-                                        false, false, SystemTime.Now(), SystemTime.Now());
-        }
+        //private static Tag CraeteTag()
+        //{
+        //    return Tag.CreateTag(Guid.NewGuid(), "DummyTagUniqueName", "DummyTag", SystemTime.Now());
+        //}
+        //private static User CreateUser()
+        //{
+        //    return User.CreateUser(Guid.NewGuid(), "dummy", "dummy@mail.com",
+        //                                false, false, SystemTime.Now(), SystemTime.Now());
+        //}
     }
 }

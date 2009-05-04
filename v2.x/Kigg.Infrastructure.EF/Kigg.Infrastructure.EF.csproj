@@ -53,6 +53,7 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="DomainObjects\Category.cs" />
+    <Compile Include="DomainObjects\DomainObjectFactory.cs" />
     <Compile Include="DomainObjects\KnownSource.cs" />
     <Compile Include="DomainObjects\Models.cs" />
     <Compile Include="DomainObjects\Story.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="DomainObjects\Tag.cs" />
     <Compile Include="DomainObjects\User.cs" />
     <Compile Include="DomainObjects\CommentSubscribtion.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\EntityCollection.cs" />
     <Compile Include="Helpers\IEntityCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -9,13 +9,6 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
 
     public class DatabaseFixture : BaseIntegrationFixture, IDisposable
     {
-        private readonly Database _database;
-
-        public DatabaseFixture()
-        {
-            _database = new Database(ConnectionString);
-        }
-
         [Fact]
         public void ObjectContext_With_LoadOptions_Should_Preload_UserTags_When_User_Is_Loaded()
         {
