@@ -1,16 +1,14 @@
-﻿namespace Kigg.EF
+﻿namespace Kigg.EF.DomainObjects
 {
     using System.Collections;
     using System.Collections.Generic;
     
-    using Kigg.DomainObjects;
-
-    public interface IEntityCollection<TEntity> : ICollection, IEnumerable<TEntity>
-        where TEntity : class, IEntity
+    public interface IEntityCollection<TInterface> : ICollection, IEnumerable<TInterface>
+        where TInterface : class
     {
         bool IsLoaded { get; }
         void Load();
         void Clear();
-        bool Remove(TEntity entity);
+        bool Remove(TInterface entity);
     }
 }

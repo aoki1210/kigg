@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Reflection;
 using Xunit;
 
 namespace Kigg.Infrastructure.EF.Test
@@ -37,15 +39,17 @@ namespace Kigg.Infrastructure.EF.Test
         [Fact]
         public void IsPreloaded_Should_Return_True_When_Related_EntityCollection_Is_Registered_Using_LoadWith()
         {
-            _loadOptions.LoadWith<Story>(s => s.StoryTags);
-            Assert.True(_loadOptions.IsPreloaded(typeof(Story).GetProperty("StoryTags")));
+            _loadOptions.LoadWith<Story>(s => s.StoryTagsInternal);
+            var property = GetProperty(typeof(Story), "StoryTagsInternal");
+            Assert.True(_loadOptions.IsPreloaded(property));
         }
         
         [Fact]
         public void IsPreloaded_Should_Return_True_When_Related_EntityObject_Is_Registered_Using_LoadWith()
         {
             _loadOptions.LoadWith<Story>(s=>s.User);
-            Assert.True(_loadOptions.IsPreloaded(typeof(Story).GetProperty("User")));
+            var property = GetProperty(typeof(Story), "User");
+            Assert.True(_loadOptions.IsPreloaded(property));
         }
 
         [Fact]
@@ -54,7 +58,7 @@ namespace Kigg.Infrastructure.EF.Test
             _loadOptions.LoadWith<User>(u => u.UserTagsInternal);
             _loadOptions.LoadWith<Story>(s => s.Category);
             _loadOptions.LoadWith<Story>(s => s.User);
-            _loadOptions.LoadWith<Story>(s => s.StoryTags);
+            _loadOptions.LoadWith<Story>(s => s.StoryTagsInternal);
             _loadOptions.LoadWith<StoryVote>(v => v.User);
             _loadOptions.LoadWith<StoryMarkAsSpam>(s => s.User);
             _loadOptions.LoadWith<StoryComment>(c => c.User);
@@ -64,6 +68,20 @@ namespace Kigg.Infrastructure.EF.Test
 
             preloadedMembers = _loadOptions.GetPreloadedMembers<User>();
             Assert.Equal(1, preloadedMembers.Length);
+        }
+
+        private static bool MemberFilterByName(MemberInfo objMemberInfo, Object propertyName)
+        {
+            // Compare the name of the member function with the filter criteria.
+            return objMemberInfo.Name == propertyName.ToString();
+        }
+
+        private static MemberInfo GetProperty(Type type, string propertyName)
+        {
+            return type.FindMembers(MemberTypes.Property,
+                                    BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public,
+                                    MemberFilterByName,
+                                    propertyName).SingleOrDefault();
         }
     }
 }

@@ -31,7 +31,7 @@
           <ScalarProperty Name="TextDescription" ColumnName="TextDescription" />
           <ScalarProperty Name="Url" ColumnName="Url" />
           <ScalarProperty Name="UrlHash" ColumnName="UrlHash" />
-          <ScalarProperty Name="IPAddress" ColumnName="IPAddress" />
+          <ScalarProperty Name="IpAddress" ColumnName="IPAddress" />
           <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
           <ScalarProperty Name="LastActivityAt" ColumnName="LastActivityAt" />
           <ScalarProperty Name="ApprovedAt" ColumnName="ApprovedAt" />

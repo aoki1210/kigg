@@ -60,9 +60,6 @@
         IQueryable<TEntity> GetQueryable<TEntity>() 
             where TEntity : EntityObject;
         
-        IQueryable<TEntity> GetQueryable<TEntity>(string queryString)
-            where TEntity : EntityObject;
-
         void InsertOnSubmit<TEntity>(TEntity entity)
             where TEntity : EntityObject;
 
