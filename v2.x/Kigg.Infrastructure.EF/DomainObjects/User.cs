@@ -11,28 +11,47 @@
     {
         [NonSerialized]
         private EntityCollection<ITag, Tag> _userTags;
+        [NonSerialized]
+        private EntityCollection<IStory, Story> _commentSubscriptions;
+
         internal IEntityCollection<ITag> UserTags
         {
             get
             {
-                EnsureUserTags();
-                if (!_userTags.IsLoaded)
-                {
-                    _userTags.Load();
-                }
+                EntityHelper.EnsureEntityCollection(ref _userTags, UserTagsInternal);
+                EntityHelper.EnsureEntityCollectionLoaded(_userTags);
                 return _userTags;
             }
             set
             {
-                var userTags = value as EntityCollection<ITag, Tag>;
-                if (userTags == null)
+                var tags = value as EntityCollection<ITag, Tag>;
+                if (tags == null)
                 {
                     throw new NotSupportedException("Assigned value must be of type EntityCollection<ITag, Tag>");
                 }
-                _userTags = userTags;
+                _userTags = tags;
             }
         }
-        
+
+        internal IEntityCollection<IStory> CommentSubscriptions
+        {
+            get
+            {
+                EntityHelper.EnsureEntityCollection(ref _commentSubscriptions, CommentSubscriptionsInternal);
+                EntityHelper.EnsureEntityCollectionLoaded(_commentSubscriptions);
+                return _commentSubscriptions;
+            }
+            set
+            {
+                var stories = value as EntityCollection<IStory, Story>;
+                if (stories == null)
+                {
+                    throw new NotSupportedException("Assigned value must be of type EntityCollection<IStory, Story>");
+                }
+                _commentSubscriptions = stories;
+            }
+        }
+
         public Roles Role
         {
             get
@@ -65,7 +84,7 @@
         {
             get
             {
-                EnsureUserTags();
+                EntityHelper.EnsureEntityCollection(ref _userTags, UserTagsInternal);
                 var query = _userTags.CreateSourceQuery();
                 return query != null ? query.Count() : 0;
             }
@@ -185,10 +204,15 @@
 
             var tagName = tag.Name;
 
-            EnsureUserTags();
+            EntityHelper.EnsureEntityCollection(ref _userTags, UserTagsInternal);
             var srcQuery = _userTags.CreateSourceQuery();
 
             return UserTagsInternal.Any(t => t.Name == tagName) || (srcQuery != null && srcQuery.Any(t => t.Name == tagName));
+        }
+
+        public void RemoveAllCommentSubscriptions()
+        {
+            CommentSubscriptions.Clear();
         }
 
         private static string CreateRandomString(int minLegth, int maxLength)
@@ -217,13 +241,6 @@
                                 };
 
             UserScoreInternal.Add(userScore);
-        }
-        private void EnsureUserTags()
-        {
-            if (_userTags == null)
-            {
-                _userTags = new EntityCollection<ITag, Tag>(UserTagsInternal);
-            }
         }
     }
 }

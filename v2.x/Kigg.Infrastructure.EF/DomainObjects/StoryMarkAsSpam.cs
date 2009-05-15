@@ -6,10 +6,19 @@ namespace Kigg.EF.DomainObjects
 
     public partial class StoryMarkAsSpam : IMarkAsSpam
     {
+        [NonSerialized]
+        private EntityReference<IStory, Story> _storyReference;
+        [NonSerialized]
+        private EntityReference<IUser, User> _userReference;
         public IStory ForStory
         {
             get
             {
+                if(Story == null)
+                {
+                    EntityHelper.EnsureEntityReference(ref _storyReference, StoryReference);
+                    EntityHelper.EnsureEntityReferenceLoaded(_storyReference);
+                }
                 return Story;
             }
         }
@@ -18,6 +27,11 @@ namespace Kigg.EF.DomainObjects
         {
             get
             {
+                if (User == null)
+                {
+                    EntityHelper.EnsureEntityReference(ref _userReference, UserReference);
+                    EntityHelper.EnsureEntityReferenceLoaded(_userReference);
+                }
                 return User;
             }
         }

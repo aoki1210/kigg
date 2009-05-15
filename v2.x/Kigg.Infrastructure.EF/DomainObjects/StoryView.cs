@@ -6,10 +6,17 @@ namespace Kigg.EF.DomainObjects
 
     public partial class StoryView : IStoryView
     {
+        [NonSerialized]
+        private EntityReference<IStory, Story> _storyReference;
         public IStory ForStory
         {
             get
             {
+                if (Story == null)
+                {
+                    EntityHelper.EnsureEntityReference(ref _storyReference, StoryReference);
+                    EntityHelper.EnsureEntityReferenceLoaded(_storyReference);
+                }
                 return Story;
             }
         }
