@@ -11,7 +11,11 @@ Test is using System.Transaction.TransactionScope maintain database state. You s
 that you have to enable MS DTS before runing this test as System.Transaction.TransactionScope
 will demand it. Otherwise the test will just fail peacefully.
 
---------DTC for Widnows Vista--------
+To enable DTC you can simply only services console under administrative tools.
+Find Distributed Transaction Coordinator. Make sure it is started, if not then start it manually.
+
+
+--------DTC for Widnows Vista-------- I think this optional
 For Vista users if you wish to enable MS DTS do the following
 Start->Run->comexp.msc
 Under Component Services Node locate
@@ -23,6 +27,5 @@ Client and Administration checkboxes unchecked
 Transaction Manager Communication
 Inbound & Outbound checked with Matual Authentication option selected
 Click Apply and then OK.
-
 
 

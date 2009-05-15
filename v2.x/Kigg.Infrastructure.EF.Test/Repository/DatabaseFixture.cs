@@ -14,7 +14,7 @@ namespace Kigg.Infrastructure.EF.Test
     public class DatabaseFixture : IDisposable
     {
         private readonly string _connectionString;
-        private const string _assemblyInfo = "Kigg.Infrastructure.EF, Version=2.2.0.0, Culture=neutral, PublicKeyToken=88117f6fba1a09d8";
+        
         private const string _edmFilesPrefix = "Kigg.Infrastructure.EF.EDM.DomainObjects";
         private const string _edmConnStringFormat ="metadata=res://{0}/{1}.csdl|res://{0}/{1}.ssdl|res://{0}/{1}.msl;provider=System.Data.SqlClient;";
 
@@ -22,7 +22,9 @@ namespace Kigg.Infrastructure.EF.Test
 
         public DatabaseFixture()
         {
-            _connectionString = String.Format(_edmConnStringFormat,_assemblyInfo, _edmFilesPrefix);
+            _connectionString = String.Format(_edmConnStringFormat,
+                                              typeof(Story).Assembly.FullName, 
+                                              _edmFilesPrefix);
             
             _database = new Mock<Database>(_connectionString);
         }
@@ -57,7 +59,7 @@ namespace Kigg.Infrastructure.EF.Test
                 Assert.Equal("StoryView", storyView);
                 Assert.Equal("StoryVote", storyVote);
                 Assert.Equal("StoryMarkAsSpam", storyMarkAsSpam);
-                Assert.Equal("User", user);
+                Assert.Equal("UserDataSource", user);
                 Assert.Equal("UserScore", userScore);
                 Assert.Equal("Tag", tag);
                 Assert.Equal("Category", category);
@@ -166,6 +168,21 @@ namespace Kigg.Infrastructure.EF.Test
             _database.Object.DeleteOnSubmit(story);
 
             _database.Verify(d => d.DeleteObject(story), Times.AtMostOnce());
+        }
+        
+        [Fact]
+        public void DeleteAllOnSubmit_Should_Call_DeleteOnSubmit()
+        {
+            var stories = new List<Story> {new Story(), new Story(), new Story(), new Story()};
+
+            _database.Object.InsertAllOnSubmit(stories);
+
+            _database.Object.DeleteAllOnSubmit(stories.AsQueryable());
+            foreach (var story in stories)
+            {
+                Story entity = story;
+                _database.Verify(e => e.DeleteOnSubmit(entity),Times.AtMostOnce());
+            }
         }
 
         [Fact]
