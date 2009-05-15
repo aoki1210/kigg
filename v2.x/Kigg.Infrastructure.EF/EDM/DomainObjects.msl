@@ -92,7 +92,7 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="User">
+    <EntitySetMapping Name="UserDataSource">
       <EntityTypeMapping TypeName="IsTypeOf(Kigg.EF.DomainObjects.User)">
         <MappingFragment StoreEntitySet="User">
           <ScalarProperty Name="Id" ColumnName="Id" />
@@ -117,6 +117,20 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <!--<EntitySetMapping Name="StorySearchResult">
+      <EntityTypeMapping TypeName="IsTypeOf(Kigg.EF.DomainObjects.StorySearchResult)">
+        <MappingFragment StoreEntitySet="StorySearchResult">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CommentSearchResult">
+      <EntityTypeMapping TypeName="IsTypeOf(Kigg.EF.DomainObjects.CommentSearchResult)">
+        <MappingFragment StoreEntitySet="CommentSearchResult">
+          <ScalarProperty Name="StoryId" ColumnName="StoryId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>-->
     <AssociationSetMapping Name="FK_Story_Category" TypeName="Kigg.EF.DomainObjects.FK_Story_Category" StoreEntitySet="Story">
       <EndProperty Name="Category">
         <ScalarProperty Name="Id" ColumnName="CategoryId" />
@@ -225,5 +239,9 @@
         <ScalarProperty Name="Id" ColumnName="UserId" />
       </EndProperty>
     </AssociationSetMapping>
+    <!--<FunctionImportMapping FunctionImportName="StorySearch"
+                           FunctionName="Kigg.EF.DomainObjects.Store.StorySearchProc"/>
+    <FunctionImportMapping FunctionImportName="CommentSearch"
+                           FunctionName="Kigg.EF.DomainObjects.Store.CommentSearchProc"/>-->
   </EntityContainerMapping>
 </Mapping>

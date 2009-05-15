@@ -19,6 +19,8 @@
     <EntitySet Name="User" EntityType="Kigg.EF.DomainObjects.Store.User" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="UserScore" EntityType="Kigg.EF.DomainObjects.Store.UserScore" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="UserTag" EntityType="Kigg.EF.DomainObjects.Store.UserTag" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="StorySearchResult" EntityType="Kigg.EF.DomainObjects.Store.StorySearchResult" Schema="dbo" />
+    <EntitySet Name="CommentSearchResult" EntityType="Kigg.EF.DomainObjects.Store.CommentSearchResult" Schema="dbo" />
     <AssociationSet Name="FK_CommentSubscribtion_Story" Association="Kigg.EF.DomainObjects.Store.FK_CommentSubscribtion_Story">
       <End Role="Story" EntitySet="Story" />
       <End Role="CommentSubscribtion" EntitySet="CommentSubscribtion" />
@@ -220,6 +222,18 @@
     <Property Name="UserId" Type="uniqueidentifier" Nullable="false" />
     <Property Name="TagId" Type="uniqueidentifier" Nullable="false" />
   </EntityType>
+  <EntityType Name="StorySearchResult">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <EntityType Name="CommentSearchResult">
+    <Key>
+      <PropertyRef Name="StoryId" />
+    </Key>
+    <Property Name="StoryId" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
   <Association Name="FK_CommentSubscribtion_Story">
     <End Role="Story" Type="Kigg.EF.DomainObjects.Store.Story" Multiplicity="1" />
     <End Role="CommentSubscribtion" Type="Kigg.EF.DomainObjects.Store.CommentSubscribtion" Multiplicity="*" />
@@ -412,4 +426,30 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Function Name="StorySearch" Aggregate="false"
+    BuiltIn="false" NiladicFunction="false" IsComposable="true" 
+    ParameterTypeSemantics="AllowImplicitConversion" StoreFunctionName="EFStorySearch"
+    Schema="dbo" ReturnType="bit">
+    <Parameter Name="storyId" Type="uniqueidentifier" Mode="In" />
+    <Parameter Name="query" Type="nvarchar" MaxLength="4000" Mode="In" />
+  </Function>
+  <Function Name="CommentSearch" Aggregate="false"
+    BuiltIn="false" NiladicFunction="false" IsComposable="true"
+    ParameterTypeSemantics="AllowImplicitConversion" StoreFunctionName="EFCommentSearch"
+    Schema="dbo" ReturnType="bit">
+    <Parameter Name="storyId" Type="uniqueidentifier" Mode="In" />
+    <Parameter Name="query" Type="nvarchar" MaxLength="4000" Mode="In" />
+  </Function>
+  <!--<Function Name="StorySearchProc" Aggregate="false"
+    BuiltIn="false" NiladicFunction="false" IsComposable="false"
+    ParameterTypeSemantics="AllowImplicitConversion" StoreFunctionName="StorySearchProc"
+    Schema="dbo">
+    <Parameter Name="query" Type="nvarchar" MaxLength="4000" Mode="In" />
+  </Function>
+  <Function Name="CommentSearchProc" Aggregate="false"
+    BuiltIn="false" NiladicFunction="false" IsComposable="false"
+    ParameterTypeSemantics="AllowImplicitConversion" StoreFunctionName="CommentSearchProc"
+    Schema="dbo">
+    <Parameter Name="query" Type="nvarchar" MaxLength="4000" Mode="In" />
+  </Function>-->
 </Schema>

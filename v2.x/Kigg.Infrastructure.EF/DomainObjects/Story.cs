@@ -3,7 +3,6 @@
     using System;
     using System.Linq;
     using System.Collections.Generic;
-    using System.Data.Objects.DataClasses;
     using System.Diagnostics;
 
     using Kigg.DomainObjects;
@@ -18,7 +17,7 @@
         private int _viewCount = NotSet;
         private int _commentCount = NotSet;
         private int _subscriberCount = NotSet;
-
+        
         [NonSerialized]
         private EntityCollection<ITag, Tag> _storyTags;
         [NonSerialized]
@@ -32,12 +31,17 @@
         [NonSerialized]
         private EntityCollection<IUser, User> _commentSubscribers;
 
+        [NonSerialized]
+        private EntityReference<ICategory, Category> _categoryReference;
+        [NonSerialized]
+        private EntityReference<IUser, User> _userReference;
+
         internal IEntityCollection<ITag> StoryTags
         {
             get
             {
-                EnsureEntityCollection(ref _storyTags, StoryTagsInternal);
-                EnsureEntityCollectionLoaded(_storyTags);
+                EntityHelper.EnsureEntityCollection(ref _storyTags, StoryTagsInternal);
+                EntityHelper.EnsureEntityCollectionLoaded(_storyTags);
                 return _storyTags;
             }
             set
@@ -54,8 +58,8 @@
         {
             get
             {
-                EnsureEntityCollection(ref _storyVotes, StoryVotesInternal);
-                EnsureEntityCollectionLoaded(_storyVotes);
+                EntityHelper.EnsureEntityCollection(ref _storyVotes, StoryVotesInternal);
+                EntityHelper.EnsureEntityCollectionLoaded(_storyVotes);
                 return _storyVotes;
             }
             set
@@ -72,8 +76,8 @@
         {
             get
             {
-                EnsureEntityCollection(ref _storyMarkAsSpam, StoryMarkAsSpamsInternal);
-                EnsureEntityCollectionLoaded(_storyMarkAsSpam);
+                EntityHelper.EnsureEntityCollection(ref _storyMarkAsSpam, StoryMarkAsSpamsInternal);
+                EntityHelper.EnsureEntityCollectionLoaded(_storyMarkAsSpam);
                 return _storyMarkAsSpam;
             }
             set
@@ -90,8 +94,8 @@
         {
             get
             {
-                EnsureEntityCollection(ref _storyViews, StoryViewsInternal);
-                EnsureEntityCollectionLoaded(_storyViews);
+                EntityHelper.EnsureEntityCollection(ref _storyViews, StoryViewsInternal);
+                EntityHelper.EnsureEntityCollectionLoaded(_storyViews);
                 return _storyViews;
             }
             set
@@ -108,8 +112,8 @@
         {
             get
             {
-                EnsureEntityCollection(ref _storyComments, StoryCommentsInternal);
-                EnsureEntityCollectionLoaded(_storyComments);
+                EntityHelper.EnsureEntityCollection(ref _storyComments, StoryCommentsInternal);
+                EntityHelper.EnsureEntityCollectionLoaded(_storyComments);
                 return _storyComments;
             }
             set
@@ -126,8 +130,8 @@
         {
             get
             {
-                EnsureEntityCollection(ref _commentSubscribers, CommentSubscribersInternal);
-                EnsureEntityCollectionLoaded(_commentSubscribers);
+                EntityHelper.EnsureEntityCollection(ref _commentSubscribers, CommentSubscribersInternal);
+                EntityHelper.EnsureEntityCollectionLoaded(_commentSubscribers);
                 return _commentSubscribers;
             }
             set
@@ -146,6 +150,11 @@
             [DebuggerStepThrough]
             get
             {
+                if (Category == null)
+                {
+                    EntityHelper.EnsureEntityReference(ref _categoryReference, CategoryReference);
+                    EntityHelper.EnsureEntityReferenceLoaded(_categoryReference);
+                }
                 return Category;
             }
         }
@@ -155,6 +164,11 @@
             [DebuggerStepThrough]
             get
             {
+                if(User == null)
+                {
+                    EntityHelper.EnsureEntityReference(ref _userReference, UserReference);
+                    EntityHelper.EnsureEntityReferenceLoaded(_userReference);
+                }
                 return User;
             }
         }
@@ -227,7 +241,7 @@
             [DebuggerStepThrough]
             get
             {
-                EnsureEntityCollection(ref _storyTags, StoryTagsInternal);
+                EntityHelper.EnsureEntityCollection(ref _storyTags, StoryTagsInternal);
                 var query = _storyTags.CreateSourceQuery();
                 return query != null ? query.Count() : 0;
             }
@@ -327,7 +341,7 @@
             Check.Argument.IsNotNull(tag, "tag");
             Check.Argument.IsNotEmpty(tag.Name, "tag.Name");
 
-            //It should load all UserTags then remove the desired tag
+            //It should load all StoryTags then remove the desired tag
             StoryTags.Remove(StoryTags.FirstOrDefault(t => t.Name == tag.Name));
         }
 
@@ -344,7 +358,7 @@
 
             var tagName = tag.Name;
 
-            EnsureEntityCollection(ref _storyTags, StoryTagsInternal);
+            EntityHelper.EnsureEntityCollection(ref _storyTags, StoryTagsInternal);
             var srcQuery = _storyTags.CreateSourceQuery();
 
             return StoryTagsInternal.Any(t => t.Name == tagName) || (srcQuery != null && srcQuery.Any(t => t.Name == tagName));
@@ -532,7 +546,7 @@
         public bool ContainsCommentSubscriber(IUser theUser)
         {
             Check.Argument.IsNotNull(theUser, "theUser");
-            EnsureEntityCollection(ref _commentSubscribers, CommentSubscribersInternal);
+            EntityHelper.EnsureEntityCollection(ref _commentSubscribers, CommentSubscribersInternal);
             var userName = theUser.UserName;
 
             var srcQuery = _commentSubscribers.CreateSourceQuery();
@@ -557,6 +571,11 @@
             {
                 CommentSubscribers.Remove(byUser);
             }
+        }
+
+        public void RemoveAllCommentSubscribers()
+        {
+            CommentSubscribers.Clear();
         }
 
         public void Approve(DateTime at)
@@ -598,25 +617,6 @@
             TextDescription = HtmlDescription.StripHtml().Trim();
         }
         
-        private static void EnsureEntityCollection<TInterface, TEntity>(ref EntityCollection<TInterface,TEntity> entityCollection, EntityCollection<TEntity> originalEntityCollection)
-            where TInterface : class
-            where TEntity : class, IEntityWithRelationships, TInterface
-        {
-            
-            if (entityCollection != null) return;
-
-            Check.Argument.IsNotNull(originalEntityCollection, "originalEntityCollection");
-            entityCollection = new EntityCollection<TInterface, TEntity>(originalEntityCollection);
-        }
-
-        private static void EnsureEntityCollectionLoaded<TInterface>(IEntityCollection<TInterface> entityCollection)
-            where TInterface : class
-        {
-            Check.Argument.IsNotNull(entityCollection, "entityCollection");
-            
-            if (entityCollection == null || entityCollection.IsLoaded) return;
-            
-            entityCollection.Load();
-        }
+        
     }
 }
