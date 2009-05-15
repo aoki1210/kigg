@@ -5,7 +5,6 @@ namespace Kigg.LinqToSql.Repository
     using System.Diagnostics;
     using System.Linq;
 
-    using Kigg.DomainObjects;
     using DomainObjects;
     
     public partial class Database : IDatabase

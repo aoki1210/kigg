@@ -17,14 +17,14 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         [Fact]
         public void Tags_Should_Be_Empty_When_New_Instance_Is_Created()
         {
-            var user = CreateUser();
+            var user = CreateNewUser();
             Assert.Empty(user.Tags);
         }
 
         [Fact]
         public void TagCount_Should_Be_Zero_When_New_Instance_Is_Created()
         {
-            var user = CreateUser();
+            var user = CreateNewUser();
             Assert.Equal(0, user.TagCount);
         }
 
@@ -41,7 +41,7 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         [Fact]
         public void IncreaseScoreBy_For_New_Instance_Should_Add_New_Item_In_UserScore_Collection()
         {
-            var user = CreateUser();
+            var user = CreateNewUser();
 
             user.IncreaseScoreBy(10, UserAction.AccountActivated);
 
@@ -51,7 +51,7 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         [Fact]
         public void DecreaseScoreBy_For_New_Instance_Should_Add_New_Item_In_UserScore_Collection()
         {
-            var user = CreateUser();
+            var user = CreateNewUser();
 
             user.DecreaseScoreBy(20, UserAction.SpamStorySubmitted);
 
@@ -81,7 +81,7 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         [Fact]
         public void AddTag_For_New_Instance_Should_Increase_Tags_Collection()
         {
-            var user = CreateUser();
+            var user = CreateNewUser();
 
             user.AddTag(new Tag { Id = Guid.NewGuid(), Name = "Dummy" });
 
@@ -91,7 +91,7 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         [Fact]
         public void RemoveTag_For_New_Instance_Should_Decrease_Tags_Collection()
         {
-            var user = CreateUser();
+            var user = CreateNewUser();
 
             user.AddTag(new Tag { Id = Guid.NewGuid(), Name = "Dummy" });
 
@@ -137,7 +137,7 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         [Fact]
         public void ContainsTag_For_New_Instance_Should_Return_True_When_Tag_Exists_In_Tags_Collection()
         {
-            var user = CreateUser();
+            var user = CreateNewUser();
 
             user.AddTag(new Tag { Id = Guid.NewGuid(), Name = "Dummy" });
 
@@ -169,7 +169,7 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         [Fact]
         public void Create_New_User_And_Insert_It_Should_Presist_User_In_Database()
         {
-            var user = CreateUser();
+            var user = CreateNewUser();
 
             using(new TransactionScope())
             {
@@ -189,7 +189,7 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
             var user = _database.UserDataSource.First();
             using (new TransactionScope())
             {
-                user.AddTag(CraeteTag());
+                user.AddTag(CreateNewTag());
 
                 _database.SubmitChanges();
 
@@ -204,7 +204,7 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         public void RemoveTag_And_Submit_Changes_Should_Remove_User_Tag_Association_In_Database()
         {
             var dataLoadOptions = new DataLoadOptions();
-            dataLoadOptions.LoadWith<Tag>(t => t.Users);
+            dataLoadOptions.LoadWith<Tag>(t => t.UsersInternal);
             _database.LoadOptions = dataLoadOptions;
 
             var user = _database.UserDataSource.First(u=>u.UserName=="bee");
@@ -217,7 +217,7 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
                 
                 var deletedTag = _database.TagDataSource.FirstOrDefault(t => t.Name == tag.Name);
                 
-                Assert.Null(deletedTag.Users.FirstOrDefault(u => u.UserName == user.UserName));
+                Assert.Null(deletedTag.UsersInternal.FirstOrDefault(u => u.UserName == user.UserName));
             }
         }
 
@@ -225,14 +225,14 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         public void RemoveAllTags_And_Submit_Changes_Should_Remove_All_User_Tag_Associations_In_Database()
         {
             var dataLoadOptions = new DataLoadOptions();
-            dataLoadOptions.LoadWith<Tag>(t => t.Users);
+            dataLoadOptions.LoadWith<Tag>(t => t.UsersInternal);
             _database.LoadOptions = dataLoadOptions;
 
             var user = _database.UserDataSource.First(u => u.UserName == "bee");
             
             using (new TransactionScope())
             {
-                var tags = _database.TagDataSource.Where(t => t.Users.Any(u => u.UserName == user.UserName));
+                var tags = _database.TagDataSource.Where(t => t.UsersInternal.Any(u => u.UserName == user.UserName));
                 
                 Assert.True(tags.Count()>0);
                 

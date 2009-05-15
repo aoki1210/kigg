@@ -16,14 +16,14 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         [Fact]
         public void Tags_Should_Be_Empty_When_New_Instance_Is_Created()
         {
-            var story = CreateStory();
+            var story = CreateNewStory();
             Assert.Empty(story.Tags);
         }
         
         [Fact]
         public void TagCount_Should_Be_Zero_When_New_Instance_Is_Created()
         {
-            var story = CreateStory();
+            var story = CreateNewStory();
             Assert.Equal(0, story.TagCount);
         }
         
@@ -40,7 +40,7 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         [Fact]
         public void AddTag_For_New_Instance_Should_Increase_Tags_Collection()
         {
-            var story = CreateStory();
+            var story = CreateNewStory();
 
             story.AddTag(new Tag { Id = Guid.NewGuid(), Name = "Dummy" });
 
@@ -50,7 +50,7 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         [Fact]
         public void RemoveTag_For_New_Instance_Should_Decrease_Tags_Collection()
         {
-            var story = CreateStory();
+            var story = CreateNewStory();
 
             story.AddTag(new Tag { Id = Guid.NewGuid(), Name = "Dummy" });
 
@@ -96,7 +96,7 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         [Fact]
         public void ContainsTag_For_New_Instance_Should_Return_True_When_Tag_Exists_In_Tags_Collection()
         {
-            var story = CreateStory();
+            var story = CreateNewStory();
 
             story.AddTag(new Tag { Id = Guid.NewGuid(), Name = "Dummy" });
 
@@ -130,8 +130,8 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         {
             var user = _database.UserDataSource.First();
             var category = _database.CategoryDataSource.First();
-            var story = CreateStory(category, user, "127.0.0.1", "dummy", "dummy", "http://www.dummy.com/dummy.aspx");
-            var tag = (Tag)_factory.CreateTag("dummy-tag");
+            var story = CreateNewStory(category, user, "127.0.0.1", "dummy", "dummy", "http://www.dummy.com/dummy.aspx");
+            var tag = (Tag)_domainFactory.CreateTag("dummy-tag");
             using (new TransactionScope())
             {
                 story.AddTag(tag);
@@ -154,7 +154,7 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
             var story = _database.StoryDataSource.First();
             using (new TransactionScope())
             {
-                story.AddTag(CraeteTag());
+                story.AddTag(CreateNewTag());
 
                 _database.SubmitChanges();
 
@@ -169,7 +169,7 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         public void RemoveTag_And_Submit_Changes_Should_Remove_User_Tag_Association_In_Database()
         {
             var dataLoadOptions = new DataLoadOptions();
-            dataLoadOptions.LoadWith<Tag>(t => t.Stories);
+            dataLoadOptions.LoadWith<Tag>(t => t.StoriesInternal);
             _database.LoadOptions = dataLoadOptions;
 
             var story = _database.StoryDataSource.First();
@@ -182,7 +182,7 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
 
                 var deletedTag = _database.TagDataSource.FirstOrDefault(t => t.Name == tag.Name);
 
-                Assert.Null(deletedTag.Stories.FirstOrDefault(s => s.Id==story.Id));
+                Assert.Null(deletedTag.StoriesInternal.FirstOrDefault(s => s.Id==story.Id));
             }
         }
 
@@ -190,14 +190,14 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         public void RemoveAllTags_And_Submit_Changes_Should_Remove_All_User_Tag_Associations_In_Database()
         {
             var dataLoadOptions = new DataLoadOptions();
-            dataLoadOptions.LoadWith<Tag>(t => t.Stories);
+            dataLoadOptions.LoadWith<Tag>(t => t.StoriesInternal);
             _database.LoadOptions = dataLoadOptions;
 
             var story = _database.StoryDataSource.First();
 
             using (new TransactionScope())
             {
-                var tags = _database.TagDataSource.Where(t => t.Stories.Any(s => s.Id == story.Id));
+                var tags = _database.TagDataSource.Where(t => t.StoriesInternal.Any(s => s.Id == story.Id));
 
                 Assert.True(tags.Count() > 0);
 
@@ -217,7 +217,7 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
 
             using (new TransactionScope())
             {
-                var newCategory = CreateCategory();
+                var newCategory = CreateNewCategory();
                 story.ChangeCategory(newCategory);
 
                 _database.SubmitChanges();

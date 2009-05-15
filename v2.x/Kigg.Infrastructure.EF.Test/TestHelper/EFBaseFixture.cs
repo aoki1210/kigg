@@ -27,7 +27,7 @@ namespace Kigg.Infrastructure.EF.Test
         protected readonly List<StoryComment> Comments;
         //protected readonly List<CommentSubscribtion> CommentSubscribtions;
 
-        //protected readonly Mock<IDatabaseFactory> databaseFactory;
+        protected readonly Mock<IDatabaseFactory> databaseFactory;
         protected readonly Mock<IDatabase> database;
 
         protected readonly Mock<IDomainObjectFactory> domainObjectFactory;
@@ -44,10 +44,10 @@ namespace Kigg.Infrastructure.EF.Test
 
         protected EfBaseFixture()
         {
-            //databaseFactory = new Mock<IDatabaseFactory>();
+            databaseFactory = new Mock<IDatabaseFactory>();
             database = new Mock<IDatabase>();
 
-            //databaseFactory.Setup(f => f.Get()).Returns(database.Object);
+            databaseFactory.Setup(f => f.Get()).Returns(database.Object);
 
             domainObjectFactory = new Mock<IDomainObjectFactory>();
 
@@ -62,7 +62,7 @@ namespace Kigg.Infrastructure.EF.Test
             storyViewRepository = new Mock<IStoryViewRepository>();
             voteRepository = new Mock<IVoteRepository>();
 
-            //resolver.Setup(r => r.Resolve<IDatabaseFactory>()).Returns(databaseFactory.Object);
+            resolver.Setup(r => r.Resolve<IDatabaseFactory>()).Returns(databaseFactory.Object);
             resolver.Setup(r => r.Resolve<IDomainObjectFactory>()).Returns(domainObjectFactory.Object);
             resolver.Setup(r => r.Resolve<IUserRepository>()).Returns(userRepository.Object);
             resolver.Setup(r => r.Resolve<ICategoryRepository>()).Returns(categoryRepository.Object);
