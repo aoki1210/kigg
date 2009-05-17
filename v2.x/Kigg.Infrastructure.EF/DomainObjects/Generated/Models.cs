@@ -24,7 +24,7 @@
 [assembly: global::System.Data.Objects.DataClasses.EdmRelationshipAttribute("Kigg.EF.DomainObjects", "UserTag", "Tag", global::System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Kigg.EF.DomainObjects.Tag), "User", global::System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(Kigg.EF.DomainObjects.User))]
 
 // Original file name: Models.cs
-// Generation date: 5/17/2009 8:08:20 PM
+// Generation date: 5/17/2009 9:17:13 PM
 namespace Kigg.EF.DomainObjects
 {
     
