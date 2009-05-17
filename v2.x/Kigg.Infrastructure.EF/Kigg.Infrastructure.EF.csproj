@@ -75,6 +75,10 @@
     <Compile Include="Repository\CategoryRepository.cs" />
     <Compile Include="Repository\CommentRepository.cs" />
     <Compile Include="Repository\CommentSubscribtionRepository.cs" />
+    <Compile Include="Repository\CompiledQueries\CategoryRepository.cs" />
+    <Compile Include="Repository\CompiledQueries\StoryRepository.cs" />
+    <Compile Include="Repository\CompiledQueries\TagRepository.cs" />
+    <Compile Include="Repository\CompiledQueries\UserRepository.cs" />
     <Compile Include="Repository\Database\ConnectionString.cs" />
     <Compile Include="Repository\Database\Database.cs" />
     <Compile Include="Repository\Database\DatabaseFactory.cs" />

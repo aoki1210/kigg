@@ -31,6 +31,7 @@
             }
             return preloadedMembers.ToArray();
         }
+        
         internal bool IsPreloaded(MemberInfo member)
         {
             Check.Argument.IsNotNull(member,"member");
@@ -42,7 +43,7 @@
         {
             Check.Argument.IsNotNull(expression, "expression");
 
-            var loadWithMemberInfo = GetLoadWithMemberInfo(expression);
+            MemberInfo loadWithMemberInfo = GetLoadWithMemberInfo(expression);
             if (IsPreloaded(loadWithMemberInfo))
             {
                 throw new InvalidOperationException("Association is already added");

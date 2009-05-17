@@ -8,7 +8,7 @@
     using Kigg.Repository;
     using DomainObjects;
 
-    public class CategoryRepository : BaseRepository<ICategory, Category>, ICategoryRepository
+    public partial class CategoryRepository : BaseRepository<ICategory, Category>, ICategoryRepository
     {
         public CategoryRepository(IDatabase database)
             : base(database)
@@ -67,7 +67,9 @@
         {
             Check.Argument.IsNotEmpty(id, "id");
 
-            return Database.CategoryDataSource.FirstOrDefault(c => c.Id == id);
+            return (DataContext != null)
+                    ? FindByIdQuery.Invoke(DataContext, id) 
+                    : Database.CategoryDataSource.FirstOrDefault(c => c.Id == id);
         }
 
 #if(DEBUG)
@@ -78,8 +80,9 @@
 
         {
             Check.Argument.IsNotEmpty(uniqueName, "uniqueName");
-
-            return Database.CategoryDataSource.FirstOrDefault(c => c.UniqueName == uniqueName);
+            return (DataContext != null)
+                    ? FindByUniqueNameQuery.Invoke(DataContext, uniqueName) 
+                    : Database.CategoryDataSource.FirstOrDefault(c => c.UniqueName == uniqueName);
         }
 
 #if(DEBUG)
@@ -89,11 +92,14 @@
 #endif
         
         {
-            return Database.CategoryDataSource.OrderBy(c => c.CreatedAt)
-                                              .AsEnumerable()
-                                              .Cast<ICategory>()
-                                              .ToList()
-                                              .AsReadOnly();
+            var categories = (DataContext != null)
+                                 ? FindAllQuery.Invoke(DataContext)
+                                 : Database.CategoryDataSource.OrderBy(c => c.CreatedAt);
+            
+            return categories.AsEnumerable()
+                             .Cast<ICategory>()
+                             .ToList()
+                             .AsReadOnly();
         }
     }
 }

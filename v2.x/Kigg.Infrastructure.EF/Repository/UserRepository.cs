@@ -3,57 +3,13 @@
     using System;
     using System.Linq;
     using System.Collections.Generic;
-    using System.Data.Objects;
-
+    
     using Kigg.DomainObjects;
     using Kigg.Repository;
     using DomainObjects;
 
-    public class UserRepository : BaseRepository<IUser, User>, IUserRepository
+    public partial class UserRepository : BaseRepository<IUser, User>, IUserRepository
     {
-        private static readonly Func<Database, string, User>
-            FindByUserNameQuery = CompiledQuery.Compile<Database, string, User>(
-                (db, userName) => db.UserSet.FirstOrDefault(u=>u.UserName==userName));
-
-        private static readonly Func<Database, string, User>
-            FindByEmailQuery = CompiledQuery.Compile<Database, string, User>(
-                (db, email) => db.UserSet.FirstOrDefault(u => u.Email == email));
-
-        private static readonly Func<Database, Guid, User>
-            FindByIdQuery = CompiledQuery.Compile<Database, Guid, User>(
-                (db, userId) => db.UserSet.FirstOrDefault(u => u.Id == userId));
-
-        private static readonly Func<Database, Guid, DateTime, DateTime, decimal>
-            FindScoreByIdQuery = CompiledQuery.Compile<Database, Guid, DateTime, DateTime, decimal>(
-                (db, userId, startTimestamp, endTimestamp) => db.UserScoreSet.Where(us => (us.User.Id == userId) && (us.Timestamp >= startTimestamp && us.Timestamp <= endTimestamp)).Sum(us => us.Score));
-
-        private static readonly Func<Database, DateTime, DateTime, IQueryable<User>>
-            FindTopQuery = CompiledQuery.Compile<Database, DateTime, DateTime, IQueryable<User>>(
-               (db, startTimestamp, endTimestamp) => 
-                   from user in db.UserSet 
-                   join score in db.UserScoreSet
-                   .Where(us => (us.User.AssignedRole == (int)Roles.User) && (!us.User.IsLockedOut) && (us.Timestamp >= startTimestamp && us.Timestamp <= endTimestamp))
-                   .GroupBy(us => us.User.Id)
-                   .Select(g => new { UserId = g.Key, Total = g.Sum(us => us.Score) })
-                   on user.Id equals score.UserId
-                   where score.Total > 0
-                   orderby score.Total descending, user.LastActivityAt descending
-                   select user);
-
-        private static readonly Func<Database, int, int, IQueryable<User>>
-            FindAllQuery = CompiledQuery.Compile<Database, int, int, IQueryable<User>>(
-                (db, start, max)=>db.UserSet.Where(u => u.IsActive && !u.IsLockedOut && u.AssignedRole == (int)Roles.User)
-                                           .OrderBy(u => u.UserName)
-                                           .ThenByDescending(u => u.LastActivityAt).Skip(start).Take(max));
-
-        private static readonly Func<Database, Guid, IQueryable<string>>
-            FindUserIpAddressesById = CompiledQuery.Compile<Database, Guid, IQueryable<string>>(
-                (db, userId) => db.StorySet.Where(s => s.User.Id == userId).Select(s => s.IpAddress)
-                                           .Union(db.VoteSet.Where(v => v.UserId == userId).Select(v => v.IpAddress))
-                                           .Union(db.CommentSet.Where(c => c.User.Id == userId).Select(c => c.IpAddress))
-                                           .Union(db.MarkAsSpamSet.Where(s => s.UserId == userId).Select(s => s.IpAddress))
-                                           .Distinct());
-
         public UserRepository(IDatabase database)
             : base(database)
         {
@@ -163,11 +119,8 @@
             {
                 return DataContext != null
                            ? FindScoreByIdQuery.Invoke(DataContext, id, startTimestamp, endTimestamp)
-                           : Database.UserScoreDataSource.Where(
-                                 us =>
-                                 (us.User.Id == id) && (us.Timestamp >= startTimestamp && us.Timestamp <= endTimestamp))
-                                 .
-                                 Sum(us => us.Score);
+                           : Database.UserScoreDataSource.Where(us =>(us.User.Id == id) && (us.Timestamp >= startTimestamp && us.Timestamp <= endTimestamp))
+                                                         .Sum(us => us.Score);
             }
             return 0;
         }
@@ -184,10 +137,18 @@
             Check.Argument.IsNotNegative(max, "max");
 
             IQueryable<User> users;
-
+            int count;
             if(DataContext != null)
             {
-                users = FindTopQuery.Invoke(DataContext, startTimestamp, endTimestamp);
+                var param = new FindTopQueryParameter
+                                {
+                                    startTimestamp = startTimestamp,
+                                    endTimestamp = endTimestamp,
+                                    start = start,
+                                    max = max
+                                };
+                users = FindTopQuery.Invoke(DataContext, param);
+                count = FindTopCountQuery.Invoke(DataContext, startTimestamp, endTimestamp);
             }
             else
             {
@@ -196,16 +157,17 @@
                                         .GroupBy(us => us.User.Id)
                                         .Select(g => new { UserId = g.Key, Total = g.Sum(us => us.Score) });
 
-                users = from user in Database.UserDataSource
+                users = (from user in Database.UserDataSource
                         join score in userWithScore
                         on user.Id equals score.UserId
                         where score.Total > 0
                         orderby score.Total descending, user.LastActivityAt descending
-                        select user;
+                        select user);
+                count = users.Count();
+                users = users.Skip(start).Take(max);
             }
             
-            return BuildPagedResult<IUser>(users.Skip(start).Take(max).AsEnumerable(), 
-                                           users.Count());
+            return BuildPagedResult<IUser>(users.AsEnumerable(), count);
         }
 
 #if(DEBUG)
@@ -221,7 +183,7 @@
             IQueryable<User> users;
             if (DataContext != null)
             {
-                users = FindAllQuery(DataContext, start, max);
+                users = FindAllQuery.Invoke(DataContext, start, max);
             }
             else
             {
