@@ -8,7 +8,7 @@
     using Kigg.Repository;
     using DomainObjects;
 
-    public class TagRepository : BaseRepository<ITag, Tag>, ITagRepository
+    public partial class TagRepository : BaseRepository<ITag, Tag>, ITagRepository
     {
         public TagRepository(IDatabase database)
             : base(database)
@@ -56,7 +56,10 @@
         {
             Check.Argument.IsNotEmpty(id, "id");
 
-            return Database.TagDataSource.FirstOrDefault(t => t.Id == id);
+            
+            return (DataContext != null) 
+                    ? FindByIdQuery.Invoke(DataContext, id) 
+                    : Database.TagDataSource.FirstOrDefault(t => t.Id == id);
         }
 
 #if(DEBUG)
@@ -67,7 +70,9 @@
         {
             Check.Argument.IsNotEmpty(uniqueName, "uniqueName");
 
-            return Database.TagDataSource.FirstOrDefault(t => t.UniqueName == uniqueName);
+            return (DataContext != null) 
+                ? FindByUniqueNameQuery.Invoke(DataContext, uniqueName)
+                : Database.TagDataSource.FirstOrDefault(t => t.UniqueName == uniqueName);
         }
 
 #if(DEBUG)
@@ -79,7 +84,9 @@
         {
             Check.Argument.IsNotEmpty(name, "name");
 
-            return Database.TagDataSource.FirstOrDefault(t => t.Name == name);
+            return (DataContext != null) 
+                ? FindByNameQuery.Invoke(DataContext, name)
+                : Database.TagDataSource.FirstOrDefault(t => t.Name == name);
         }
 
 #if(DEBUG)
@@ -91,14 +98,13 @@
             Check.Argument.IsNotEmpty(name, "name");
             Check.Argument.IsNotNegativeOrZero(max, "max");
 
-            return Database.TagDataSource
-                           .Where(t => t.Name.StartsWith(name))
-                           .OrderBy(t => t.Name)
-                           .Take(max)
-                           .AsEnumerable()
-                           .Cast<ITag>()
-                           .ToList()
-                           .AsReadOnly();
+            var tags = (DataContext != null)
+                           ? FindMatchingQuery.Invoke(DataContext, name, max)
+                           : Database.TagDataSource.Where(t => t.Name.StartsWith(name))
+                                                   .OrderBy(t => t.Name)
+                                                   .Take(max);
+
+            return tags.AsEnumerable().Cast<ITag>().ToList().AsReadOnly();
         }
 
 #if(DEBUG)
@@ -109,15 +115,15 @@
         {
             Check.Argument.IsNotNegativeOrZero(top, "top");
 
-            return Database.TagDataSource
-                           .Where(t => t.StoriesInternal.Any())
-                           .OrderByDescending(t => t.StoriesInternal.Count(st => st.ApprovedAt != null))
-                           .ThenBy(t => t.Name)
-                           .Take(top)
-                           .AsEnumerable()
-                           .Cast<ITag>()
-                           .ToList()
-                           .AsReadOnly();
+            var tags = (DataContext != null)
+                           ? FindByUsageQuery.Invoke(DataContext, top)
+                           : Database.TagDataSource
+                                     .Where(t => t.StoriesInternal.Any())
+                                     .OrderByDescending(t => t.StoriesInternal.Count(st => st.ApprovedAt != null))
+                                     .ThenBy(t => t.Name)
+                                     .Take(top);
+            
+            return tags.AsEnumerable().Cast<ITag>().ToList().AsReadOnly();
         }
 
 #if(DEBUG)
@@ -126,12 +132,11 @@
         public ICollection<ITag> FindAll()
 #endif
         {
-            return Database.TagDataSource
-                           .OrderBy(t => t.Name)
-                           .AsEnumerable()
-                           .Cast<ITag>()
-                           .ToList()
-                           .AsReadOnly();
+            var tags = (DataContext != null)
+                           ? FindAllQuery.Invoke(DataContext)
+                           : Database.TagDataSource.OrderBy(t => t.Name);
+
+            return tags.AsEnumerable().Cast<ITag>().ToList().AsReadOnly();
         }
     }
 }
