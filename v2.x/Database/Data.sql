@@ -1,7 +1,12 @@
-USE Kigg
+USE [KiGG]
 GO
 
 DELETE [Tag]
+GO
+
+INSERT INTO Tag([ID], [UniqueName], [Name], [CreatedAt])
+VALUES (newid(), 'Unspecified', 'Unspecified', getutcdate())
+WAITFOR DELAY '00:00:01'
 GO
 
 INSERT INTO Tag([ID], [UniqueName], [Name], [CreatedAt])
@@ -83,6 +88,13 @@ GO
 
 DELETE [Category]
 GO
+INSERT INTO Category([ID], [UniqueName], [Name], [CreatedAt])
+VALUES (newid(), 'Unspecified', 'Unspecified', getutcdate())
+WAITFOR DELAY '00:00:01'
+
+INSERT INTO Category([ID], [UniqueName], [Name], [CreatedAt])
+VALUES (newid(), 'ADO.NET', 'ADO.NET', getutcdate())
+WAITFOR DELAY '00:00:01'
 
 INSERT INTO Category([ID], [UniqueName], [Name], [CreatedAt])
 VALUES (newid(), 'ASP.NET', 'ASP.NET', getutcdate())
