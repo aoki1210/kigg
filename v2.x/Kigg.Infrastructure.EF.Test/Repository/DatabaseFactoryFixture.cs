@@ -32,8 +32,8 @@ namespace Kigg.Infrastructure.EF.Test
         [Fact]
         public void Get_Should_Return_The_Same_Database()
         {
-            var db1 = _factory.Get();
-            var db2 = _factory.Get();
+            var db1 = _factory.Create();
+            var db2 = _factory.Create();
 
             Assert.Same(db1, db2);
         }
@@ -41,7 +41,7 @@ namespace Kigg.Infrastructure.EF.Test
         [Fact]
         public void Accessing_Database_After_Dispose_Should_Throw_Exception()
         {
-            var db = _factory.Get();
+            var db = _factory.Create();
             _factory.Dispose();
 
             Assert.Throws<ObjectDisposedException>(db.SubmitChanges);

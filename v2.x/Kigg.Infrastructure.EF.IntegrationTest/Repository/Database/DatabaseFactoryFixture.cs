@@ -19,7 +19,7 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         [Fact]
         public void Get_Should_Return_Correctly_Initialized_Database()
         {
-            using(var db = _factory.Get())
+            using(var db = _factory.Create())
             {
                 var story = db.StoryDataSource.First();
                 var vote = db.VoteDataSource.First();

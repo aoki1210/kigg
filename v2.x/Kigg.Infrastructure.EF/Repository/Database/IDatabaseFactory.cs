@@ -4,6 +4,6 @@
 
     public interface IDatabaseFactory : IDisposable
     {
-        IDatabase Get();
+        IDatabase Create();
     }
 }

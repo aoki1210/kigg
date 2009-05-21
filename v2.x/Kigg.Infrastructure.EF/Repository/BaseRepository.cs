@@ -21,7 +21,7 @@
         }
 
         protected BaseRepository(IDatabaseFactory factory)
-            : this(factory.Get())
+            : this(factory.Create())
         {
         }
 
