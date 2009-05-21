@@ -2,9 +2,10 @@
 {
     using System;
     using System.Diagnostics;
+    using System.Globalization;
 
     using Infrastructure;
-
+    
     public class ConnectionString : IConnectionString
     {
         private readonly string _providerConnectionString;
@@ -20,10 +21,12 @@
 
             _providerConnectionString = configuration.ConnectionStrings(name);
 
-            _edmConnectionString = String.Format(_edmConnStringFormat,
+            _edmConnectionString = String.Format(CultureInfo.InvariantCulture,
+                                                 _edmConnStringFormat,
                                                  GetType().Assembly.FullName, 
                                                  _edmFilesPrefix, 
                                                  _providerConnectionString);
+
         }
 
         public string Value

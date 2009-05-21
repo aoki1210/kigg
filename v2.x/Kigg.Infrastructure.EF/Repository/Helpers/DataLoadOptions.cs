@@ -1,12 +1,15 @@
-﻿namespace Kigg.EF.Repository
+﻿
+
+namespace Kigg.EF.Repository
 {
     using System;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Reflection;
-
+    
     internal class DataLoadOptions
     {
         private static readonly string[] ValidTypes = new[] { "ComplexObject ", "StructuralObject", "EntityObject", "EntityCollection`1" };
@@ -89,7 +92,7 @@
                 if(!isEntity && !isEntityCollection)
                 {
                     var errorMsg =
-                    String.Format(
+                    String.Format(CultureInfo.InvariantCulture,
                         "Related end \"{0}\" must be of type that implements System.Data.Objects.DataClasses.EntityCollection<T> or System.Data.Objects.DataClasses.IEntityWithRelationships",
                         expression);
                     throw new InvalidOperationException(errorMsg);
@@ -97,7 +100,9 @@
             }
             else
             {
-                throw new InvalidOperationException(String.Format("{0} must be property member", expression));
+                throw new InvalidOperationException(String.Format(CultureInfo.InvariantCulture, 
+                                                                "{0} must be property member", 
+                                                                expression));
             }
         }
 

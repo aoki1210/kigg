@@ -47,7 +47,7 @@ namespace Kigg.Infrastructure.EF.Test
             databaseFactory = new Mock<IDatabaseFactory>();
             database = new Mock<IDatabase>();
 
-            databaseFactory.Setup(f => f.Get()).Returns(database.Object);
+            databaseFactory.Setup(f => f.Create()).Returns(database.Object);
 
             domainObjectFactory = new Mock<IDomainObjectFactory>();
 

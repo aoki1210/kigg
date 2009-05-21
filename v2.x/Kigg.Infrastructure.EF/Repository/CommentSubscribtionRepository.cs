@@ -19,7 +19,7 @@
         }
 
         public CommentSubscribtionRepository(IDatabaseFactory factory)
-            : this(factory.Get())
+            : this(factory.Create())
         {
         }
 
