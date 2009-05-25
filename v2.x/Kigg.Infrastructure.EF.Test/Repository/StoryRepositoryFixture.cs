@@ -125,6 +125,24 @@ namespace Kigg.Infrastructure.EF.Test
         }
 
         [Fact]
+        public void FindPublishedByCategory_With_Category_Name_Should_Return_Paged_Result()
+        {
+            var story1 = CreateStory();
+            var story2 = CreateStory();
+            var story3 = CreateStory();
+
+            var rnd = new Random();
+
+            Stories.AddRange(new[] { story1 as Story, story2 as Story, story3 as Story });
+            Stories.ForEach(s => s.Publish(SystemTime.Now().AddDays(-rnd.Next(1, 5)), rnd.Next(1, 10)));
+
+            var pagedResult = _storyRepository.FindPublishedByCategory(Stories[0].Category.Name, 0, 10);
+
+            Assert.Equal(Stories.Count, pagedResult.Result.Count);
+            Assert.Equal(Stories.Count, pagedResult.Total);
+        }
+
+        [Fact]
         public void FindUpcoming_Should_Return_Paged_Result()
         {
             var story1 = CreateStory();
@@ -201,6 +219,25 @@ namespace Kigg.Infrastructure.EF.Test
         }
 
         [Fact]
+        public void FindByTag_With_Tag_Name_Should_Return_Paged_Result()
+        {
+            var story1 = CreateStory();
+            var story2 = CreateStory();
+            var story3 = CreateStory();
+
+            Stories.AddRange(new[] { story1 as Story, story2 as Story, story3 as Story });
+
+            var tag = _factory.CreateTag("dummy");
+
+            Stories.ForEach(s => s.AddTag(tag));
+
+            var pagedResult = _storyRepository.FindByTag(tag.Name, 0, 10);
+
+            Assert.Equal(3, pagedResult.Result.Count);
+            Assert.Equal(3, pagedResult.Total);
+        }
+
+        [Fact]
         public void Search_Should_Return_Correct_Result()
         {
             var story1 = CreateStory();
@@ -232,6 +269,21 @@ namespace Kigg.Infrastructure.EF.Test
         }
 
         [Fact]
+        public void FindPostedByUser_With_UserName_Should_Return_Correct_Result()
+        {
+            var story1 = CreateStory();
+            var story2 = CreateStory();
+            var story3 = CreateStory();
+
+            Stories.AddRange(new[] { story1 as Story, story2 as Story, story3 as Story });
+
+            var pagedResult = _storyRepository.FindPostedByUser(Stories[0].User.UserName, 0, 10);
+
+            Assert.Equal(Stories.Count, pagedResult.Result.Count);
+            Assert.Equal(Stories.Count, pagedResult.Total);
+        }
+
+        [Fact]
         public void FindPromotedByUser_Should_Return_Correct_Result()
         {
             var story1 = CreateStory();
@@ -245,6 +297,25 @@ namespace Kigg.Infrastructure.EF.Test
             Stories.ForEach(s => Votes.Add(new StoryVote { User = (User)user, Story = s, IpAddress = "192.168.0.1", Timestamp = SystemTime.Now().AddDays(-3) }));
 
             var pagedResult = _storyRepository.FindPromotedByUser(user.Id, 0, 10);
+
+            Assert.Equal(3, pagedResult.Result.Count);
+            Assert.Equal(3, pagedResult.Total);
+        }
+
+        [Fact]
+        public void FindPromotedByUser_With_UserName_Should_Return_Correct_Result()
+        {
+            var story1 = CreateStory();
+            var story2 = CreateStory();
+            var story3 = CreateStory();
+
+            Stories.AddRange(new[] { story1 as Story, story2 as Story, story3 as Story });
+
+            var user = _factory.CreateUser("promoter", "promoter@users.com", "xxxxxx");
+
+            Stories.ForEach(s => Votes.Add(new StoryVote { User = (User)user, Story = s, IpAddress = "192.168.0.1", Timestamp = SystemTime.Now().AddDays(-3) }));
+
+            var pagedResult = _storyRepository.FindPromotedByUser(user.UserName, 0, 10);
 
             Assert.Equal(3, pagedResult.Result.Count);
             Assert.Equal(3, pagedResult.Total);

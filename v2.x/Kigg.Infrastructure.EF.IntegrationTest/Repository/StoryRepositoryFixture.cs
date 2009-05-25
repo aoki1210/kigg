@@ -49,9 +49,9 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
                 _storyRepository.Add(story);
                 _database.SubmitChanges();
 
-                Assert.Throws<ArgumentException>(() => _storyRepository.Add(story));    
+                Assert.Throws<ArgumentException>(() => _storyRepository.Add(story));
             }
-            
+
         }
 
         [Fact]
@@ -59,18 +59,18 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         {
             using (new TransactionScope())
             {
-                var user = (User) _domainFactory.CreateUser("dummyuser", "dummyuser@mail.com", String.Empty);
+                var user = (User)_domainFactory.CreateUser("dummyuser", "dummyuser@mail.com", String.Empty);
                 var category = _domainFactory.CreateCategory("dummycategory");
                 var story = _domainFactory.CreateStory(category, user, "192.168.0.1", "dummy title", "dummy Desc", "http://kiGG.net/story.aspx");
                 var tag = _domainFactory.CreateTag("DummyTag");
                 story.AddTag(tag);
                 user.AddTag(tag);
 
-                #pragma warning disable 168
+#pragma warning disable 168
                 var comment = _domainFactory.CreateComment(story, "comment", SystemTime.Now(), user, "192.168.0.2");
                 var vote = _domainFactory.CreateStoryVote(story, SystemTime.Now(), user, "192.168.0.1");
                 var spamMark = _domainFactory.CreateMarkAsSpam(story, SystemTime.Now(), user, "192.168.0.3");
-                #pragma warning restore 168
+#pragma warning restore 168
 
                 _storyRepository.Add(story);
                 _database.SubmitChanges();
@@ -109,8 +109,8 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         {
             using (new TransactionScope())
             {
-                GenerateStories(true,false, true);
-                
+                GenerateStories(true, false, true);
+
                 _database.SubmitChanges();
 
                 var pagedResult = _storyRepository.FindPublished(0, 5);
@@ -139,29 +139,49 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         }
 
         [Fact]
+        public void FindPublishedByCategory_With_CategoryName_Should_Return_Paged_Result()
+        {
+            using (new TransactionScope())
+            {
+                GenerateStories(true, false, true);
+
+                _database.SubmitChanges();
+
+                var categoryName = CreateNewCategory().Name;
+                //var category = _database.CategoryDataSource.First(c => c.Name == categoryName);
+                var pagedResult = _storyRepository.FindPublishedByCategory(categoryName, 0, 5);
+
+                Assert.Equal(5, pagedResult.Result.Count);
+                Assert.Equal(10, pagedResult.Total);
+            }
+        }
+
+        [Fact]
         public void FindUpcoming_Should_Return_Paged_Result()
         {
             using (new TransactionScope())
             {
-                GenerateStories(false,true, true);
+                GenerateStories(false, true, true);
                 _database.SubmitChanges();
                 var pagedResult = _storyRepository.FindUpcoming(0, 5);
                 Assert.Equal(5, pagedResult.Result.Count);
                 Assert.True(pagedResult.Total >= 10);
             }
         }
+
         [Fact]
         public void FindNew_Should_Return_Paged_Result()
         {
             using (new TransactionScope())
             {
-                GenerateStories(false,true, true);
+                GenerateStories(false, true, true);
                 _database.SubmitChanges();
                 var pagedResult = _storyRepository.FindNew(0, 5);
                 Assert.Equal(5, pagedResult.Result.Count);
                 Assert.True(pagedResult.Total >= 10);
             }
         }
+
         [Fact]
         public void FindUnapproved_Should_Return_Paged_Result()
         {
@@ -174,7 +194,7 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
                 Assert.True(pagedResult.Total >= 10);
             }
         }
-        
+
         [Fact]
         public void FindPublishable_Should_Return_Correct_Result()
         {
@@ -187,7 +207,7 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
                 Assert.True(pagedResult.Total >= 10);
             }
         }
-        
+
         [Fact]
         public void FindByTag_Should_Return_Paged_Result()
         {
@@ -200,6 +220,24 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
                 var tagName = CreateNewTag().Name;
                 var tag = _database.TagDataSource.First(c => c.Name == tagName);
                 var pagedResult = _storyRepository.FindByTag(tag.Id, 0, 5);
+
+                Assert.Equal(5, pagedResult.Result.Count);
+                Assert.Equal(10, pagedResult.Total);
+            }
+        }
+
+        [Fact]
+        public void FindByTag_With_TagName_Should_Return_Paged_Result()
+        {
+            using (new TransactionScope())
+            {
+                GenerateStories(true, false, true);
+
+                _database.SubmitChanges();
+
+                var tagName = CreateNewTag().Name;
+                //var tag = _database.TagDataSource.First(c => c.Name == tagName);
+                var pagedResult = _storyRepository.FindByTag(tagName, 0, 5);
 
                 Assert.Equal(5, pagedResult.Result.Count);
                 Assert.Equal(10, pagedResult.Total);
@@ -238,7 +276,24 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
                 Assert.Equal(10, pagedResult.Total);
             }
         }
-        
+
+        [Fact]
+        public void FindPostedByUser_With_UserName_Should_Return_Correct_Result()
+        {
+            using (new TransactionScope())
+            {
+                GenerateStories(true, false, true);
+
+                _database.SubmitChanges();
+                var userName = CreateNewUser().UserName;
+                //var id = _database.UserDataSource.First(u => u.UserName == userName).Id;
+                var pagedResult = _storyRepository.FindPostedByUser(userName, 0, 5);
+
+                Assert.Equal(5, pagedResult.Result.Count);
+                Assert.Equal(10, pagedResult.Total);
+            }
+        }
+
         [Fact]
         public void FindPromotedByUser_Should_Return_Correct_Result()
         {
@@ -251,11 +306,34 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
                 var stories = _database.StoryDataSource.Where(s => s.User.UserName == userName);
 
                 var newUser = (User)_domainFactory.CreateUser("promoterUser", "promoterUser@mail.com", "Pa$$w0rd");
-                
-                stories.ForEach(s=>s.StoryVotesInternal.Add(new StoryVote{User = newUser, Story = s, IpAddress = "192.168.0.5", Timestamp = SystemTime.Now()}));
+
+                stories.ForEach(s => s.StoryVotesInternal.Add(new StoryVote { User = newUser, Story = s, IpAddress = "192.168.0.5", Timestamp = SystemTime.Now() }));
                 _database.SubmitChanges();
 
                 var pagedResult = _storyRepository.FindPromotedByUser(newUser.Id, 0, 5);
+
+                Assert.Equal(5, pagedResult.Result.Count);
+                Assert.Equal(10, pagedResult.Total);
+            }
+        }
+
+        [Fact]
+        public void FindPromotedByUser_With_UserName_Should_Return_Correct_Result()
+        {
+            using (new TransactionScope())
+            {
+                GenerateStories(true, false, true);
+
+                _database.SubmitChanges();
+                var userName = CreateNewUser().UserName;
+                var stories = _database.StoryDataSource.Where(s => s.User.UserName == userName);
+
+                var newUser = (User)_domainFactory.CreateUser("promoterUser", "promoterUser@mail.com", "Pa$$w0rd");
+
+                stories.ForEach(s => s.StoryVotesInternal.Add(new StoryVote { User = newUser, Story = s, IpAddress = "192.168.0.5", Timestamp = SystemTime.Now() }));
+                _database.SubmitChanges();
+
+                var pagedResult = _storyRepository.FindPromotedByUser(newUser.UserName, 0, 5);
 
                 Assert.Equal(5, pagedResult.Result.Count);
                 Assert.Equal(10, pagedResult.Total);
@@ -362,7 +440,7 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
                 var count = _storyRepository.CountByNew();
 
                 Assert.True(count >= 10);
-            }    
+            }
         }
 
         [Fact]
@@ -376,7 +454,7 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
                 var count = _storyRepository.CountByUnapproved();
 
                 Assert.True(count >= 10);
-            }   
+            }
         }
 
         [Fact]
@@ -387,10 +465,10 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
                 GenerateStories(false, true, true);
 
                 _database.SubmitChanges();
-                var count = _storyRepository.CountByPublishable(SystemTime.Now().AddDays(-10),SystemTime.Now());
+                var count = _storyRepository.CountByPublishable(SystemTime.Now().AddDays(-10), SystemTime.Now());
 
                 Assert.True(count >= 10);
-            }  
+            }
         }
         [Fact]
         public void CountPostedByUser_Should_Return_Correct_Result()
@@ -407,7 +485,7 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
                 var count = _storyRepository.CountPostedByUser(id);
 
                 Assert.Equal(10, count);
-            }  
+            }
         }
 
         private void GenerateStories(bool publish, bool markNew, bool approve)
@@ -426,11 +504,11 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
                 {
                     story.Approve(SystemTime.Now().AddDays(-6));
                 }
-                if(publish)
+                if (publish)
                 {
                     story.Publish(SystemTime.Now().AddDays(-rnd.Next(1, 5)), rnd.Next(1, 10));
                 }
-                if(markNew)
+                if (markNew)
                 {
                     story.LastProcessedAt = null;
                 }
