@@ -59,6 +59,12 @@
         }
 
         [DebuggerStepThrough]
+        public virtual PagedResult<IStory> FindPublishedByCategory(string category, int start, int max)
+        {
+            return _innerRepository.FindPublishedByCategory(category, start, max);
+        }
+
+        [DebuggerStepThrough]
         public virtual PagedResult<IStory> FindUpcoming(int start, int max)
         {
             return _innerRepository.FindUpcoming(start, max);
@@ -93,6 +99,12 @@
         }
 
         [DebuggerStepThrough]
+        public virtual PagedResult<IStory> FindByTag(string tag, int start, int max)
+        {
+            return _innerRepository.FindByTag(tag, start, max);
+        }
+
+        [DebuggerStepThrough]
         public virtual PagedResult<IStory> Search(string query, int start, int max)
         {
             return _innerRepository.Search(query, start, max);
@@ -105,9 +117,21 @@
         }
 
         [DebuggerStepThrough]
+        public virtual PagedResult<IStory> FindPostedByUser(string userName, int start, int max)
+        {
+            return _innerRepository.FindPostedByUser(userName, start, max);
+        }
+
+        [DebuggerStepThrough]
         public virtual PagedResult<IStory> FindPromotedByUser(Guid userId, int start, int max)
         {
             return _innerRepository.FindPromotedByUser(userId, start, max);
+        }
+
+        [DebuggerStepThrough]
+        public virtual PagedResult<IStory> FindPromotedByUser(string userName, int start, int max)
+        {
+            return _innerRepository.FindPromotedByUser(userName, start, max);
         }
 
         [DebuggerStepThrough]
@@ -163,5 +187,6 @@
         {
             return _innerRepository.CountPostedByUser(userId);
         }
+
     }
 }

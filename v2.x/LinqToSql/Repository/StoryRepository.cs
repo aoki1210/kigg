@@ -7,14 +7,16 @@
     using Kigg.DomainObjects;
     using Kigg.Repository;
     using DomainObjects;
-    
+
     public class StoryRepository : BaseRepository<IStory, Story>, IStoryRepository
     {
-        public StoryRepository(IDatabase database) : base(database)
+        public StoryRepository(IDatabase database)
+            : base(database)
         {
         }
 
-        public StoryRepository(IDatabaseFactory factory) : base(factory)
+        public StoryRepository(IDatabaseFactory factory)
+            : base(factory)
         {
         }
 
@@ -22,7 +24,7 @@
         {
             Check.Argument.IsNotNull(entity, "entity");
 
-            Story story = (Story) entity;
+            var story = (Story)entity;
 
             if (Database.StoryDataSource.Any(s => s.UrlHash == story.UrlHash))
             {
@@ -38,7 +40,7 @@
         {
             Check.Argument.IsNotNull(entity, "entity");
 
-            Story story = (Story) entity;
+            var story = (Story)entity;
 
             Database.DeleteAll(Database.StoryViewDataSource.Where(sv => sv.StoryId == story.Id));
             Database.DeleteAll(Database.CommentSubscribtionDataSource.Where(cs => cs.StoryId == story.Id));
@@ -101,6 +103,25 @@
 
             var stories = Database.StoryDataSource
                                   .Where(s => (s.ApprovedAt != null) && (s.PublishedAt != null) && (s.Rank != null) && (s.CategoryId == categoryId))
+                                  .OrderByDescending(s => s.PublishedAt)
+                                  .ThenBy(s => s.Rank)
+                                  .ThenByDescending(s => s.CreatedAt)
+                                  .Skip(start)
+                                  .Take(max);
+
+            return BuildPagedResult<IStory>(stories, total);
+        }
+
+        public virtual PagedResult<IStory> FindPublishedByCategory(string category, int start, int max)
+        {
+            Check.Argument.IsNotEmpty(category, "category");
+            Check.Argument.IsNotNegative(start, "start");
+            Check.Argument.IsNotNegative(max, "max");
+
+            int total = CountByCategory(category);
+
+            var stories = Database.StoryDataSource
+                                  .Where(s => (s.ApprovedAt != null) && (s.PublishedAt != null) && (s.Rank != null) && (s.Category.Name == category))
                                   .OrderByDescending(s => s.PublishedAt)
                                   .ThenBy(s => s.Rank)
                                   .ThenByDescending(s => s.CreatedAt)
@@ -192,6 +213,23 @@
             return BuildPagedResult<IStory>(stories, total);
         }
 
+        public virtual PagedResult<IStory> FindByTag(string tag, int start, int max)
+        {
+            Check.Argument.IsNotEmpty(tag, "tag");
+            Check.Argument.IsNotNegative(start, "start");
+            Check.Argument.IsNotNegative(max, "max");
+
+            int total = CountByTag(tag);
+
+            var stories = Database.StoryDataSource
+                                  .Where(s => (s.ApprovedAt != null) && s.StoryTags.Any(st => st.Tag.Name == tag))
+                                  .OrderByDescending(s => s.CreatedAt)
+                                  .Skip(start)
+                                  .Take(max);
+
+            return BuildPagedResult<IStory>(stories, total);
+        }
+
         public virtual PagedResult<IStory> Search(string query, int start, int max)
         {
             Check.Argument.IsNotEmpty(query, "query");
@@ -232,6 +270,24 @@
             return BuildPagedResult<IStory>(stories, total);
         }
 
+        public virtual PagedResult<IStory> FindPostedByUser(string userName, int start, int max)
+        {
+            Check.Argument.IsNotEmpty(userName, "userName");
+            Check.Argument.IsNotNegative(start, "start");
+            Check.Argument.IsNotNegative(max, "max");
+
+            int total = CountPostedByUser(userName);
+
+            List<Story> stories = Database.StoryDataSource
+                                          .Where(s => ((s.ApprovedAt != null) && (s.User.UserName == userName)))
+                                          .OrderByDescending(s => s.CreatedAt)
+                                          .Skip(start)
+                                          .Take(max)
+                                          .ToList();
+
+            return BuildPagedResult<IStory>(stories, total);
+        }
+
         public virtual PagedResult<IStory> FindPromotedByUser(Guid userId, int start, int max)
         {
             Check.Argument.IsNotEmpty(userId, "userId");
@@ -243,6 +299,26 @@
 
             List<Story> stories = Database.VoteDataSource
                                           .Where(v => ((v.UserId == userId) && (v.Story.ApprovedAt != null)))
+                                          .OrderByDescending(v => v.Timestamp)
+                                          .Select(v => v.Story)
+                                          .Skip(start)
+                                          .Take(max)
+                                          .ToList();
+
+            return BuildPagedResult<IStory>(stories, total);
+        }
+
+        public virtual PagedResult<IStory> FindPromotedByUser(string userName, int start, int max)
+        {
+            Check.Argument.IsNotEmpty(userName, "userName");
+            Check.Argument.IsNotNegative(start, "start");
+            Check.Argument.IsNotNegative(max, "max");
+
+            int total = Database.StoryDataSource
+                                .Count(s => ((s.ApprovedAt != null) && s.StoryVotes.Any(v => v.User.UserName == userName)));
+
+            List<Story> stories = Database.VoteDataSource
+                                          .Where(v => ((v.User.UserName == userName) && (v.Story.ApprovedAt != null)))
                                           .OrderByDescending(v => v.Timestamp)
                                           .Select(v => v.Story)
                                           .Skip(start)
@@ -295,11 +371,26 @@
                            .Count(s => (s.ApprovedAt != null) && (s.PublishedAt != null) && (s.CategoryId == categoryId));
         }
 
+        public virtual int CountByCategory(string categoryName)
+        {
+            Check.Argument.IsNotEmpty(categoryName, "categoryName");
+
+            return Database.StoryDataSource
+                           .Count(s => (s.ApprovedAt != null) && (s.PublishedAt != null) && (s.Category.Name == categoryName));
+        }
+
         public virtual int CountByTag(Guid tagId)
         {
             Check.Argument.IsNotEmpty(tagId, "tagId");
 
             return Database.StoryDataSource.Count(s => (s.ApprovedAt != null) && s.StoryTags.Any(st => st.TagId == tagId));
+        }
+
+        public virtual int CountByTag(string tagName)
+        {
+            Check.Argument.IsNotEmpty(tagName, "tagName");
+
+            return Database.StoryDataSource.Count(s => (s.ApprovedAt != null) && s.StoryTags.Any(st => st.Tag.Name == tagName));
         }
 
         public virtual int CountByNew()
@@ -325,6 +416,13 @@
             Check.Argument.IsNotEmpty(userId, "userId");
 
             return Database.StoryDataSource.Count(s => (s.ApprovedAt != null) && (s.UserId == userId));
+        }
+
+        public virtual int CountPostedByUser(string userName)
+        {
+            Check.Argument.IsNotEmpty(userName, "userName");
+
+            return Database.StoryDataSource.Count(s => (s.ApprovedAt != null) && (s.User.UserName == userName));
         }
     }
 }
