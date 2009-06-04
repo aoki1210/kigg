@@ -43,6 +43,9 @@ namespace Kigg.Web
             // Ignore the error directory which contains error pages
             _routes.IgnoreRoute("ErrorPages/{*pathInfo}");
 
+            // Ignore the ado.net data services directory which contains kigg data services
+            _routes.IgnoreRoute("DataServices/{*pathInfo}");
+
             //Exclude favicon (google toolbar request gif file as fav icon)
             _routes.IgnoreRoute("{*favicon}", new { favicon = @"(.*/)?favicon.([iI][cC][oO]|[gG][iI][fF])(/.*)?" });
 
