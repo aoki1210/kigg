@@ -1,15 +1,12 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Data;
-using System.Transactions;
 
 using Xunit;
 
 namespace Kigg.Infrastructure.EF.IntegrationTest
 {
     using Kigg.EF.Repository;
-    using Kigg.EF.DomainObjects;
-
+    
     public class CommentRepositoryFixture : BaseIntegrationFixture
     {
         private readonly CommentRepository _commentRepository;
@@ -28,42 +25,69 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         [Fact]
         public void CountByStory_Should_Return_Correct_Count()
         {
-            var story = GetStoryWithComments();
-            var count = story.StoryCommentsInternal.CreateSourceQuery().Count();
-            Assert.Equal(count, _commentRepository.CountByStory(story.Id));
+            using (BeginTransaction())
+            {
+                var story = GenerateStoryGraph();
+                var comment = CreateNewComment(story, story.User, "some content");
+                _database.InsertOnSubmit(story);
+                _database.InsertOnSubmit(comment);
+                _database.SubmitChanges();
+
+                var count = story.StoryCommentsInternal.CreateSourceQuery().Count();
+                
+                Assert.Equal(count, _commentRepository.CountByStory(story.Id));
+            }
         }
 
         [Fact]
         public void FindById_Should_Return_Correct_Comment()
         {
-            var story = GetStoryWithComments();
-            var comment = _database.CommentDataSource.Where(c => c.Story.Id == story.Id).First();
-            var foundComment = _commentRepository.FindById(story.Id, comment.Id);
-            Assert.NotNull(foundComment);
-            Assert.Equal(comment.Id, foundComment.Id);
+            using (BeginTransaction())
+            {
+                var story = GenerateStoryGraph();
+                var comment = CreateNewComment(story, story.User, "some content");
+                _database.InsertOnSubmit(story);
+                _database.InsertOnSubmit(comment);
+                _database.SubmitChanges();
+
+                var foundComment = _commentRepository.FindById(story.Id, comment.Id);
+                Assert.NotNull(foundComment);
+                Assert.Equal(comment.Id, foundComment.Id);
+            }
         }
 
         [Fact]
         public void FindAfter_Should_Return_Correct_Comments()
         {
-            var date = new DateTime(2000, 1, 1);
-            var story = GetStoryWithComments();
+            using (BeginTransaction())
+            {
+                var story = GenerateStoryGraph();
+                var comment = CreateNewComment(story, story.User, "some content");
+                _database.InsertOnSubmit(story);
+                _database.InsertOnSubmit(comment);
+                _database.SubmitChanges();
 
-            var count = _database.CommentDataSource
+                var date = comment.CreatedAt.AddSeconds(-10);
+
+                var count = _database.CommentDataSource
                                  .Where(c => c.Story.Id == story.Id && c.CreatedAt >= date)
                                  .Count();
-            
-            var result = _commentRepository.FindAfter(story.Id, date);
 
-            Assert.Equal(count, result.Count);
+                var result = _commentRepository.FindAfter(story.Id, date);
+                Assert.Equal(count, result.Count);
+            }
         }
 
         [Fact]
         public void Add_And_Presist_Changes_Should_Succeed()
         {
-            using (new TransactionScope())
+            using (BeginTransaction())
             {
-                var comment = CreateNewComment();
+                var story = GenerateStoryGraph();
+                _database.InsertOnSubmit(story);
+                _database.SubmitChanges();
+
+                var comment = CreateNewComment(story, story.User,"some content");
                 _commentRepository.Add(comment);
                 Assert.Equal(EntityState.Added, comment.EntityState);
                 _database.SubmitChanges();
@@ -74,9 +98,14 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         [Fact]
         public void Remove_And_Presist_Changes_Should_Succeed()
         {
-            var comment = _database.CommentDataSource.First();
-            using (new TransactionScope())
+            using (BeginTransaction())
             {
+                var story = GenerateStoryGraph();
+                var comment = CreateNewComment(story, story.User, "some content");
+                _database.InsertOnSubmit(story);
+                _database.InsertOnSubmit(comment);
+                _database.SubmitChanges();
+
                 _commentRepository.Remove(comment);
                 Assert.Equal(EntityState.Deleted, comment.EntityState);
                 _database.SubmitChanges();
@@ -84,9 +113,5 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
             }
         }
 
-        private Story GetStoryWithComments()
-        {
-            return _database.StoryDataSource.Where(s => s.StoryCommentsInternal.Any(c => c.Story.Id == s.Id)).First();
-        }
     }
 }

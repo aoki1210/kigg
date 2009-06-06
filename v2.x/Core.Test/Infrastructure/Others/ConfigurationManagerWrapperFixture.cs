@@ -24,7 +24,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void ConnectionString_Should_Throw_Exception_When_Accessing_An_Non_Existent_Key()
         {
-            Assert.Throws<NullReferenceException>(() => _configurationManager.ConnectionStrings("foo"));
+            Assert.Throws<NullReferenceException>(() => _configurationManager.GetConnectionString("foo"));
         }
 
         [Fact]

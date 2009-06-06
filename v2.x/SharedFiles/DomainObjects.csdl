@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <Schema Namespace="Kigg.EF.DomainObjects" Alias="Self" 
         xmlns="http://schemas.microsoft.com/ado/2006/04/edm"
         xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration">

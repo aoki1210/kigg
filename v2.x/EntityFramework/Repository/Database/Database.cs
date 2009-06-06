@@ -15,10 +15,10 @@
         internal const string _defaultContainerName = "KiggEntityContainer";
         private const string esql = @"select value distinct resultset.Id from
                                     ((select s.Id as Id from KiggEntityContainer.Story as s 
-                                      where Kigg.EF.DomainObjects.Store.StorySearch(s.Id, @query) = true)
+                                      where Kigg.EF.DomainObjects.Store.EFSearchStory(s.Id, @query) = true)
                                       UNION ALL
                                      (select sc.Story.Id as Id from KiggEntityContainer.StoryComment as sc 
-                                      where Kigg.EF.DomainObjects.Store.CommentSearch(sc.Story.Id, @query) = true)
+                                      where Kigg.EF.DomainObjects.Store.EFSearchComment(sc.Story.Id, @query) = true)
                                     ) as resultset";
 
         private readonly static IDictionary<string,string> EntitySetNames = new Dictionary<string, string>(10);
@@ -35,6 +35,12 @@
         private IQueryable<KnownSource> _knownSourceDataSource;
         private IQueryable<StoryMarkAsSpam> _markAsSpamDataSource;
         private IQueryable<StoryComment> _commentDataSource;
+
+        public Database() :
+            base (System.Configuration.ConfigurationManager.ConnectionStrings["KiGGDatabase"].ConnectionString, _defaultContainerName)
+        {
+            
+        }
 
         public Database(string connectionString) :
             base(connectionString, _defaultContainerName)

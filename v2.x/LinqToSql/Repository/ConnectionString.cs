@@ -13,7 +13,7 @@
             Check.Argument.IsNotNull(configuration, "configuration");
             Check.Argument.IsNotEmpty(name, "name");
 
-            _value = configuration.ConnectionStrings(name);
+            _value = configuration.GetConnectionString(name);
         }
 
         public string Value

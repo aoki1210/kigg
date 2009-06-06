@@ -9,8 +9,8 @@ namespace Kigg.Infrastructure
             get;
         }
 
-        string ConnectionStrings(string name);
-
+        string GetConnectionString(string name);
+        string GetProviderName(string name);
         T GetSection<T>(string sectionName);
     }
 }

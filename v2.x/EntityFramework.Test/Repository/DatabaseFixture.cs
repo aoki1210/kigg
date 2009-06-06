@@ -15,17 +15,16 @@ namespace Kigg.Infrastructure.EF.Test
     {
         private readonly string _connectionString;
         
-        private const string _edmFilesPrefix = "Kigg.Infrastructure.EF.EDM.DomainObjects";
-        private const string _edmConnStringFormat ="metadata=res://{0}/{1}.csdl|res://{0}/{1}.ssdl|res://{0}/{1}.msl;provider=System.Data.SqlClient;";
-
         private readonly Mock<Database> _database;
 
         public DatabaseFixture()
         {
-            _connectionString = String.Format(_edmConnStringFormat,
-                                              typeof(Story).Assembly.FullName, 
-                                              _edmFilesPrefix);
+            var configMngr = new Mock<IConfigurationManager>();
+            configMngr.Setup(c => c.GetConnectionString("KiGG")).Returns("Data Source=.\\sqlexpress;Initial Catalog=KiGG;Integrated Security=True;MultipleActiveResultSets=False");
+            configMngr.Setup(c => c.GetProviderName("KiGG")).Returns("System.Data.SqlClient");
+            var connectionString = new ConnectionString(configMngr.Object, "KiGG", ".\\EDM");
             
+            _connectionString = connectionString.Value;
             _database = new Mock<Database>(_connectionString);
         }
 

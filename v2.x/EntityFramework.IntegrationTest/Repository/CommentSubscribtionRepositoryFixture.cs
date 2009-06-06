@@ -1,6 +1,4 @@
 ﻿using System.Linq;
-using System.Transactions;
-
 using Xunit;
 
 namespace Kigg.Infrastructure.EF.IntegrationTest
@@ -10,10 +8,11 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
     public class CommentSubscribtionRepositoryFixture: BaseIntegrationFixture
     {
         private readonly CommentSubscribtionRepository _commentSubscribtionRepository;
-
+        
         public CommentSubscribtionRepositoryFixture()
         {
             _commentSubscribtionRepository = new CommentSubscribtionRepository(_database);
+            
         }
 
         [Fact]
@@ -25,16 +24,19 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         [Fact]
         public void CountByStory_Should_Return_Correct_Count()
         {
-            var story = GetAnyExistingStory();
-            using(new TransactionScope())
+            using (BeginTransaction())
             {
-                story.SubscribeComment(GetAnyExistingUser());
+                var story = GenerateStoryGraph();
+                story.SubscribeComment(story.User);
+                var comment = CreateNewComment(story, story.User, "some content");
+                _database.InsertOnSubmit(story);
+                _database.InsertOnSubmit(comment);
                 _database.SubmitChanges();
 
                 var count = story.CommentSubscribersInternal.CreateSourceQuery().Count();
-                
+
                 Assert.True(count > 0);
-                
+
                 Assert.Equal(count, _commentSubscribtionRepository.CountByStory(story.Id));
             }
         }
@@ -42,16 +44,16 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         [Fact]
         public void FindById_Should_Return_Correct_Subscribtion()
         {
-            var story = GetAnyExistingStory();
-            var user = GetAnyExistingUser();
-
-            var storyId = story.Id;
-            var userId = user.Id;
-
-            using (new TransactionScope())
+            using (BeginTransaction())
             {
-                story.SubscribeComment(user);
+                var story = GenerateStoryGraph();
+                story.SubscribeComment(story.User);
+                _database.InsertOnSubmit(story);
+                
                 _database.SubmitChanges();
+
+                var storyId = story.Id;
+                var userId = story.User.Id;
 
                 var count = story.CommentSubscribersInternal.CreateSourceQuery().Count();
 
@@ -67,37 +69,42 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         [Fact]
         public void Add_And_Presist_Changes_Should_Succeed()
         {
-            var story = GetAnyExistingStory();
-            var user = GetAnyExistingUser();
-            var count = story.CommentSubscribersInternal.CreateSourceQuery().Count();
-            using (new TransactionScope())
+            using (BeginTransaction())
             {
-                var subscribtion = _domainFactory.CreateCommentSubscribtion(story, user);
+                var story = GenerateStoryGraph();
+                _database.InsertOnSubmit(story);
+                _database.SubmitChanges();
+
+                var subscribtion = _domainFactory.CreateCommentSubscribtion(story, story.User);
+                
                 _commentSubscribtionRepository.Add(subscribtion);
+
                 _database.SubmitChanges();
                 var newCount = story.CommentSubscribersInternal.CreateSourceQuery().Count();
-                Assert.Equal(count + 1, newCount);
+                Assert.Equal(1, newCount);
             }
         }
 
         [Fact]
         public void Remove_And_Presist_Changes_Should_Succeed()
         {
-            var story = GetAnyExistingStory();
-            var user = GetAnyExistingUser();
-            var count = story.CommentSubscribersInternal.CreateSourceQuery().Count();
-            using (new TransactionScope())
+            using (BeginTransaction())
             {
-                var subscribtion = _domainFactory.CreateCommentSubscribtion(story, user);
-                
+                var story = GenerateStoryGraph();
+                _database.InsertOnSubmit(story);
+                _database.SubmitChanges();
+
+                var subscribtion = _domainFactory.CreateCommentSubscribtion(story, story.User);
+
                 _commentSubscribtionRepository.Add(subscribtion);
+
                 _database.SubmitChanges();
 
                 _commentSubscribtionRepository.Remove(subscribtion);
                 _database.SubmitChanges();
 
                 var newCount = story.CommentSubscribersInternal.CreateSourceQuery().Count();
-                Assert.Equal(count, newCount);
+                Assert.Equal(0, newCount);
             }
         }
     }

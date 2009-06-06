@@ -32,6 +32,26 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'SqlServer|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\SqlServer\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'MySql|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\MySql\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -58,7 +78,6 @@
     <Compile Include="DomainObjects\Helpers\IEntityReference.cs" />
     <Compile Include="DomainObjects\KnownSource.cs" />
     <Compile Include="DomainObjects\Generated\Models.cs" />
-    <Compile Include="DomainObjects\Generated\Views.cs" />
     <Compile Include="DomainObjects\Story.cs" />
     <Compile Include="DomainObjects\StoryComment.cs" />
     <Compile Include="DomainObjects\StoryMarkAsSpam.cs" />
@@ -104,9 +123,18 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="EDM\DomainObjects.csdl" />
-    <EmbeddedResource Include="EDM\DomainObjects.msl" />
-    <EmbeddedResource Include="EDM\DomainObjects.ssdl" />
+    <None Include="..\SharedFiles\DomainObjects.csdl">
+      <Link>EDM\DomainObjects.csdl</Link>
+    </None>
+    <None Include="..\SharedFiles\DomainObjects.msl">
+      <Link>EDM\DomainObjects.msl</Link>
+    </None>
+    <None Include="..\SharedFiles\DomainObjects.MySql.ssdl">
+      <Link>EDM\DomainObjects.MySql.ssdl</Link>
+    </None>
+    <None Include="..\SharedFiles\DomainObjects.SqlServer.ssdl">
+      <Link>EDM\DomainObjects.SqlServer.ssdl</Link>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -117,8 +145,10 @@
   </Target>
   -->
   <PropertyGroup>
-    <PreBuildEvent>"%25windir%25\Microsoft.NET\Framework\v3.5\edmgen.exe" /mode:EntityClassGeneration /incsdl:$(ProjectDir)\EDM\DomainObjects.csdl /outobjectlayer:$(ProjectDir)\DomainObjects\Generated\Models.cs /language:CSharp
+    <PreBuildEvent>"%25windir%25\Microsoft.NET\Framework\v3.5\edmgen.exe" /mode:EntityClassGeneration /incsdl:$(SolutionDir)SharedFiles\DomainObjects.csdl /outobjectlayer:$(ProjectDir)\DomainObjects\Generated\Models.cs /language:CSharp
 
-"%25windir%25\Microsoft.NET\Framework\v3.5\edmgen.exe" /mode:ViewGeneration  /incsdl:$(ProjectDir)\EDM\DomainObjects.csdl /inssdl:$(ProjectDir)\EDM\DomainObjects.ssdl /inmsl:$(ProjectDir)\EDM\DomainObjects.msl /outviews:$(ProjectDir)\DomainObjects\Generated\Views.cs /language:CSharp</PreBuildEvent>
+"%25windir%25\Microsoft.NET\Framework\v3.5\edmgen.exe" /mode:ViewGeneration  /incsdl:$(SolutionDir)SharedFiles\DomainObjects.csdl /inssdl:$(SolutionDir)SharedFiles\DomainObjects.SqlServer.ssdl /inmsl:$(SolutionDir)SharedFiles\DomainObjects.msl /outviews:$(ProjectDir)\DomainObjects\Generated\SqlServerViews.cs /language:CSharp
+
+"%25windir%25\Microsoft.NET\Framework\v3.5\edmgen.exe" /mode:ViewGeneration  /incsdl:$(SolutionDir)SharedFiles\DomainObjects.csdl /inssdl:$(SolutionDir)SharedFiles\DomainObjects.MySql.ssdl /inmsl:$(SolutionDir)SharedFiles\DomainObjects.msl /outviews:$(ProjectDir)\DomainObjects\Generated\MySqlViews.cs /language:CSharp</PreBuildEvent>
   </PropertyGroup>
 </Project>

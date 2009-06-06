@@ -1,11 +1,11 @@
 ﻿using System.Linq;
 using System.Data;
-using System.Transactions;
 
 using Xunit;
 
 namespace Kigg.Infrastructure.EF.IntegrationTest
 {
+    using DomainObjects;
     using Kigg.EF.DomainObjects;
     using Kigg.EF.Repository;
 
@@ -27,37 +27,58 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         [Fact]
         public void CountByStory_Should_Return_Correct_Count()
         {
-            var storyId = GetAnyExistingStory().Id;
-            var count = _database.MarkAsSpamDataSource.Count(m => m.StoryId == storyId);
-            Assert.Equal(count, _markAsSpamRepository.CountByStory(storyId));
+            using (BeginTransaction())
+            {
+                var story = GenerateStoryGraph();
+                CreateNewMarkAsSpam(story, CreateNewUser("spammarker"));
+                
+                _database.InsertOnSubmit(story);
+
+                _database.SubmitChanges();
+
+                var storyId = story.Id;
+                var count = _database.MarkAsSpamDataSource.Count(m => m.StoryId == storyId);
+                Assert.Equal(count, _markAsSpamRepository.CountByStory(storyId));
+            }
+            
         }
 
         [Fact]
         public void FindById_Should_Return_Correct_MarkAsSpam()
         {
-            var newMarkSpam = CreateNewMarkAsSpam();
-            var story = (Story)newMarkSpam.ForStory;
-            var user = newMarkSpam.ByUser;
-            using(new TransactionScope())
+            using (BeginTransaction())
             {
-                story.StoryMarkAsSpamsInternal.Add(newMarkSpam);
+                var story = GenerateStoryGraph();
+                var newMarkSpam =CreateNewMarkAsSpam(story, CreateNewUser("spammarker"));
+                
+                _database.InsertOnSubmit(story);
                 _database.SubmitChanges();
 
+                var user = newMarkSpam.ByUser;
                 var markSpam = _markAsSpamRepository.FindById(story.Id, user.Id);
+
                 Assert.NotNull(markSpam);
                 Assert.Equal(newMarkSpam.ForStory.Id, markSpam.ForStory.Id);
                 Assert.Equal(newMarkSpam.ByUser.Id, markSpam.ByUser.Id);
                 Assert.Equal(newMarkSpam.FromIPAddress, markSpam.FromIPAddress);
                 Assert.Equal(newMarkSpam.MarkedAt, markSpam.MarkedAt);
+
+                var storyId = story.Id;
+                var count = _database.MarkAsSpamDataSource.Count(m => m.StoryId == storyId);
+                Assert.Equal(count, _markAsSpamRepository.CountByStory(storyId));
             }
         }
 
         [Fact]
         public void Add_And_Presist_Changes_Should_Succeed()
         {
-            using (new TransactionScope())
+            using (BeginTransaction())
             {
-                var markedSpam = CreateNewMarkAsSpam();
+                var story = GenerateStoryGraph();
+                _database.InsertOnSubmit(story);
+                _database.SubmitChanges();
+
+                var markedSpam = CreateNewMarkAsSpam(story, CreateNewUser("spamarker"));
                 _markAsSpamRepository.Add(markedSpam);
                 Assert.Equal(EntityState.Added, markedSpam.EntityState);
                 _database.SubmitChanges();
@@ -68,10 +89,14 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         [Fact]
         public void Remove_And_Presist_Changes_Should_Succeed()
         {
-            using (new TransactionScope())
+            using (BeginTransaction())
             {
-                var markedSpam = CreateNewMarkAsSpam();
-                _markAsSpamRepository.Add(markedSpam);
+                var story = GenerateStoryGraph();
+                _database.InsertOnSubmit(story);
+                _database.SubmitChanges();
+
+                var markedSpam = CreateNewMarkAsSpam(story, CreateNewUser("spamarker"));
+                _database.InsertOnSubmit(markedSpam);
                 _database.SubmitChanges();
 
                 _markAsSpamRepository.Remove(markedSpam);
@@ -81,13 +106,11 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
             }
         }
 
-        private StoryMarkAsSpam CreateNewMarkAsSpam()
+        private StoryMarkAsSpam CreateNewMarkAsSpam(IStory forStory, IUser byUser)
         {
-            var story = GetAnyExistingStory();
-            var user = GetAnyExistingUser();
-            return (StoryMarkAsSpam)_domainFactory.CreateMarkAsSpam(story, 
-                                                                    SystemTime.Now(), 
-                                                                    user, 
+            return (StoryMarkAsSpam)_domainFactory.CreateMarkAsSpam(forStory, 
+                                                                    SystemTime.Now(),
+                                                                    byUser, 
                                                                     "127.0.0.1");
         }
     }

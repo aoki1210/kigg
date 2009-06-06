@@ -1,14 +1,11 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Data;
-using System.Transactions;
 
 using Xunit;
 
 namespace Kigg.Infrastructure.EF.IntegrationTest
 {
     using Kigg.EF.Repository;
-    using Kigg.EF.DomainObjects;
 
     public class StoryViewRepositoryFixture : BaseIntegrationFixture
     {
@@ -28,7 +25,7 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         [Fact]
         public void Add_And_Presist_Changes_Should_Succeed()
         {
-            using (new TransactionScope())
+            using (BeginTransaction())
             {
                 var view = CreateNewStoryView();
                 _storyViewRepository.Add(view);
@@ -41,9 +38,12 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         [Fact]
         public void Remove_And_Presist_Changes_Should_Succeed()
         {
-            var view = _database.StoryViewDataSource.First();
-            using (new TransactionScope())
+            using (BeginTransaction())
             {
+                var view = CreateNewStoryView();
+                _database.InsertOnSubmit(view);
+                _database.SubmitChanges();
+
                 _storyViewRepository.Remove(view);
                 Assert.Equal(EntityState.Deleted, view.EntityState);
                 _database.SubmitChanges();
@@ -54,30 +54,38 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         [Fact]
         public void CountByStory_Should_Return_Correct_Count()
         {
-            var storyId = GetAnyExistingStory().Id;
-            var count = _database.StoryViewDataSource.Count(v => v.Story.Id == storyId);
+            using(BeginTransaction())
+            {
+                var view = CreateNewStoryView();
+                _database.InsertOnSubmit(view);
+                _database.SubmitChanges();
 
-            Assert.Equal(count, _storyViewRepository.CountByStory(storyId));
+                var storyId = view.Story.Id;
+                var count = _database.StoryViewDataSource.Count(v => v.Story.Id == storyId);
+
+                Assert.Equal(count, _storyViewRepository.CountByStory(storyId));    
+            }
+            
         }
 
         [Fact]
         public void FindAfter_Should_Return_Correct_Views()
         {
-            var date = new DateTime(2009, 1, 1);
-            var storyId = GetAnyExistingStory().Id;
+            using (BeginTransaction())
+            {
+                var view = CreateNewStoryView();
+                var storyId = view.Story.Id;
+                _database.InsertOnSubmit(view);
+                _database.SubmitChanges();
 
-            var count = _database.StoryViewDataSource
-                                 .Count(v => v.Story.Id == storyId && v.Timestamp >= date);
+                var date = view.ViewedAt.AddSeconds(-10);
+                var count = _database.StoryViewDataSource
+                                     .Count(v => v.Story.Id == storyId && v.Timestamp >= date);
 
-            var result = _storyViewRepository.FindAfter(storyId, date);
+                var result = _storyViewRepository.FindAfter(storyId, date);
 
-            Assert.Equal(count, result.Count);
-        }
-
-        private StoryView CreateNewStoryView()
-        {
-            var story = GetAnyExistingStory();
-            return (StoryView)_domainFactory.CreateStoryView(story, SystemTime.Now(), "192.168.0.1");
+                Assert.Equal(count, result.Count);
+            }
         }
     }
 }
