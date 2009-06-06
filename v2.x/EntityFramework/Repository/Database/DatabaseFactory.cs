@@ -17,7 +17,7 @@
 #if(DEBUG)
         public virtual IDatabase Create()
 #else
-        public IDatabase Get()
+        public IDatabase Create()
 #endif
 
         {

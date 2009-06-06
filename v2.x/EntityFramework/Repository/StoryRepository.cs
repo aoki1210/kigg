@@ -284,7 +284,7 @@
 #if(DEBUG)
         public virtual PagedResult<IStory> FindByTag(string tagName, int start, int max)
 #else
-        public PagedResult<IStory> FindByTag(string tag, int start, int max)
+        public PagedResult<IStory> FindByTag(string tagName, int start, int max)
 #endif
         {
             Check.Argument.IsNotEmpty(tagName, "tagName");

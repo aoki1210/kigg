@@ -1,4 +1,4 @@
-CREATE function [dbo].[EFCommentSearch]
+CREATE function [dbo].[EFSearchComment]
       (
 		@storyId uniqueidentifier,
 		@query nvarchar(4000)
@@ -20,7 +20,7 @@ BEGIN
 END
 GO
 
-CREATE function [dbo].[EFStorySearch]
+CREATE function [dbo].[EFSearchStory]
       (
 		@storyId uniqueidentifier,
 		@query nvarchar(4000)

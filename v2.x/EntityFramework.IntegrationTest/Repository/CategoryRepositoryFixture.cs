@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Data;
-using System.Transactions;
 
 using Xunit;
 
@@ -28,30 +27,39 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         [Fact]
         public void Add_And_Presist_Changes_Should_Succeed()
         {
-            using (new TransactionScope())
+            using (BeginTransaction())
             {
                 var category = (Category) _domainFactory.CreateCategory("Dummy Category");
                 _categoryRepository.Add(category);
+                
                 Assert.Equal(EntityState.Added, category.EntityState);
                 _database.SubmitChanges();
                 Assert.Equal(EntityState.Unchanged, category.EntityState);
+            
             }
         }
 
         [Fact]
         public void Add_Should_Throw_Exception_When_Specified_Name_Already_Exists()
         {
-            var category = _database.CategoryDataSource.First();
-
-            Assert.Throws<ArgumentException>(() => _categoryRepository.Add(_domainFactory.CreateCategory(category.Name)));
+            using(BeginTransaction())
+            {
+                var category = CreateNewCategory("AddCategoryTest");
+                _database.InsertOnSubmit(category);
+                _database.SubmitChanges();
+                Assert.Throws<ArgumentException>(() => _categoryRepository.Add(_domainFactory.CreateCategory(category.Name)));
+            }
         }
 
         [Fact]
         public void Remove_And_Presist_Changes_Should_Succeed()
         {
-            var category = _database.CategoryDataSource.First();
-            using (new TransactionScope())
+            using (BeginTransaction())
             {
+                var category = CreateNewCategory("DeleteCategoryTest");
+                _database.InsertOnSubmit(category);
+                _database.SubmitChanges();
+                
                 _categoryRepository.Remove(category);
                 Assert.Equal(EntityState.Deleted, category.EntityState);
                 _database.SubmitChanges();
@@ -62,27 +70,47 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         [Fact]
         public void FindById_Should_Return_Correct_Category()
         {
-            var existingCategory = _database.CategoryDataSource.First();
-            var category = _categoryRepository.FindById(existingCategory.Id);
-            Assert.Equal(existingCategory.Id, category.Id);
+            using (BeginTransaction())
+            {
+                var newCategory = CreateNewCategory("FindByIdTest");
+                _database.InsertOnSubmit(newCategory);
+                _database.SubmitChanges();
+
+                var category = _categoryRepository.FindById(newCategory.Id);
+                Assert.Equal(newCategory.Id, category.Id);
+            }
         }
 
         [Fact]
         public void FindByUniqueName_Should_Return_Correct_Category()
         {
-            var existingCategory = _database.CategoryDataSource.First();
-            var category = _categoryRepository.FindByUniqueName(existingCategory.UniqueName);
-            Assert.Equal(existingCategory.UniqueName, category.UniqueName);
+            using (BeginTransaction())
+            {
+                var newCategory = CreateNewCategory("FindByUniqueNameTest");
+                _database.InsertOnSubmit(newCategory);
+                _database.SubmitChanges();
+
+                var category = _categoryRepository.FindByUniqueName(newCategory.UniqueName);
+                Assert.Equal(newCategory.Id, category.Id);
+                Assert.Equal(category.UniqueName, category.UniqueName);
+            }
         }
 
         [Fact]
         public void FindAll_Should_Return_All_Category()
         {
-            int count = _database.CategoryDataSource.Count();
+            using (BeginTransaction())
+            {
+                _database.InsertOnSubmit(CreateNewCategory("FindAllTest1"));
+                _database.InsertOnSubmit(CreateNewCategory("FindAllTest2"));
+                _database.SubmitChanges();
 
-            var result = _categoryRepository.FindAll();
+                int count = _database.CategoryDataSource.Count();
 
-            Assert.Equal(count, result.Count);
+                var result = _categoryRepository.FindAll();
+
+                Assert.Equal(count, result.Count);
+            }
         }
     }
 }

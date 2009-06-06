@@ -426,16 +426,16 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Function Name="StorySearch" Aggregate="false"
+  <Function Name="EFSearchStory" Aggregate="false"
     BuiltIn="false" NiladicFunction="false" IsComposable="true" 
-    ParameterTypeSemantics="AllowImplicitConversion" StoreFunctionName="EFStorySearch"
+    ParameterTypeSemantics="AllowImplicitConversion" StoreFunctionName="EFSearchStory"
     Schema="dbo" ReturnType="bit">
     <Parameter Name="storyId" Type="uniqueidentifier" Mode="In" />
     <Parameter Name="query" Type="nvarchar" MaxLength="4000" Mode="In" />
   </Function>
-  <Function Name="CommentSearch" Aggregate="false"
+  <Function Name="EFSearchComment" Aggregate="false"
     BuiltIn="false" NiladicFunction="false" IsComposable="true"
-    ParameterTypeSemantics="AllowImplicitConversion" StoreFunctionName="EFCommentSearch"
+    ParameterTypeSemantics="AllowImplicitConversion" StoreFunctionName="EFSearchComment"
     Schema="dbo" ReturnType="bit">
     <Parameter Name="storyId" Type="uniqueidentifier" Mode="In" />
     <Parameter Name="query" Type="nvarchar" MaxLength="4000" Mode="In" />

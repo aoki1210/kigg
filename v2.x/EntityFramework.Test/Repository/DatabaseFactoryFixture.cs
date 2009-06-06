@@ -5,28 +5,21 @@ using Xunit;
 
 namespace Kigg.Infrastructure.EF.Test
 {
-    using Kigg.EF.DomainObjects;
+    
     using Kigg.EF.Repository;
 
     public class DatabaseFactoryFixture
     {
-        private readonly string _connectionString;
-        
-        private const string _edmFilesPrefix = "Kigg.Infrastructure.EF.EDM.DomainObjects";
-        private const string _edmConnStringFormat = "metadata=res://{0}/{1}.csdl|res://{0}/{1}.ssdl|res://{0}/{1}.msl;provider=System.Data.SqlClient;";
-
         private readonly IDatabaseFactory _factory;
 
         public DatabaseFactoryFixture()
         {
-            _connectionString = String.Format(_edmConnStringFormat, 
-                                              typeof(Story).Assembly.FullName, 
-                                              _edmFilesPrefix);
+            var configMngr = new Mock<IConfigurationManager>();
+            configMngr.Setup(c => c.GetConnectionString("KiGG")).Returns("Data Source=.\\sqlexpress;Initial Catalog=KiGG;Integrated Security=True;MultipleActiveResultSets=False");
+            configMngr.Setup(c => c.GetProviderName("KiGG")).Returns("System.Data.SqlClient");
+            var connectionString = new ConnectionString(configMngr.Object, "KiGG", ".\\EDM");
 
-            var connectionString = new Mock<IConnectionString>();
-            
-            connectionString.SetupGet(c => c.Value).Returns(_connectionString);
-            _factory = new DatabaseFactory(connectionString.Object);
+            _factory = new DatabaseFactory(connectionString);
         }
 
         [Fact]

@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Data;
 using System.Linq;
-using System.Transactions;
 
 using Xunit;
 
 namespace Kigg.Infrastructure.EF.IntegrationTest
 {
-    //using DomainObjects;
     using Kigg.EF.Repository;
     using Kigg.EF.DomainObjects;
 
@@ -30,11 +28,17 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         [Fact]
         public void TagCount_Should_Return_Correct_Count_For_Existing_Story()
         {
-            var options = new DataLoadOptions();
-            options.LoadWith<Story>(s => s.StoryTagsInternal);
-            _database.LoadOptions = options;
-            var story = _database.StoryDataSource.First();
-            Assert.Equal(story.Tags.Count, story.TagCount);
+            using(BeginTransaction())
+            {
+                var options = new DataLoadOptions();
+                options.LoadWith<Story>(s => s.StoryTagsInternal);
+                _database.LoadOptions = options;
+
+                GenerateStoriesAndSave();
+                _database.SubmitChanges();
+                var story = _database.StoryDataSource.First();
+                Assert.Equal(story.Tags.Count, story.TagCount);    
+            }
         }
 
         [Fact]
@@ -64,33 +68,44 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         [Fact]
         public void AddTag_For_Existing_Story_Should_Increase_Tags_Collection()
         {
-            var options = new DataLoadOptions();
-            options.LoadWith<Story>(s => s.StoryTagsInternal);
-            _database.LoadOptions = options;
+            using (BeginTransaction())
+            {
+                var options = new DataLoadOptions();
+                options.LoadWith<Story>(s => s.StoryTagsInternal);
+                _database.LoadOptions = options;
 
-            var story = _database.StoryDataSource.First();
-            var tagsCount = story.Tags.Count;
-            story.AddTag(new Tag { Id = Guid.NewGuid(), Name = "Dummy" });
+                GenerateStoriesAndSave();
+                _database.SubmitChanges();
+                var story = _database.StoryDataSource.First();
+                var tagsCount = story.Tags.Count;
+                story.AddTag(new Tag {Id = Guid.NewGuid(), Name = "Dummy"});
 
-            Assert.Equal(tagsCount + 1, story.Tags.Count);
+                Assert.Equal(tagsCount + 1, story.Tags.Count);
+            }
         }
 
         [Fact]
         public void RemoveTag_For_Existing_Story_Should_Decrease_Tags_Collection()
         {
-            var options = new DataLoadOptions();
-            options.LoadWith<Story>(s => s.StoryTagsInternal);
-            _database.LoadOptions = options;
+            using(BeginTransaction())
+            {
+                var options = new DataLoadOptions();
+                options.LoadWith<Story>(s => s.StoryTagsInternal);
+                _database.LoadOptions = options;
+                
+                GenerateStoriesAndSave();
+                _database.SubmitChanges();
+                var story = _database.StoryDataSource.First();
+                var tagsCount = story.Tags.Count;
+                story.AddTag(new Tag { Id = Guid.NewGuid(), Name = "Dummy" });
 
-            var story = _database.StoryDataSource.First();
-            var tagsCount = story.Tags.Count;
-            story.AddTag(new Tag { Id = Guid.NewGuid(), Name = "Dummy" });
+                Assert.Equal(tagsCount + 1, story.Tags.Count);
 
-            Assert.Equal(tagsCount + 1, story.Tags.Count);
+                story.RemoveTag(new Tag { Name = "Dummy" });
 
-            story.RemoveTag(new Tag { Name = "Dummy" });
-
-            Assert.Equal(tagsCount, story.Tags.Count);
+                Assert.Equal(tagsCount, story.Tags.Count);
+            }
+            
         }
 
         [Fact]
@@ -106,34 +121,50 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         [Fact]
         public void ContainsTag_For_Existing_Story_Should_Return_True_When_Tag_Exists_In_Preloaded_Tags_Collection()
         {
-            var options = new DataLoadOptions();
-            options.LoadWith<Story>(s => s.StoryTagsInternal);
-            _database.LoadOptions = options;
+            using(BeginTransaction())
+            {
+                var options = new DataLoadOptions();
+                options.LoadWith<Story>(s => s.StoryTagsInternal);
+                _database.LoadOptions = options;
+                GenerateStoriesAndSave();
+                _database.SubmitChanges();
+                var story = _database.StoryDataSource.First();
+                var tag = story.StoryTagsInternal.First();
 
-            var story = _database.StoryDataSource.First();
-            var tag = story.StoryTagsInternal.First();
-
-            Assert.True(story.ContainsTag(new Tag { Name = tag.Name }));
+                Assert.True(story.ContainsTag(new Tag { Name = tag.Name }));
+            }            
         }
 
         [Fact]
         public void ContainsTag_For_Existing_Story_Should_Return_True_When_Tag_Exists_In_Lazy_Loaded_Tags_Collection()
         {
-            var story = _database.StoryDataSource.First();
-            var tag = story.StoryTagsInternal.CreateSourceQuery().First();
+            using (BeginTransaction())
+            {
+                var options = new DataLoadOptions();
+                options.LoadWith<Story>(s => s.StoryTagsInternal);
+                _database.LoadOptions = options;
+                GenerateStoriesAndSave();
+                _database.SubmitChanges();
+                var story = _database.StoryDataSource.First();
+                var tag = story.StoryTagsInternal.CreateSourceQuery().First();
 
-            Assert.True(story.ContainsTag(new Tag { Name = tag.Name }));
+                Assert.True(story.ContainsTag(new Tag {Name = tag.Name}));
+            }
         }
 
         [Fact]
         public void Create_New_Story_And_Insert_It_Should_Presist_Story_In_Database()
         {
-            var user = _database.UserDataSource.First();
-            var category = _database.CategoryDataSource.First();
-            var story = CreateNewStory(category, user, "127.0.0.1", "dummy", "dummy", "http://www.dummy.com/dummy.aspx");
-            var tag = (Tag)_domainFactory.CreateTag("dummy-tag");
-            using (new TransactionScope())
+            using (BeginTransaction())
             {
+                GenerateStoriesAndSave();
+                _database.SubmitChanges();
+                var user = _database.UserDataSource.First();
+                var category = _database.CategoryDataSource.First();
+                var story = CreateNewStory(category, user, "127.0.0.1", "dummy", "dummy",
+                                           "http://www.dummy.com/dummy.aspx");
+                var tag = (Tag) _domainFactory.CreateTag("dummy-tag");
+
                 story.AddTag(tag);
                 _database.InsertOnSubmit(story);
 
@@ -151,11 +182,11 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         [Fact]
         public void AddTag_And_Submit_Changes_Should_Presist_Story_Tag_Association_In_Database()
         {
-            var story = _database.StoryDataSource.First();
-            using (new TransactionScope())
+            using (BeginTransaction())
             {
+                var story = CreateNewStory();
                 story.AddTag(CreateNewTag());
-
+                _database.InsertOnSubmit(story);
                 _database.SubmitChanges();
 
                 var tag = (Tag)story.Tags.First(t => t.Name == "DummyTag");
@@ -168,14 +199,17 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         [Fact]
         public void RemoveTag_And_Submit_Changes_Should_Remove_User_Tag_Association_In_Database()
         {
-            var dataLoadOptions = new DataLoadOptions();
-            dataLoadOptions.LoadWith<Tag>(t => t.StoriesInternal);
-            _database.LoadOptions = dataLoadOptions;
-
-            var story = _database.StoryDataSource.First();
-            var tag = story.StoryTagsInternal.CreateSourceQuery().First();
-            using (new TransactionScope())
+            using (BeginTransaction())
             {
+                var dataLoadOptions = new DataLoadOptions();
+                dataLoadOptions.LoadWith<Tag>(t => t.StoriesInternal);
+                _database.LoadOptions = dataLoadOptions;
+                
+                GenerateStoriesAndSave();
+                _database.SubmitChanges();
+                var story = _database.StoryDataSource.First();
+                var tag = story.StoryTagsInternal.CreateSourceQuery().First();
+                
                 story.RemoveTag(tag);
 
                 _database.SubmitChanges();
@@ -189,14 +223,16 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         [Fact]
         public void RemoveAllTags_And_Submit_Changes_Should_Remove_All_User_Tag_Associations_In_Database()
         {
-            var dataLoadOptions = new DataLoadOptions();
-            dataLoadOptions.LoadWith<Tag>(t => t.StoriesInternal);
-            _database.LoadOptions = dataLoadOptions;
-
-            var story = _database.StoryDataSource.First();
-
-            using (new TransactionScope())
+            using (BeginTransaction())
             {
+                var dataLoadOptions = new DataLoadOptions();
+                dataLoadOptions.LoadWith<Tag>(t => t.StoriesInternal);
+                _database.LoadOptions = dataLoadOptions;
+                GenerateStoriesAndSave();
+                _database.SubmitChanges();
+
+                var story = _database.StoryDataSource.First();
+
                 var tags = _database.TagDataSource.Where(t => t.StoriesInternal.Any(s => s.Id == story.Id));
 
                 Assert.True(tags.Count() > 0);
@@ -212,11 +248,13 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         [Fact]
         public void ChangeCategory_And_Presist_Story_Should_Preserve_Relation_With_New_Category_And_Delete_Relation_With_Old_One()
         {
-            var story = _database.StoryDataSource.First();
-            var category = _database.CategoryDataSource.First(c => c.Stories.Any(s => s.Id == story.Id));
-
-            using (new TransactionScope())
+            using (BeginTransaction())
             {
+                GenerateStoriesAndSave();
+                _database.SubmitChanges();
+                var story = _database.StoryDataSource.First();
+                var category = _database.CategoryDataSource.First(c => c.Stories.Any(s => s.Id == story.Id));
+
                 var newCategory = CreateNewCategory();
                 story.ChangeCategory(newCategory);
 
@@ -231,12 +269,13 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         [Fact]
         public void SubscribeComment_And_Presist_Story_Should_Preserve_User_Subscription_For_The_Story()
         {
-            var user = _database.UserDataSource.First();
-
-            var story = _database.StoryDataSource.First();
-
-            using (new TransactionScope())
+            using (BeginTransaction())
             {
+                GenerateStoriesAndSave();
+                var user = _database.UserDataSource.First();
+
+                var story = _database.StoryDataSource.First();
+
                 var srcQuery = story.CommentSubscribersInternal.CreateSourceQuery();
                 
                 var count = story.CommentSubscribersInternal.Count;
@@ -255,12 +294,12 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         [Fact]
         public void ContainsCommentSubscriber_Should_Return_True_When_User_Is_Subscribed_For_The_Story()
         {
-            var user = _database.UserDataSource.First();
-
-            var story = _database.StoryDataSource.First();
-
-            using (new TransactionScope())
+            using (BeginTransaction())
             {
+                GenerateStoriesAndSave();
+                var user = _database.UserDataSource.First();
+
+                var story = _database.StoryDataSource.First();
                 story.SubscribeComment(user);
                 _database.SubmitChanges();
                 story = _database.StoryDataSource.First();
@@ -271,12 +310,12 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         [Fact]
         public void UnsubscribeComment_And_Presist_Story_Should_Preserve_User_Unsubscription_From_The_Story()
         {
-            var user = _database.UserDataSource.First();
-
-            var story = _database.StoryDataSource.First();
-
-            using (new TransactionScope())
+            using (BeginTransaction())
             {
+                GenerateStoriesAndSave();
+                var user = _database.UserDataSource.First();
+
+                var story = _database.StoryDataSource.First();
                 var srcQuery = story.CommentSubscribersInternal.CreateSourceQuery();
                 var realCount = srcQuery.Count();
 
@@ -291,6 +330,12 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
                 
                 Assert.Equal(realCount, srcQuery.Count());
             }            
+        }
+
+        private void GenerateStoriesAndSave()
+        {
+            GenerateStories(true, false, true);
+            _database.SubmitChanges();
         }
     }
 }

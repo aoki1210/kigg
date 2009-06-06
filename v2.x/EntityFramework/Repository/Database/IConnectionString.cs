@@ -6,5 +6,9 @@
         {
             get;
         }
+        string ProviderName
+        { 
+            get;
+        }
     }
 }

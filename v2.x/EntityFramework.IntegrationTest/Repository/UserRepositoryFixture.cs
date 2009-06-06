@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Data;
-using System.Transactions;
 
 using Xunit;
 
@@ -29,7 +28,7 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         [Fact]
         public void Add_And_Presist_Changes_Should_Succeed()
         {
-            using (new TransactionScope())
+            using (BeginTransaction())
             {
                 var user = CreateNewUser();
                 _userRepository.Add(user);
@@ -42,27 +41,39 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         [Fact]
         public void Add_Should_Throw_Exception_When_Specified_Name_Already_Exists()
         {
-            var userName = GetAnyExistingUser().UserName;
-            var newUser = CreateNewUser();
-            newUser.UserName = userName;
+            using (BeginTransaction())
+            {
+                var user = CreateNewUser("demouser");
+                _database.InsertOnSubmit(user);
+                _database.SubmitChanges();
 
-            Assert.Throws<ArgumentException>(() => _userRepository.Add(newUser));
+                var newUser = CreateNewUser("demouser");
+                Assert.Throws<ArgumentException>(() => _userRepository.Add(newUser));
+            }
+
         }
 
         [Fact]
         public void Add_Should_Throw_Exception_When_Specified_Email_Already_Exists()
         {
-            var email = GetAnyExistingUser().Email;
-            var newUser = CreateNewUser();
-            newUser.Email = email;
+            using (BeginTransaction())
+            {
+                var user = CreateNewUser("demouser1");
+                _database.InsertOnSubmit(user);
+                _database.SubmitChanges();
 
-            Assert.Throws<ArgumentException>(() => _userRepository.Add(newUser));
+                var email = user.Email;
+                var newUser = CreateNewUser("demouser2");
+                newUser.Email = email;
+
+                Assert.Throws<ArgumentException>(() => _userRepository.Add(newUser));
+            }
         }
 
         [Fact]
         public void Remove_And_Presist_Changes_Should_Succeed()
         {
-            using (new TransactionScope())
+            using (BeginTransaction())
             {
                 var user = (User)_domainFactory.CreateUser("dummyuser", "dummyuser@mail.com", String.Empty);
 
@@ -74,11 +85,12 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
                 var tag = _domainFactory.CreateTag("DummyTag");
                 story.AddTag(tag);
                 user.AddTag(tag);
-                #pragma warning disable 168
+
+#pragma warning disable 168
                 var comment = _domainFactory.CreateComment(story, "comment", SystemTime.Now(), user, "192.168.0.2");
                 var vote = _domainFactory.CreateStoryVote(story, SystemTime.Now(), user, "192.168.0.1");
                 var spamMark = _domainFactory.CreateMarkAsSpam(story, SystemTime.Now(), user, "192.168.0.3");
-                #pragma warning restore 168
+#pragma warning restore 168
 
                 _database.SubmitChanges();
 
@@ -90,37 +102,60 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         [Fact]
         public void FindById_Should_Return_Correct_User()
         {
-            var id = GetAnyExistingUser().Id;
+            using (BeginTransaction())
+            {
+                var newUser = CreateNewUser("demouser1");
+                _database.InsertOnSubmit(newUser);
+                _database.SubmitChanges();
 
-            var user = _userRepository.FindById(id);
+                var id = newUser.Id;
 
-            Assert.Equal(id, user.Id);
+                var user = _userRepository.FindById(id);
+
+                Assert.Equal(id, user.Id);
+            }
+
         }
 
         [Fact]
         public void FindByUserName_Should_Return_Correct_User()
         {
-            var userName = GetAnyExistingUser().UserName;
-            
-            var user = _userRepository.FindByUserName(userName);
+            using (BeginTransaction())
+            {
+                var newUser = CreateNewUser("demouser1");
+                _database.InsertOnSubmit(newUser);
+                _database.SubmitChanges();
 
-            Assert.Equal(userName, user.UserName);
+                var userName = newUser.UserName;
+
+                var user = _userRepository.FindByUserName(userName);
+
+                Assert.Equal(userName, user.UserName);
+            }
         }
 
         [Fact]
         public void FindByEmail_Should_Return_Correct_User()
         {
-            var email = GetAnyExistingUser().Email;
+            using (BeginTransaction())
+            {
+                var newUser = CreateNewUser("demouser1");
+                _database.InsertOnSubmit(newUser);
+                _database.SubmitChanges();
 
-            var user = _userRepository.FindByEmail(email);
+                var email = newUser.Email;
 
-            Assert.Equal(email, user.Email);
+                var user = _userRepository.FindByEmail(email);
+
+                Assert.Equal(email, user.Email);
+            }
+
         }
-        
+
         [Fact]
         public void FindScoreById_Should_Return_Correct_Score()
         {
-            using(new TransactionScope())
+            using (BeginTransaction())
             {
                 GenerateUsersWithScores();
                 _database.SubmitChanges();
@@ -133,13 +168,12 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
 
                 Assert.Equal(userScore, foundScore);
             }
-            
         }
 
         [Fact]
         public void FindTop_Should_Return_Top_Users()
         {
-            using(new TransactionScope())
+            using (BeginTransaction())
             {
                 GenerateUsersWithScores();
                 _database.SubmitChanges();
@@ -149,11 +183,11 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
                 Assert.Equal(10, pagedResult.Total);
             }
         }
-        
+
         [Fact]
         public void FindAll_Should_Return_Top_Users()
         {
-            using (new TransactionScope())
+            using (BeginTransaction())
             {
                 GenerateUsersWithScores();
                 _database.SubmitChanges();
@@ -164,26 +198,26 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
                 Assert.Equal(total, pagedResult.Total);
             }
         }
-        
+
         [Fact]
         public void FindIPAddresses_Should_Return_The_IPAddresses_That_The_User_Used_To_Submit_Comment_Promote_And_MarkAsSpams()
         {
-            using(new TransactionScope())
+            using (BeginTransaction())
             {
                 var user = (User)_domainFactory.CreateUser("dummyuser", "dummyuser@mail.com", String.Empty);
-            
+
                 _userRepository.Add(user);
 
                 var category = _domainFactory.CreateCategory("dummycategory");
                 var story = _domainFactory.CreateStory(category, user, "192.168.0.1", "dummy title", "dummy Desc",
                                                        "http://kiGG.net/story.aspx");
 
-                #pragma warning disable 168
+#pragma warning disable 168
                 var comment = _domainFactory.CreateComment(story, "comment", SystemTime.Now(), user, "192.168.0.2");
                 var vote = _domainFactory.CreateStoryVote(story, SystemTime.Now(), user, "192.168.0.1");
                 var spamMark = _domainFactory.CreateMarkAsSpam(story, SystemTime.Now(), user, "192.168.0.3");
-                #pragma warning restore 168
-                
+#pragma warning restore 168
+
                 _database.SubmitChanges();
                 var ipAddresses = _userRepository.FindIPAddresses(user.Id);
 
@@ -204,12 +238,12 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
                 for (var j = 1; j <= 10; j++)
                 {
                     var score = new UserScore
-                                    {
-                                        User = user,
-                                        Action = 2,
-                                        Score = 10,
-                                        Timestamp = SystemTime.Now()
-                                    };
+                    {
+                        User = user,
+                        Action = 2,
+                        Score = 10,
+                        Timestamp = SystemTime.Now()
+                    };
 
                     _database.AddObject("UserScore", score);
                 }

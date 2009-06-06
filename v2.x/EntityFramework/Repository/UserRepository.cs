@@ -57,14 +57,18 @@
             Database.DeleteAllOnSubmit(Database.CommentDataSource.Where(c => c.User.Id == user.Id || c.Story.User.Id == user.Id));
             Database.DeleteAllOnSubmit(Database.VoteDataSource.Where(v => v.User.Id == user.Id || v.Story.User.Id == user.Id));
             Database.DeleteAllOnSubmit(Database.MarkAsSpamDataSource.Where(s => s.User.Id == user.Id || s.Story.User.Id == user.Id));
-            
-            var submittedStories = Database.StoryDataSource.Where(s => s.User.Id == user.Id).AsEnumerable();
-            foreach (var story in submittedStories)
-            {
-                story.RemoveAllTags();
-                story.RemoveAllCommentSubscribers();
-                Database.DeleteOnSubmit(story);
-            }
+
+            //Convert to List immediatly to avoid issues with databases
+            //that do not support MARS 
+            var submittedStories = Database.StoryDataSource
+                                           .Where(s => s.User.Id == user.Id)
+                                           .ToList()
+                                           .AsReadOnly();
+
+            submittedStories.ForEach(s => s.RemoveAllTags());
+            submittedStories.ForEach(s => s.RemoveAllCommentSubscribers());
+            submittedStories.ForEach(s => Database.DeleteOnSubmit(s));
+
             base.Remove(user);
         }
 

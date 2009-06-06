@@ -32,6 +32,26 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'SqlServer|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\SqlServer\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'MySql|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\MySql\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Moq, Version=3.0.308.2, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -94,7 +114,7 @@
       <Project>{04A61455-9656-4E67-A8D6-9FBA348F0FB3}</Project>
       <Name>Kigg.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Kigg.Infrastructure.EF\Kigg.Infrastructure.EF.csproj">
+    <ProjectReference Include="..\EntityFramework\Kigg.Infrastructure.EF.csproj">
       <Project>{7AEA11B2-945D-42FB-A9F0-97745DA88393}</Project>
       <Name>Kigg.Infrastructure.EF</Name>
     </ProjectReference>
@@ -102,6 +122,28 @@
       <Project>{880A0F43-4A21-4A6E-BCA7-4094F0FB38AB}</Project>
       <Name>Kigg.Test.Infrastructure</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\SharedFiles\DomainObjects.csdl">
+      <Link>EDM\DomainObjects.csdl</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\SharedFiles\DomainObjects.msl">
+      <Link>EDM\DomainObjects.msl</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\SharedFiles\DomainObjects.MySql.ssdl">
+      <Link>EDM\DomainObjects.MySql.ssdl</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\SharedFiles\DomainObjects.SqlServer.ssdl">
+      <Link>EDM\DomainObjects.SqlServer.ssdl</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\SharedFiles\DomainObjects.ssdl">
+      <Link>EDM\DomainObjects.ssdl</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

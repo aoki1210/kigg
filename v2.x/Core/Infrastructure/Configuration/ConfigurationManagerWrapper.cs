@@ -16,9 +16,15 @@ namespace Kigg.Infrastructure
         }
 
         [DebuggerStepThrough]
-        public string ConnectionStrings(string name)
+        public string GetConnectionString(string name)
         {
             return ConfigurationManager.ConnectionStrings[name].ConnectionString;
+        }
+
+        [DebuggerStepThrough]
+        public string GetProviderName(string name)
+        {
+            return ConfigurationManager.ConnectionStrings[name].ProviderName;
         }
 
         [DebuggerStepThrough]
