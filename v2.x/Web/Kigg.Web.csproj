@@ -97,6 +97,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\References\system.Web\Microsoft.Web.Mvc.dll</HintPath>
     </Reference>
+    <Reference Include="MySql.Data, Version=6.0.3.0, Culture=neutral, PublicKeyToken=92c3c527cdfe7566, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\MySqlClient\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data.Entity, Version=6.0.3.0, Culture=neutral, PublicKeyToken=92c3c527cdfe7566, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\MySqlClient\MySql.Data.Entity.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -257,6 +265,21 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\badWords.xml" />
+    <Content Include="..\SharedFiles\DomainObjects.csdl">
+      <Link>App_Data\DomainObjects.csdl</Link>
+    </Content>
+    <Content Include="..\SharedFiles\DomainObjects.msl">
+      <Link>App_Data\DomainObjects.msl</Link>
+    </Content>
+    <Content Include="..\SharedFiles\DomainObjects.MySql.ssdl">
+      <Link>App_Data\DomainObjects.MySql.ssdl</Link>
+    </Content>
+    <Content Include="..\SharedFiles\DomainObjects.SqlServer.ssdl">
+      <Link>App_Data\DomainObjects.SqlServer.ssdl</Link>
+    </Content>
+    <Content Include="..\SharedFiles\DomainObjects.ssdl">
+      <Link>App_Data\DomainObjects.ssdl</Link>
+    </Content>
     <None Include="Assets\Images\approve.png" />
     <Content Include="App_Data\blockedUrlPrefixList.txt" />
     <Content Include="Assets\Images\aboutus.jpg" />

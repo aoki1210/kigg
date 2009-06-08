@@ -7,6 +7,8 @@
     using System.Collections.Generic;
     using System.Data.Objects.DataClasses;
 
+    using Infrastructure;
+    
     public class EntityCollection<TInterface, TEntity> : IEntityCollection<TInterface>
         where TInterface : class
         where TEntity : class, IEntityWithRelationships, TInterface
@@ -45,7 +47,19 @@
         public bool IsLoaded
         #endif
         {
-            get { return _entityCollection.IsLoaded || _isLoaded; }
+            get
+            {
+                try
+                {
+                    return _entityCollection.IsLoaded || _isLoaded;
+                }
+                catch (ObjectDisposedException ex)
+                {
+                    Log.Exception(ex);
+                    return _isLoaded;
+                }
+                
+            }
         }
         
         #if(DEBUG)
@@ -58,10 +72,15 @@
             {
                 _entityCollection.Load();
             }
-            catch (InvalidOperationException)
+            catch (ObjectDisposedException ex)
+            {
+                Log.Exception(ex);
+                _isLoaded = true;
+            }
+            catch (InvalidOperationException ex)
             {
                 //An exception will thrown in case Object EntityState is Detached or Deleted
-
+                Log.Exception(ex);
                 _isLoaded = true;
             }
         }
@@ -77,8 +96,14 @@
             {
                 query = _entityCollection.CreateSourceQuery();   
             }
-            catch (InvalidOperationException)
+            catch (ObjectDisposedException ex)
             {
+                Log.Exception(ex);
+                query = _entityCollection.AsQueryable();
+            }
+            catch (InvalidOperationException ex)
+            {
+                Log.Exception(ex);
                 query = _entityCollection.AsQueryable();
             }
             return query ?? _entityCollection.AsQueryable();

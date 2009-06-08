@@ -299,8 +299,8 @@ BEGIN
   select count(ft.Id) into rows_count
   from fulltextsearchcomment ft
   inner join storycomment on ft.Id= storycomment.Id
-  where storycomment.StoryId = @storyId
-  and match(ft.TextBody) against (@srchQry WITH QUERY EXPANSION);
+  where storycomment.StoryId = storyId
+  and match(ft.TextBody) against (srchQry WITH QUERY EXPANSION);
   if rows_count > 0 then
      return 1;
   end if;
@@ -320,8 +320,8 @@ BEGIN
   select count(ft.Id) into rows_count
   from fulltextsearchstory ft
   inner join story on ft.Id= story.Id
-  where ft.Id = @storyId
-  and match(ft.Title, ft.TextDescription) against (@srchQry WITH QUERY EXPANSION);
+  where ft.Id = storyId
+  and match(ft.Title, ft.TextDescription) against (srchQry WITH QUERY EXPANSION);
 
   if rows_count > 0 then
      return 1;

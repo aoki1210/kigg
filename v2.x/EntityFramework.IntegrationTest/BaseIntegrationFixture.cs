@@ -1,7 +1,8 @@
 ﻿using System;
-//using System.Linq;
 using System.Data;
 using System.Data.Common;
+
+using Moq;
 
 using Kigg.EF.DomainObjects;
 using Kigg.EF.Repository;
@@ -17,12 +18,20 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         protected readonly DatabaseFactory _dbFactory;
         protected readonly DomainObjectFactory _domainFactory;
 
+        protected readonly Mock<IDependencyResolverFactory> _resolverFactory;
+        protected readonly Mock<IDependencyResolver> _resolver;
         protected BaseIntegrationFixture()
         {
             _connectionString = CreateConnectionString();
             _database = new Database(_connectionString.Value);
             _dbFactory = new DatabaseFactory(_connectionString);
-            _domainFactory = new DomainObjectFactory();    
+            _domainFactory = new DomainObjectFactory();
+
+            _resolver = new Mock<IDependencyResolver>();
+            _resolverFactory = new Mock<IDependencyResolverFactory>();
+            _resolverFactory.Setup(f => f.CreateInstance()).Returns(_resolver.Object);
+            _resolver.Setup(r => r.Resolve<ILog>()).Returns(new Mock<ILog>().Object);
+            IoC.InitializeWith(_resolverFactory.Object);
         }
         
         protected string ConnectionString
