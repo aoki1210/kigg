@@ -10,21 +10,21 @@
         Provider="Devart.Data.MySql" ProviderManifestToken="MySQL51"
         -->
   <EntityContainer Name="KiggStorageEntityContainer" >
-    <EntitySet Name="Category" EntityType="Kigg.EF.DomainObjects.Store.Category" store:Type="Tables" Schema="kiggdb" />
-    <EntitySet Name="CommentSubscribtion" EntityType="Kigg.EF.DomainObjects.Store.CommentSubscribtion" store:Type="Tables" Schema="kiggdb" />
-    <EntitySet Name="KnownSource" EntityType="Kigg.EF.DomainObjects.Store.KnownSource" store:Type="Tables" Schema="kiggdb" />
-    <EntitySet Name="Story" EntityType="Kigg.EF.DomainObjects.Store.Story" store:Type="Tables" Schema="kiggdb" />
-    <EntitySet Name="StoryComment" EntityType="Kigg.EF.DomainObjects.Store.StoryComment" store:Type="Tables" Schema="kiggdb" />
-    <EntitySet Name="StoryMarkAsSpam" EntityType="Kigg.EF.DomainObjects.Store.StoryMarkAsSpam" store:Type="Tables" Schema="kiggdb" />
-    <EntitySet Name="StoryTag" EntityType="Kigg.EF.DomainObjects.Store.StoryTag" store:Type="Tables" Schema="kiggdb" />
-    <EntitySet Name="StoryView" EntityType="Kigg.EF.DomainObjects.Store.StoryView" store:Type="Tables" Schema="kiggdb" />
-    <EntitySet Name="StoryVote" EntityType="Kigg.EF.DomainObjects.Store.StoryVote" store:Type="Tables" Schema="kiggdb" />
-    <EntitySet Name="Tag" EntityType="Kigg.EF.DomainObjects.Store.Tag" store:Type="Tables" Schema="kiggdb" />
-    <EntitySet Name="User" EntityType="Kigg.EF.DomainObjects.Store.User" store:Type="Tables" Schema="kiggdb" />
-    <EntitySet Name="UserScore" EntityType="Kigg.EF.DomainObjects.Store.UserScore" store:Type="Tables" Schema="kiggdb" />
-    <EntitySet Name="UserTag" EntityType="Kigg.EF.DomainObjects.Store.UserTag" store:Type="Tables" Schema="kiggdb" />
-    <EntitySet Name="StorySearchResult" EntityType="Kigg.EF.DomainObjects.Store.StorySearchResult" Schema="kiggdb" />
-    <EntitySet Name="CommentSearchResult" EntityType="Kigg.EF.DomainObjects.Store.CommentSearchResult" Schema="kiggdb" />
+    <EntitySet Name="Category" EntityType="Kigg.EF.DomainObjects.Store.Category" store:Type="Tables" Schema="kigg" />
+    <EntitySet Name="CommentSubscribtion" EntityType="Kigg.EF.DomainObjects.Store.CommentSubscribtion" store:Type="Tables" Schema="kigg" />
+    <EntitySet Name="KnownSource" EntityType="Kigg.EF.DomainObjects.Store.KnownSource" store:Type="Tables" Schema="kigg" />
+    <EntitySet Name="Story" EntityType="Kigg.EF.DomainObjects.Store.Story" store:Type="Tables" Schema="kigg" />
+    <EntitySet Name="StoryComment" EntityType="Kigg.EF.DomainObjects.Store.StoryComment" store:Type="Tables" Schema="kigg" />
+    <EntitySet Name="StoryMarkAsSpam" EntityType="Kigg.EF.DomainObjects.Store.StoryMarkAsSpam" store:Type="Tables" Schema="kigg" />
+    <EntitySet Name="StoryTag" EntityType="Kigg.EF.DomainObjects.Store.StoryTag" store:Type="Tables" Schema="kigg" />
+    <EntitySet Name="StoryView" EntityType="Kigg.EF.DomainObjects.Store.StoryView" store:Type="Tables" Schema="kigg" />
+    <EntitySet Name="StoryVote" EntityType="Kigg.EF.DomainObjects.Store.StoryVote" store:Type="Tables" Schema="kigg" />
+    <EntitySet Name="Tag" EntityType="Kigg.EF.DomainObjects.Store.Tag" store:Type="Tables" Schema="kigg" />
+    <EntitySet Name="User" EntityType="Kigg.EF.DomainObjects.Store.User" store:Type="Tables" Schema="kigg" />
+    <EntitySet Name="UserScore" EntityType="Kigg.EF.DomainObjects.Store.UserScore" store:Type="Tables" Schema="kigg" />
+    <EntitySet Name="UserTag" EntityType="Kigg.EF.DomainObjects.Store.UserTag" store:Type="Tables" Schema="kigg" />
+    <EntitySet Name="StorySearchResult" EntityType="Kigg.EF.DomainObjects.Store.StorySearchResult" Schema="kigg" />
+    <EntitySet Name="CommentSearchResult" EntityType="Kigg.EF.DomainObjects.Store.CommentSearchResult" Schema="kigg" />
     <AssociationSet Name="FK_CommentSubscribtion_Story" Association="Kigg.EF.DomainObjects.Store.FK_CommentSubscribtion_Story">
       <End Role="Story" EntitySet="Story" />
       <End Role="CommentSubscribtion" EntitySet="CommentSubscribtion" />
@@ -433,27 +433,27 @@
   <Function Name="EFSearchStory" Aggregate="false"
     BuiltIn="false" NiladicFunction="false" IsComposable="true"
     ParameterTypeSemantics="AllowImplicitConversion" StoreFunctionName="EFSearchStory"
-    Schema="kiggdb" ReturnType="boolean">
+    Schema="kigg" ReturnType="boolean">
     <Parameter Name="StoryId" Type="guid" Mode="In" />
     <Parameter Name="query" Type="varchar" MaxLength="4000" Mode="In" />
   </Function>
   <Function Name="EFSearchComment" Aggregate="false"
     BuiltIn="false" NiladicFunction="false" IsComposable="true"
     ParameterTypeSemantics="AllowImplicitConversion" StoreFunctionName="EFSearchComment"
-    Schema="kiggdb" ReturnType="boolean">
+    Schema="kigg" ReturnType="boolean">
     <Parameter Name="StoryId" Type="guid" Mode="In" />
     <Parameter Name="query" Type="varchar" MaxLength="4000" Mode="In" />
   </Function>
   <!--<Function Name="StorySearchProc" Aggregate="false"
     BuiltIn="false" NiladicFunction="false" IsComposable="false"
     ParameterTypeSemantics="AllowImplicitConversion" StoreFunctionName="StorySearchProc"
-    Schema="kiggdb">
+    Schema="kigg">
     <Parameter Name="query" Type="varchar" MaxLength="4000" Mode="In" />
   </Function>
   <Function Name="CommentSearchProc" Aggregate="false"
     BuiltIn="false" NiladicFunction="false" IsComposable="false"
     ParameterTypeSemantics="AllowImplicitConversion" StoreFunctionName="CommentSearchProc"
-    Schema="kiggdb">
+    Schema="kigg">
     <Parameter Name="query" Type="varchar" MaxLength="4000" Mode="In" />
   </Function>-->
 </Schema>

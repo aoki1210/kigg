@@ -53,6 +53,18 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Moq, Version=3.0.308.2, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\moq\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data, Version=6.0.3.0, Culture=neutral, PublicKeyToken=92c3c527cdfe7566, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\MySqlClient\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data.Entity, Version=6.0.3.0, Culture=neutral, PublicKeyToken=92c3c527cdfe7566, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\MySqlClient\MySql.Data.Entity.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>

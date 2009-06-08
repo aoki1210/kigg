@@ -67,8 +67,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SharedFiles\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="BaseDataService.cs" />
-    <Compile Include="Properties\CommonAssemblyInfo.cs" />
     <Compile Include="Data\ShoutedStory.cs" />
     <Compile Include="Data\ShoutUser.cs" />
     <Compile Include="Extensions\StoryExtension.cs" />

@@ -12,6 +12,7 @@
     {
         private const int NotSet = -1;
 
+        private int _tagCount = NotSet;
         private int _voteCount = NotSet;
         private int _markAsSpamCount = NotSet;
         private int _viewCount = NotSet;
@@ -30,7 +31,7 @@
         private EntityCollection<IComment, StoryComment> _storyComments;
         [NonSerialized]
         private EntityCollection<IUser, User> _commentSubscribers;
-
+    
         [NonSerialized]
         private EntityReference<ICategory, Category> _categoryReference;
         [NonSerialized]
@@ -241,9 +242,14 @@
             [DebuggerStepThrough]
             get
             {
-                EntityHelper.EnsureEntityCollection(ref _storyTags, StoryTagsInternal);
-                var query = _storyTags.CreateSourceQuery();
-                return query != null ? query.Count() : 0;
+                if (_tagCount == NotSet)
+                {
+                    EntityHelper.EnsureEntityCollection(ref _storyTags, StoryTagsInternal);
+                    var query = _storyTags.CreateSourceQuery();
+
+                    _tagCount = query != null ? query.Count() : 0;
+                }
+                return _tagCount;
             }
         }
 

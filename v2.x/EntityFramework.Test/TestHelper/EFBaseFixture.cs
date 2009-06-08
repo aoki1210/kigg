@@ -19,13 +19,12 @@ namespace Kigg.Infrastructure.EF.Test
         protected readonly List<Story> Stories;
         protected readonly List<KnownSource> KnownSources;
         protected readonly List<UserScore> UserScores;
-        //protected readonly List<UserTag> UserTags;
-        //protected readonly List<StoryTag> StoryTags;
+        
         protected readonly List<StoryView> Views;
         protected readonly List<StoryVote> Votes;
         protected readonly List<StoryMarkAsSpam> MarkAsSpams;
         protected readonly List<StoryComment> Comments;
-        //protected readonly List<CommentSubscribtion> CommentSubscribtions;
+        
 
         protected readonly Mock<IDatabaseFactory> databaseFactory;
         protected readonly Mock<IDatabase> database;
@@ -74,34 +73,29 @@ namespace Kigg.Infrastructure.EF.Test
             resolver.Setup(r => r.Resolve<IMarkAsSpamRepository>()).Returns(markAsSpamRepository.Object);
             resolver.Setup(r => r.Resolve<IStoryViewRepository>()).Returns(storyViewRepository.Object);
             resolver.Setup(r => r.Resolve<IVoteRepository>()).Returns(voteRepository.Object);
-
+            
             Users = new List<User>();
             Categories = new List<Category>();
             Tags = new List<Tag>();
             Stories = new List<Story>();
             KnownSources = new List<KnownSource>();
             UserScores = new List<UserScore>();
-            //UserTags = new List<UserTag>();
-            //StoryTags = new List<StoryTag>();
+            
             Views = new List<StoryView>();
             Votes = new List<StoryVote>();
             MarkAsSpams = new List<StoryMarkAsSpam>();
             Comments = new List<StoryComment>();
-            //CommentSubscribtions = new List<CommentSubscribtion>();
-
+            
             database.SetupGet(db => db.UserDataSource).Returns(Users.AsQueryable());
             database.SetupGet(db => db.CategoryDataSource).Returns(Categories.AsQueryable());
             database.SetupGet(db => db.TagDataSource).Returns(Tags.AsQueryable());
             database.SetupGet(db => db.StoryDataSource).Returns(Stories.AsQueryable());
             database.SetupGet(db => db.KnownSourceDataSource).Returns(KnownSources.AsQueryable());
             database.SetupGet(db => db.UserScoreDataSource).Returns(UserScores.AsQueryable());
-            //database.SetupGet(db => db.UserTagDataSource).Returns(UserTags.AsQueryable());
-            //database.SetupGet(db => db.StoryTagDataSource).Returns(StoryTags.AsQueryable());
             database.SetupGet(db => db.StoryViewDataSource).Returns(Views.AsQueryable());
             database.SetupGet(db => db.VoteDataSource).Returns(Votes.AsQueryable());
             database.SetupGet(db => db.MarkAsSpamDataSource).Returns(MarkAsSpams.AsQueryable());
             database.SetupGet(db => db.CommentDataSource).Returns(Comments.AsQueryable());
-            //database.SetupGet(db => db.CommentSubscribtionDataSource).Returns(CommentSubscribtions.AsQueryable());
         }
 
         public override void Dispose()

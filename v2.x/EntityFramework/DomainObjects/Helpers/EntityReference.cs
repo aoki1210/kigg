@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Data.Objects.DataClasses;
 
 namespace Kigg.EF.DomainObjects
 {
-    using System.Data.Objects.DataClasses;
+    using Infrastructure;
 
     public class EntityReference<TInterface, TEntity> : IEntityReference<TInterface>
         where TInterface : class
@@ -47,10 +48,15 @@ namespace Kigg.EF.DomainObjects
             {
                 _entityReference.Load();
             }
-            catch (InvalidOperationException)
+            catch (ObjectDisposedException ex)
+            {
+                Log.Exception(ex);
+                _isLoaded = true;
+            }
+            catch (InvalidOperationException ex)
             {
                 //An exception will thrown in case Object EntityState is Detached or Deleted
-
+                Log.Exception(ex);
                 _isLoaded = true;
             }
         }

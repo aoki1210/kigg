@@ -345,6 +345,5 @@
             }
             return query;
         }
-
     }
 }
