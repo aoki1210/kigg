@@ -6,6 +6,7 @@
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Web;
+using System.Collections.Generic;
 
     public static class StringExtension
     {
@@ -170,6 +171,12 @@
         public static string HtmlDecode(this string target)
         {
             return HttpUtility.HtmlDecode(target);
+        }
+
+        public static string Replace(this string target, ICollection<string> oldValues, string newValue)
+        {
+            oldValues.ForEach(oldValue => target = target.Replace(oldValue, newValue));
+            return target;
         }
     }
 }

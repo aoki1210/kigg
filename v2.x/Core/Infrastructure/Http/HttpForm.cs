@@ -139,7 +139,7 @@ namespace Kigg.Infrastructure
 
         internal static void RequestCallback(IAsyncResult result)
         {
-            StateContainer states = (StateContainer) result.AsyncState;
+            var states = (StateContainer) result.AsyncState;
 
             try
             {
@@ -158,7 +158,7 @@ namespace Kigg.Infrastructure
 
         internal static void WriteCallback(IAsyncResult result)
         {
-            StateContainer states = (StateContainer) result.AsyncState;
+            var states = (StateContainer) result.AsyncState;
 
             try
             {
@@ -178,11 +178,11 @@ namespace Kigg.Infrastructure
 
         internal static void ResponseCallback(IAsyncResult result)
         {
-            StateContainer states = (StateContainer) result.AsyncState;
+            var states = (StateContainer) result.AsyncState;
 
             try
             {
-                HttpFormResponse httpFormResponse = new HttpFormResponse();
+                var httpFormResponse = new HttpFormResponse();
                 WebResponse response = states.Request.EndGetResponse(result);
 
                 PopulateHeadersAndCookies(response, httpFormResponse);
@@ -190,9 +190,9 @@ namespace Kigg.Infrastructure
                 using (Stream stream = response.GetResponseStream())
                 {
                     const int BufferLength = 8096;
-                    byte[] buffer = new byte[BufferLength];
+                    var buffer = new byte[BufferLength];
 
-                    using (MemoryStream ms = new MemoryStream())
+                    using (var ms = new MemoryStream())
                     {
                         int bytesRead;
 
@@ -234,7 +234,7 @@ namespace Kigg.Infrastructure
 
         internal static string PrepareRequestBody(NameValueCollection formFields)
         {
-            StringBuilder requestBody = new StringBuilder();
+            var requestBody = new StringBuilder();
 
             foreach (string key in formFields.AllKeys)
             {
@@ -254,7 +254,7 @@ namespace Kigg.Infrastructure
             const int MaxTry = 3;
 
             int tryCount = 0;
-            HttpFormResponse httpFormResponse = new HttpFormResponse();
+            var httpFormResponse = new HttpFormResponse();
 
             // Sometimes the external site can throw exception so we might
             // have to retry few more times
@@ -266,7 +266,7 @@ namespace Kigg.Infrastructure
                     {
                         PopulateHeadersAndCookies(response, httpFormResponse);
 
-                        using (StreamReader sr = new StreamReader(response.GetResponseStream()))
+                        using (var sr = new StreamReader(response.GetResponseStream()))
                         {
                             httpFormResponse.Response = sr.ReadToEnd();
                         }
@@ -284,9 +284,9 @@ namespace Kigg.Infrastructure
 
         internal static void PopulateHeadersAndCookies(WebResponse webResponse, HttpFormResponse response)
         {
-            response.Headers.Add(response.Headers);
+            response.Headers.Add(webResponse.Headers);
 
-            HttpWebResponse httpWebResponse = webResponse as HttpWebResponse;
+            var httpWebResponse = webResponse as HttpWebResponse;
 
             if (httpWebResponse != null)
             {
@@ -299,7 +299,7 @@ namespace Kigg.Infrastructure
 
         protected internal virtual WebRequest CreateRequest(string url, string userName, string password, string contentType, NameValueCollection headers, NameValueCollection cookies, bool isPost)
         {
-            HttpWebRequest request = (HttpWebRequest) WebRequest.Create(new Uri(url));
+            var request = (HttpWebRequest) WebRequest.Create(new Uri(url));
 
             request.Method = isPost ? "POST" : "GET";
             request.UserAgent = _userAgent;

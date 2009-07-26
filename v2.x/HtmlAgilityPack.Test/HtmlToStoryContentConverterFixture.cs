@@ -12,8 +12,9 @@ namespace Kigg.Infrastructure.HtmlAgilityPack.Test
         public HtmlToStoryContentConverterFixture()
         {
             string[] xPaths = LargeStrings.XPaths.Split(new[]{"\r\n"}, StringSplitOptions.RemoveEmptyEntries);
+            string[] titleFilters = LargeStrings.TitleFilters.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
 
-            _converter = new HtmlToStoryContentConverter(new HtmlSanitizer(), xPaths);
+            _converter = new HtmlToStoryContentConverter(new HtmlSanitizer(), xPaths, titleFilters);
         }
 
         [Fact]
@@ -29,6 +30,45 @@ namespace Kigg.Infrastructure.HtmlAgilityPack.Test
 
             Assert.Equal("The Official Microsoft ASP.NET Site", result.Title);
             Assert.Equal(LargeStrings.Text, result.Description);
+            Assert.Null(result.TrackBackUrl);
+        }
+
+        [Fact]
+        public void Convert_Should_Remove_H1()
+        {
+            var result = _converter.Convert("http://asp.net", LargeStrings.H1Html);
+
+            Assert.Equal("H1 Removal Test", result.Title);
+            Assert.Equal(LargeStrings.H1Text, result.Description);
+            Assert.Null(result.TrackBackUrl);
+        }
+
+        [Fact]
+        public void Convert_Should_Remove_By_Line()
+        {
+            var result = _converter.Convert("http://asp.net", LargeStrings.ByLineHtml);
+
+            Assert.Equal("By Line Removal Test", result.Title);
+            Assert.Equal(LargeStrings.ByLineText, result.Description);
+            Assert.Null(result.TrackBackUrl);
+        }
+
+        [Fact]
+        public void Convert_Should_Remove_Date_Line()
+        {
+            var result = _converter.Convert("http://asp.net", LargeStrings.DateLineHtml);
+
+            Assert.Equal("Date Removal Test", result.Title);
+            Assert.Equal(LargeStrings.DateLineText, result.Description);
+            Assert.Null(result.TrackBackUrl);
+        }
+
+        [Fact]
+        public void Convert_Should_Filter_Title()
+        {
+            var result = _converter.Convert("http://asp.net", LargeStrings.TitleFilterHtml);
+
+            Assert.Equal("The Title", result.Title);
             Assert.Null(result.TrackBackUrl);
         }
 

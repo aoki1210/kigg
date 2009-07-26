@@ -17,8 +17,15 @@ namespace Kigg.Infrastructure.HtmlAgilityPack
 
         private readonly List<string> _xPaths = new List<string>();
         private readonly IHtmlSanitizer _sanitizer;
+        private readonly List<string> _titleFilters = new List<string>();
 
-        public HtmlToStoryContentConverter(IHtmlSanitizer sanitizer, string fileName) : this(sanitizer, File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName)).Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries))
+        public HtmlToStoryContentConverter(IHtmlSanitizer sanitizer, string xPathsFileName, string titleFiltersFileName)
+            : this(sanitizer, ReadTextFile(xPathsFileName), ReadTextFile(titleFiltersFileName))
+        {
+        }
+
+        public HtmlToStoryContentConverter(IHtmlSanitizer sanitizer, string xPathsFileName)
+            : this(sanitizer, ReadTextFile(xPathsFileName))
         {
         }
 
@@ -26,9 +33,15 @@ namespace Kigg.Infrastructure.HtmlAgilityPack
         {
             Check.Argument.IsNotNull(sanitizer, "sanitizer");
             Check.Argument.IsNotEmpty(xPaths, "xPaths");
-
+            
             _sanitizer = sanitizer;
             _xPaths.AddRange(xPaths);
+        }
+
+        public HtmlToStoryContentConverter(IHtmlSanitizer sanitizer, ICollection<string> xPaths, ICollection<string> titleFilters)
+            : this (sanitizer, xPaths)
+        {
+            _titleFilters.AddRange(titleFilters);
         }
 
         public virtual StoryContent Convert(string url, string html)
@@ -57,13 +70,18 @@ namespace Kigg.Infrastructure.HtmlAgilityPack
             return new StoryContent(title, content, trackbackUrl);
         }
 
-        private static string GetTitle(Document document)
+        private string GetTitle(Document document)
         {
             Node titleNode = document.DocumentNode.SelectSingleNode("//title");
 
-            return (titleNode == null) ? null : titleNode.InnerText.Trim('\t').Trim();
+            return (titleNode == null) ? null : titleNode.InnerText.Trim('\t').Replace(_titleFilters, string.Empty).Trim();
         }
 
+        private static string[] ReadTextFile(string fileName)
+        {
+            return File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName)).Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+        }
+        
         private static string GetTrackbackUrl(string html)
         {
             Match match = TrackbackExpression.Match(html);
@@ -132,7 +150,7 @@ namespace Kigg.Infrastructure.HtmlAgilityPack
                     }
                 }
             }
-            catch(NullReferenceException)
+            catch (NullReferenceException)
             {
             }
 
@@ -168,12 +186,14 @@ namespace Kigg.Infrastructure.HtmlAgilityPack
                             (string.Compare(nodeName, "br", StringComparison.OrdinalIgnoreCase) == 0) ||
                             (string.Compare(nodeName, "hr", StringComparison.OrdinalIgnoreCase) == 0))
                         {
-                            outText.Write("\r\n");
+                            outText.Write("\r\n"); 
                         }
-
-                        if (node.HasChildNodes)
+                        if (string.Compare(nodeName, "h1", StringComparison.OrdinalIgnoreCase) != 0)
                         {
-                            ConvertContentTo(node, outText);
+                            if (node.HasChildNodes)
+                            {
+                                ConvertContentTo(node, outText);
+                            }
                         }
 
                         break;
@@ -189,18 +209,23 @@ namespace Kigg.Infrastructure.HtmlAgilityPack
                             break;
                         }
 
-                        string html = ((TextNode) node).Text;
+                        string html = ((TextNode)node).Text;
 
                         if (Node.IsOverlappedClosingElement(html))
                         {
                             break;
                         }
 
-                        if (html.Trim().Length > 0)
+                        DateTime parsedDateTime;
+
+                        if (html.Trim().Length == 0 ||
+                        html.Length > 2 && string.Compare(html.Substring(0, 3), "by ", StringComparison.OrdinalIgnoreCase) == 0 ||
+                        DateTime.TryParse(html.Trim(), out parsedDateTime))
                         {
-                            outText.Write(Entity.DeEntitize(html));
+                            break;
                         }
 
+                        outText.Write(Entity.DeEntitize(html));
                         break;
                     }
             }
