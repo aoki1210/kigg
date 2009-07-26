@@ -52,6 +52,16 @@
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'PublishingRelease|AnyCPU' ">
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="DotNetOpenId, Version=2.5.0.8281, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -385,19 +395,15 @@
     <None Include="Assets\JavaScripts\SmoothImage.js" />
     <None Include="Assets\JavaScripts\ImageCode.js" />
     <Content Include="Assets\JavaScripts\ImageCode.min.js" />
-    <Content Include="Assets\JavaScripts\ui.autocomplete.min.js" />
-    <Content Include="Assets\JavaScripts\ui.core.min.js" />
-    <Content Include="Assets\JavaScripts\ui.dialog.min.js" />
-    <Content Include="Assets\JavaScripts\ui.dialog.min.js" />
-    <Content Include="Assets\JavaScripts\ui.draggable.min.js" />
-    <Content Include="Assets\JavaScripts\ui.draggable.min.js" />
-    <Content Include="Assets\JavaScripts\ui.resizable.min.js" />
-    <Content Include="Assets\JavaScripts\ui.resizable.min.js" />
-    <Content Include="Assets\JavaScripts\ui.tabs.min.js" />
     <None Include="Assets\StyleSheets\colorPicker.css" />
     <None Include="Assets\StyleSheets\marItUp.css" />
     <None Include="Assets\StyleSheets\site.css" />
     <None Include="Assets\StyleSheets\ui.jquery.css" />
+    <Content Include="Assets\JavaScripts\ui.autocomplete.min.js" />
+    <Content Include="Assets\JavaScripts\ui.core.min.js" />
+    <Content Include="Assets\JavaScripts\ui.dialog.min.js" />
+    <Content Include="Assets\JavaScripts\ui.draggable.min.js" />
+    <Content Include="Assets\JavaScripts\ui.resizable.min.js" />
     <Content Include="Assets\JavaScripts\ui.tabs.min.js" />
     <Content Include="Assets\JavaScripts\Utility.min.js" />
     <Content Include="Assets\StyleSheets\colorPicker.min.css" />
@@ -408,7 +414,6 @@
     <Content Include="Assets\StyleSheets\ui.jquery.min.css" />
     <Content Include="App_Data\blockedIPList.txt" />
     <Content Include="DataServices\KiggDataService.svc" />
-    <Content Include="ErrorPages\Offline.aspx" />
     <Content Include="ErrorPages\NotFound.aspx" />
     <Content Include="Global.asax" />
     <Content Include="Logs\trace.csv" />
@@ -429,8 +434,6 @@
     <None Include="Assets\JavaScripts\Search.js" />
     <Content Include="Assets\JavaScripts\jquery.validate.min.js" />
     <None Include="Assets\JavaScripts\Membership.js" />
-    <Content Include="Assets\JavaScripts\ui.autocomplete.min.js" />
-    <Content Include="Assets\JavaScripts\ui.core.min.js" />
     <Content Include="MailTemplates\ConfirmSpamStory.txt" />
     <Content Include="MailTemplates\ConfirmSpamComment.txt" />
     <Content Include="MailTemplates\ApproveStory.txt" />

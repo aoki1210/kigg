@@ -117,6 +117,42 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ByLineHtml" xml:space="preserve">
+    <value>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
+&lt;html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"&gt;
+&lt;head&gt;
+  &lt;title&gt;By Line Removal Test&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id="content"&gt;
+&lt;p&gt;By KodefuGuru, © 2009, All Rights Reserved&lt;/p&gt;
+&lt;p&gt;Chinese martial arts, known in Mandarin as wushu and popularly as kungfu, consist of a number of fighting styles that were developed over the centuries. Those fighting styles can be classified according to common themes that are identified as "families", "sects" or "schools" of martial arts. Example of themes are physical exercises that mimic movements from animals or a history and training method that gather inspiration from various Chinese philosophies, myths and legends. Some styles focus on the the harnessing of qi and are labeled internal, while others concentrate on improving muscle and cardiovascular fitness and are labeled external. Geographical association, as in northern and southern, is another popular method of categorization. Each fighting style offers a different approach to the common problems of self-defense, health, and self-cultivation from a Chinese perspective.&lt;/p&gt;
+&lt;p&gt;Descriptions of Chinese martial arts can be traced to the Xia Dynasty which existed more than 4000 years ago. [4] Their origin is attributed to self-defense needs, hunting activities and military training in ancient China. Hand-to-hand combat and weapons practice were important components in the training of Chinese soldiers.[5][6] From this beginning, Chinese martial arts proceeded to incorporate different philosophies and ideas into its practice—expanding its purpose from self-defense to health maintenance and finally as method of self-cultivation. Conversely, the influence of martial ideals in civilian society can be found in poetry, fiction, and eventually film.&lt;/p&gt;
+&lt;/div&gt;         
+&lt;/body&gt;
+&lt;/html&gt;</value>
+  </data>
+  <data name="ByLineText" xml:space="preserve">
+    <value>Chinese martial arts, known in Mandarin as wushu and popularly as kungfu, consist of a number of fighting styles that were developed over the centuries. Those fighting styles can be classified according to common themes that are identified as "families", "sects" or "schools" of martial arts. Example of themes are physical exercises that mimic movements from animals or a history and training method that gather inspiration from various Chinese philosophies, myths and legends. Some styles focus on the the h...</value>
+  </data>
+  <data name="H1Html" xml:space="preserve">
+    <value>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
+&lt;html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"&gt;
+&lt;head&gt;
+  &lt;title&gt;H1 Removal Test&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id="content"&gt;
+&lt;h1&gt;H1 Removal Test&lt;/h1&gt;
+&lt;p&gt;Chinese martial arts, known in Mandarin as wushu and popularly as kungfu, consist of a number of fighting styles that were developed over the centuries. Those fighting styles can be classified according to common themes that are identified as "families", "sects" or "schools" of martial arts. Example of themes are physical exercises that mimic movements from animals or a history and training method that gather inspiration from various Chinese philosophies, myths and legends. Some styles focus on the the harnessing of qi and are labeled internal, while others concentrate on improving muscle and cardiovascular fitness and are labeled external. Geographical association, as in northern and southern, is another popular method of categorization. Each fighting style offers a different approach to the common problems of self-defense, health, and self-cultivation from a Chinese perspective.&lt;/p&gt;
+&lt;p&gt;Descriptions of Chinese martial arts can be traced to the Xia Dynasty which existed more than 4000 years ago. [4] Their origin is attributed to self-defense needs, hunting activities and military training in ancient China. Hand-to-hand combat and weapons practice were important components in the training of Chinese soldiers.[5][6] From this beginning, Chinese martial arts proceeded to incorporate different philosophies and ideas into its practice—expanding its purpose from self-defense to health maintenance and finally as method of self-cultivation. Conversely, the influence of martial ideals in civilian society can be found in poetry, fiction, and eventually film.&lt;/p&gt;
+&lt;/div&gt;         
+&lt;/body&gt;
+&lt;/html&gt;</value>
+  </data>
+  <data name="H1Text" xml:space="preserve">
+    <value>Chinese martial arts, known in Mandarin as wushu and popularly as kungfu, consist of a number of fighting styles that were developed over the centuries. Those fighting styles can be classified according to common themes that are identified as "families", "sects" or "schools" of martial arts. Example of themes are physical exercises that mimic movements from animals or a history and training method that gather inspiration from various Chinese philosophies, myths and legends. Some styles focus on the the h...</value>
+  </data>
   <data name="Html1" xml:space="preserve">
     <value>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
 &lt;html xmlns="http://www.w3.org/1999/xhtml"&gt;
@@ -977,7 +1013,7 @@ return true;
     &lt;span&gt;Blog Statistics&lt;/span&gt;
     &lt;div style="padding-top:1px"&gt;
         &lt;a rel="nofollow" target="_blank" href="http://feeds.feedburner.com/manzurrashid"&gt;
-            &lt;img src="http://feeds.feedburner.com/~fc/manzurrashid?bg=FF6600&amp;fg=000000&amp;anim=0" alt="" style="border:0px;width:88px;height:26px"/&gt;
+            &lt;img src="http://feeds.feedburner.com/~fc/manzurrashid?bg=843002&amp;fg=000000&amp;anim=0" alt="" style="border:0px;width:88px;height:26px"/&gt;
         &lt;/a&gt;
     &lt;/div&gt;
     &lt;div style="padding-top:1px"&gt;
@@ -1044,8 +1080,8 @@ return true;
                         &lt;div id="content2"&gt;
                             
 
-&lt;div align="center" id="div845447045eab4c9cb8cf607cc42366e7" style="padding-top:5px; padding-bottom:5px; margin-bottom:15px"&gt;
-    &lt;iframe name="framef0f26b90b8e5428f80b7d8a87cd742e3" src="/a/Banner.htm" width="468" height="60" scrolling="no" frameborder="0" marginheight="0" marginwidth="0" visible=false onload="makeTransparentTop(this, document.getElementById('div845447045eab4c9cb8cf607cc42366e7'))"&gt;&lt;/iframe&gt;
+&lt;div align="center" id="div845447045eab4c9cb8c8430027cc42366e7" style="padding-top:5px; padding-bottom:5px; margin-bottom:15px"&gt;
+    &lt;iframe name="framef0f26b90b8e5428f80b7d8a87cd742e3" src="/a/Banner.htm" width="468" height="60" scrolling="no" frameborder="0" marginheight="0" marginwidth="0" visible=false onload="makeTransparentTop(this, document.getElementById('div845447045eab4c9cb8c8430027cc42366e7'))"&gt;&lt;/iframe&gt;
 
 &lt;/div&gt;
 
@@ -3663,9 +3699,12 @@ Visual Web DeveloperLearn ASP.NET
 Video Tutorials
 Starter Kit Web Sites
 Books on ASP.NETIn the NewsNew Updates to the ASP.NET Wiki
-Tuesday, September 16, 2008
 
-      The Wiki...</value>
+
+      The Wiki continues to grow with upd...</value>
+  </data>
+  <data name="TitleFilters" xml:space="preserve">
+    <value>Test :</value>
   </data>
   <data name="XPaths" xml:space="preserve">
     <value>.//div[@class="post-body entry-content"]
@@ -3704,5 +3743,38 @@ Tuesday, September 16, 2008
 .//div[@id="maincontent"]
 .//div[@id="postcontent"]
 .//div[@id="main"]</value>
+  </data>
+  <data name="TitleFilterHtml" xml:space="preserve">
+    <value>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
+&lt;html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"&gt;
+&lt;head&gt;
+  &lt;title&gt;Test : The Title&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id="content"&gt;
+&lt;p&gt;By KodefuGuru, © 2009, All Rights Reserved&lt;/p&gt;
+&lt;p&gt;Chinese martial arts, known in Mandarin as wushu and popularly as kungfu, consist of a number of fighting styles that were developed over the centuries. Those fighting styles can be classified according to common themes that are identified as "families", "sects" or "schools" of martial arts. Example of themes are physical exercises that mimic movements from animals or a history and training method that gather inspiration from various Chinese philosophies, myths and legends. Some styles focus on the the harnessing of qi and are labeled internal, while others concentrate on improving muscle and cardiovascular fitness and are labeled external. Geographical association, as in northern and southern, is another popular method of categorization. Each fighting style offers a different approach to the common problems of self-defense, health, and self-cultivation from a Chinese perspective.&lt;/p&gt;
+&lt;p&gt;Descriptions of Chinese martial arts can be traced to the Xia Dynasty which existed more than 4000 years ago. [4] Their origin is attributed to self-defense needs, hunting activities and military training in ancient China. Hand-to-hand combat and weapons practice were important components in the training of Chinese soldiers.[5][6] From this beginning, Chinese martial arts proceeded to incorporate different philosophies and ideas into its practice—expanding its purpose from self-defense to health maintenance and finally as method of self-cultivation. Conversely, the influence of martial ideals in civilian society can be found in poetry, fiction, and eventually film.&lt;/p&gt;
+&lt;/div&gt;         
+&lt;/body&gt;
+&lt;/html&gt;</value>
+  </data>
+  <data name="DateLineHtml" xml:space="preserve">
+    <value>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
+&lt;html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"&gt;
+&lt;head&gt;
+  &lt;title&gt;Date Removal Test&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id="content"&gt;
+&lt;p&gt;Tuesday, September 16, 2008&lt;/p&gt;
+&lt;p&gt;Chinese martial arts, known in Mandarin as wushu and popularly as kungfu, consist of a number of fighting styles that were developed over the centuries. Those fighting styles can be classified according to common themes that are identified as "families", "sects" or "schools" of martial arts. Example of themes are physical exercises that mimic movements from animals or a history and training method that gather inspiration from various Chinese philosophies, myths and legends. Some styles focus on the the harnessing of qi and are labeled internal, while others concentrate on improving muscle and cardiovascular fitness and are labeled external. Geographical association, as in northern and southern, is another popular method of categorization. Each fighting style offers a different approach to the common problems of self-defense, health, and self-cultivation from a Chinese perspective.&lt;/p&gt;
+&lt;p&gt;Descriptions of Chinese martial arts can be traced to the Xia Dynasty which existed more than 4000 years ago. [4] Their origin is attributed to self-defense needs, hunting activities and military training in ancient China. Hand-to-hand combat and weapons practice were important components in the training of Chinese soldiers.[5][6] From this beginning, Chinese martial arts proceeded to incorporate different philosophies and ideas into its practice—expanding its purpose from self-defense to health maintenance and finally as method of self-cultivation. Conversely, the influence of martial ideals in civilian society can be found in poetry, fiction, and eventually film.&lt;/p&gt;
+&lt;/div&gt;         
+&lt;/body&gt;
+&lt;/html&gt;</value>
+  </data>
+  <data name="DateLineText" xml:space="preserve">
+    <value>Chinese martial arts, known in Mandarin as wushu and popularly as kungfu, consist of a number of fighting styles that were developed over the centuries. Those fighting styles can be classified according to common themes that are identified as "families", "sects" or "schools" of martial arts. Example of themes are physical exercises that mimic movements from animals or a history and training method that gather inspiration from various Chinese philosophies, myths and legends. Some styles focus on the the h...</value>
   </data>
 </root>
