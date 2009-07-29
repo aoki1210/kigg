@@ -1,5 +1,3 @@
-using Kigg.Service;
-
 namespace Kigg.Web
 {
     using System;
@@ -9,12 +7,14 @@ namespace Kigg.Web
     using System.Web;
     using System.Web.Mvc;
 
-    using DotNetOpenId;
-    using DotNetOpenId.Extensions.SimpleRegistration;
-    using DotNetOpenId.RelyingParty;
+    using DotNetOpenAuth.OpenId;
+    using DotNetOpenAuth.OpenId.Extensions.SimpleRegistration;
+    using DotNetOpenAuth.OpenId.RelyingParty;
+    using DotNetOpenAuth.Messaging;
 
     using DomainObjects;
     using Infrastructure;
+    using Service;
 
     public class MembershipController : BaseController
     {
@@ -69,7 +69,7 @@ namespace Kigg.Web
             {
                 if (value)
                 {
-                    HttpCookie cookie = new HttpCookie("oidr")
+                    var cookie = new HttpCookie("oidr")
                                             {
                                                 Expires = DateTime.Now.AddMinutes(5),
                                                 HttpOnly = false,
@@ -107,7 +107,7 @@ namespace Kigg.Web
             {
                 if (!string.IsNullOrEmpty(value))
                 {
-                    HttpCookie cookie = new HttpCookie("returnUrl")
+                    var cookie = new HttpCookie("returnUrl")
                                             {
                                                 Expires = DateTime.Now.AddMinutes(5),
                                                 HttpOnly = false,
@@ -143,21 +143,21 @@ namespace Kigg.Web
 
                         if (Identifier.TryParse(identifier, out id))
                         {
-                            Realm realm = new Realm(new Uri(string.Concat(Settings.RootUrl, Url.RouteUrl("OpenId"))));
+                            var realm = new Realm(new Uri(string.Concat(Settings.RootUrl, Url.RouteUrl("OpenId"))));
 
                             IAuthenticationRequest request = OpenIdRelyingParty.CreateRequest(identifier, realm);
 
-                            ClaimsRequest fetch = new ClaimsRequest
-                                                      {
-                                                          Email = DemandLevel.Require
-                                                      };
+                            var fetch = new ClaimsRequest
+                                            {
+                                                Email = DemandLevel.Require
+                                            };
 
                             request.AddExtension(fetch);
 
                             OpenIdRememberMe = rememberMe ?? false;
                             ReturnUrl = (HttpContext.Request.UrlReferrer != null) ? HttpContext.Request.UrlReferrer.ToString() : string.Empty;
 
-                            request.RedirectToProvider();
+                            return request.RedirectingResponse.AsActionResult(); //.RedirectToProvider();
                         }
                     }
 
@@ -178,7 +178,7 @@ namespace Kigg.Web
                         }
                         else
                         {
-                            ClaimsResponse fetch = OpenIdRelyingParty.Response.GetExtension<ClaimsResponse>();
+                            var fetch = OpenIdRelyingParty.Response.GetExtension<ClaimsResponse>();
 
                             // Some of the Provider does not return Email
                             // Such as Yahoo, Blogger, Bloglines etc, in that case we will assign a default
@@ -210,7 +210,14 @@ namespace Kigg.Web
                 }
                 else if ((OpenIdRelyingParty.Response.Status == AuthenticationStatus.Failed) || (OpenIdRelyingParty.Response.Status == AuthenticationStatus.Canceled))
                 {
-                    errorMessage = "Failed to login with your preferred OpenID provider.";
+                    if (OpenIdRelyingParty.Response.Exception!= null)
+                    {
+                        errorMessage = OpenIdRelyingParty.Response.Exception.Message;
+                    }
+                    if (String.IsNullOrEmpty(errorMessage))
+                    {
+                        errorMessage = "Failed to login with your preferred OpenID provider.";
+                    }
                 }
             }
             catch (Exception oid)
@@ -236,7 +243,7 @@ namespace Kigg.Web
         [AcceptVerbs(HttpVerbs.Post), Compress]
         public ActionResult Signup(string userName, string password, string email)
         {
-            JsonViewData viewData = Validate<JsonViewData>(
+            var viewData = Validate<JsonViewData>(
                                                                 new Validation(() => string.IsNullOrEmpty(userName.NullSafe()), "User name cannot be blank."),
                                                                 new Validation(() => userName.Trim().Length < MinimumLength, "User name cannot be less than {0} character.".FormatWith(MinimumLength)),
                                                                 new Validation(() => !UserNameExpression.IsMatch(userName), "User name must be alphanumeric characters which starts with alphabet and can only contains special characters dash and underscore."),
@@ -286,7 +293,7 @@ namespace Kigg.Web
         [AcceptVerbs(HttpVerbs.Post), Compress]
         public ActionResult Login(string userName, string password, bool? rememberMe)
         {
-            JsonViewData viewData = Validate<JsonViewData>(
+            var viewData = Validate<JsonViewData>(
                                                                 new Validation(() => string.IsNullOrEmpty(userName.NullSafe()), "User name cannot be blank."),
                                                                 new Validation(() => string.IsNullOrEmpty(password.NullSafe()), "Password cannot be blank.")
                                                           );
@@ -375,7 +382,7 @@ namespace Kigg.Web
         [AcceptVerbs(HttpVerbs.Post), Compress]
         public ActionResult ForgotPassword(string email)
         {
-            JsonViewData viewData = Validate<JsonViewData>(
+            var viewData = Validate<JsonViewData>(
                                                                 new Validation(() => string.IsNullOrEmpty(email.NullSafe()), "Email cannot be blank."),
                                                                 new Validation(() => !email.NullSafe().IsEmail(), "Invalid email address format.")
                                                           );
@@ -427,7 +434,7 @@ namespace Kigg.Web
         [AcceptVerbs(HttpVerbs.Post), Compress]
         public ActionResult ChangePassword(string oldPassword, string newPassword, string confirmPassword)
         {
-            JsonViewData viewData = Validate<JsonViewData>(
+             var viewData = Validate<JsonViewData>(
                                                                 new Validation(() => string.IsNullOrEmpty(oldPassword.NullSafe()), "Old password cannot be blank."),
                                                                 new Validation(() => string.IsNullOrEmpty(newPassword.NullSafe()), "New password cannot be blank."),
                                                                 new Validation(() => newPassword.Trim().Length < MinimumLength, "New password cannot be less than {0} character.".FormatWith(MinimumLength)),
@@ -465,7 +472,7 @@ namespace Kigg.Web
         [AcceptVerbs(HttpVerbs.Post), Compress]
         public ActionResult ChangeEmail(string email)
         {
-            JsonViewData viewData = Validate<JsonViewData>(
+            var viewData = Validate<JsonViewData>(
                                                                 new Validation(() => string.IsNullOrEmpty(email.NullSafe()), "Email cannot be blank."),
                                                                 new Validation(() => !email.NullSafe().IsEmail(), "Invalid email address format."),
                                                                 new Validation(() => !IsCurrentUserAuthenticated, "You are currently not authenticated.")
@@ -501,7 +508,7 @@ namespace Kigg.Web
         [AcceptVerbs(HttpVerbs.Post), Compress]
         public ActionResult ChangeRole(string id, string role)
         {
-            JsonViewData viewData = Validate<JsonViewData>(
+            var viewData = Validate<JsonViewData>(
                                                                 new Validation(() => string.IsNullOrEmpty(id), "User Id cannot be blank."),
                                                                 new Validation(() => string.IsNullOrEmpty(role), "Role cannot be blank."),
                                                                 new Validation(() => id.ToGuid().IsEmpty(), "Invalid user identifier."),
@@ -556,7 +563,7 @@ namespace Kigg.Web
         [AcceptVerbs(HttpVerbs.Post), Compress]
         public ActionResult AllowIps(string id, ICollection<string> ipAddress)
         {
-            JsonViewData viewData = Validate<JsonViewData>(
+            var viewData = Validate<JsonViewData>(
                                                                 new Validation(() => string.IsNullOrEmpty(id), "User Id cannot be blank."),
                                                                 new Validation(() => id.ToGuid().IsEmpty(), "Invalid user identifier."),
                                                                 new Validation(() => !IsCurrentUserAuthenticated, "You are currently not authenticated."),
@@ -576,7 +583,7 @@ namespace Kigg.Web
                     else
                     {
                         ICollection<string> usedIpAddresses = UserRepository.FindIPAddresses(user.Id);
-                        List<string> blockedIps = new List<string>();
+                        var blockedIps = new List<string>();
 
                         ipAddress = ipAddress ?? new List<string>();
 
@@ -660,7 +667,7 @@ namespace Kigg.Web
         [Compress]
         public ActionResult List(int? page)
         {
-            UserListViewData viewData = CreateViewData<UserListViewData>();
+            var viewData = CreateViewData<UserListViewData>();
 
             PagedResult<IUser> pagedResult = UserRepository.FindAll(PageCalculator.StartIndex(page, Settings.HtmlUserPerPage), Settings.HtmlUserPerPage);
 
@@ -698,7 +705,7 @@ namespace Kigg.Web
             }
 
             UserDetailTab selectedTab = tab.ToEnum(UserDetailTab.Promoted);
-            UserDetailViewData viewData = CreateViewData<UserDetailViewData>();
+            var viewData = CreateViewData<UserDetailViewData>();
 
             viewData.CurrentPage = page ?? 1;
             viewData.SelectedTab = selectedTab;
@@ -740,23 +747,24 @@ namespace Kigg.Web
                                                                  .ToList()
                                                                  .AsReadOnly();
 
-            TopUserTabsViewData viewData = new TopUserTabsViewData
-                                               {
-                                                   TopLeaders = topLeaders,
-                                                   TopMovers = topMovers
-                                               };
+            var viewData = new TopUserTabsViewData
+                               {
+                                   TopLeaders = topLeaders,
+                                   TopMovers = topMovers
+                               };
 
             return View(viewData);
         }
 
         private ActionResult LockOrUnlock(string id, bool unlock)
         {
-            JsonViewData viewData = Validate<JsonViewData>(
-                                                                new Validation(() => string.IsNullOrEmpty(id), "User Id cannot be blank."),
-                                                                new Validation(() => id.ToGuid().IsEmpty(), "Invalid user identifier."),
-                                                                new Validation(() => !IsCurrentUserAuthenticated, "You are currently not authenticated."),
-                                                                new Validation(() => !CurrentUser.IsAdministrator(), "You do not have the privilege to call this method.")
-                                                          );
+            var viewData = Validate<JsonViewData>(
+                new Validation(() => string.IsNullOrEmpty(id), "User Id cannot be blank."),
+                new Validation(() => id.ToGuid().IsEmpty(), "Invalid user identifier."),
+                new Validation(() => !IsCurrentUserAuthenticated, "You are currently not authenticated."),
+                new Validation(() => !CurrentUser.IsAdministrator(),
+                               "You do not have the privilege to call this method.")
+                );
 
             if (viewData == null)
             {
@@ -800,11 +808,11 @@ namespace Kigg.Web
 
         private void GenerateMessageCookie(string message, bool isError)
         {
-            HttpCookie cookie = new HttpCookie("notification")
-                                    {
-                                        Expires = DateTime.Now.AddMinutes(5),
-                                        HttpOnly = false
-                                    };
+            var cookie = new HttpCookie("notification")
+                             {
+                                 Expires = DateTime.Now.AddMinutes(5),
+                                 HttpOnly = false
+                             };
 
             cookie.Values.Add("msg", message);
             cookie.Values.Add("err", isError.ToString());

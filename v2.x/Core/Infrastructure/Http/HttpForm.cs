@@ -15,11 +15,11 @@ namespace Kigg.Infrastructure
         private readonly bool _requestCompressed;
         private readonly int _maximumRedirects;
 
-        static HttpForm()
-        {
-            // Ignore the ssl certificate error which we usually get in the web browser such as expired etc.
-            ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
-        }
+        //static HttpForm()
+        //{
+        //    // Ignore the ssl certificate error which we usually get in the web browser such as expired etc.
+        //    ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+        //}
 
         public HttpForm(string userAgent, int timeout, bool requestCompressed, int maximumRedirects)
         {

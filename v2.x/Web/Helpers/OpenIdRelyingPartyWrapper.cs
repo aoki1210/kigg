@@ -1,12 +1,12 @@
 namespace Kigg.Web
 {
-    using DotNetOpenId;
-    using DotNetOpenId.RelyingParty;
+    using DotNetOpenAuth.OpenId;
+    using DotNetOpenAuth.OpenId.RelyingParty;
 
     public class OpenIdRelyingPartyWrapper : IOpenIdRelyingParty
     {
         private OpenIdRelyingParty _openId;
-
+        private IAuthenticationResponse _response;
         private OpenIdRelyingParty Internal
         {
             get
@@ -24,7 +24,11 @@ namespace Kigg.Web
         {
             get
             {
-                return Internal.Response;
+                if (_response == null)
+                {
+                    _response = Internal.GetResponse();
+                }
+                return _response;
             }
         }
 

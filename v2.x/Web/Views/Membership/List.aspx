@@ -9,7 +9,7 @@
     }
 
 </script>
-<asp:Content ID="Content1" ContentPlaceHolderID="HeadPlaceHolder" runat="server"></asp:Content>
+<asp:Content ID="Content1" ContentPlaceHolderID="HeadPlaceHolder" runat="server"/>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
     <%= Html.PageHeader(Model.Subtitle)%>
     <%if (!Model.Users.IsNullOrEmpty()) %>

@@ -31,7 +31,7 @@
     }
 
 </script>
-<asp:Content ID="Content1" ContentPlaceHolderID="HeadPlaceHolder" runat="server"></asp:Content>
+<asp:Content ID="Content1" ContentPlaceHolderID="HeadPlaceHolder" runat="server"/>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
     <%= Html.PageHeader("Submit New Story")%>
     <form id="frmStorySubmit" action="<%= Url.Action("Submit", "Story") %>" method="post">
