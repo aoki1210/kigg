@@ -1,7 +1,7 @@
 namespace Kigg.Web
 {
-    using DotNetOpenId;
-    using DotNetOpenId.RelyingParty;
+    using DotNetOpenAuth.OpenId;
+    using DotNetOpenAuth.OpenId.RelyingParty;
 
     public interface IOpenIdRelyingParty
     {
