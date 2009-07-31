@@ -34,7 +34,7 @@
     width:480px;
     height:240px;
     background: url(Assets/Images/marItUp/bg-editor-markdown.png) no-repeat;
-    display:block;
+    /*display:block;*/
     line-height:18px;
     overflow:auto;
 }

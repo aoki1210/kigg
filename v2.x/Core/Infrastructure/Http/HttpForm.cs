@@ -143,9 +143,9 @@ namespace Kigg.Infrastructure
 
             try
             {
-                states.RequesteStream = states.Request.EndGetRequestStream(result);
+                states.RequestStream = states.Request.EndGetRequestStream(result);
 
-                states.RequesteStream.BeginWrite(states.RequestContent, 0, states.RequestContent.Length, WriteCallback, states);
+                states.RequestStream.BeginWrite(states.RequestContent, 0, states.RequestContent.Length, WriteCallback, states);
             }
             catch (Exception e)
             {
@@ -162,8 +162,8 @@ namespace Kigg.Infrastructure
 
             try
             {
-                states.RequesteStream.EndWrite(result);
-                states.RequesteStream.Close();
+                states.RequestStream.EndWrite(result);
+                states.RequestStream.Close();
 
                 states.Request.BeginGetResponse(ResponseCallback, states);
             }
@@ -374,7 +374,7 @@ namespace Kigg.Infrastructure
                 set;
             }
 
-            public Stream RequesteStream
+            public Stream RequestStream
             {
                 get;
                 set;
