@@ -234,7 +234,7 @@ namespace Kigg.Core.Test
             var state = new HttpForm.StateContainer
                             {
                                 Request = request.Object,
-                                RequesteStream = stream.Object,
+                                RequestStream = stream.Object,
                                 RequestContent = content,
                                 OnComplete = delegate { },
                                 OnError = delegate { }
@@ -259,7 +259,7 @@ namespace Kigg.Core.Test
             var state = new HttpForm.StateContainer
                             {
                                 Request = request.Object,
-                                RequesteStream = stream.Object,
+                                RequestStream = stream.Object,
                                 RequestContent = content,
                                 OnComplete = delegate { },
                                 OnError = delegate { }
@@ -283,7 +283,7 @@ namespace Kigg.Core.Test
             var state = new HttpForm.StateContainer
                             {
                                 Request = request.Object,
-                                RequesteStream = stream.Object,
+                                RequestStream = stream.Object,
                                 OnComplete = delegate { },
                                 OnError = delegate { }
                             };
@@ -307,7 +307,7 @@ namespace Kigg.Core.Test
             var state = new HttpForm.StateContainer
                             {
                                 Request = request.Object,
-                                RequesteStream = stream.Object,
+                                RequestStream = stream.Object,
                                 OnComplete = delegate { },
                                 OnError = delegate { }
                             };

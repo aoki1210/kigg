@@ -1,3 +1,5 @@
+using System;
+
 namespace Kigg.Infrastructure
 {
     using System.Collections.Specialized;
@@ -143,16 +145,16 @@ namespace Kigg.Infrastructure
 
         private void UpdateStatus(string status)
         {
-            HttpFormPostRequest postRequest = new HttpFormPostRequest
-                                                  {
-                                                      Url = _statusUrl,
-                                                      UserName = _userName,
-                                                      Password = _password,
-                                                      FormFields = new NameValueCollection
-                                                                       {
-                                                                           {"status", status.UrlEncode()}
-                                                                       }
-                                                  };
+            var postRequest = new HttpFormPostRequest
+                                  {
+                                      Url = _statusUrl,
+                                      UserName = _userName,
+                                      Password = _password,
+                                      FormFields = new NameValueCollection
+                                                       {
+                                                           {"status", status.UrlEncode()}
+                                                       }
+                                  };
 
             if (!string.IsNullOrEmpty(_source))
             {
@@ -166,17 +168,17 @@ namespace Kigg.Infrastructure
         {
             foreach(string recipient in _directMessageRecipients)
             {
-                HttpFormPostRequest postRequest = new HttpFormPostRequest
-                                                      {
-                                                          Url = _directMessageUrl,
-                                                          UserName = _userName,
-                                                          Password = _password,
-                                                          FormFields = new NameValueCollection
-                                                                           {
-                                                                               {"user", recipient.UrlEncode() },
-                                                                               {"text", message.UrlEncode() }
-                                                                           }
-                                                      };
+                var postRequest = new HttpFormPostRequest
+                                      {
+                                          Url = _directMessageUrl,
+                                          UserName = _userName,
+                                          Password = _password,
+                                          FormFields = new NameValueCollection
+                                                           {
+                                                               {"user", recipient.UrlEncode()},
+                                                               {"text", message.UrlEncode()}
+                                                           }
+                                      };
 
                 _httpForm.PostAsync(postRequest);
             }
@@ -184,7 +186,7 @@ namespace Kigg.Infrastructure
 
         private string BuildStatus(string prefix, IStory story, string storyUrl)
         {
-            StringBuilder statusBuilder = new StringBuilder();
+            var statusBuilder = new StringBuilder();
 
             statusBuilder.Append(BuildMessage(prefix, _useOriginalUrlOfStory ? story.Url : storyUrl, story.Title));
 
@@ -192,8 +194,7 @@ namespace Kigg.Infrastructure
             {
                 for (int i = 0; i < story.Tags.Count; i++)
                 {
-                    string tagName = (i == 0) ? "," : " " + "#" + story.Tags.ElementAt(i).Name;
-
+                    string tagName = (i == 0 ? "," : " ") + "#" + story.Tags.ElementAt(i).Name.Replace(" ",String.Empty); 
                     if ((statusBuilder.Length + tagName.Length) < MaxLength)
                     {
                         statusBuilder.Append(tagName);
