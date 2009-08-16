@@ -163,11 +163,10 @@
   </Target>
   -->
   <PropertyGroup>
-    <PreBuildEvent>"%25windir%25\Microsoft.NET\Framework\v3.5\edmgen.exe" /mode:EntityClassGeneration /incsdl:$(SolutionDir)SharedFiles\DomainObjects.csdl /outobjectlayer:$(ProjectDir)\DomainObjects\Generated\Models.cs /language:CSharp
+    <PreBuildEvent>"%25windir%25\Microsoft.NET\Framework\v3.5\edmgen.exe" /mode:EntityClassGeneration /incsdl:"$(SolutionDir)SharedFiles\DomainObjects.csdl" /outobjectlayer:"$(ProjectDir)DomainObjects\Generated\Models.cs" /language:CSharp
 
-"%25windir%25\Microsoft.NET\Framework\v3.5\edmgen.exe" /mode:ViewGeneration  /incsdl:$(SolutionDir)SharedFiles\DomainObjects.csdl /inssdl:$(SolutionDir)SharedFiles\DomainObjects.SqlServer.ssdl /inmsl:$(SolutionDir)SharedFiles\DomainObjects.msl /outviews:$(ProjectDir)\DomainObjects\Generated\SqlServerViews.cs /language:CSharp
+"%25windir%25\Microsoft.NET\Framework\v3.5\edmgen.exe" /mode:ViewGeneration /incsdl:"$(SolutionDir)SharedFiles\DomainObjects.csdl" /inssdl:"$(SolutionDir)SharedFiles\DomainObjects.SqlServer.ssdl" /inmsl:"$(SolutionDir)SharedFiles\DomainObjects.msl" /outviews:"$(ProjectDir)DomainObjects\Generated\SqlServerViews.cs" /language:CSharp
 
-
-$(SolutionDir)\References\MySqlClient\edmgen.exe /mode:ViewGeneration  /incsdl:$(SolutionDir)SharedFiles\DomainObjects.csdl /inssdl:$(SolutionDir)SharedFiles\DomainObjects.MySql.ssdl /inmsl:$(SolutionDir)SharedFiles\DomainObjects.msl /outviews:$(ProjectDir)\DomainObjects\Generated\MySqlViews.cs /language:CSharp</PreBuildEvent>
+"$(SolutionDir)References\MySqlClient\edmgen.exe" /mode:ViewGeneration /incsdl:"$(SolutionDir)SharedFiles\DomainObjects.csdl" /inssdl:"$(SolutionDir)SharedFiles\DomainObjects.MySql.ssdl" /inmsl:"$(SolutionDir)SharedFiles\DomainObjects.msl" /outviews:"$(ProjectDir)DomainObjects\Generated\MySqlViews.cs" /language:CSharp</PreBuildEvent>
   </PropertyGroup>
 </Project>
