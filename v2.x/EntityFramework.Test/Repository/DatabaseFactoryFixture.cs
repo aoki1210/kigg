@@ -37,7 +37,7 @@ namespace Kigg.Infrastructure.EF.Test
             var db = _factory.Create();
             _factory.Dispose();
 
-            Assert.Throws<ObjectDisposedException>(db.SubmitChanges);
+            Assert.Throws<ObjectDisposedException>(() => db.SubmitChanges());
         }
     }
 }
