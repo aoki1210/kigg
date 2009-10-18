@@ -190,9 +190,12 @@ namespace Kigg.Service
 
             using(IUnitOfWork unitOfWork = UnitOfWork.Begin())
             {
-                _storyRepository.Remove(theStory);
-
+                //Removing story is supposed to be before Publishing Delete Event. However, because that Entity Framework
+                //set all related objects to null, a NullReferenceException will occure within event subscribers, as they
+                //might access related objects such as PostedBy, BelongsTo, Votes etc...
                 _eventAggregator.GetEvent<StoryDeleteEvent>().Publish(new StoryDeleteEventArgs(theStory, byUser));
+
+                _storyRepository.Remove(theStory);
 
                 unitOfWork.Commit();
             }
@@ -339,9 +342,12 @@ namespace Kigg.Service
             {
                 using(IUnitOfWork unitOfWork = UnitOfWork.Begin())
                 {
-                    _storyRepository.Remove(theStory);
-
+                    //Removing story is supposed to be before Publishing Spam Event. However, because that Entity Framework
+                    //set all related objects to null, a NullReferenceException will occure within event subscribers, as they
+                    //might access related objects such as PostedBy, BelongsTo, Votes etc...
                     _eventAggregator.GetEvent<StorySpamEvent>().Publish(new StorySpamEventArgs(theStory, byUser, storyUrl));
+                    
+                    _storyRepository.Remove(theStory);
 
                     unitOfWork.Commit();
                 }
@@ -354,9 +360,12 @@ namespace Kigg.Service
 
             using(IUnitOfWork unitOfWork = UnitOfWork.Begin())
             {
-                theComment.ForStory.DeleteComment(theComment);
-
+                //Removing story is supposed to be before Publishing Spam Event. However, because that Entity Framework
+                //set all related objects to null, a NullReferenceException will occure within event subscribers, as they
+                //might access related objects such as PostedBy etc...
                 _eventAggregator.GetEvent<CommentSpamEvent>().Publish(new CommentSpamEventArgs(theComment, byUser, storyUrl));
+                
+                theComment.ForStory.DeleteComment(theComment);
 
                 unitOfWork.Commit();
             }

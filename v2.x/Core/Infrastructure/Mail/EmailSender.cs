@@ -121,7 +121,9 @@ namespace Kigg.Infrastructure
             Check.Argument.IsNotNull(story, "story");
             Check.Argument.IsNotNull(byUser, "byUser");
 
-            string body = PrepareMailBodyWith("ConfirmSpamStory", "confirmedByUserName", byUser.UserName, "title", story.Title, "siteUrl", url, "originalUrl", story.Url, "postedByUserName", story.PostedBy.UserName);
+            string postedBy = (story.PostedBy == null) ? String.Empty : story.PostedBy.UserName;
+
+            string body = PrepareMailBodyWith("ConfirmSpamStory", "confirmedByUserName", byUser.UserName, "title", story.Title, "siteUrl", url, "originalUrl", story.Url, "postedByUserName", postedBy);
 
             SendMailAsync(_settings.WebmasterEmail, _settings.SupportEmail, "Story Confirmed As Spam - {0}".FormatWith(SystemTime.Now().ToLongDateString()), body);
         }
@@ -153,7 +155,9 @@ namespace Kigg.Infrastructure
             Check.Argument.IsNotNull(story, "story");
             Check.Argument.IsNotNull(byUser, "byUser");
 
-            string body = PrepareMailBodyWith("StoryDeleted", "deletedByUserName", byUser.UserName, "title", story.Title, "url", story.Url, "postedByUserName", story.PostedBy.UserName);
+            string postedBy = (story.PostedBy == null) ? String.Empty : story.PostedBy.UserName;
+
+            string body = PrepareMailBodyWith("StoryDeleted", "deletedByUserName", byUser.UserName, "title", story.Title, "url", story.Url, "postedByUserName", postedBy);
 
             SendMailAsync(_settings.WebmasterEmail, _settings.SupportEmail, "Story Deleted - {0}".FormatWith(SystemTime.Now().ToLongDateString()), body);
         }
