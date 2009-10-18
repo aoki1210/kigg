@@ -53,10 +53,11 @@ namespace Kigg.EF.DomainObjects
                 Log.Exception(ex);
                 _isLoaded = true;
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException)
             {
                 //An exception will thrown in case Object EntityState is Detached or Deleted
-                Log.Exception(ex);
+                //Ignore this exception, it will be always occure in lazy loading operation
+                //Log.Exception(ex);
                 _isLoaded = true;
             }
         }
