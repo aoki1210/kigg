@@ -144,20 +144,20 @@ namespace Kigg.Web
 
                                                                         if (!string.IsNullOrEmpty(routeName))
                                                                         {
-                                                                            link = helper.RouteLink(text, routeName, newValues);
+                                                                            link = helper.RouteLink(text, routeName, newValues).ToHtmlString();
                                                                         }
                                                                         else
                                                                         {
                                                                             actionName = actionName ?? values["action"].ToString();
                                                                             controllerName = controllerName ?? values["controller"].ToString();
 
-                                                                            link = helper.ActionLink(text, actionName, controllerName, newValues, null);
+                                                                            link = helper.ActionLink(text, actionName, controllerName, newValues, null).ToHtmlString();
                                                                         }
 
                                                                         return string.Concat(" ", link);
                                                                     };
 
-            StringBuilder pagerHtml = new StringBuilder();
+            var pagerHtml = new StringBuilder();
 
             if (pageCount > 1)
             {

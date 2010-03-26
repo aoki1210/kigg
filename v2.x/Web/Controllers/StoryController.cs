@@ -83,7 +83,7 @@ namespace Kigg.Web
 
             summary = summary ?? new PagedResult<StorySummary>();
 
-            return Json(summary);
+            return Json(summary, JsonRequestBehavior.AllowGet);
         }
 
         [Compress]
@@ -161,7 +161,7 @@ namespace Kigg.Web
 
             summary = summary ?? new PagedResult<StorySummary>();
 
-            return Json(summary);
+            return Json(summary, JsonRequestBehavior.AllowGet);
         }
 
         [Compress]
@@ -424,7 +424,7 @@ namespace Kigg.Web
                 }
             }
 
-            return Json(viewData);
+            return Json(viewData, JsonRequestBehavior.AllowGet);
         }
 
         [AcceptVerbs(HttpVerbs.Post), ValidateInput(false), Compress]
