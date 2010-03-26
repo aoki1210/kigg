@@ -34,9 +34,10 @@ namespace Kigg.Web.Test
 
     public class ControllerFactoryTestDouble : ControllerFactory
     {
-        protected override Type GetControllerType(string controllerName)
+        protected override Type GetControllerType(RequestContext requestContext, string controllerName)
         {
             return typeof(ControllerTestDouble);
+            
         }
     }
 }

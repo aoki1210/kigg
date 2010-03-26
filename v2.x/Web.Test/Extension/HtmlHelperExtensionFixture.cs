@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Specialized;
+using System.IO;
 using System.Web.Mvc;
 using System.Web.Routing;
 
@@ -214,13 +215,13 @@ namespace Kigg.Web.Test
             RouteTable.Routes.Clear();
             new RegisterRoutes(settings.Object).Execute();
 
-            ControllerContext controllerContext = new ControllerContext(_httpContext.Object, routeData, new Mock<ControllerBase>().Object);
-            ViewContext viewContext = new ViewContext(controllerContext, new Mock<IView>().Object, vdd, new TempDataDictionary());
+            var controllerContext = new ControllerContext(_httpContext.Object, routeData, new Mock<ControllerBase>().Object);
+            var viewContext = new ViewContext(controllerContext, new Mock<IView>().Object, vdd, new TempDataDictionary(), new Mock<TextWriter>().Object);
 
-            Mock<IViewDataContainer> mockVdc = new Mock<IViewDataContainer>();
+            var mockVdc = new Mock<IViewDataContainer>();
             mockVdc.Setup(vdc => vdc.ViewData).Returns(vdd);
 
-            HtmlHelper htmlHelper = new HtmlHelper(viewContext, mockVdc.Object);
+            var htmlHelper = new HtmlHelper(viewContext, mockVdc.Object);
 
             return htmlHelper;
         }

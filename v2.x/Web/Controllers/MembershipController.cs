@@ -725,12 +725,14 @@ namespace Kigg.Web
             return View(viewData);
         }
 
+        [ChildActionOnly]
         [ValidateInput(false)]
         public ActionResult Menu()
         {
             return View(new UserMenuViewData { IsUserAuthenticated = IsCurrentUserAuthenticated, CurrentUser = CurrentUser });
         }
 
+        [ChildActionOnly]
         public ActionResult TopTabs()
         {
             DateTime maxTimestamp = SystemTime.Now();

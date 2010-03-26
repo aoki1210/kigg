@@ -1,4 +1,5 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/Views/Shared/SiteTemplate.Master" Inherits="System.Web.Mvc.ViewPage<UserDetailViewData>"%>
+<%@ Import Namespace="System.Web.Routing"%>
 <script runat="server">
 
     protected override void OnInit(EventArgs e)
@@ -17,19 +18,21 @@
         {
             case UserDetailTab.Posted:
                 {
-                    Html.RenderAction<StoryController>(c => c.PostedBy(userId, page));
+                    Html.RenderAction("PostedBy", "Story", new RouteValueDictionary{{"name",userId}, {"page", page}});
                     break;
                 }
 
             case UserDetailTab.Commented:
                 {
-                    Html.RenderAction<StoryController>(c => c.CommentedBy(userId, page));
+                    Html.RenderAction("CommentedBy", "Story", new RouteValueDictionary { { "name", userId }, { "page", page } });
+                    //Html.RenderAction<StoryController>(c => c.CommentedBy(userId, page));
                     break;
                 }
 
             default:
                 {
-                    Html.RenderAction<StoryController>(c => c.PromotedBy(userId, page));
+                    Html.RenderAction("PromotedBy", "Story", new RouteValueDictionary { { "name", userId }, { "page", page } });
+                    //Html.RenderAction<StoryController>(c => c.PromotedBy(userId, page));
                     break;
                 }
         }

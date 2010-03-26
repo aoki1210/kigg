@@ -55,7 +55,7 @@ namespace Kigg.Web
 
             if (!isClientBrowserItSelf)
             {
-                return Json(tagNames);
+                return Json(tagNames, JsonRequestBehavior.AllowGet);
             }
 
             JavaScriptSerializer serializer = new JavaScriptSerializer();

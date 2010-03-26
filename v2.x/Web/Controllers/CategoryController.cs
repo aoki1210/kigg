@@ -23,11 +23,13 @@ namespace Kigg.Web
         }
 
         [ValidateInput(false)]
+        [ChildActionOnly]
         public ActionResult Menu()
         {
             return View(Categories);
         }
 
+        [ChildActionOnly]
         public ActionResult RadioButtonList()
         {
             return View(Categories);

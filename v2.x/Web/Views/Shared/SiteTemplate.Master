@@ -131,11 +131,11 @@
                 <h1><a rel="home" title="<%= Model.SiteTitle %>" href="<%= Url.Content("~/")%>"><%= Model.SiteTitle %></a></h1>
             </div>
             <div class="links">
-                <% Html.RenderAction<MembershipController>(c => c.Menu()); %>
+                <% Html.RenderAction("Menu", "Membership"); %>
             </div>
         </div>
         <div class="menu">
-            <% Html.RenderAction<CategoryController>(c => c.Menu()); %>
+            <% Html.RenderAction("Menu", "Category"); %>
             <% Html.RenderPartial("SearchBox", ViewData.Model); %>
         </div>
         <div id="wrapper">
@@ -143,14 +143,14 @@
                 <%
                     if (Model.CanCurrentUserModerate)
                     {
-                        Html.RenderAction<SupportController>(c => c.ControlPanel());
+                        Html.RenderAction("ControlPanel", "Support");
                     }
                 %>
                 <% Html.RenderPartial("IntroBox"); %>
                 <div class="divider"></div>
-                <% Html.RenderAction<MembershipController>(c => c.TopTabs()); %>
+                <% Html.RenderAction("TopTabs", "Membership"); %>
                 <div class="divider"></div>
-                <% Html.RenderAction<TagController>(c => c.Tabs()); %>
+                <% Html.RenderAction("Tabs", "Tag"); %>
                 <div class="divider"></div>
             </div>
             <div id="content">

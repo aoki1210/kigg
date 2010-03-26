@@ -35,7 +35,7 @@
                 </p>
                 <p>
                     <label class="label">Category:</label>
-                    <% Html.RenderAction<CategoryController>(c => c.RadioButtonList()); %>
+                    <% Html.RenderAction("RadioButtonList", "Category"); %>
                     <span class="error"></span>
                 </p>
                 <p>
