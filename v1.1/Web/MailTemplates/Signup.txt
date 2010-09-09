@@ -1,9 +1,0 @@
-This is an automatically generated message. DO NOT REPLY TO THIS EMAIL.
-
-Thanks for signing up in Kigg.com. The following is your account detail:
-User Name:<%UserName%>
-Password:<%Password%>
-
-Thanks,
-Site Admin
-http://kigg.dotnetslackers.com
