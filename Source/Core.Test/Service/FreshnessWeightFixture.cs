@@ -19,8 +19,8 @@ namespace Kigg.Core.Test
         [Fact]
         public void Calculate_Should_Return_Same_Weight_When_Both_Stories_Age_Is_More_Than_Specified_Days()
         {
-            var story1 = new Mock<IStory>();
-            var story2 = new Mock<IStory>();
+            var story1 = new Mock<Story>();
+            var story2 = new Mock<Story>();
             var now = SystemTime.Now();
 
             story1.SetupGet(s => s.CreatedAt).Returns(now.AddDays(-FreshNessThresholdInDays).AddHours(-6));
@@ -32,8 +32,8 @@ namespace Kigg.Core.Test
         [Fact]
         public void Calculate_Should_Return_Different_Weight_When_Either_Of_Stories_Age_Is_Less_Than_Specified_Days()
         {
-            var story1 = new Mock<IStory>();
-            var story2 = new Mock<IStory>();
+            var story1 = new Mock<Story>();
+            var story2 = new Mock<Story>();
             var now = SystemTime.Now();
 
             story1.SetupGet(s => s.CreatedAt).Returns(now.AddDays(-FreshNessThresholdInDays).AddHours(-6));

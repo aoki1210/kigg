@@ -1,6 +1,6 @@
 namespace Kigg.Repository
 {
-    using System;
+    //using System;
     using System.Collections.Generic;
 
     using DomainObjects;
@@ -12,7 +12,7 @@ namespace Kigg.Repository
         {
         }
 
-        public override void Add(ITag entity)
+        public override void Add(Tag entity)
         {
             Check.Argument.IsNotNull(entity, "entity");
 
@@ -21,7 +21,7 @@ namespace Kigg.Repository
             Log.Info("Tag added: {0}, {1}", entity.Id, entity.Name);
         }
 
-        public override void Remove(ITag entity)
+        public override void Remove(Tag entity)
         {
             Check.Argument.IsNotNull(entity, "entity");
 
@@ -30,9 +30,9 @@ namespace Kigg.Repository
             Log.Warning("Tag removed: {0}, {1}", entity.Id, entity.Name);
         }
 
-        public override ITag FindById(Guid id)
+        public override Tag FindById(long id)
         {
-            Check.Argument.IsNotEmpty(id, "id");
+            //Check.Argument.IsNotEmpty(id, "id");
 
             Log.Info("Retrieving tag with id: {0}", id);
 
@@ -50,7 +50,7 @@ namespace Kigg.Repository
             return result;
         }
 
-        public override ITag FindByUniqueName(string uniqueName)
+        public override Tag FindByUniqueName(string uniqueName)
         {
             Check.Argument.IsNotEmpty(uniqueName, "uniqueName");
 
@@ -70,7 +70,7 @@ namespace Kigg.Repository
             return result;
         }
 
-        public override ITag FindByName(string name)
+        public override Tag FindByName(string name)
         {
             Check.Argument.IsNotEmpty(name, "name");
 
@@ -90,7 +90,7 @@ namespace Kigg.Repository
             return result;
         }
 
-        public override ICollection<ITag> FindMatching(string name, int max)
+        public override ICollection<Tag> FindMatching(string name, int max)
         {
             Check.Argument.IsNotEmpty(name, "name");
             Check.Argument.IsNotNegativeOrZero(max, "max");
@@ -111,7 +111,7 @@ namespace Kigg.Repository
             return result;
         }
 
-        public override ICollection<ITag> FindByUsage(int top)
+        public override ICollection<Tag> FindByUsage(int top)
         {
             Check.Argument.IsNotNegativeOrZero(top, "top");
 
@@ -131,7 +131,7 @@ namespace Kigg.Repository
             return result;
         }
 
-        public override ICollection<ITag> FindAll()
+        public override ICollection<Tag> FindAll()
         {
             Log.Info("Retrieving all tag");
 

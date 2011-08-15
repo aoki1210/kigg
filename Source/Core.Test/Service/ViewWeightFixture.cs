@@ -26,7 +26,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Calculate_Should_Return_Correct_Weight_For_Same_Ip()
         {
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
 
             Setup("192.168.0.1", "192.168.0.1", "192.168.0.1");
 
@@ -36,7 +36,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Calculate_Should_Return_Correct_Weight_For_Different_Ip()
         {
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
 
             Setup("192.168.0.1", "192.168.0.2", "192.168.0.3");
 
@@ -46,7 +46,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Calculate_Should_Use_StroyViewRepository()
         {
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
 
             Setup("192.168.0.1", "192.168.0.2", "192.168.0.3");
 
@@ -57,18 +57,18 @@ namespace Kigg.Core.Test
 
         private void Setup(params string[] ipAddress)
         {
-            var views = new List<IStoryView>();
+            var views = new List<StoryView>();
 
             foreach(string ip in ipAddress)
             {
-                var view = new Mock<IStoryView>();
+                var view = new Mock<StoryView>();
 
                 view.Setup(v => v.FromIPAddress).Returns(ip);
 
                 views.Add(view.Object);
             }
 
-            _repository.Setup(r => r.FindAfter(It.IsAny<Guid>(), It.IsAny<DateTime>())).Returns(views).Verifiable();
+            _repository.Setup(r => r.FindAfter(It.IsAny<long>(), It.IsAny<DateTime>())).Returns(views).Verifiable();
         }
     }
 }

@@ -12,23 +12,23 @@
 
         void SendNewPassword(string email, string userName, string password);
 
-        void SendComment(string url, IComment comment, IEnumerable<IUser> users);
+        void SendComment(string url, Comment comment, IEnumerable<User> users);
 
-        void NotifySpamStory(string url, IStory story, string source);
+        void NotifySpamStory(string url, Story story, string source);
 
-        void NotifyStoryMarkedAsSpam(string url, IStory story, IUser byUser);
+        void NotifyStoryMarkedAsSpam(string url, Story story, User byUser);
 
-        void NotifySpamComment(string url, IComment comment, string source);
+        void NotifySpamComment(string url, Comment comment, string source);
 
-        void NotifyStoryApprove(string url, IStory story, IUser byUser);
+        void NotifyStoryApprove(string url, Story story, User byUser);
 
-        void NotifyConfirmSpamStory(string url, IStory story, IUser byUser);
+        void NotifyConfirmSpamStory(string url, Story story, User byUser);
 
-        void NotifyConfirmSpamComment(string url, IComment comment, IUser byUser);
+        void NotifyConfirmSpamComment(string url, Comment comment, User byUser);
 
-        void NotifyCommentAsOffended(string url, IComment comment, IUser byUser);
+        void NotifyCommentAsOffended(string url, Comment comment, User byUser);
 
-        void NotifyStoryDelete(IStory story, IUser byUser);
+        void NotifyStoryDelete(Story story, User byUser);
 
         void NotifyPublishedStories(DateTime timestamp, IEnumerable<PublishedStory> stories);
 

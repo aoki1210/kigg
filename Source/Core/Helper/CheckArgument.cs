@@ -21,7 +21,7 @@
             {
                 if (argument == Guid.Empty)
                 {
-                    throw new ArgumentException("\"{0}\" cannot be empty guid.".FormatWith(argumentName), argumentName);
+                    throw new ArgumentException("\"{0}\" cannot be empty Guid.".FormatWith(argumentName), argumentName);
                 }
             }
 

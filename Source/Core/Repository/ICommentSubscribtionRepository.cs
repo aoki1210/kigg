@@ -4,8 +4,8 @@ namespace Kigg.Repository
 
     using DomainObjects;
 
-    public interface ICommentSubscribtionRepository : IRepository<ICommentSubscribtion>, ICountByStoryRepository
+    public interface ICommentSubscribtionRepository : IRepository<CommentSubscribtion>, ICountByStoryRepository
     {
-        ICommentSubscribtion FindById(Guid storyId, Guid userId);
+        CommentSubscribtion FindById(long storyId, long userId);
     }
 }

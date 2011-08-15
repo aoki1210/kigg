@@ -10,11 +10,11 @@ namespace Kigg.Core.Test
 
     public class TagExtensionFixture : BaseFixture
     {
-        private readonly Mock<ITag> _tag;
+        private readonly Mock<Tag> _tag;
 
         public TagExtensionFixture()
         {
-            _tag = new Mock<ITag>();
+            _tag = new Mock<Tag>();
         }
         [Fact]
         public void GetStoryCount_Should_Return_Correct_Value()

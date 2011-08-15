@@ -8,19 +8,19 @@ namespace Kigg.Service
     public class StoryViewEventArgs
     {
         [DebuggerStepThrough]
-        public StoryViewEventArgs(IStory story, IUser user)
+        public StoryViewEventArgs(Story story, User user)
         {
             Story = story;
             User = user;
         }
 
-        public IStory Story
+        public Story Story
         {
             get;
             private set;
         }
 
-        public IUser User
+        public User User
         {
             get;
             private set;

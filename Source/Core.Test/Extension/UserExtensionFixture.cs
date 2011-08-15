@@ -1,4 +1,3 @@
-using System;
 using Moq;
 using Xunit;
 
@@ -11,11 +10,11 @@ namespace Kigg.Core.Test
 
     public class UserExtensionFixture : BaseFixture
     {
-        private readonly Mock<IUser> _user;
+        private readonly Mock<User> _user;
 
         public UserExtensionFixture()
         {
-            _user = new Mock<IUser>();
+            _user = new Mock<User>();
         }
 
         [Fact]
@@ -75,7 +74,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void ShouldHideCaptcha_Should_Be_False_When_Use_Is_Null()
         {
-            Assert.False(((IUser) null).ShouldHideCaptcha());
+            Assert.False(((User) null).ShouldHideCaptcha());
         }
 
         [Fact]
@@ -99,11 +98,11 @@ namespace Kigg.Core.Test
         {
             const string Email = "foo@bar.com";
             
-            _user.SetupGet(u => u.Id).Returns(Guid.NewGuid());
+            _user.SetupGet(u => u.Id).Returns(1);
             _user.SetupGet(u => u.Email).Returns(Email);
 
-            var sameEmailUser = new Mock<IUser>();
-            sameEmailUser.SetupGet(u => u.Id).Returns(Guid.NewGuid());
+            var sameEmailUser = new Mock<User>();
+            sameEmailUser.SetupGet(u => u.Id).Returns(2);
             sameEmailUser.SetupGet(u => u.Email).Returns(Email);
 
             PrepareFindByEmail(sameEmailUser.Object);
@@ -116,7 +115,7 @@ namespace Kigg.Core.Test
         {
             const string Email = "foo@bar.com";
 
-            _user.SetupGet(u => u.Id).Returns(Guid.NewGuid());
+            _user.SetupGet(u => u.Id).Returns(1);
             _user.SetupGet(u => u.Email).Returns(Email);
 
             PrepareFindByEmail(null);
@@ -137,7 +136,7 @@ namespace Kigg.Core.Test
         public void GetScore_Should_Use_IUserRepository()
         {
             var userRepository = SetupResolve<IUserRepository>();
-            var id = Guid.NewGuid();
+            var id = 1;
             var start = SystemTime.Now().AddHours(-6);
             var end = SystemTime.Now();
             _user.SetupGet(u => u.Id).Returns(id);
@@ -146,7 +145,7 @@ namespace Kigg.Core.Test
             userRepository.Verify(r => r.FindScoreById(id, start, end), Times.AtMostOnce());
         }
 
-        private void PrepareFindByEmail(IUser user)
+        private void PrepareFindByEmail(User user)
         {
             var repository = SetupResolve<IUserRepository>();
             repository.Setup(r => r.FindByEmail(_user.Object.Email)).Returns(user).Verifiable();

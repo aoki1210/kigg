@@ -8,7 +8,7 @@ namespace Kigg.Service
 
     public class PublishedStory
     {
-        public PublishedStory(IStory story)
+        public PublishedStory(Story story)
         {
             Check.Argument.IsNotNull(story, "story");
 
@@ -16,7 +16,7 @@ namespace Kigg.Service
             Weights = new Dictionary<string, double>();
         }
 
-        public IStory Story
+        public Story Story
         {
             get;
             private set;

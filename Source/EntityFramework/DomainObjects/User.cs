@@ -7,7 +7,7 @@
     using Kigg.DomainObjects;
     using Infrastructure.DomainRepositoryExtensions;
 
-    public partial class User : IUser
+    public partial class User
     {
         [NonSerialized]
         private EntityCollection<ITag, Tag> _userTags;

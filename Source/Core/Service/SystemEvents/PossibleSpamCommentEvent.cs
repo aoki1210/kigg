@@ -8,14 +8,14 @@ namespace Kigg.Service
     public class PossibleSpamCommentEventArgs
     {
         [DebuggerStepThrough]
-        public PossibleSpamCommentEventArgs(IComment comment, string source, string detailUrl)
+        public PossibleSpamCommentEventArgs(Comment comment, string source, string detailUrl)
         {
             Comment = comment;
             Source = source;
             DetailUrl = detailUrl;
         }
 
-        public IComment Comment
+        public Comment Comment
         {
             get;
             private set;

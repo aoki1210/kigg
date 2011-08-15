@@ -27,31 +27,31 @@ namespace Kigg.Core.Test
         [Fact]
         public void Calculate_Should_Return_Correct_Weight()
         {
-            var user1 = new Mock<IUser>();
-            var user2 = new Mock<IUser>();
-            var user3 = new Mock<IUser>();
+            var user1 = new Mock<User>();
+            var user2 = new Mock<User>();
+            var user3 = new Mock<User>();
 
-            var moderator = new Mock<IUser>();
-            var admin = new Mock<IUser>();
+            var moderator = new Mock<User>();
+            var admin = new Mock<User>();
 
-            user1.SetupGet(u => u.Id).Returns(Guid.NewGuid());
-            user2.SetupGet(u => u.Id).Returns(Guid.NewGuid());
-            user3.SetupGet(u => u.Id).Returns(Guid.NewGuid());
+            user1.SetupGet(u => u.Id).Returns(1);
+            user2.SetupGet(u => u.Id).Returns(1);
+            user3.SetupGet(u => u.Id).Returns(1);
             user1.SetupGet(u => u.CurrentScore).Returns(100);
             user2.SetupGet(u => u.CurrentScore).Returns(200);
             user3.SetupGet(u => u.CurrentScore).Returns(300);
 
-            moderator.SetupGet(u => u.Id).Returns(Guid.NewGuid());
-            admin.SetupGet(u => u.Id).Returns(Guid.NewGuid());
+            moderator.SetupGet(u => u.Id).Returns(1);
+            admin.SetupGet(u => u.Id).Returns(1);
             moderator.SetupGet(u => u.Role).Returns(Roles.Moderator);
             admin.SetupGet(u => u.Role).Returns(Roles.Administrator);
 
-            var user1Vote = new Mock<IVote>();
-            var user2Vote = new Mock<IVote>();
-            var user3Vote = new Mock<IVote>();
+            var user1Vote = new Mock<Vote>();
+            var user2Vote = new Mock<Vote>();
+            var user3Vote = new Mock<Vote>();
 
-            var moderatorVote = new Mock<IVote>();
-            var adminVote = new Mock<IVote>();
+            var moderatorVote = new Mock<Vote>();
+            var adminVote = new Mock<Vote>();
 
             user1Vote.Setup(v => v.ByUser).Returns(user1.Object);
             user2Vote.Setup(v => v.ByUser).Returns(user2.Object);
@@ -60,9 +60,9 @@ namespace Kigg.Core.Test
             moderatorVote.Setup(v => v.ByUser).Returns(moderator.Object);
             adminVote.Setup(v => v.ByUser).Returns(admin.Object);
 
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
 
-            _repository.Setup(r => r.FindAfter(It.IsAny<Guid>(), It.IsAny<DateTime>())).Returns(new[] { user1Vote.Object, user2Vote.Object, user3Vote.Object, moderatorVote.Object, adminVote.Object }).Verifiable();
+            _repository.Setup(r => r.FindAfter(It.IsAny<long>(), It.IsAny<DateTime>())).Returns(new[] { user1Vote.Object, user2Vote.Object, user3Vote.Object, moderatorVote.Object, adminVote.Object }).Verifiable();
 
             Assert.Equal(
                             (

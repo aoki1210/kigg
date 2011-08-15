@@ -12,7 +12,7 @@ namespace Kigg.Repository
         {
         }
 
-        public override void Add(IUser entity)
+        public override void Add(User entity)
         {
             Check.Argument.IsNotNull(entity, "entity");
 
@@ -21,7 +21,7 @@ namespace Kigg.Repository
             Log.Info("User added: {0}, {1}", entity.Id, entity.UserName);
         }
 
-        public override void Remove(IUser entity)
+        public override void Remove(User entity)
         {
             Check.Argument.IsNotNull(entity, "entity");
 
@@ -30,9 +30,9 @@ namespace Kigg.Repository
             Log.Warning("User removed: {0}, {1}", entity.Id, entity.UserName);
         }
 
-        public override IUser FindById(Guid id)
+        public override User FindById(long id)
         {
-            Check.Argument.IsNotEmpty(id, "id");
+            //Check.Argument.IsNotEmpty(id, "id");
 
             Log.Info("Retrieving user with id: {0}", id);
 
@@ -50,7 +50,7 @@ namespace Kigg.Repository
             return result;
         }
 
-        public override IUser FindByUserName(string userName)
+        public override User FindByUserName(string userName)
         {
             Check.Argument.IsNotEmpty(userName, "userName");
 
@@ -70,7 +70,7 @@ namespace Kigg.Repository
             return result;
         }
 
-        public override IUser FindByEmail(string email)
+        public override User FindByEmail(string email)
         {
             Check.Argument.IsNotInvalidEmail(email, "email");
 
@@ -90,9 +90,9 @@ namespace Kigg.Repository
             return result;
         }
 
-        public override decimal FindScoreById(Guid id, DateTime startTimestamp, DateTime endTimestamp)
+        public override decimal FindScoreById(long id, DateTime startTimestamp, DateTime endTimestamp)
         {
-            Check.Argument.IsNotEmpty(id, "id");
+            //Check.Argument.IsNotEmpty(id, "id");
             Check.Argument.IsNotInFuture(startTimestamp, "startTimestamp");
             Check.Argument.IsNotInFuture(endTimestamp, "endTimestamp");
 
@@ -105,7 +105,7 @@ namespace Kigg.Repository
             return result;
         }
 
-        public override PagedResult<IUser> FindTop(DateTime startTimestamp, DateTime endTimestamp, int start, int max)
+        public override PagedResult<User> FindTop(DateTime startTimestamp, DateTime endTimestamp, int start, int max)
         {
             Check.Argument.IsNotInFuture(startTimestamp, "startTimestamp");
             Check.Argument.IsNotInFuture(endTimestamp, "endTimestamp");
@@ -128,7 +128,7 @@ namespace Kigg.Repository
             return pagedResult;
         }
 
-        public override PagedResult<IUser> FindAll(int start, int max)
+        public override PagedResult<User> FindAll(int start, int max)
         {
             Check.Argument.IsNotNegative(start, "start");
             Check.Argument.IsNotNegative(max, "max");
@@ -149,9 +149,9 @@ namespace Kigg.Repository
             return pagedResult;
         }
 
-        public override ICollection<string> FindIPAddresses(Guid id)
+        public override ICollection<string> FindIPAddresses(long id)
         {
-            Check.Argument.IsNotEmpty(id, "id");
+            //Check.Argument.IsNotEmpty(id, "id");
 
             Log.Info("Retrieving ip addresses of user : {0}", id);
 

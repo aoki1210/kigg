@@ -4,14 +4,14 @@ namespace Kigg.Repository
 
     using DomainObjects;
 
-    public interface ITagRepository : IUniqueNameEntityRepository<ITag>
+    public interface ITagRepository : IUniqueNameEntityRepository<Tag>
     {
-        ITag FindByName(string name);
+        Tag FindByName(string name);
 
-        ICollection<ITag> FindMatching(string name, int max);
+        ICollection<Tag> FindMatching(string name, int max);
 
-        ICollection<ITag> FindByUsage(int top);
+        ICollection<Tag> FindByUsage(int top);
 
-        ICollection<ITag> FindAll();
+        ICollection<Tag> FindAll();
     }
 }

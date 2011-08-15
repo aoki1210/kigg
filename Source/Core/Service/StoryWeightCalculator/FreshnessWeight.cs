@@ -18,7 +18,7 @@ namespace Kigg.Service
             _intervalInHours = intervalInHours;
         }
 
-        public override double Calculate(DateTime publishingTimestamp, IStory story)
+        public override double Calculate(DateTime publishingTimestamp, Story story)
         {
             Check.Argument.IsNotInFuture(publishingTimestamp, "publishingTimestamp");
             Check.Argument.IsNotNull(story, "story");

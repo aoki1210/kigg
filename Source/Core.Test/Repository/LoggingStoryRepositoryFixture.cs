@@ -108,7 +108,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void FindByUrl_Should_Use_InnerRepository_And_Log_When_Story_Does_Not_Exist()
         {
-            _innerRepository.Setup(r => r.FindByUrl(It.IsAny<String>())).Returns((IStory) null).Verifiable();
+            _innerRepository.Setup(r => r.FindByUrl(It.IsAny<String>())).Returns((Story) null).Verifiable();
             log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
             log.Setup(l => l.Warning(It.IsAny<string>())).Verifiable();
 
@@ -533,7 +533,7 @@ namespace Kigg.Core.Test
 
         private void Add()
         {
-            _innerRepository.Setup(r => r.Add(It.IsAny<IStory>())).Verifiable();
+            _innerRepository.Setup(r => r.Add(It.IsAny<Story>())).Verifiable();
             log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
             _loggingRepository.Add(CreateStubStory());
@@ -541,15 +541,15 @@ namespace Kigg.Core.Test
 
         private void Remove()
         {
-            _innerRepository.Setup(r => r.Remove(It.IsAny<IStory>())).Verifiable();
+            _innerRepository.Setup(r => r.Remove(It.IsAny<Story>())).Verifiable();
             log.Setup(l => l.Warning(It.IsAny<string>())).Verifiable();
 
             _loggingRepository.Remove(CreateStubStory());
         }
 
-        private void FindById(IStory result)
+        private void FindById(Story result)
         {
-            _innerRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns(result).Verifiable();
+            _innerRepository.Setup(r => r.FindById(It.IsAny<long>())).Returns(result).Verifiable();
             log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
             if (result == null)
@@ -557,10 +557,10 @@ namespace Kigg.Core.Test
                 log.Setup(l => l.Warning(It.IsAny<string>())).Verifiable();
             }
 
-            _loggingRepository.FindById(Guid.NewGuid());
+            _loggingRepository.FindById(1);
         }
 
-        private void FindByUniqueName(IStory result)
+        private void FindByUniqueName(Story result)
         {
             _innerRepository.Setup(r => r.FindByUniqueName(It.IsAny<string>())).Returns(result).Verifiable();
             log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
@@ -573,7 +573,7 @@ namespace Kigg.Core.Test
             _loggingRepository.FindByUniqueName("a-dummy-story");
         }
 
-        private void FindByUrl(IStory result)
+        private void FindByUrl(Story result)
         {
             _innerRepository.Setup(r => r.FindByUrl(It.IsAny<string>())).Returns(result).Verifiable();
             log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
@@ -586,9 +586,9 @@ namespace Kigg.Core.Test
             _loggingRepository.FindByUrl("http://story.com");
         }
 
-        private void FindPublished(ICollection<IStory> result)
+        private void FindPublished(ICollection<Story> result)
         {
-            _innerRepository.Setup(r => r.FindPublished(It.IsAny<int>(), It.IsAny<int>())).Returns((result == null) ? new PagedResult<IStory>() : new PagedResult<IStory>(result, result.Count)).Verifiable();
+            _innerRepository.Setup(r => r.FindPublished(It.IsAny<int>(), It.IsAny<int>())).Returns((result == null) ? new PagedResult<Story>() : new PagedResult<Story>(result, result.Count)).Verifiable();
             log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
             if (result.IsNullOrEmpty())
@@ -599,9 +599,9 @@ namespace Kigg.Core.Test
             _loggingRepository.FindPublished(0, 10);
         }
 
-        private void FindPublishedByCategory(ICollection<IStory> result)
+        private void FindPublishedByCategory(ICollection<Story> result)
         {
-            _innerRepository.Setup(r => r.FindPublishedByCategory(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>())).Returns((result == null) ? new PagedResult<IStory>() : new PagedResult<IStory>(result, result.Count)).Verifiable();
+            _innerRepository.Setup(r => r.FindPublishedByCategory(It.IsAny<long>(), It.IsAny<int>(), It.IsAny<int>())).Returns((result == null) ? new PagedResult<Story>() : new PagedResult<Story>(result, result.Count)).Verifiable();
             log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
             if (result.IsNullOrEmpty())
@@ -609,12 +609,12 @@ namespace Kigg.Core.Test
                 log.Setup(l => l.Warning(It.IsAny<string>())).Verifiable();
             }
 
-            _loggingRepository.FindPublishedByCategory(Guid.NewGuid(), 0, 10);
+            _loggingRepository.FindPublishedByCategory(1, 0, 10);
         }
 
-        private void FindUpcoming(ICollection<IStory> result)
+        private void FindUpcoming(ICollection<Story> result)
         {
-            _innerRepository.Setup(r => r.FindUpcoming(It.IsAny<int>(), It.IsAny<int>())).Returns((result == null) ? new PagedResult<IStory>() : new PagedResult<IStory>(result, result.Count)).Verifiable();
+            _innerRepository.Setup(r => r.FindUpcoming(It.IsAny<int>(), It.IsAny<int>())).Returns((result == null) ? new PagedResult<Story>() : new PagedResult<Story>(result, result.Count)).Verifiable();
             log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
             if (result.IsNullOrEmpty())
@@ -625,9 +625,9 @@ namespace Kigg.Core.Test
             _loggingRepository.FindUpcoming(0, 10);
         }
 
-        private void FindNew(ICollection<IStory> result)
+        private void FindNew(ICollection<Story> result)
         {
-            _innerRepository.Setup(r => r.FindNew(It.IsAny<int>(), It.IsAny<int>())).Returns((result == null) ? new PagedResult<IStory>() : new PagedResult<IStory>(result, result.Count)).Verifiable();
+            _innerRepository.Setup(r => r.FindNew(It.IsAny<int>(), It.IsAny<int>())).Returns((result == null) ? new PagedResult<Story>() : new PagedResult<Story>(result, result.Count)).Verifiable();
             log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
             if (result.IsNullOrEmpty())
@@ -638,9 +638,9 @@ namespace Kigg.Core.Test
             _loggingRepository.FindNew(0, 10);
         }
 
-        private void FindUnapproved(ICollection<IStory> result)
+        private void FindUnapproved(ICollection<Story> result)
         {
-            _innerRepository.Setup(r => r.FindUnapproved(It.IsAny<int>(), It.IsAny<int>())).Returns((result == null) ? new PagedResult<IStory>() : new PagedResult<IStory>(result, result.Count)).Verifiable();
+            _innerRepository.Setup(r => r.FindUnapproved(It.IsAny<int>(), It.IsAny<int>())).Returns((result == null) ? new PagedResult<Story>() : new PagedResult<Story>(result, result.Count)).Verifiable();
             log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
             if (result.IsNullOrEmpty())
@@ -651,9 +651,9 @@ namespace Kigg.Core.Test
             _loggingRepository.FindUnapproved(0, 10);
         }
 
-        private void FindPublishable(ICollection<IStory> result)
+        private void FindPublishable(ICollection<Story> result)
         {
-            _innerRepository.Setup(r => r.FindPublishable(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>(), It.IsAny<int>())).Returns((result == null) ? new PagedResult<IStory>() : new PagedResult<IStory>(result, result.Count)).Verifiable();
+            _innerRepository.Setup(r => r.FindPublishable(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>(), It.IsAny<int>())).Returns((result == null) ? new PagedResult<Story>() : new PagedResult<Story>(result, result.Count)).Verifiable();
             log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
             if (result.IsNullOrEmpty())
@@ -664,9 +664,9 @@ namespace Kigg.Core.Test
             _loggingRepository.FindPublishable(SystemTime.Now().AddDays(-7), SystemTime.Now().AddHours(-4), 0, 10);
         }
 
-        private void FindByTag(ICollection<IStory> result)
+        private void FindByTag(ICollection<Story> result)
         {
-            _innerRepository.Setup(r => r.FindByTag(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>())).Returns((result == null) ? new PagedResult<IStory>() : new PagedResult<IStory>(result, result.Count)).Verifiable();
+            _innerRepository.Setup(r => r.FindByTag(It.IsAny<long>(), It.IsAny<int>(), It.IsAny<int>())).Returns((result == null) ? new PagedResult<Story>() : new PagedResult<Story>(result, result.Count)).Verifiable();
             log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
             if (result.IsNullOrEmpty())
@@ -674,12 +674,12 @@ namespace Kigg.Core.Test
                 log.Setup(l => l.Warning(It.IsAny<string>())).Verifiable();
             }
 
-            _loggingRepository.FindByTag(Guid.NewGuid(), 0, 10);
+            _loggingRepository.FindByTag(1, 0, 10);
         }
 
-        private void Search(ICollection<IStory> result)
+        private void Search(ICollection<Story> result)
         {
-            _innerRepository.Setup(r => r.Search(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>())).Returns((result == null) ? new PagedResult<IStory>() : new PagedResult<IStory>(result, result.Count)).Verifiable();
+            _innerRepository.Setup(r => r.Search(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>())).Returns((result == null) ? new PagedResult<Story>() : new PagedResult<Story>(result, result.Count)).Verifiable();
             log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
             if (result.IsNullOrEmpty())
@@ -690,9 +690,9 @@ namespace Kigg.Core.Test
             _loggingRepository.Search("query", 0, 10);
         }
 
-        private void FindPostedByUser(ICollection<IStory> result)
+        private void FindPostedByUser(ICollection<Story> result)
         {
-            _innerRepository.Setup(r => r.FindPostedByUser(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>())).Returns((result == null) ? new PagedResult<IStory>() : new PagedResult<IStory>(result, result.Count)).Verifiable();
+            _innerRepository.Setup(r => r.FindPostedByUser(It.IsAny<long>(), It.IsAny<int>(), It.IsAny<int>())).Returns((result == null) ? new PagedResult<Story>() : new PagedResult<Story>(result, result.Count)).Verifiable();
             log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
             if (result.IsNullOrEmpty())
@@ -700,12 +700,12 @@ namespace Kigg.Core.Test
                 log.Setup(l => l.Warning(It.IsAny<string>())).Verifiable();
             }
 
-            _loggingRepository.FindPostedByUser(Guid.NewGuid(), 0, 10);
+            _loggingRepository.FindPostedByUser(1, 0, 10);
         }
 
-        private void FindPromotedByUser(ICollection<IStory> result)
+        private void FindPromotedByUser(ICollection<Story> result)
         {
-            _innerRepository.Setup(r => r.FindPromotedByUser(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>())).Returns((result == null) ? new PagedResult<IStory>() : new PagedResult<IStory>(result, result.Count)).Verifiable();
+            _innerRepository.Setup(r => r.FindPromotedByUser(It.IsAny<long>(), It.IsAny<int>(), It.IsAny<int>())).Returns((result == null) ? new PagedResult<Story>() : new PagedResult<Story>(result, result.Count)).Verifiable();
             log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
             if (result.IsNullOrEmpty())
@@ -713,12 +713,12 @@ namespace Kigg.Core.Test
                 log.Setup(l => l.Warning(It.IsAny<string>())).Verifiable();
             }
 
-            _loggingRepository.FindPromotedByUser(Guid.NewGuid(), 0, 10);
+            _loggingRepository.FindPromotedByUser(1, 0, 10);
         }
 
-        private void FindCommentedByUser(ICollection<IStory> result)
+        private void FindCommentedByUser(ICollection<Story> result)
         {
-            _innerRepository.Setup(r => r.FindCommentedByUser(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>())).Returns((result == null) ? new PagedResult<IStory>() : new PagedResult<IStory>(result, result.Count)).Verifiable();
+            _innerRepository.Setup(r => r.FindCommentedByUser(It.IsAny<long>(), It.IsAny<int>(), It.IsAny<int>())).Returns((result == null) ? new PagedResult<Story>() : new PagedResult<Story>(result, result.Count)).Verifiable();
             log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
             if (result.IsNullOrEmpty())
@@ -726,7 +726,7 @@ namespace Kigg.Core.Test
                 log.Setup(l => l.Warning(It.IsAny<string>())).Verifiable();
             }
 
-            _loggingRepository.FindCommentedByUser(Guid.NewGuid(), 0, 10);
+            _loggingRepository.FindCommentedByUser(1, 0, 10);
         }
 
         private void CountByPublished()
@@ -747,18 +747,18 @@ namespace Kigg.Core.Test
 
         private void CountByCategory()
         {
-            _innerRepository.Setup(r => r.CountByCategory(It.IsAny<Guid>())).Returns(0).Verifiable();
+            _innerRepository.Setup(r => r.CountByCategory(It.IsAny<long>())).Returns(0).Verifiable();
             log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
-            _loggingRepository.CountByCategory(Guid.NewGuid());
+            _loggingRepository.CountByCategory(1);
         }
 
         private void CountByTag()
         {
-            _innerRepository.Setup(r => r.CountByTag(It.IsAny<Guid>())).Returns(0).Verifiable();
+            _innerRepository.Setup(r => r.CountByTag(It.IsAny<long>())).Returns(0).Verifiable();
             log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
-            _loggingRepository.CountByTag(Guid.NewGuid());
+            _loggingRepository.CountByTag(1);
         }
 
         private void CountByNew()
@@ -787,10 +787,10 @@ namespace Kigg.Core.Test
 
         private void CountPostedByUser()
         {
-            _innerRepository.Setup(r => r.CountPostedByUser(It.IsAny<Guid>())).Returns(0).Verifiable();
+            _innerRepository.Setup(r => r.CountPostedByUser(It.IsAny<long>())).Returns(0).Verifiable();
             log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
-            _loggingRepository.CountPostedByUser(Guid.NewGuid());
+            _loggingRepository.CountPostedByUser(1);
         }
     }
 }

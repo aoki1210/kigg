@@ -87,7 +87,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Create_Should_Return_Null_Error_Message_When_Successfully_Submitted()
         {
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
 
             var result = Create(story);
 
@@ -97,9 +97,9 @@ namespace Kigg.Core.Test
         [Fact]
         public void Create_Should_Also_Promote_The_Story()
         {
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
 
-            story.Setup(s => s.Promote(It.IsAny<DateTime>(), It.IsAny<IUser>(), It.IsAny<string>())).Returns(true);
+            story.Setup(s => s.Promote(It.IsAny<DateTime>(), It.IsAny<User>(), It.IsAny<string>())).Returns(true);
 
             Create(story);
 
@@ -109,7 +109,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Create_Should_Request_Thumnbnail_To_Capture()
         {
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
 
             thumbnail.Setup(t => t.Capture(It.IsAny<string>())).Verifiable();
 
@@ -121,9 +121,9 @@ namespace Kigg.Core.Test
         [Fact]
         public void Create_Should_Subscribe_User_For_New_Comments()
         {
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
 
-            story.Setup(s => s.SubscribeComment(It.IsAny<IUser>())).Verifiable();
+            story.Setup(s => s.SubscribeComment(It.IsAny<User>())).Verifiable();
 
             Create(story);
 
@@ -133,10 +133,10 @@ namespace Kigg.Core.Test
         [Fact]
         public void Create_Should_Add_Tag_Using_Tag_Repository()
         {
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
 
-            _tagRepository.Setup(r => r.FindByName(It.IsAny<string>())).Returns((ITag) null);
-            _tagRepository.Setup(r => r.Add(It.IsAny<ITag>())).Verifiable();
+            _tagRepository.Setup(r => r.FindByName(It.IsAny<string>())).Returns((Tag) null);
+            _tagRepository.Setup(r => r.Add(It.IsAny<Tag>())).Verifiable();
 
             Create(story);
 
@@ -146,8 +146,8 @@ namespace Kigg.Core.Test
         [Fact]
         public void Create_Should_Add_Tag_To_Story()
         {
-            var story = new Mock<IStory>();
-            story.Setup(s => s.AddTag(It.IsAny<ITag>())).Verifiable();
+            var story = new Mock<Story>();
+            story.Setup(s => s.AddTag(It.IsAny<Tag>())).Verifiable();
 
             Create(story);
 
@@ -157,10 +157,10 @@ namespace Kigg.Core.Test
         [Fact]
         public void Create_Should_Add_Tag_To_User()
         {
-            var user = new Mock<IUser>();
-            var story = new Mock<IStory>();
+            var user = new Mock<User>();
+            var story = new Mock<Story>();
 
-            user.Setup(s => s.AddTag(It.IsAny<ITag>())).Verifiable();
+            user.Setup(s => s.AddTag(It.IsAny<Tag>())).Verifiable();
 
             Create(story, user);
 
@@ -172,32 +172,32 @@ namespace Kigg.Core.Test
         {
             settings.SetupGet(s => s.AllowPossibleSpamStorySubmit).Returns(false);
 
-            var user = new Mock<IUser>();
+            var user = new Mock<User>();
 
             user.SetupGet(u => u.Role).Returns(Roles.Moderator);
 
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
 
             //_storyRepository.Setup().Never();
             
             Create(story, user);
 
-            _storyRepository.Verify(r => r.CountPostedByUser(It.IsAny<Guid>()),Times.Never());
+            _storyRepository.Verify(r => r.CountPostedByUser(It.IsAny<long>()),Times.Never());
         }
 
         [Fact]
         public void Create_Should_Not_CheckForSpam_When_Possible_Spam_Is_Allowed_And_User_CanModerate()
         {
-            var user = new Mock<IUser>();
+            var user = new Mock<User>();
 
             user.SetupGet(u => u.Role).Returns(Roles.Moderator);
 
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
 
-            //_storyRepository.Setup(r => r.CountPostedByUser(It.IsAny<Guid>())).Never();
+            //_storyRepository.Setup(r => r.CountPostedByUser(It.IsAny<long>())).Never();
             Create(story, user);
             
-            _storyRepository.Verify(r => r.CountPostedByUser(It.IsAny<Guid>()), Times.Never());
+            _storyRepository.Verify(r => r.CountPostedByUser(It.IsAny<long>()), Times.Never());
 
             _storyRepository.Verify();
         }
@@ -205,11 +205,11 @@ namespace Kigg.Core.Test
         [Fact]
         public void Create_Should_Use_SpamPostProcesor_When_Spam_Is_Detected_And_Possible_Spam_Is_Allowed()
         {
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
 
-            _storyRepository.Setup(r => r.CountPostedByUser(It.IsAny<Guid>())).Returns(settings.Object.StorySumittedThresholdOfUserToSpamCheck -1);
+            _storyRepository.Setup(r => r.CountPostedByUser(It.IsAny<long>())).Returns(settings.Object.StorySumittedThresholdOfUserToSpamCheck -1);
             _spamProtection.Setup(sp => sp.IsSpam(It.IsAny<SpamCheckContent>(), It.IsAny<Action<string, bool>>())).Callback((SpamCheckContent sp, Action<string, bool> onComplete) => onComplete("foo", true));
-            _spamPostProcessor.Setup(sp => sp.Process(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<string>(), It.IsAny<IStory>())).Verifiable();
+            _spamPostProcessor.Setup(sp => sp.Process(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<string>(), It.IsAny<Story>())).Verifiable();
 
             Create(story);
 
@@ -221,7 +221,7 @@ namespace Kigg.Core.Test
         {
             settings.SetupGet(s => s.AllowPossibleSpamStorySubmit).Returns(false);
 
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
 
             _spamProtection.Setup(sp => sp.IsSpam(It.IsAny<SpamCheckContent>())).Returns(false);
             story.Setup(s => s.Approve(It.IsAny<DateTime>())).Verifiable();
@@ -236,7 +236,7 @@ namespace Kigg.Core.Test
         {
             settings.SetupGet(s => s.AllowPossibleSpamStorySubmit).Returns(false);
 
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
 
             _spamProtection.Setup(sp => sp.IsSpam(It.IsAny<SpamCheckContent>())).Returns(false);
 
@@ -261,9 +261,9 @@ namespace Kigg.Core.Test
         {
             settings.SetupGet(s => s.AllowPossibleSpamStorySubmit).Returns(false);
 
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
 
-            _storyRepository.Setup(r => r.CountPostedByUser(It.IsAny<Guid>())).Returns(settings.Object.StorySumittedThresholdOfUserToSpamCheck - 1);
+            _storyRepository.Setup(r => r.CountPostedByUser(It.IsAny<long>())).Returns(settings.Object.StorySumittedThresholdOfUserToSpamCheck - 1);
             _spamProtection.Setup(sp => sp.IsSpam(It.IsAny<SpamCheckContent>())).Returns(true);
 
             var result = Create(story);
@@ -274,7 +274,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Create_Should_Return_Error_Message_When_Url_Does_Not_Return_Any_Content()
         {
-            _categoryRepository.Setup(r => r.FindByUniqueName(It.IsAny<string>())).Returns(new Mock<ICategory>().Object);
+            _categoryRepository.Setup(r => r.FindByUniqueName(It.IsAny<string>())).Returns(new Mock<Category>().Object);
             _contentService.Setup(cs => cs.Get(It.IsAny<string>())).Returns(StoryContent.Empty);
 
             var result = Create();
@@ -285,7 +285,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Create_Should_Return_Error_Message_When_Category_Does_Not_Exist()
         {
-            _categoryRepository.Setup(r => r.FindByUniqueName(It.IsAny<string>())).Returns((ICategory) null);
+            _categoryRepository.Setup(r => r.FindByUniqueName(It.IsAny<string>())).Returns((Category) null);
 
             var result = Create();
 
@@ -295,7 +295,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Create_Should_Return_Error_Message_When_Url_Already_Exists()
         {
-            _storyRepository.Setup(r => r.FindByUrl(It.IsAny<string>())).Returns(new Mock<IStory>().Object);
+            _storyRepository.Setup(r => r.FindByUrl(It.IsAny<string>())).Returns(new Mock<Story>().Object);
 
             var result = Create();
 
@@ -313,7 +313,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Create_Should_Return_Error_Message_When_Blank_Url_Is_Passed()
         {
-            var user = new Mock<IUser>();
+            var user = new Mock<User>();
 
             var result = Create(user.Object, string.Empty, "A dummy Story", "dummy", "Dummy description of Story", "192.168.0.1", "A dummy agent");
 
@@ -323,7 +323,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Create_Should_Return_Error_Message_When_Invalid_Url_Is_Passed()
         {
-            var user = new Mock<IUser>();
+            var user = new Mock<User>();
 
             var result = Create(user.Object, "foo", "A dummy Story", "dummy", "Dummy description of Story", "192.168.0.1", "A dummy agent");
 
@@ -333,7 +333,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Create_Should_Return_Error_Message_When_Blank_Title_Is_Passed()
         {
-            var user = new Mock<IUser>();
+            var user = new Mock<User>();
 
             var result = Create(user.Object, "http://astory.com", string.Empty, "dummy", "Dummy description of Story", "192.168.0.1", "A dummy agent");
 
@@ -343,7 +343,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Create_Should_Return_Error_Message_When_Title_Exceeds_Max_Length()
         {
-            var user = new Mock<IUser>();
+            var user = new Mock<User>();
 
             var result = Create(user.Object, "http://astory.com", new string('x', 257), "dummy", "Dummy description of Story", "192.168.0.1", "A dummy agent");
 
@@ -353,7 +353,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Create_Should_Return_Error_Message_When_Blank_Category_Is_Passed()
         {
-            var user = new Mock<IUser>();
+            var user = new Mock<User>();
 
             var result = Create(user.Object, "http://astory.com", "a dummy story", string.Empty, "Dummy description of Story", "192.168.0.1", "A dummy agent");
 
@@ -363,7 +363,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Create_Should_Return_Error_Message_When_Blank_Description_Is_Passed()
         {
-            var user = new Mock<IUser>();
+            var user = new Mock<User>();
 
             var result = Create(user.Object, "http://astory.com", "a dummy story", "dummy", string.Empty, "192.168.0.1", "A dummy agent");
 
@@ -373,7 +373,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Create_Should_Return_Error_Message_When_Out_Of_Length_Description_Is_Passed()
         {
-            var user = new Mock<IUser>();
+            var user = new Mock<User>();
 
             var result = Create(user.Object, "http://astory.com", "A dummy story", "dummy", new string('x', 2049), "192.168.0.1", "A dummy agent");
 
@@ -383,7 +383,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Create_Should_Return_Error_Message_When_Blank_IpAddress_Is_Passed()
         {
-            var user = new Mock<IUser>();
+            var user = new Mock<User>();
 
             var result = Create(user.Object, "http://astory.com", "a dummy story", "dummy", "A dummy description", string.Empty, "A dummy agent");
 
@@ -393,7 +393,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Create_Should_Return_Error_Message_When_Blank_UserAgent_Is_Passed()
         {
-            var user = new Mock<IUser>();
+            var user = new Mock<User>();
 
             var result = Create(user.Object, "http://astory.com", "a dummy story", "dummy", "A dummy description", "192.168.0.1", string.Empty);
 
@@ -403,7 +403,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Update_Should_Use_The_Story()
         {
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
 
             Update(story);
 
@@ -413,7 +413,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Update_Should_Use_The_CategoryRepository()
         {
-            Update(new Mock<IStory>());
+            Update(new Mock<Story>());
 
             _categoryRepository.Verify();
         }
@@ -438,7 +438,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void View_Should_Use_Story()
         {
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
 
             View(story);
 
@@ -448,7 +448,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void View_Should_Publish_Story_View_Event()
         {
-            View(new Mock<IStory>());
+            View(new Mock<Story>());
 
             _eventAggregator.Verify();
             _storyViewEvent.Verify();
@@ -457,9 +457,9 @@ namespace Kigg.Core.Test
         [Fact]
         public void Promote_Should_Use_Story()
         {
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
 
-            Promote(new Mock<IStory>());
+            Promote(new Mock<Story>());
 
             story.Verify();
         }
@@ -467,7 +467,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Promote_Should_Publish_Story_Promote_Event()
         {
-            Promote(new Mock<IStory>());
+            Promote(new Mock<Story>());
 
             _eventAggregator.Verify();
             _storyPromoteEvent.Verify();
@@ -476,7 +476,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Demote_Should_Use_Story()
         {
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
 
             Demote(story);
 
@@ -486,7 +486,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Demote_Should_Publish_Story_Demote_Event()
         {
-            Demote(new Mock<IStory>());
+            Demote(new Mock<Story>());
 
             _eventAggregator.Verify();
             _storyDemoteEvent.Verify();
@@ -495,7 +495,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void MarkAsSpam_Should_Use_Story()
         {
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
 
             MarkAsSpam(story);
 
@@ -505,7 +505,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void MarkAsSpam_Should_Publish_Story_Mark_As_Spam_Event()
         {
-            MarkAsSpam(new Mock<IStory>());
+            MarkAsSpam(new Mock<Story>());
 
             _eventAggregator.Verify();
             _storyMarkAsSpamEvent.Verify();
@@ -514,7 +514,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void UnmarkAsSpam_Should_Use_Story()
         {
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
 
             UnmarkAsSpam(story);
 
@@ -524,7 +524,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void UnmarkAsSpam_Should_Publish_Story_Unmark_As_Spam_Event()
         {
-            UnmarkAsSpam(new Mock<IStory>());
+            UnmarkAsSpam(new Mock<Story>());
 
             _eventAggregator.Verify();
             _storyUnmarkAsSpamEvent.Verify();
@@ -533,11 +533,11 @@ namespace Kigg.Core.Test
         [Fact]
         public void Comment_Should_Return_Null_Error_Message_When_Successfully_Posted()
         {
-            var story = new Mock<IStory>();
-            var user = new Mock<IUser>();
-            var comment = new Mock<IComment>();
+            var story = new Mock<Story>();
+            var user = new Mock<User>();
+            var comment = new Mock<Comment>();
 
-            story.Setup(s => s.PostComment(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<IUser>(), It.IsAny<string>())).Returns(comment.Object);
+            story.Setup(s => s.PostComment(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<User>(), It.IsAny<string>())).Returns(comment.Object);
 
             var result = Comment(story.Object, user.Object, true);
 
@@ -547,11 +547,11 @@ namespace Kigg.Core.Test
         [Fact]
         public void Comment_Should_Use_Story()
         {
-            var story = new Mock<IStory>();
-            var user = new Mock<IUser>();
-            var comment = new Mock<IComment>();
+            var story = new Mock<Story>();
+            var user = new Mock<User>();
+            var comment = new Mock<Comment>();
 
-            story.Setup(s => s.PostComment(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<IUser>(), It.IsAny<string>())).Returns(comment.Object).Verifiable();
+            story.Setup(s => s.PostComment(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<User>(), It.IsAny<string>())).Returns(comment.Object).Verifiable();
             Comment(story.Object, user.Object, true);
 
             story.Verify();
@@ -560,12 +560,12 @@ namespace Kigg.Core.Test
         [Fact]
         public void Comment_Should_Subscribe_Via_Email_When_Passing_True()
         {
-            var story = new Mock<IStory>();
-            var user = new Mock<IUser>();
-            var comment = new Mock<IComment>();
+            var story = new Mock<Story>();
+            var user = new Mock<User>();
+            var comment = new Mock<Comment>();
 
-            story.Setup(s => s.PostComment(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<IUser>(), It.IsAny<string>())).Returns(comment.Object);
-            story.Setup(s => s.SubscribeComment(It.IsAny<IUser>())).Verifiable();
+            story.Setup(s => s.PostComment(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<User>(), It.IsAny<string>())).Returns(comment.Object);
+            story.Setup(s => s.SubscribeComment(It.IsAny<User>())).Verifiable();
 
             Comment(story.Object, user.Object, true);
 
@@ -575,12 +575,12 @@ namespace Kigg.Core.Test
         [Fact]
         public void Comment_Should_Unsubscribe_from_Email_When_Passing_False()
         {
-            var story = new Mock<IStory>();
-            var user = new Mock<IUser>();
-            var comment = new Mock<IComment>();
+            var story = new Mock<Story>();
+            var user = new Mock<User>();
+            var comment = new Mock<Comment>();
 
-            story.Setup(s => s.PostComment(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<IUser>(), It.IsAny<string>())).Returns(comment.Object);
-            story.Setup(s => s.UnsubscribeComment(It.IsAny<IUser>())).Verifiable();
+            story.Setup(s => s.PostComment(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<User>(), It.IsAny<string>())).Returns(comment.Object);
+            story.Setup(s => s.UnsubscribeComment(It.IsAny<User>())).Verifiable();
 
             Comment(story.Object, user.Object, false);
 
@@ -592,16 +592,16 @@ namespace Kigg.Core.Test
         {
             settings.SetupGet(s => s.AllowPossibleSpamCommentSubmit).Returns(false);
 
-            var story = new Mock<IStory>();
-            var user = new Mock<IUser>();
-            var subscriber = new Mock<IUser>();
+            var story = new Mock<Story>();
+            var user = new Mock<User>();
+            var subscriber = new Mock<User>();
 
-            var comment = new Mock<IComment>();
+            var comment = new Mock<Comment>();
 
             _spamProtection.Setup(sp => sp.IsSpam(It.IsAny<SpamCheckContent>())).Returns(false);
 
-            story.Setup(s => s.PostComment(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<IUser>(), It.IsAny<string>())).Returns(comment.Object);
-            story.SetupGet(s => s.Subscribers).Returns(new List<IUser>{ subscriber.Object });
+            story.Setup(s => s.PostComment(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<User>(), It.IsAny<string>())).Returns(comment.Object);
+            story.SetupGet(s => s.Subscribers).Returns(new List<User>{ subscriber.Object });
 
             var commentSubmitEvent = new Mock<CommentSubmitEvent>();
             _eventAggregator.Setup(ea => ea.GetEvent<CommentSubmitEvent>()).Returns(commentSubmitEvent.Object).Verifiable();
@@ -616,13 +616,13 @@ namespace Kigg.Core.Test
         [Fact]
         public void Comment_Should_Use_SpamPostProcessor_When_Possible_Spam_Is_Allowed()
         {
-            var story = new Mock<IStory>();
-            var user = new Mock<IUser>();
-            var comment = new Mock<IComment>();
+            var story = new Mock<Story>();
+            var user = new Mock<User>();
+            var comment = new Mock<Comment>();
 
-            story.Setup(s => s.PostComment(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<IUser>(), It.IsAny<string>())).Returns(comment.Object);
+            story.Setup(s => s.PostComment(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<User>(), It.IsAny<string>())).Returns(comment.Object);
             _spamProtection.Setup(sp => sp.IsSpam(It.IsAny<SpamCheckContent>(), It.IsAny<Action<string, bool>>())).Callback((SpamCheckContent sp, Action<string, bool> onComplete) => onComplete("foo", true));
-            _spamPostProcessor.Setup(sp => sp.Process(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<string>(), It.IsAny<IComment>())).Verifiable();
+            _spamPostProcessor.Setup(sp => sp.Process(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<string>(), It.IsAny<Comment>())).Verifiable();
 
             Comment(story.Object, user.Object, true);
 
@@ -632,8 +632,8 @@ namespace Kigg.Core.Test
         [Fact]
         public void Comment_Should_Return_Error_Message_When_Spam_Is_Detected_And_Possible_Spam_Is_Not_Allowed()
         {
-            var story = new Mock<IStory>();
-            var user = new Mock<IUser>();
+            var story = new Mock<Story>();
+            var user = new Mock<User>();
 
             settings.SetupGet(s => s.AllowPossibleSpamCommentSubmit).Returns(false);
             _spamProtection.Setup(sp => sp.IsSpam(It.IsAny<SpamCheckContent>())).Returns(true);
@@ -646,7 +646,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Comment_Should_Return_Error_Message_When_Null_Story_Is_Passed()
         {
-            var result = Comment(null, new Mock<IUser>().Object, false);
+            var result = Comment(null, new Mock<User>().Object, false);
 
             Assert.Equal("Story cannot be null.", result.ErrorMessage);
         }
@@ -654,7 +654,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Comment_Should_Return_Error_Message_When_Null_User_Is_Passed()
         {
-            var result = Comment(new Mock<IStory>().Object, null, false);
+            var result = Comment(new Mock<Story>().Object, null, false);
 
             Assert.Equal("User cannot be null.", result.ErrorMessage);
         }
@@ -662,7 +662,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Comment_Should_Return_Error_Message_When_Blank_Content_Is_Passed()
         {
-            var result = Comment(new Mock<IStory>().Object, new Mock<IUser>().Object, string.Empty, false, null, null);
+            var result = Comment(new Mock<Story>().Object, new Mock<User>().Object, string.Empty, false, null, null);
 
             Assert.Equal("Comment cannot be blank.", result.ErrorMessage);
         }
@@ -670,7 +670,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Comment_Should_Return_Error_Message_When_Blank_Content_Exceeds_Maximum_Length()
         {
-            var result = Comment(new Mock<IStory>().Object, new Mock<IUser>().Object, new string('x', 2049), false, null, null);
+            var result = Comment(new Mock<Story>().Object, new Mock<User>().Object, new string('x', 2049), false, null, null);
 
             Assert.Equal("Comment cannot be more than 2048 character.", result.ErrorMessage);
         }
@@ -678,7 +678,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Comment_Should_Return_Error_Message_When_Blank_IpAddress_Is_Passed()
         {
-            var result = Comment(new Mock<IStory>().Object, new Mock<IUser>().Object, new string('x', 2048), false, string.Empty, null);
+            var result = Comment(new Mock<Story>().Object, new Mock<User>().Object, new string('x', 2048), false, string.Empty, null);
 
             Assert.Equal("User ip address cannot be blank.", result.ErrorMessage);
         }
@@ -686,7 +686,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Comment_Should_Return_Error_Message_When_Blank_UserAgent_Is_Passed()
         {
-            var result = Comment(new Mock<IStory>().Object, new Mock<IUser>().Object, new string('x', 2048), false, "192.168.0.1", null);
+            var result = Comment(new Mock<Story>().Object, new Mock<User>().Object, new string('x', 2048), false, "192.168.0.1", null);
 
             Assert.Equal("User agent cannot be empty.", result.ErrorMessage);
         }
@@ -694,7 +694,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Spam_Should_Use_StoryRepository_For_Story()
         {
-            SpamStory(new Mock<IStory>());
+            SpamStory(new Mock<Story>());
 
             _storyRepository.Verify();
         }
@@ -702,7 +702,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Spam_Should_Publish_Story_Spam_Event()
         {
-            SpamStory(new Mock<IStory>());
+            SpamStory(new Mock<Story>());
 
             _eventAggregator.Verify();
             _storySpamEvent.Verify();
@@ -711,7 +711,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Spam_Should_Use_Story_For_Comment()
         {
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
 
             SpamComment(story);
 
@@ -721,7 +721,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Spam_Should_Publish_Comment_Spam_Event()
         {
-            SpamComment(new Mock<IStory>());
+            SpamComment(new Mock<Story>());
 
             _eventAggregator.Verify();
             _commentSpamEvent.Verify();
@@ -730,7 +730,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void MarkAsOffended_Should_Use_Comment()
         {
-            var comment = new Mock<IComment>();
+            var comment = new Mock<Comment>();
 
             MarkAsOffended(comment);
 
@@ -740,7 +740,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void MarkAsOffended_Should_Publish_Comment_Mark_As_Offended_Event()
         {
-            MarkAsOffended(new Mock<IComment>());
+            MarkAsOffended(new Mock<Comment>());
 
             _eventAggregator.Verify();
             _commentMarkAsOffendedEvent.Verify();
@@ -796,7 +796,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void Approve_Should_Use_Story()
         {
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
 
             Approve(story);
 
@@ -806,27 +806,27 @@ namespace Kigg.Core.Test
         [Fact]
         public void Approve_Should_Publish_Story_AApprove_Event()
         {
-            Approve(new Mock<IStory>());
+            Approve(new Mock<Story>());
 
             _eventAggregator.Verify();
             _storyApproveEvent.Verify();
         }
 
-        private StoryCreateResult Create(Mock<IStory> story)
+        private StoryCreateResult Create(Mock<Story> story)
         {
-            var user = new Mock<IUser>();
+            var user = new Mock<User>();
 
             story.SetupGet(s => s.Url).Returns("http://astory.com");
 
             return Create(story, user);
         }
 
-        private StoryCreateResult Create(Mock<IStory> story, Mock<IUser> user)
+        private StoryCreateResult Create(Mock<Story> story, Mock<User> user)
         {
-            _storyRepository.Setup(r => r.FindByUrl(It.IsAny<string>())).Returns((IStory)null);
-            _categoryRepository.Setup(r => r.FindByUniqueName(It.IsAny<string>())).Returns(new Mock<ICategory>().Object);
+            _storyRepository.Setup(r => r.FindByUrl(It.IsAny<string>())).Returns((Story)null);
+            _categoryRepository.Setup(r => r.FindByUniqueName(It.IsAny<string>())).Returns(new Mock<Category>().Object);
             _contentService.Setup(s => s.Get(It.IsAny<string>())).Returns(new StoryContent("A dummy story", "Dummy description", "http://trackbackurl.com"));
-            _factory.Setup(f => f.CreateStory(It.IsAny<ICategory>(), It.IsAny<IUser>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(story.Object);
+            _factory.Setup(f => f.CreateStory(It.IsAny<Category>(), It.IsAny<User>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(story.Object);
 
             _storySubmitEvent = new Mock<StorySubmitEvent>();
 
@@ -838,30 +838,30 @@ namespace Kigg.Core.Test
 
         private StoryCreateResult Create()
         {
-            var user = new Mock<IUser>();
+            var user = new Mock<User>();
 
             return Create(user.Object, "http://astory.com", "A dummy Story", "dummy", "Dummy description of Story", "192.168.0.1", "A dummy agent");
         }
 
-        private StoryCreateResult Create(IUser user, string url, string title, string category, string desriptions, string ipAddress, string userAgent)
+        private StoryCreateResult Create(User user, string url, string title, string category, string desriptions, string ipAddress, string userAgent)
         {
             return _storyService.Create(user, url, title, category, desriptions, "dummy, C#", ipAddress, userAgent, null, new NameValueCollection { { "foo", "bar" } }, s => "http://dotnetshoutout.com/A-Dummy-Story");
         }
 
-        private void Update(Mock<IStory> story)
+        private void Update(Mock<Story> story)
         {
-            var category = new Mock<ICategory>();
+            var category = new Mock<Category>();
             category.Setup(c => c.UniqueName).Returns("Dummy");
 
             story.SetupGet(s => s.BelongsTo).Returns(category.Object);
 
             story.Setup(s => s.ChangeNameAndCreatedAt(It.IsAny<string>(), It.IsAny<DateTime>())).Verifiable();
             story.SetupSet(s => s.Title = "This is a title").Verifiable();
-            story.Setup(s => s.ChangeCategory(It.IsAny<ICategory>())).Verifiable();
+            story.Setup(s => s.ChangeCategory(It.IsAny<Category>())).Verifiable();
             story.SetupSet(s => s.HtmlDescription = "This is the description").Verifiable();
-            story.Setup(s => s.AddTag(It.IsAny<ITag>())).Verifiable();
+            story.Setup(s => s.AddTag(It.IsAny<Tag>())).Verifiable();
 
-            var updatedCategory = new Mock<ICategory>();
+            var updatedCategory = new Mock<Category>();
             _categoryRepository.Setup(r => r.FindByUniqueName(It.IsAny<string>())).Returns(updatedCategory.Object).Verifiable();
 
             _storyService.Update(story.Object, string.Empty, DateTime.MinValue, "This is a title", "foobar", "This is the description", "foo,bar");
@@ -869,7 +869,7 @@ namespace Kigg.Core.Test
 
         private void Delete()
         {
-            _storyRepository.Setup(r => r.Remove(It.IsAny<IStory>())).Verifiable();
+            _storyRepository.Setup(r => r.Remove(It.IsAny<Story>())).Verifiable();
 
             _storyDeleteEvent = new Mock<StoryDeleteEvent>();
 
@@ -877,12 +877,12 @@ namespace Kigg.Core.Test
             _storyDeleteEvent.Setup(e => e.Publish(It.IsAny<StoryDeleteEventArgs>())).Verifiable();
 
 
-            _storyService.Delete(new Mock<IStory>().Object, new Mock<IUser>().Object);
+            _storyService.Delete(new Mock<Story>().Object, new Mock<User>().Object);
         }
 
-        private void View(Mock<IStory> story)
+        private void View(Mock<Story> story)
         {
-            var user = new Mock<IUser>();
+            var user = new Mock<User>();
 
             story.Setup(s => s.View(It.IsAny<DateTime>(), It.IsAny<string>())).Verifiable();
 
@@ -894,11 +894,11 @@ namespace Kigg.Core.Test
             _storyService.View(story.Object, user.Object, "192.168.0.1");
         }
 
-        private void Promote(Mock<IStory> story)
+        private void Promote(Mock<Story> story)
         {
-            var user = new Mock<IUser>();
+            var user = new Mock<User>();
 
-            story.Setup(s => s.Promote(It.IsAny<DateTime>(), It.IsAny<IUser>(), It.IsAny<string>())).Returns(true).Verifiable();
+            story.Setup(s => s.Promote(It.IsAny<DateTime>(), It.IsAny<User>(), It.IsAny<string>())).Returns(true).Verifiable();
 
             _storyPromoteEvent = new Mock<StoryPromoteEvent>();
 
@@ -908,11 +908,11 @@ namespace Kigg.Core.Test
             _storyService.Promote(story.Object, user.Object, "192.168.0.1");
         }
 
-        private void Demote(Mock<IStory> story)
+        private void Demote(Mock<Story> story)
         {
-            var user = new Mock<IUser>();
+            var user = new Mock<User>();
 
-            story.Setup(s => s.Demote(It.IsAny<DateTime>(), It.IsAny<IUser>())).Returns(true).Verifiable();
+            story.Setup(s => s.Demote(It.IsAny<DateTime>(), It.IsAny<User>())).Returns(true).Verifiable();
 
             _storyDemoteEvent = new Mock<StoryDemoteEvent>();
 
@@ -922,11 +922,11 @@ namespace Kigg.Core.Test
             _storyService.Demote(story.Object, user.Object);
         }
 
-        private void MarkAsSpam(Mock<IStory> story)
+        private void MarkAsSpam(Mock<Story> story)
         {
-            var user = new Mock<IUser>();
+            var user = new Mock<User>();
 
-            story.Setup(s => s.MarkAsSpam(It.IsAny<DateTime>(), It.IsAny<IUser>(), It.IsAny<string>())).Returns(true).Verifiable();
+            story.Setup(s => s.MarkAsSpam(It.IsAny<DateTime>(), It.IsAny<User>(), It.IsAny<string>())).Returns(true).Verifiable();
 
             _storyMarkAsSpamEvent = new Mock<StoryMarkAsSpamEvent>();
 
@@ -936,11 +936,11 @@ namespace Kigg.Core.Test
             _storyService.MarkAsSpam(story.Object, "http://dotnetshoutout.com/A-Dummy-Story", user.Object, "192.168.0.1");
         }
 
-        private void UnmarkAsSpam(Mock<IStory> story)
+        private void UnmarkAsSpam(Mock<Story> story)
         {
-            var user = new Mock<IUser>();
+            var user = new Mock<User>();
 
-            story.Setup(s => s.UnmarkAsSpam(It.IsAny<DateTime>(), It.IsAny<IUser>())).Returns(true).Verifiable();
+            story.Setup(s => s.UnmarkAsSpam(It.IsAny<DateTime>(), It.IsAny<User>())).Returns(true).Verifiable();
 
             _storyUnmarkAsSpamEvent = new Mock<StoryUnmarkAsSpamEvent>();
 
@@ -950,52 +950,52 @@ namespace Kigg.Core.Test
             _storyService.UnmarkAsSpam(story.Object, user.Object);
         }
 
-        private CommentCreateResult Comment(IStory story, IUser user, bool subscribe)
+        private CommentCreateResult Comment(Story story, User user, bool subscribe)
         {
             return Comment(story, user, "This is a dummy comment", subscribe, "192.168.0.1", "A dummy browser");
         }
 
-        private CommentCreateResult Comment(IStory story, IUser user, string content, bool subscribe, string ipAddress, string userAgent)
+        private CommentCreateResult Comment(Story story, User user, string content, bool subscribe, string ipAddress, string userAgent)
         {
             return _storyService.Comment(story, "http://dotnetshoutout.com/A-Dummy-Story", user, content, subscribe, ipAddress, userAgent, null, new NameValueCollection { { "foo", "bar" } });
         }
 
-        private void SpamStory(Mock<IStory> story)
+        private void SpamStory(Mock<Story> story)
         {
-            var postedBy = new Mock<IUser>();
+            var postedBy = new Mock<User>();
 
             story.SetupGet(s => s.PostedBy).Returns(postedBy.Object);
 
-            _storyRepository.Setup(r => r.Remove(It.IsAny<IStory>())).Verifiable();
+            _storyRepository.Setup(r => r.Remove(It.IsAny<Story>())).Verifiable();
 
             _storySpamEvent = new Mock<StorySpamEvent>();
 
             _eventAggregator.Setup(ea => ea.GetEvent<StorySpamEvent>()).Returns(_storySpamEvent.Object).Verifiable();
             _storySpamEvent.Setup(e => e.Publish(It.IsAny<StorySpamEventArgs>())).Verifiable();
 
-            _storyService.Spam(story.Object, "http://dotnetshoutout.com/Dummy-Story", new Mock<IUser>().Object);
+            _storyService.Spam(story.Object, "http://dotnetshoutout.com/Dummy-Story", new Mock<User>().Object);
         }
 
-        private void SpamComment(Mock<IStory> story)
+        private void SpamComment(Mock<Story> story)
         {
-            var postedBy = new Mock<IUser>();
+            var postedBy = new Mock<User>();
 
-            var comment = new Mock<IComment>();
+            var comment = new Mock<Comment>();
             comment.SetupGet(c => c.ByUser).Returns(postedBy.Object);
             comment.SetupGet(c => c.ForStory).Returns(story.Object);
 
-            story.Setup(s => s.DeleteComment(It.IsAny<IComment>())).Verifiable();
+            story.Setup(s => s.DeleteComment(It.IsAny<Comment>())).Verifiable();
 
             _commentSpamEvent = new Mock<CommentSpamEvent>();
             _eventAggregator.Setup(ea => ea.GetEvent<CommentSpamEvent>()).Returns(_commentSpamEvent.Object).Verifiable();
             _commentSpamEvent.Setup(e => e.Publish(It.IsAny<CommentSpamEventArgs>())).Verifiable();
 
-            _storyService.Spam(comment.Object, "http://dotnetshoutout.com/Dummy-Story", new Mock<IUser>().Object);
+            _storyService.Spam(comment.Object, "http://dotnetshoutout.com/Dummy-Story", new Mock<User>().Object);
         }
 
-        private void MarkAsOffended(Mock<IComment> comment)
+        private void MarkAsOffended(Mock<Comment> comment)
         {
-            var postedBy = new Mock<IUser>();
+            var postedBy = new Mock<User>();
 
             comment.SetupGet(c => c.ByUser).Returns(postedBy.Object);
 
@@ -1005,7 +1005,7 @@ namespace Kigg.Core.Test
             _eventAggregator.Setup(ea => ea.GetEvent<CommentMarkAsOffendedEvent>()).Returns(_commentMarkAsOffendedEvent.Object).Verifiable();
             _commentMarkAsOffendedEvent.Setup(e => e.Publish(It.IsAny<CommentMarkAsOffendedEventArgs>())).Verifiable();
 
-            _storyService.MarkAsOffended(comment.Object, "http://dotnetshoutout.com", new Mock<IUser>().Object);
+            _storyService.MarkAsOffended(comment.Object, "http://dotnetshoutout.com", new Mock<User>().Object);
         }
 
         private void Publish()
@@ -1013,27 +1013,27 @@ namespace Kigg.Core.Test
             const int PublishableCount = 40;
             var rnd = new Random();
 
-            var stories = new List<IStory>();
+            var stories = new List<Story>();
 
             for (var i = 1; i <= PublishableCount; i++ )
             {
-                stories.Add(new Mock<IStory>().Object);
+                stories.Add(new Mock<Story>().Object);
             }
 
             _storyRepository.Setup(r => r.CountByPublishable(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(PublishableCount).Verifiable();
-            _storyRepository.Setup(r => r.FindPublishable(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>(stories, PublishableCount)).Verifiable();
+            _storyRepository.Setup(r => r.FindPublishable(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<Story>(stories, PublishableCount)).Verifiable();
 
-            _voteStrategy.Setup(s => s.Calculate(It.IsAny<DateTime>(), It.IsAny<IStory>())).Returns(rnd.Next(2, 100)).Verifiable();
-            _commentStrategy.Setup(s => s.Calculate(It.IsAny<DateTime>(), It.IsAny<IStory>())).Returns(rnd.Next(0, 20)).Verifiable();
-            _viewStrategy.Setup(s => s.Calculate(It.IsAny<DateTime>(), It.IsAny<IStory>())).Returns(rnd.NextDouble()).Verifiable();
-            _userScoreStrategy.Setup(s => s.Calculate(It.IsAny<DateTime>(), It.IsAny<IStory>())).Returns(rnd.Next(1, 300)).Verifiable();
-            _freshnessStrategy.Setup(s => s.Calculate(It.IsAny<DateTime>(), It.IsAny<IStory>())).Returns(rnd.Next(0, 3)).Verifiable();
-            _knownSourceStrategy.Setup(s => s.Calculate(It.IsAny<DateTime>(), It.IsAny<IStory>())).Returns(rnd.Next(0, 5)).Verifiable();
+            _voteStrategy.Setup(s => s.Calculate(It.IsAny<DateTime>(), It.IsAny<Story>())).Returns(rnd.Next(2, 100)).Verifiable();
+            _commentStrategy.Setup(s => s.Calculate(It.IsAny<DateTime>(), It.IsAny<Story>())).Returns(rnd.Next(0, 20)).Verifiable();
+            _viewStrategy.Setup(s => s.Calculate(It.IsAny<DateTime>(), It.IsAny<Story>())).Returns(rnd.NextDouble()).Verifiable();
+            _userScoreStrategy.Setup(s => s.Calculate(It.IsAny<DateTime>(), It.IsAny<Story>())).Returns(rnd.Next(1, 300)).Verifiable();
+            _freshnessStrategy.Setup(s => s.Calculate(It.IsAny<DateTime>(), It.IsAny<Story>())).Returns(rnd.Next(0, 3)).Verifiable();
+            _knownSourceStrategy.Setup(s => s.Calculate(It.IsAny<DateTime>(), It.IsAny<Story>())).Returns(rnd.Next(0, 5)).Verifiable();
 
-            var markAsSpam = new Mock<IMarkAsSpam>();
+            var markAsSpam = new Mock<MarkAsSpam>();
 
-            markAsSpam.Setup(m => m.ByUser).Returns(new Mock<IUser>().Object);
-            _markAsSpamRepository.Setup(s => s.FindAfter(It.IsAny<Guid>(), It.IsAny<DateTime>())).Returns(new[] { markAsSpam.Object }).Verifiable();
+            markAsSpam.Setup(m => m.ByUser).Returns(new Mock<User>().Object);
+            _markAsSpamRepository.Setup(s => s.FindAfter(It.IsAny<long>(), It.IsAny<DateTime>())).Returns(new[] { markAsSpam.Object }).Verifiable();
 
             _storyPublishEvent = new Mock<StoryPublishEvent>();
             _eventAggregator.Setup(ea => ea.GetEvent<StoryPublishEvent>()).Returns(_storyPublishEvent.Object).Verifiable();
@@ -1046,9 +1046,9 @@ namespace Kigg.Core.Test
             _storyService.Publish();
         }
 
-        private void Approve(Mock<IStory> story)
+        private void Approve(Mock<Story> story)
         {
-            var postedBy = new Mock<IUser>();
+            var postedBy = new Mock<User>();
 
             story.SetupGet(s => s.PostedBy).Returns(postedBy.Object);
 
@@ -1058,7 +1058,7 @@ namespace Kigg.Core.Test
             _eventAggregator.Setup(ea => ea.GetEvent<StoryApproveEvent>()).Returns(_storyApproveEvent.Object).Verifiable();
             _storyApproveEvent.Setup(e => e.Publish(It.IsAny<StoryApproveEventArgs>())).Verifiable();
 
-            var byUser = new Mock<IUser>();
+            var byUser = new Mock<User>();
 
             _storyService.Approve(story.Object, "http://dotnetshoutout.com/Dummy-Story", byUser.Object);
         }

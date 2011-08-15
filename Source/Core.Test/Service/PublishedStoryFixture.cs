@@ -12,7 +12,7 @@ namespace Kigg.Core.Test
 
         public PublishedStoryFixture()
         {
-            _publishedStory = new PublishedStory(new Mock<IStory>().Object);
+            _publishedStory = new PublishedStory(new Mock<Story>().Object);
         }
 
         [Fact]

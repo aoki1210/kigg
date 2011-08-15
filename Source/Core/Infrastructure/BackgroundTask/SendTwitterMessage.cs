@@ -125,7 +125,7 @@ namespace Kigg.Infrastructure
             SendMessage(message);
         }
 
-        private void UpdateStatusForStorySubmit(IStory story, string storyUrl)
+        private void UpdateStatusForStorySubmit(Story story, string storyUrl)
         {
             const string Prefix = "NEW: ";
 
@@ -134,7 +134,7 @@ namespace Kigg.Infrastructure
             UpdateStatus(status);
         }
 
-        private void UpdateStatusForStoryPublish(IStory story)
+        private void UpdateStatusForStoryPublish(Story story)
         {
             const string Prefix = "PUBLISHED: ";
 
@@ -184,7 +184,7 @@ namespace Kigg.Infrastructure
             }
         }
 
-        private string BuildStatus(string prefix, IStory story, string storyUrl)
+        private string BuildStatus(string prefix, Story story, string storyUrl)
         {
             var statusBuilder = new StringBuilder();
 

@@ -25,7 +25,7 @@ namespace Kigg.Repository
             _upcomingStoryCacheDurationInMinutes = upcomingStoriesCacheDurationInMinutes;
         }
 
-        public override PagedResult<IStory> FindPublished(int start, int max)
+        public override PagedResult<Story> FindPublished(int start, int max)
         {
             Check.Argument.IsNotNegative(start, "start");
             Check.Argument.IsNotNegative(max, "max");
@@ -35,7 +35,7 @@ namespace Kigg.Repository
             int lastCount = (start + max);
             bool checkCache = (lastCount <= _noOfPublishedStoryCacheCount);
 
-            PagedResult<IStory> result = null;
+            PagedResult<Story> result = null;
 
             if (checkCache)
             {
@@ -55,7 +55,7 @@ namespace Kigg.Repository
             return result;
         }
 
-        public override PagedResult<IStory> FindUpcoming(int start, int max)
+        public override PagedResult<Story> FindUpcoming(int start, int max)
         {
             Check.Argument.IsNotNegative(start, "start");
             Check.Argument.IsNotNegative(max, "max");
@@ -65,7 +65,7 @@ namespace Kigg.Repository
             int lastCount = (start + max);
             bool useCache = (lastCount <= _noOfUpcomingStoryCacheCount);
 
-            PagedResult<IStory> result = null;
+            PagedResult<Story> result = null;
 
             if (useCache)
             {

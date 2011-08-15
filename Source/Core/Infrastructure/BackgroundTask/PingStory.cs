@@ -56,7 +56,7 @@ namespace Kigg.Infrastructure
             SendPing(eventArgs.Story, eventArgs.DetailUrl);
         }
 
-        private void SendPing(IStory story, string detailUrl)
+        private void SendPing(Story story, string detailUrl)
         {
             StoryContent content = _contentService.Get(story.Url);
 

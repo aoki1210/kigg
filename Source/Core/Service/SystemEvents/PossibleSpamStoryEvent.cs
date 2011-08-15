@@ -8,14 +8,14 @@ namespace Kigg.Service
     public class PossibleSpamStoryEventArgs
     {
         [DebuggerStepThrough]
-        public PossibleSpamStoryEventArgs(IStory story, string source, string detailUrl)
+        public PossibleSpamStoryEventArgs(Story story, string source, string detailUrl)
         {
             Story = story;
             Source = source;
             DetailUrl = detailUrl;
         }
 
-        public IStory Story
+        public Story Story
         {
             get;
             private set;

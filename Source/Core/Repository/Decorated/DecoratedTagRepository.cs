@@ -18,49 +18,49 @@
         }
 
         [DebuggerStepThrough]
-        public virtual void Add(ITag entity)
+        public virtual void Add(Tag entity)
         {
             _innerRepository.Add(entity);
         }
 
         [DebuggerStepThrough]
-        public virtual void Remove(ITag entity)
+        public virtual void Remove(Tag entity)
         {
             _innerRepository.Remove(entity);
         }
 
         [DebuggerStepThrough]
-        public virtual ITag FindById(Guid id)
+        public virtual Tag FindById(long id)
         {
             return _innerRepository.FindById(id);
         }
 
         [DebuggerStepThrough]
-        public virtual ITag FindByUniqueName(string uniqueName)
+        public virtual Tag FindByUniqueName(string uniqueName)
         {
             return _innerRepository.FindByUniqueName(uniqueName);
         }
 
         [DebuggerStepThrough]
-        public virtual ITag FindByName(string name)
+        public virtual Tag FindByName(string name)
         {
             return _innerRepository.FindByName(name);
         }
 
         [DebuggerStepThrough]
-        public virtual ICollection<ITag> FindMatching(string name, int max)
+        public virtual ICollection<Tag> FindMatching(string name, int max)
         {
             return _innerRepository.FindMatching(name, max);
         }
 
         [DebuggerStepThrough]
-        public virtual ICollection<ITag> FindByUsage(int top)
+        public virtual ICollection<Tag> FindByUsage(int top)
         {
             return _innerRepository.FindByUsage(top);
         }
 
         [DebuggerStepThrough]
-        public virtual ICollection<ITag> FindAll()
+        public virtual ICollection<Tag> FindAll()
         {
             return _innerRepository.FindAll();
         }

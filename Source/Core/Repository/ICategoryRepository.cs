@@ -4,8 +4,8 @@ namespace Kigg.Repository
 
     using DomainObjects;
 
-    public interface ICategoryRepository : IUniqueNameEntityRepository<ICategory>
+    public interface ICategoryRepository : IUniqueNameEntityRepository<Category>
     {
-        ICollection<ICategory> FindAll();
+        ICollection<Category> FindAll();
     }
 }

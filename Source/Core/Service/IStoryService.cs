@@ -7,32 +7,32 @@ namespace Kigg.Service
 
     public interface IStoryService
     {
-        StoryCreateResult Create(IUser byUser, string url, string title, string category, string description, string tags, string userIPAddress, string userAgent, string urlReferer, NameValueCollection serverVariables, Func<IStory, string> buildDetailUrl);
+        StoryCreateResult Create(User byUser, string url, string title, string category, string description, string tags, string userIPAddress, string userAgent, string urlReferer, NameValueCollection serverVariables, Func<Story, string> buildDetailUrl);
 
-        void Update(IStory theStory, string uniqueName, DateTime createdAt, string title, string category, string description, string tags);
+        void Update(Story theStory, string uniqueName, DateTime createdAt, string title, string category, string description, string tags);
 
-        void Delete(IStory theStory, IUser byUser);
+        void Delete(Story theStory, User byUser);
 
-        void View(IStory theStory, IUser byUser, string fromIPAddress);
+        void View(Story theStory, User byUser, string fromIPAddress);
 
-        void Promote(IStory theStory, IUser byUser, string fromIPAddress);
+        void Promote(Story theStory, User byUser, string fromIPAddress);
 
-        void Demote(IStory theStory, IUser byUser);
+        void Demote(Story theStory, User byUser);
 
-        void MarkAsSpam(IStory theStory, string storyUrl, IUser byUser, string fromIPAddress);
+        void MarkAsSpam(Story theStory, string storyUrl, User byUser, string fromIPAddress);
 
-        void UnmarkAsSpam(IStory theStory, IUser byUser);
+        void UnmarkAsSpam(Story theStory, User byUser);
 
-        CommentCreateResult Comment(IStory forStory, string storyUrl, IUser byUser, string content, bool subscribe, string userIPAddress, string userAgent, string urlReferer, NameValueCollection serverVariables);
+        CommentCreateResult Comment(Story forStory, string storyUrl, User byUser, string content, bool subscribe, string userIPAddress, string userAgent, string urlReferer, NameValueCollection serverVariables);
 
         void Publish();
 
-        void Approve(IStory theStory, string storyUrl, IUser byUser);
+        void Approve(Story theStory, string storyUrl, User byUser);
 
-        void Spam(IStory theStory, string storyUrl, IUser byUser);
+        void Spam(Story theStory, string storyUrl, User byUser);
 
-        void Spam(IComment theComment, string storyUrl, IUser byUser);
+        void Spam(Comment theComment, string storyUrl, User byUser);
 
-        void MarkAsOffended(IComment theComment, string storyUrl, IUser byUser);
+        void MarkAsOffended(Comment theComment, string storyUrl, User byUser);
     }
 }

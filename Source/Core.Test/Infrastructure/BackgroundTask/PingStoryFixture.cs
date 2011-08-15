@@ -114,12 +114,12 @@ namespace Kigg.Core.Test
         {
             var story = Setup();
 
-            _pingStory.StoryApproved(new StoryApproveEventArgs(story.Object, new Mock<IUser>().Object, "http://dotnetshoutout.com/Dummy-Title"));
+            _pingStory.StoryApproved(new StoryApproveEventArgs(story.Object, new Mock<User>().Object, "http://dotnetshoutout.com/Dummy-Title"));
         }
 
-        private Mock<IStory> Setup()
+        private Mock<Story> Setup()
         {
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
 
             story.SetupGet(s => s.Title).Returns("Dummy Title");
 

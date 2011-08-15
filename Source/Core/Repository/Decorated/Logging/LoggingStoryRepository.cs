@@ -11,7 +11,7 @@ namespace Kigg.Repository
         {
         }
 
-        public override void Add(IStory entity)
+        public override void Add(Story entity)
         {
             Check.Argument.IsNotNull(entity, "entity");
 
@@ -20,7 +20,7 @@ namespace Kigg.Repository
             Log.Info("Story added: {0}, {1}", entity.Id, entity.Title);
         }
 
-        public override void Remove(IStory entity)
+        public override void Remove(Story entity)
         {
             Check.Argument.IsNotNull(entity, "entity");
 
@@ -29,9 +29,9 @@ namespace Kigg.Repository
             Log.Warning("Story removed: {0}, {1}", entity.Id, entity.Title);
         }
 
-        public override IStory FindById(Guid id)
+        public override Story FindById(long id)
         {
-            Check.Argument.IsNotEmpty(id, "id");
+            //Check.Argument.IsNotEmpty(id, "id");
 
             Log.Info("Retrieving story with id: {0}", id);
 
@@ -49,7 +49,7 @@ namespace Kigg.Repository
             return result;
         }
 
-        public override IStory FindByUniqueName(string uniqueName)
+        public override Story FindByUniqueName(string uniqueName)
         {
             Check.Argument.IsNotEmpty(uniqueName, "uniqueName");
 
@@ -69,7 +69,7 @@ namespace Kigg.Repository
             return result;
         }
 
-        public override IStory FindByUrl(string url)
+        public override Story FindByUrl(string url)
         {
             Check.Argument.IsNotInvalidWebUrl(url, "url");
 
@@ -89,7 +89,7 @@ namespace Kigg.Repository
             return result;
         }
 
-        public override PagedResult<IStory> FindPublished(int start, int max)
+        public override PagedResult<Story> FindPublished(int start, int max)
         {
             Check.Argument.IsNotNegative(start, "start");
             Check.Argument.IsNotNegative(max, "max");
@@ -110,9 +110,9 @@ namespace Kigg.Repository
             return pagedResult;
         }
 
-        public override PagedResult<IStory> FindPublishedByCategory(Guid categoryId, int start, int max)
+        public override PagedResult<Story> FindPublishedByCategory(long categoryId, int start, int max)
         {
-            Check.Argument.IsNotEmpty(categoryId, "categoryId");
+            //Check.Argument.IsNotEmpty(categoryId, "categoryId");
             Check.Argument.IsNotNegative(start, "start");
             Check.Argument.IsNotNegative(max, "max");
 
@@ -132,7 +132,7 @@ namespace Kigg.Repository
             return pagedResult;
         }
 
-        public override PagedResult<IStory> FindUpcoming(int start, int max)
+        public override PagedResult<Story> FindUpcoming(int start, int max)
         {
             Check.Argument.IsNotNegative(start, "start");
             Check.Argument.IsNotNegative(max, "max");
@@ -153,7 +153,7 @@ namespace Kigg.Repository
             return pagedResult;
         }
 
-        public override PagedResult<IStory> FindNew(int start, int max)
+        public override PagedResult<Story> FindNew(int start, int max)
         {
             Check.Argument.IsNotNegative(start, "start");
             Check.Argument.IsNotNegative(max, "max");
@@ -174,7 +174,7 @@ namespace Kigg.Repository
             return pagedResult;
         }
 
-        public override PagedResult<IStory> FindUnapproved(int start, int max)
+        public override PagedResult<Story> FindUnapproved(int start, int max)
         {
             Check.Argument.IsNotNegative(start, "start");
             Check.Argument.IsNotNegative(max, "max");
@@ -195,7 +195,7 @@ namespace Kigg.Repository
             return pagedResult;
         }
 
-        public override PagedResult<IStory> FindPublishable(DateTime minimumDate, DateTime maximumDate, int start, int max)
+        public override PagedResult<Story> FindPublishable(DateTime minimumDate, DateTime maximumDate, int start, int max)
         {
             Check.Argument.IsNotInFuture(minimumDate, "minimumDate");
             Check.Argument.IsNotInFuture(maximumDate, "maximumDate");
@@ -218,9 +218,9 @@ namespace Kigg.Repository
             return pagedResult;
         }
 
-        public override PagedResult<IStory> FindByTag(Guid tagId, int start, int max)
+        public override PagedResult<Story> FindByTag(long tagId, int start, int max)
         {
-            Check.Argument.IsNotEmpty(tagId, "tagId");
+            //Check.Argument.IsNotEmpty(tagId, "tagId");
             Check.Argument.IsNotNegative(start, "start");
             Check.Argument.IsNotNegative(max, "max");
 
@@ -240,7 +240,7 @@ namespace Kigg.Repository
             return pagedResult;
         }
 
-        public override PagedResult<IStory> Search(string query, int start, int max)
+        public override PagedResult<Story> Search(string query, int start, int max)
         {
             Check.Argument.IsNotEmpty(query, "query");
             Check.Argument.IsNotNegative(start, "start");
@@ -262,9 +262,9 @@ namespace Kigg.Repository
             return pagedResult;
         }
 
-        public override PagedResult<IStory> FindPostedByUser(Guid userId, int start, int max)
+        public override PagedResult<Story> FindPostedByUser(long userId, int start, int max)
         {
-            Check.Argument.IsNotEmpty(userId, "userId");
+            //Check.Argument.IsNotEmpty(userId, "userId");
             Check.Argument.IsNotNegative(start, "start");
             Check.Argument.IsNotNegative(max, "max");
 
@@ -284,9 +284,9 @@ namespace Kigg.Repository
             return pagedResult;
         }
 
-        public override PagedResult<IStory> FindPromotedByUser(Guid userId, int start, int max)
+        public override PagedResult<Story> FindPromotedByUser(long userId, int start, int max)
         {
-            Check.Argument.IsNotEmpty(userId, "userId");
+            //Check.Argument.IsNotEmpty(userId, "userId");
             Check.Argument.IsNotNegative(start, "start");
             Check.Argument.IsNotNegative(max, "max");
 
@@ -306,9 +306,9 @@ namespace Kigg.Repository
             return pagedResult;
         }
 
-        public override PagedResult<IStory> FindCommentedByUser(Guid userId, int start, int max)
+        public override PagedResult<Story> FindCommentedByUser(long userId, int start, int max)
         {
-            Check.Argument.IsNotEmpty(userId, "userId");
+            //Check.Argument.IsNotEmpty(userId, "userId");
             Check.Argument.IsNotNegative(start, "start");
             Check.Argument.IsNotNegative(max, "max");
 
@@ -350,9 +350,9 @@ namespace Kigg.Repository
             return result;
         }
 
-        public override int CountByCategory(Guid categoryId)
+        public override int CountByCategory(long categoryId)
         {
-            Check.Argument.IsNotEmpty(categoryId, "categoryId");
+            //Check.Argument.IsNotEmpty(categoryId, "categoryId");
 
             Log.Info("Retrieving count for category : {0}", categoryId);
 
@@ -363,9 +363,9 @@ namespace Kigg.Repository
             return result;
         }
 
-        public override int CountByTag(Guid tagId)
+        public override int CountByTag(long tagId)
         {
-            Check.Argument.IsNotEmpty(tagId, "tagId");
+            //Check.Argument.IsNotEmpty(tagId, "tagId");
 
             Log.Info("Retrieving count for tag : {0}", tagId);
 
@@ -412,7 +412,7 @@ namespace Kigg.Repository
             return result;
         }
 
-        public override int CountPostedByUser(Guid userId)
+        public override int CountPostedByUser(long userId)
         {
             Log.Info("Retrieving posted by user count: {0}".FormatWith(userId));
 

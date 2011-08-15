@@ -8,20 +8,20 @@ namespace Kigg.Service
     public class StoryApproveEventArgs
     {
         [DebuggerStepThrough]
-        public StoryApproveEventArgs(IStory story, IUser user, string detailUrl)
+        public StoryApproveEventArgs(Story story, User user, string detailUrl)
         {
             Story = story;
             User = user;
             DetailUrl = detailUrl;
         }
 
-        public IStory Story
+        public Story Story
         {
             get;
             private set;
         }
 
-        public IUser User
+        public User User
         {
             get;
             private set;

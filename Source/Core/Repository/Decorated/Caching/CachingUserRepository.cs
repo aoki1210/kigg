@@ -22,9 +22,9 @@ namespace Kigg.Repository
             _userCacheDurationInMinutes = userCacheDurationInMinutes;
         }
 
-        public override decimal FindScoreById(Guid id, DateTime startTimestamp, DateTime endTimestamp)
+        public override decimal FindScoreById(long id, DateTime startTimestamp, DateTime endTimestamp)
         {
-            Check.Argument.IsNotEmpty(id, "id");
+            //Check.Argument.IsNotEmpty(id, "id");
             Check.Argument.IsNotInFuture(startTimestamp, "startTimestamp");
             Check.Argument.IsNotInFuture(endTimestamp, "endTimestamp");
 
@@ -46,7 +46,7 @@ namespace Kigg.Repository
             return score;
         }
 
-        public override PagedResult<IUser> FindTop(DateTime startTimestamp, DateTime endTimestamp, int start, int max)
+        public override PagedResult<User> FindTop(DateTime startTimestamp, DateTime endTimestamp, int start, int max)
         {
             Check.Argument.IsNotInFuture(startTimestamp, "startTimestamp");
             Check.Argument.IsNotInFuture(endTimestamp, "endTimestamp");
@@ -58,7 +58,7 @@ namespace Kigg.Repository
             int lastCount = (start + max);
             bool useCache = (lastCount <= _noOfUsersCacheCount);
 
-            PagedResult<IUser> result = null;
+            PagedResult<User> result = null;
 
             if (useCache)
             {

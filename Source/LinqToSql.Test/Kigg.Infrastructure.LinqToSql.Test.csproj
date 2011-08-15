@@ -153,10 +153,6 @@
       <Project>{04A61455-9656-4E67-A8D6-9FBA348F0FB3}</Project>
       <Name>Kigg.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\LinqToSql\Kigg.Infrastructure.LinqToSql.csproj">
-      <Project>{49CDCCC2-2C02-4DF1-9234-246D974D2B2D}</Project>
-      <Name>Kigg.Infrastructure.LinqToSql</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Test.Infrastructure\Kigg.Test.Infrastructure.csproj">
       <Project>{880A0F43-4A21-4A6E-BCA7-4094F0FB38AB}</Project>
       <Name>Kigg.Test.Infrastructure</Name>

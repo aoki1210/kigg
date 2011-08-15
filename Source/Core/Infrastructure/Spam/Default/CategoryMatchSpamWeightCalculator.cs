@@ -22,7 +22,7 @@ namespace Kigg.Infrastructure
 
             content = content.StripHtml().ToUpperInvariant();
 
-            foreach (ICategory category in _categoryRepository.FindAll())
+            foreach (Category category in _categoryRepository.FindAll())
             {
                 if (content.Contains(category.Name.ToUpperInvariant()))
                 {

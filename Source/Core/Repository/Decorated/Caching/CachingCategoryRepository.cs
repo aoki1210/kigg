@@ -16,11 +16,11 @@ namespace Kigg.Repository
             _cacheDurationInMinutes = cacheDurationInMinutes;
         }
 
-        public override ICollection<ICategory> FindAll()
+        public override ICollection<Category> FindAll()
         {
             const string CacheKey = "categories:All";
 
-            ICollection<ICategory> result;
+            ICollection<Category> result;
 
             Cache.TryGet(CacheKey, out result);
 

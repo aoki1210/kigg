@@ -9,75 +9,75 @@ namespace Kigg.Core.Test
 
     public abstract class DecoratedRepositoryFixture : BaseFixture
     {
-        protected static IUser CreateStubUser()
+        protected static User CreateStubUser()
         {
-            var user = new Mock<IUser>();
+            var user = new Mock<User>();
 
-            user.SetupGet(u => u.Id).Returns(Guid.NewGuid());
+            user.SetupGet(u => u.Id).Returns(1);
             user.SetupGet(u => u.UserName).Returns("Stub");
             user.SetupGet(u => u.Email).Returns("stub@tdd.com");
 
             return user.Object;
         }
 
-        protected static ICategory CreateStubCategory()
+        protected static Category CreateStubCategory()
         {
-            var category = new Mock<ICategory>();
+            var category = new Mock<Category>();
 
-            category.SetupGet(c => c.Id).Returns(Guid.NewGuid());
+            category.SetupGet(c => c.Id).Returns(1);
             category.SetupGet(c => c.Name).Returns("Stub");
 
             return category.Object;
         }
 
-        protected static ITag CreateStubTag()
+        protected static Tag CreateStubTag()
         {
-            var tag = new Mock<ITag>();
+            var tag = new Mock<Tag>();
 
-            tag.SetupGet(t => t.Id).Returns(Guid.NewGuid());
+            tag.SetupGet(t => t.Id).Returns(1);
             tag.SetupGet(t => t.Name).Returns("Stub");
 
             return tag.Object;
         }
 
-        protected static IStory CreateStubStory()
+        protected static Story CreateStubStory()
         {
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
 
-            story.SetupGet(s => s.Id).Returns(Guid.NewGuid());
+            story.SetupGet(s => s.Id).Returns(1);
             story.SetupGet(s => s.Title).Returns("Stub");
             story.SetupGet(s => s.BelongsTo).Returns(CreateStubCategory());
 
             return story.Object;
         }
 
-        protected static IComment CreateStubComment()
+        protected static Comment CreateStubComment()
         {
-            var comment = new Mock<IComment>();
+            var comment = new Mock<Comment>();
 
-            comment.SetupGet(c => c.Id).Returns(Guid.NewGuid());
+            comment.SetupGet(c => c.Id).Returns(1);
             comment.SetupGet(c => c.ForStory).Returns(CreateStubStory());
 
             return comment.Object;
         }
 
-        protected static IVote CreateStubVote()
+        protected static Vote CreateStubVote()
         {
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
 
             story.SetupGet(s => s.Title).Returns("Stub Title");
             story.SetupGet(s => s.Url).Returns("Stub Url");
 
-            var vote = new Mock<IVote>();
+            var vote = new Mock<Vote>();
 
             vote.SetupGet(v => v.ForStory).Returns(story.Object);
 
             return vote.Object;
         }
 
-        protected static IKnownSource CreateStubKnownSource()
+        protected static KnownSource CreateStubKnownSource()
         {
-            var knownSource = new Mock<IKnownSource>();
+            var knownSource = new Mock<KnownSource>();
 
             knownSource.SetupGet(ks => ks.Url).Returns("http://knownsoure.com");
             knownSource.SetupGet(ks => ks.Grade).Returns(KnownSourceGrade.A);

@@ -60,18 +60,18 @@ namespace Kigg.Core.Test
 
         public void FindUpcoming()
         {
-            cache.Setup(c => c.Set(It.IsAny<string>(), It.IsAny<PagedResult<IStory>>(), It.IsAny<DateTime>())).Verifiable();
+            cache.Setup(c => c.Set(It.IsAny<string>(), It.IsAny<PagedResult<Story>>(), It.IsAny<DateTime>())).Verifiable();
 
-            _innerRepository.Setup(r => r.FindUpcoming(It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>(new List<IStory> { CreateStubStory() }, 1)).Verifiable();
+            _innerRepository.Setup(r => r.FindUpcoming(It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<Story>(new List<Story> { CreateStubStory() }, 1)).Verifiable();
 
             _repository.FindUpcoming(0, 10);
         }
 
         private void FindPublished()
         {
-            cache.Setup(c => c.Set(It.IsAny<string>(), It.IsAny<PagedResult<IStory>>(), It.IsAny<DateTime>())).Verifiable();
+            cache.Setup(c => c.Set(It.IsAny<string>(), It.IsAny<PagedResult<Story>>(), It.IsAny<DateTime>())).Verifiable();
 
-            _innerRepository.Setup(r => r.FindPublished(It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<IStory>(new List<IStory> { CreateStubStory() }, 1)).Verifiable();
+            _innerRepository.Setup(r => r.FindPublished(It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<Story>(new List<Story> { CreateStubStory() }, 1)).Verifiable();
 
             _repository.FindPublished(0, 10);
         }

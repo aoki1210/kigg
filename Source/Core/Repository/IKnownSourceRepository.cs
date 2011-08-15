@@ -2,8 +2,8 @@ namespace Kigg.Repository
 {
     using DomainObjects;
 
-    public interface IKnownSourceRepository : IRepository<IKnownSource>
+    public interface IKnownSourceRepository : IRepository<KnownSource>
     {
-        IKnownSource FindMatching(string url);
+        KnownSource FindMatching(string url);
     }
 }

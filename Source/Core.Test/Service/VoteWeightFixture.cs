@@ -59,32 +59,32 @@ namespace Kigg.Core.Test
             _repository.Verify();
         }
 
-        private Mock<IStory> Setup(string ownerIp, params string[] promoterIps)
+        private Mock<Story> Setup(string ownerIp, params string[] promoterIps)
         {
-            var ownerId = Guid.NewGuid();
+            var ownerId = 1;
 
-            var story = new Mock<IStory>();
-            var owner = new Mock<IUser>();
+            var story = new Mock<Story>();
+            var owner = new Mock<User>();
 
             owner.SetupGet(u => u.Id).Returns(ownerId);
             story.SetupGet(s => s.PostedBy).Returns(owner.Object);
             story.SetupGet(s => s.FromIPAddress).Returns(ownerIp);
 
-            var votes = new List<IVote>();
+            var votes = new List<Vote>();
 
             foreach (string ip in promoterIps)
             {
-                var promoter = new Mock<IUser>();
-                promoter.SetupGet(u => u.Id).Returns(Guid.NewGuid());
+                var promoter = new Mock<User>();
+                promoter.SetupGet(u => u.Id).Returns(1);
 
-                var vote = new Mock<IVote>();
+                var vote = new Mock<Vote>();
                 vote.SetupGet(c => c.FromIPAddress).Returns(ip);
                 vote.SetupGet(c => c.ByUser).Returns(promoter.Object);
 
                 votes.Add(vote.Object);
             }
 
-            _repository.Setup(r => r.FindAfter(It.IsAny<Guid>(), It.IsAny<DateTime>())).Returns(votes).Verifiable();
+            _repository.Setup(r => r.FindAfter(It.IsAny<long>(), It.IsAny<DateTime>())).Returns(votes).Verifiable();
 
             return story;
         }

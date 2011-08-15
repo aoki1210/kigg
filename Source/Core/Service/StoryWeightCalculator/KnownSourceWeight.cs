@@ -16,11 +16,11 @@ namespace Kigg.Service
             _repository = repository;
         }
 
-        public override double Calculate(DateTime publishingTimestamp, IStory story)
+        public override double Calculate(DateTime publishingTimestamp, Story story)
         {
             Check.Argument.IsNotNull(story, "story");
 
-            IKnownSource knownSource = _repository.FindMatching(story.Url);
+            KnownSource knownSource = _repository.FindMatching(story.Url);
             KnownSourceGrade grade = (knownSource == null) ? KnownSourceGrade.None : knownSource.Grade;
 
             return (int) grade;
