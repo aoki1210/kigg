@@ -8,20 +8,20 @@ namespace Kigg.Service
     public class CommentSpamEventArgs
     {
         [DebuggerStepThrough]
-        public CommentSpamEventArgs(IComment comment, IUser user, string detailUrl)
+        public CommentSpamEventArgs(Comment comment, User user, string detailUrl)
         {
             Comment = comment;
             User = user;
             DetailUrl = detailUrl;
         }
 
-        public IComment Comment
+        public Comment Comment
         {
             get;
             private set;
         }
 
-        public IUser User
+        public User User
         {
             get;
             private set;

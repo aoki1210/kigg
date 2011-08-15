@@ -4,8 +4,8 @@ namespace Kigg.Service
 
     public interface ISpamPostprocessor
     {
-        void Process(string source, bool isSpam, string detailUrl, IStory story);
+        void Process(string source, bool isSpam, string detailUrl, Story story);
 
-        void Process(string source, bool isSpam, string detailUrl, IComment comment);
+        void Process(string source, bool isSpam, string detailUrl, Comment comment);
     }
 }

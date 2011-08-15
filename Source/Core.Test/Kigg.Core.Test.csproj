@@ -111,7 +111,6 @@
     <Compile Include="..\SharedFiles\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Extension\CategoryExtensionFixture.cs" />
     <Compile Include="Extension\CollectionExtensionFixture.cs" />
     <Compile Include="Extension\TagExtensionFixture.cs" />
     <Compile Include="Extension\DateTimeExtensionFixture.cs" />

@@ -11,48 +11,48 @@
     public static class StoryExtension
     {
         [DebuggerStepThrough]
-        public static int GetViewCount(this IStory forStory)
+        public static int GetViewCount(this Story forStory)
         {
             Check.Argument.IsNotNull(forStory, "forStory");
             return GetCount<IStoryViewRepository>(forStory.Id);
         }
 
         [DebuggerStepThrough]
-        public static int GetVoteCount(this IStory forStory)
+        public static int GetVoteCount(this Story forStory)
         {
             Check.Argument.IsNotNull(forStory, "forStory");
             return GetCount<IVoteRepository>(forStory.Id);
         }
 
         [DebuggerStepThrough]
-        public static int GetMarkAsSpamCount(this IStory forStory)
+        public static int GetMarkAsSpamCount(this Story forStory)
         {
             Check.Argument.IsNotNull(forStory, "forStory");
             return GetCount<IMarkAsSpamRepository>(forStory.Id);
         }
 
         [DebuggerStepThrough]
-        public static int GetCommentCount(this IStory forStory)
+        public static int GetCommentCount(this Story forStory)
         {
             Check.Argument.IsNotNull(forStory, "forStory");
             return GetCount<ICommentRepository>(forStory.Id);
         }
 
         [DebuggerStepThrough]
-        public static int GetSubscriberCount(this IStory forStory)
+        public static int GetSubscriberCount(this Story forStory)
         {
             Check.Argument.IsNotNull(forStory, "forStory");
             return GetCount<ICommentSubscribtionRepository>(forStory.Id);
         }
 
         [DebuggerStepThrough]
-        private static int GetCount<T>(Guid storyId) where T : class, ICountByStoryRepository
+        private static int GetCount<T>(long storyId) where T : class, ICountByStoryRepository
         {
             return IoC.Resolve<T>().CountByStory(storyId);
         }
 
         [DebuggerStepThrough]
-        public static IStoryView AddView(this IStory forStory, DateTime at, string fromIpAddress)
+        public static StoryView AddView(this Story forStory, DateTime at, string fromIpAddress)
         {
             Check.Argument.IsNotNull(forStory, "forStory");
             Check.Argument.IsNotInvalidDate(at, "at");
@@ -65,7 +65,7 @@
         }
 
         [DebuggerStepThrough]
-        public static IVote AddVote(this IStory forStory, DateTime at, IUser byUser, string fromIpAddress)
+        public static Vote AddVote(this Story forStory, DateTime at, User byUser, string fromIpAddress)
         {
             Check.Argument.IsNotNull(forStory, "forStory");
             Check.Argument.IsNotInFuture(at, "at");
@@ -79,7 +79,7 @@
         }
 
         [DebuggerStepThrough]
-        public static void RemoveVote(this IStory fromStory, IVote vote)
+        public static void RemoveVote(this Story fromStory, Vote vote)
         {
             Check.Argument.IsNotNull(fromStory, "fromStory");
             Check.Argument.IsNotNull(vote, "vote");
@@ -87,7 +87,7 @@
         }
 
         [DebuggerStepThrough]
-        public static IVote GetVote(this IStory forStory,IUser byUser)
+        public static Vote GetVote(this Story forStory,User byUser)
         {
             Check.Argument.IsNotNull(forStory, "forStory");
             Check.Argument.IsNotNull(byUser, "byUser");
@@ -95,7 +95,7 @@
         }
 
         [DebuggerStepThrough]
-        public static IMarkAsSpam MarkSpam(this IStory forStory, DateTime at, IUser byUser, string fromIpAddress)
+        public static MarkAsSpam MarkSpam(this Story forStory, DateTime at, User byUser, string fromIpAddress)
         {
             Check.Argument.IsNotNull(forStory, "forStory");
             Check.Argument.IsNotInFuture(at, "at");
@@ -109,7 +109,7 @@
         }
 
         [DebuggerStepThrough]
-        public static void UnmarkSpam(this IStory forStory, IMarkAsSpam spam)
+        public static void UnmarkSpam(this Story forStory, MarkAsSpam spam)
         {
             Check.Argument.IsNotNull(forStory, "forStory");
             Check.Argument.IsNotNull(spam, "spam");
@@ -117,7 +117,7 @@
         }
 
         [DebuggerStepThrough]
-        public static IMarkAsSpam GetMarkAsSpam(this IStory forStory, IUser byUser)
+        public static MarkAsSpam GetMarkAsSpam(this Story forStory, User byUser)
         {
             Check.Argument.IsNotNull(forStory, "forStory");
             Check.Argument.IsNotNull(byUser, "byUser");
@@ -125,7 +125,7 @@
         }
 
         [DebuggerStepThrough]
-        public static IComment AddComment(this IStory forStory, string content, DateTime at, IUser byUser, string fromIpAddress)
+        public static Comment AddComment(this Story forStory, string content, DateTime at, User byUser, string fromIpAddress)
         {
             var comment = IoC.Resolve<IDomainObjectFactory>().CreateComment(forStory, content, at, byUser, fromIpAddress);
             IoC.Resolve<ICommentRepository>().Add(comment);
@@ -133,15 +133,15 @@
         }
 
         [DebuggerStepThrough]
-        public static IComment GetComment(this IStory forStory, Guid commentId)
+        public static Comment GetComment(this Story forStory, long commentId)
         {
             Check.Argument.IsNotNull(forStory, "forStory");
-            Check.Argument.IsNotEmpty(commentId, "commentId");
+            //Check.Argument.IsNotEmpty(commentId, "commentId");
             return IoC.Resolve<ICommentRepository>().FindById(forStory.Id, commentId);
         }
 
         [DebuggerStepThrough]
-        public static void RemoveComment(this IStory forStory, IComment comment)
+        public static void RemoveComment(this Story forStory, Comment comment)
         {
             Check.Argument.IsNotNull(forStory, "forStory");
             Check.Argument.IsNotNull(comment, "comment");
@@ -149,7 +149,7 @@
         }
 
         [DebuggerStepThrough]
-        public static ICommentSubscribtion GetCommentSubscribtion(this IStory forStory, IUser theUser)
+        public static CommentSubscribtion GetCommentSubscribtion(this Story forStory, User theUser)
         {
             Check.Argument.IsNotNull(forStory, "forStory");
             Check.Argument.IsNotNull(theUser, "theUser");
@@ -157,7 +157,7 @@
         }
 
         [DebuggerStepThrough]
-        public static ICommentSubscribtion AddCommentSubscribtion(this IStory forStory, IUser byUser)
+        public static CommentSubscribtion AddCommentSubscribtion(this Story forStory, User byUser)
         {
             Check.Argument.IsNotNull(forStory, "forStory");
             Check.Argument.IsNotNull(byUser, "byUser");
@@ -173,7 +173,7 @@
         }
 
         [DebuggerStepThrough]
-        public static ICommentSubscribtion RemoveCommentSubscribtion(this IStory forStory, IUser byUser)
+        public static CommentSubscribtion RemoveCommentSubscribtion(this Story forStory, User byUser)
         {
             Check.Argument.IsNotNull(forStory, "forStory");
             Check.Argument.IsNotNull(byUser, "byUser");

@@ -8,13 +8,13 @@ namespace Kigg.Service
     public class CommentSubmitEventArgs
     {
         [DebuggerStepThrough]
-        public CommentSubmitEventArgs(IComment comment, string detailUrl)
+        public CommentSubmitEventArgs(Comment comment, string detailUrl)
         {
             Comment = comment;
             DetailUrl = detailUrl;
         }
 
-        public IComment Comment
+        public Comment Comment
         {
             get;
             private set;

@@ -8,12 +8,12 @@ namespace Kigg.Service
     public class UserActivateEventArgs
     {
         [DebuggerStepThrough]
-        public UserActivateEventArgs(IUser user)
+        public UserActivateEventArgs(User user)
         {
             User = user;
         }
 
-        public IUser User
+        public User User
         {
             get;
             private set;

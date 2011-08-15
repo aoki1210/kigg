@@ -21,7 +21,7 @@ namespace Kigg.Service
             _storyRepository = storyRepository;
         }
 
-        public void Process(string source, bool isSpam, string detailUrl, IStory story)
+        public void Process(string source, bool isSpam, string detailUrl, Story story)
         {
             Check.Argument.IsNotEmpty(source, "source");
             Check.Argument.IsNotEmpty(detailUrl, "detailUrl");
@@ -44,13 +44,13 @@ namespace Kigg.Service
             }
         }
 
-        public void Process(string source, bool isSpam, string detailUrl, IComment comment)
+        public void Process(string source, bool isSpam, string detailUrl, Comment comment)
         {
             Check.Argument.IsNotEmpty(source, "source");
             Check.Argument.IsNotEmpty(detailUrl, "detailUrl");
             Check.Argument.IsNotNull(comment, "story");
 
-            IStory story = _storyRepository.FindById(comment.ForStory.Id);
+            Story story = _storyRepository.FindById(comment.ForStory.Id);
             comment = story.FindComment(comment.Id);
 
             if (isSpam)

@@ -18,57 +18,57 @@ namespace Kigg.Repository
         }
 
         [DebuggerStepThrough]
-        public virtual void Add(IUser entity)
+        public virtual void Add(User entity)
         {
             _innerRepository.Add(entity);
         }
 
         [DebuggerStepThrough]
-        public virtual void Remove(IUser entity)
+        public virtual void Remove(User entity)
         {
             _innerRepository.Remove(entity);
         }
 
         [DebuggerStepThrough]
-        public virtual IUser FindById(Guid id)
+        public virtual User FindById(long id)
         {
             return _innerRepository.FindById(id);
         }
 
         [DebuggerStepThrough]
-        public virtual IUser FindByUserName(string userName)
+        public virtual User FindByUserName(string userName)
         {
             return _innerRepository.FindByUserName(userName);
         }
 
         [DebuggerStepThrough]
-        public virtual IUser FindByEmail(string email)
+        public virtual User FindByEmail(string email)
         {
             return _innerRepository.FindByEmail(email);
         }
 
         [DebuggerStepThrough]
-        public virtual decimal FindScoreById(Guid id, DateTime startTimestamp, DateTime endTimestamp)
+        public virtual decimal FindScoreById(long id, DateTime startTimestamp, DateTime endTimestamp)
         {
             return _innerRepository.FindScoreById(id, startTimestamp, endTimestamp);
         }
 
         [DebuggerStepThrough]
-        public virtual PagedResult<IUser> FindTop(DateTime startTimestamp, DateTime endTimestamp, int start, int max)
+        public virtual PagedResult<User> FindTop(DateTime startTimestamp, DateTime endTimestamp, int start, int max)
         {
             return _innerRepository.FindTop(startTimestamp, endTimestamp, start, max);
         }
 
         [DebuggerStepThrough]
-        public virtual PagedResult<IUser> FindAll(int start, int max)
+        public virtual PagedResult<User> FindAll(int start, int max)
         {
             return _innerRepository.FindAll(start, max);
         }
 
         [DebuggerStepThrough]
-        public virtual ICollection<string> FindIPAddresses(Guid id)
+        public virtual ICollection<string> FindIPAddresses(long id)
         {
-            Check.Argument.IsNotEmpty(id, "id");
+            //Check.Argument.IsNotEmpty(id, "id");
 
             return _innerRepository.FindIPAddresses(id);
         }

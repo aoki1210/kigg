@@ -4,7 +4,7 @@ namespace Kigg.Service
 
     public class StoryCreateResult : BaseServiceResult
     {
-        public IStory NewStory
+        public Story NewStory
         {
             get;
             set;

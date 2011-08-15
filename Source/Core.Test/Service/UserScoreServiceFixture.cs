@@ -15,7 +15,7 @@ namespace Kigg.Core.Test
     public class UserScoreServiceFixture : BaseFixture
     {
         private readonly Mock<IEventAggregator> _eventAggregator;
-        private readonly Mock<IUser> _user;
+        private readonly Mock<User> _user;
         private readonly UserScoreService _userScoreService;
 
         public UserScoreServiceFixture()
@@ -34,9 +34,9 @@ namespace Kigg.Core.Test
             userScoreTable.SetupGet(us => us.StoryIncorrectlyMarkedAsSpam).Returns(1);
             userScoreTable.SetupGet(us => us.SpamCommentSubmitted).Returns(5);
 
-            _user = new Mock<IUser>();
+            _user = new Mock<User>();
 
-            _user.SetupGet(u => u.Id).Returns(Guid.NewGuid());
+            _user.SetupGet(u => u.Id).Returns(1);
             _user.SetupGet(u => u.Role).Returns(Roles.User);
 
             _eventAggregator = new Mock<IEventAggregator>();
@@ -59,7 +59,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void StorySubmitted_Should_Increase_Score()
         {
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
 
             story.SetupGet(s => s.PostedBy).Returns(_user.Object);
 
@@ -141,7 +141,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void CommentSubmitted_Should_Increase_Score_When_Story_Has_Not_Expired()
         {
-            var comment = new Mock<IComment>();
+            var comment = new Mock<Comment>();
             var story = MockStory();
 
             comment.SetupGet(c => c.ForStory).Returns(story.Object);
@@ -154,7 +154,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void StoryDeleted_Should_Decreasase_Score()
         {
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
 
             PrepareStoryToRemove(story);
             story.SetupGet(s => s.PostedBy).Returns(_user.Object);
@@ -171,7 +171,7 @@ namespace Kigg.Core.Test
 
             for(int i = 0; i < 5; i++)
             {
-                var story = new Mock<IStory>();
+                var story = new Mock<Story>();
                 story.SetupGet(s => s.PostedBy).Returns(_user.Object);
                 stories.Add(new PublishedStory(story.Object));
             }
@@ -183,7 +183,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void StorySpammed_Should_Decreasase_Score()
         {
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
 
             PrepareStoryToRemove(story);
             story.SetupGet(s => s.PostedBy).Returns(_user.Object);
@@ -197,14 +197,14 @@ namespace Kigg.Core.Test
         public void StoryIncorrectlyMarkedAsSpam_Should_Decrease_Score()
         {
             _user.Setup(u => u.DecreaseScoreBy(It.IsAny<decimal>(), UserAction.StoryIncorrectlyMarkedAsSpam)).Verifiable();
-            _userScoreService.StoryIncorrectlyMarkedAsSpam(new StoryIncorrectlyMarkedAsSpamEventArgs(new Mock<IStory>().Object, _user.Object));
+            _userScoreService.StoryIncorrectlyMarkedAsSpam(new StoryIncorrectlyMarkedAsSpamEventArgs(new Mock<Story>().Object, _user.Object));
         }
 
         [Fact]
         public void CommentSpammed_Should_Decrease_Score()
         {
-            var comment = new Mock<IComment>();
-            comment.SetupGet(c => c.ByUser).Returns(new Mock<IUser>().Object);
+            var comment = new Mock<Comment>();
+            comment.SetupGet(c => c.ByUser).Returns(new Mock<User>().Object);
 
             _user.Setup(u => u.DecreaseScoreBy(It.IsAny<decimal>(), UserAction.SpamCommentSubmitted)).Verifiable();
             _userScoreService.CommentSpammed(new CommentSpamEventArgs(comment.Object, _user.Object, string.Empty));
@@ -213,8 +213,8 @@ namespace Kigg.Core.Test
         [Fact]
         public void CommentMarkedAsOffended_Should_Decrease_Score()
         {
-            var comment = new Mock<IComment>();
-            comment.SetupGet(c => c.ByUser).Returns(new Mock<IUser>().Object);
+            var comment = new Mock<Comment>();
+            comment.SetupGet(c => c.ByUser).Returns(new Mock<User>().Object);
 
             _user.Setup(u => u.DecreaseScoreBy(It.IsAny<decimal>(), UserAction.CommentMarkedAsOffended)).Verifiable();
             _userScoreService.CommentMarkedAsOffended(new CommentMarkAsOffendedEventArgs(comment.Object, _user.Object, string.Empty));
@@ -227,7 +227,7 @@ namespace Kigg.Core.Test
             story.SetupGet(s => s.PostedBy).Returns(_user.Object);
 
             _user.Setup(u => u.IncreaseScoreBy(It.IsAny<decimal>(), UserAction.StorySubmitted)).Verifiable();
-            _userScoreService.StoryApproved(new StoryApproveEventArgs(story.Object, new Mock<IUser>().Object, string.Empty));
+            _userScoreService.StoryApproved(new StoryApproveEventArgs(story.Object, new Mock<User>().Object, string.Empty));
         }
 
         [Fact]
@@ -442,27 +442,27 @@ namespace Kigg.Core.Test
             storyIncorrectlyMarkedAsSpamEvent.Verify();
         }
 
-        private static Mock<IStory> MockStory()
+        private static Mock<Story> MockStory()
         {
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
             story.SetupGet(s => s.CreatedAt).Returns(SystemTime.Now().AddHours(-1));
 
             return story;
         }
 
-        private static void PrepareStoryToRemove(Mock<IStory> story)
+        private static void PrepareStoryToRemove(Mock<Story> story)
         {
             const int counter = 5;
 
             DateTime fakeDate = SystemTime.Now().AddDays(-1);
 
-            List<IMarkAsSpam> markAsSpams = new List<IMarkAsSpam>();
+            List<MarkAsSpam> markAsSpams = new List<MarkAsSpam>();
 
             for(var i = 1; i <= counter; i++)
             {
-                var markAsSpam = new Mock<IMarkAsSpam>();
+                var markAsSpam = new Mock<MarkAsSpam>();
 
-                markAsSpam.SetupGet(m => m.ByUser).Returns(new Mock<IUser>().Object);
+                markAsSpam.SetupGet(m => m.ByUser).Returns(new Mock<User>().Object);
                 markAsSpam.SetupGet(m => m.MarkedAt).Returns(fakeDate.AddHours(1));
 
                 markAsSpams.Add(markAsSpam.Object);
@@ -470,13 +470,13 @@ namespace Kigg.Core.Test
 
             story.SetupGet(s => s.MarkAsSpams).Returns(markAsSpams);
 
-            List<IComment> comments = new List<IComment>();
+            List<Comment> comments = new List<Comment>();
 
             for (var i = 1; i <= counter; i++)
             {
-                var comment = new Mock<IComment>();
+                var comment = new Mock<Comment>();
 
-                comment.SetupGet(c => c.ByUser).Returns(new Mock<IUser>().Object);
+                comment.SetupGet(c => c.ByUser).Returns(new Mock<User>().Object);
                 comment.SetupGet(c => c.CreatedAt).Returns(fakeDate.AddHours(1));
 
                 comments.Add(comment.Object);
@@ -484,13 +484,13 @@ namespace Kigg.Core.Test
 
             story.SetupGet(s => s.Comments).Returns(comments);
 
-            List<IVote> votes = new List<IVote>();
+            List<Vote> votes = new List<Vote>();
 
             for (var i = 1; i <= counter; i++)
             {
-                var vote = new Mock<IVote>();
+                var vote = new Mock<Vote>();
 
-                vote.SetupGet(v => v.ByUser).Returns(new Mock<IUser>().Object);
+                vote.SetupGet(v => v.ByUser).Returns(new Mock<User>().Object);
                 vote.SetupGet(v => v.PromotedAt).Returns(fakeDate.AddHours(1));
 
                 votes.Add(vote.Object);

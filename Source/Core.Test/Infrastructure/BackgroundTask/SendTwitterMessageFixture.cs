@@ -51,7 +51,7 @@ namespace Kigg.Core.Test
             _contentService.Setup(cs => cs.ShortUrl(It.IsAny<string>())).Returns("http://shorturl.com/axs").Verifiable();
             _httpForm.Setup(h => h.PostAsync(It.IsAny<HttpFormPostRequest>())).Verifiable();
 
-            _sendTwitterMessage.StoryApproved(new StoryApproveEventArgs(story.Object, new Mock<IUser>().Object,"http://dotnetshoutout.com/dummy-story"));
+            _sendTwitterMessage.StoryApproved(new StoryApproveEventArgs(story.Object, new Mock<User>().Object,"http://dotnetshoutout.com/dummy-story"));
 
             _contentService.Verify();
             _httpForm.Verify();
@@ -79,7 +79,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void PossibleSpamStoryDetected_Should_Send_Message()
         {
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
             story.SetupGet(s => s.Url).Returns("http://astory.com");
             story.SetupGet(s => s.Title).Returns("dummy story");
 
@@ -95,11 +95,11 @@ namespace Kigg.Core.Test
         [Fact]
         public void PossibleSpamCommentDetected_Should_Send_Message()
         {
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
             story.SetupGet(s => s.Url).Returns("http://astory.com");
             story.SetupGet(s => s.Title).Returns("dummy story");
 
-            var comment = new Mock<IComment>();
+            var comment = new Mock<Comment>();
             comment.SetupGet(c => c.ForStory).Returns(story.Object);
 
             _contentService.Setup(cs => cs.ShortUrl(It.IsAny<string>())).Returns("http://shorturl.com/axs").Verifiable();
@@ -114,14 +114,14 @@ namespace Kigg.Core.Test
         [Fact]
         public void StoryMarkedAsSpam_Should_Send_Message()
         {
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
             story.SetupGet(s => s.Url).Returns("http://astory.com");
             story.SetupGet(s => s.Title).Returns("dummy story");
 
             _contentService.Setup(cs => cs.ShortUrl(It.IsAny<string>())).Returns("http://shorturl.com/axs").Verifiable();
             _httpForm.Setup(h => h.PostAsync(It.IsAny<HttpFormPostRequest>())).Verifiable();
 
-            _sendTwitterMessage.StoryMarkedAsSpam(new StoryMarkAsSpamEventArgs(story.Object, new Mock<IUser>().Object, "http://dotnetshoutout.com/dummy-story"));
+            _sendTwitterMessage.StoryMarkedAsSpam(new StoryMarkAsSpamEventArgs(story.Object, new Mock<User>().Object, "http://dotnetshoutout.com/dummy-story"));
 
             _contentService.Verify();
             _httpForm.Verify();
@@ -224,18 +224,18 @@ namespace Kigg.Core.Test
             storyMarkAsSpamEvent.Verify();
         }
 
-        private static Mock<IStory> MockStory()
+        private static Mock<Story> MockStory()
         {
-            var tag1 = new Mock<ITag>();
+            var tag1 = new Mock<Tag>();
             tag1.SetupGet(t => t.Name).Returns("Tag1");
 
-            var tag2 = new Mock<ITag>();
+            var tag2 = new Mock<Tag>();
             tag2.SetupGet(t => t.Name).Returns("Tag2");
 
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
             story.SetupGet(s => s.Url).Returns("http://astory.com");
             story.SetupGet(s => s.Title).Returns(new string('x', 105));
-            story.SetupGet(s => s.Tags).Returns(new List<ITag> { tag1.Object, tag2.Object });
+            story.SetupGet(s => s.Tags).Returns(new List<Tag> { tag1.Object, tag2.Object });
 
             return story;
         }

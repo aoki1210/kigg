@@ -50,12 +50,12 @@ namespace Kigg.Core.Test
 
         private void SetupRepository()
         {
-            var tags = new List<ITag>();
+            var tags = new List<Tag>();
 
-            var tag1 = new Mock<ITag>();
+            var tag1 = new Mock<Tag>();
             tag1.SetupGet(t => t.Name).Returns("ASPNETMVC");
 
-            var tag2 = new Mock<ITag>();
+            var tag2 = new Mock<Tag>();
             tag2.SetupGet(t => t.Name).Returns("IoC/DI");
 
             tags.AddRange(new[] { tag1.Object, tag2.Object });

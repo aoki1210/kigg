@@ -53,7 +53,7 @@ namespace Kigg.Infrastructure
             SendMailAsync(_settings.WebmasterEmail, email, "{0}: Your new password".FormatWith(_settings.SiteTitle), body);
         }
 
-        public void SendComment(string url, IComment comment, IEnumerable<IUser> users)
+        public void SendComment(string url, Comment comment, IEnumerable<User> users)
         {
             Check.Argument.IsNotEmpty(url, "url");
             Check.Argument.IsNotNull(comment, "comment");
@@ -64,14 +64,14 @@ namespace Kigg.Infrastructure
 
             ThreadPool.QueueUserWorkItem(state =>
                                                     {
-                                                         foreach (IUser user in users)
+                                                         foreach (User user in users)
                                                          {
                                                              SendMail(_settings.WebmasterEmail, user.Email, subject, body);
                                                          }
                                                     });
         }
 
-        public void NotifySpamStory(string url, IStory story, string source)
+        public void NotifySpamStory(string url, Story story, string source)
         {
             Check.Argument.IsNotEmpty(url, "storyUrl");
             Check.Argument.IsNotNull(story, "story");
@@ -82,7 +82,7 @@ namespace Kigg.Infrastructure
             SendMailAsync(_settings.WebmasterEmail, _settings.SupportEmail, "Spam Story Submitted - {0}".FormatWith(SystemTime.Now().ToLongDateString()), body);
         }
 
-        public void NotifyStoryMarkedAsSpam(string url, IStory story, IUser byUser)
+        public void NotifyStoryMarkedAsSpam(string url, Story story, User byUser)
         {
             Check.Argument.IsNotEmpty(url, "url");
             Check.Argument.IsNotNull(story, "story");
@@ -93,7 +93,7 @@ namespace Kigg.Infrastructure
             SendMailAsync(_settings.WebmasterEmail, _settings.SupportEmail, "Story Marked As Spam - {0}".FormatWith(SystemTime.Now().ToLongDateString()), body);
         }
 
-        public void NotifySpamComment(string url, IComment comment, string source)
+        public void NotifySpamComment(string url, Comment comment, string source)
         {
             Check.Argument.IsNotEmpty(url, "url");
             Check.Argument.IsNotNull(comment, "comment");
@@ -104,7 +104,7 @@ namespace Kigg.Infrastructure
             SendMailAsync(_settings.WebmasterEmail, _settings.SupportEmail, "Spam Comment Submitted - {0}".FormatWith(SystemTime.Now().ToLongDateString()), body);
         }
 
-        public void NotifyStoryApprove(string url, IStory story, IUser byUser)
+        public void NotifyStoryApprove(string url, Story story, User byUser)
         {
             Check.Argument.IsNotEmpty(url, "url");
             Check.Argument.IsNotNull(story, "story");
@@ -115,7 +115,7 @@ namespace Kigg.Infrastructure
             SendMailAsync(_settings.WebmasterEmail, _settings.SupportEmail, "Story Approved - {0}".FormatWith(SystemTime.Now().ToLongDateString()), body);
         }
 
-        public void NotifyConfirmSpamStory(string url, IStory story, IUser byUser)
+        public void NotifyConfirmSpamStory(string url, Story story, User byUser)
         {
             Check.Argument.IsNotEmpty(url, "url");
             Check.Argument.IsNotNull(story, "story");
@@ -128,7 +128,7 @@ namespace Kigg.Infrastructure
             SendMailAsync(_settings.WebmasterEmail, _settings.SupportEmail, "Story Confirmed As Spam - {0}".FormatWith(SystemTime.Now().ToLongDateString()), body);
         }
 
-        public void NotifyConfirmSpamComment(string url, IComment comment, IUser byUser)
+        public void NotifyConfirmSpamComment(string url, Comment comment, User byUser)
         {
             Check.Argument.IsNotEmpty(url, "url");
             Check.Argument.IsNotNull(comment, "comment");
@@ -139,7 +139,7 @@ namespace Kigg.Infrastructure
             SendMailAsync(_settings.WebmasterEmail, _settings.SupportEmail, "Comment Confirmed As Spam - {0}".FormatWith(SystemTime.Now().ToLongDateString()), body);
         }
 
-        public void NotifyCommentAsOffended(string url, IComment comment, IUser byUser)
+        public void NotifyCommentAsOffended(string url, Comment comment, User byUser)
         {
             Check.Argument.IsNotEmpty(url, "url");
             Check.Argument.IsNotNull(comment, "comment");
@@ -150,7 +150,7 @@ namespace Kigg.Infrastructure
             SendMailAsync(_settings.WebmasterEmail, _settings.SupportEmail, "Comment Marked As Offended - {0}".FormatWith(SystemTime.Now().ToLongDateString()), body);
         }
 
-        public void NotifyStoryDelete(IStory story, IUser byUser)
+        public void NotifyStoryDelete(Story story, User byUser)
         {
             Check.Argument.IsNotNull(story, "story");
             Check.Argument.IsNotNull(byUser, "byUser");

@@ -50,12 +50,12 @@ namespace Kigg.Core.Test
 
         private void SetupRepository()
         {
-            var categories = new List<ICategory>();
+            var categories = new List<Category>();
 
-            var category1 = new Mock<ICategory>();
+            var category1 = new Mock<Category>();
             category1.SetupGet(c => c.Name).Returns("C#");
 
-            var category2 = new Mock<ICategory>();
+            var category2 = new Mock<Category>();
             category2.SetupGet(c => c.Name).Returns("ASP.NET");
 
             categories.AddRange(new[] { category1.Object, category2.Object });

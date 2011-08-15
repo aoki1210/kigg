@@ -8,7 +8,7 @@
     <ProjectGuid>{04A61455-9656-4E67-A8D6-9FBA348F0FB3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Kigg.Core</RootNamespace>
+    <RootNamespace>Kigg</RootNamespace>
     <AssemblyName>Kigg.Core</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -104,15 +104,15 @@
     <Compile Include="..\SharedFiles\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="DomainObjects\ICommentSubscribtion.cs" />
-    <Compile Include="DomainObjects\IKnownSource.cs" />
-    <Compile Include="DomainObjects\ITagContainer.cs" />
+    <Compile Include="DomainObjects\CommentSubscribtion.cs" />
+    <Compile Include="DomainObjects\KnownSource.cs" />
+    <Compile Include="DomainObjects\Interfaces\ITagContainer.cs" />
     <Compile Include="DomainObjects\KnownSourceGrade.cs" />
     <Compile Include="DomainObjects\Roles.cs" />
     <Compile Include="DomainObjects\UserAction.cs" />
+    <Compile Include="DomainObjects\UserScore.cs" />
     <Compile Include="Extension\CollectionExtension.cs" />
     <Compile Include="Extension\DateTimeExtension.cs" />
-    <Compile Include="Extension\DomainObjectsExplicitExtension\CategoryExtension.cs" />
     <Compile Include="Extension\DomainObjectsExplicitExtension\StoryExtension.cs" />
     <Compile Include="Extension\DomainObjectsExplicitExtension\TagExtension.cs" />
     <Compile Include="Extension\DomainObjectsExplicitExtension\UserExtension.cs" />
@@ -173,10 +173,10 @@
     <Compile Include="Service\StoryWeightCalculator\FreshnessWeight.cs" />
     <Compile Include="Service\StoryWeightCalculator\IStoryWeightCalculator.cs" />
     <Compile Include="Service\IUserScoreTable.cs" />
-    <Compile Include="DomainObjects\IMarkAsSpam.cs" />
-    <Compile Include="DomainObjects\IUniqueNameEntity.cs" />
-    <Compile Include="DomainObjects\IStoryView.cs" />
-    <Compile Include="DomainObjects\IVote.cs" />
+    <Compile Include="DomainObjects\MarkAsSpam.cs" />
+    <Compile Include="DomainObjects\Interfaces\IUniqueNameEntity.cs" />
+    <Compile Include="DomainObjects\StoryView.cs" />
+    <Compile Include="DomainObjects\Vote.cs" />
     <Compile Include="Service\PublishedStory.cs" />
     <Compile Include="Service\StoryWeightCalculator\KnownSourceWeight.cs" />
     <Compile Include="Service\StoryWeightCalculator\StoryWeightBaseCalculator.cs" />
@@ -231,16 +231,16 @@
     <Compile Include="Repository\Decorated\DecoratedCategoryRepository.cs" />
     <Compile Include="Repository\Decorated\DecoratedStoryRepository.cs" />
     <Compile Include="Repository\Decorated\DecoratedTagRepository.cs" />
-    <Compile Include="DomainObjects\IDomainObjectFactory.cs" />
+    <Compile Include="DomainObjects\Interfaces\IDomainObjectFactory.cs" />
     <Compile Include="Helper\PagedResult.cs" />
     <Compile Include="Configuration\ConfigurationSettings.cs" />
     <Compile Include="Configuration\IConfigurationSettings.cs" />
-    <Compile Include="DomainObjects\IComment.cs" />
-    <Compile Include="DomainObjects\IStory.cs" />
-    <Compile Include="DomainObjects\IUser.cs" />
-    <Compile Include="DomainObjects\ITag.cs" />
-    <Compile Include="DomainObjects\ICategory.cs" />
-    <Compile Include="DomainObjects\IEntity.cs" />
+    <Compile Include="DomainObjects\Comment.cs" />
+    <Compile Include="DomainObjects\Story.cs" />
+    <Compile Include="DomainObjects\User.cs" />
+    <Compile Include="DomainObjects\Tag.cs" />
+    <Compile Include="DomainObjects\Category.cs" />
+    <Compile Include="DomainObjects\Interfaces\IEntity.cs" />
     <Compile Include="Helper\CheckArgument.cs" />
     <Compile Include="Extension\StringExtension.cs" />
     <Compile Include="Infrastructure\Caching\Cache.cs" />

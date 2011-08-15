@@ -28,13 +28,13 @@ namespace Kigg.Core.Test
         [Fact]
         public void CommentSubmitted_Should_SendMail()
         {
-            var story = new Mock<IStory>();
-            story.SetupGet(s => s.Subscribers).Returns(new List<IUser>());
+            var story = new Mock<Story>();
+            story.SetupGet(s => s.Subscribers).Returns(new List<User>());
 
-            var comment = new Mock<IComment>();
+            var comment = new Mock<Comment>();
             comment.SetupGet(c => c.ForStory).Returns(story.Object);
 
-            _emailSender.Setup(es => es.SendComment(It.IsAny<string>(), It.IsAny<IComment>(), It.IsAny<IEnumerable<IUser>>())).Verifiable();
+            _emailSender.Setup(es => es.SendComment(It.IsAny<string>(), It.IsAny<Comment>(), It.IsAny<IEnumerable<User>>())).Verifiable();
 
             _sendMail.CommentSubmitted(new CommentSubmitEventArgs(comment.Object, "http://dotnetshoutout.com"));
 
@@ -44,11 +44,11 @@ namespace Kigg.Core.Test
         [Fact]
         public void CommentMarkedAsOffended_Should_SendMail()
         {
-            var comment = new Mock<IComment>();
+            var comment = new Mock<Comment>();
 
-            _emailSender.Setup(es => es.NotifyCommentAsOffended(It.IsAny<string>(), It.IsAny<IComment>(), It.IsAny<IUser>())).Verifiable();
+            _emailSender.Setup(es => es.NotifyCommentAsOffended(It.IsAny<string>(), It.IsAny<Comment>(), It.IsAny<User>())).Verifiable();
 
-            _sendMail.CommentMarkedAsOffended(new CommentMarkAsOffendedEventArgs(comment.Object, new Mock<IUser>().Object, "http://dotnetshoutout.com"));
+            _sendMail.CommentMarkedAsOffended(new CommentMarkAsOffendedEventArgs(comment.Object, new Mock<User>().Object, "http://dotnetshoutout.com"));
 
             _emailSender.Verify();
         }
@@ -56,9 +56,9 @@ namespace Kigg.Core.Test
         [Fact]
         public void CommentSpammed_Should_SendMail()
         {
-            _emailSender.Setup(es => es.NotifyConfirmSpamComment(It.IsAny<string>(), It.IsAny<IComment>(), It.IsAny<IUser>())).Verifiable();
+            _emailSender.Setup(es => es.NotifyConfirmSpamComment(It.IsAny<string>(), It.IsAny<Comment>(), It.IsAny<User>())).Verifiable();
 
-            _sendMail.CommentSpammed(new CommentSpamEventArgs(new Mock<IComment>().Object, new Mock<IUser>().Object,"http://dotnetshoutout.com"));
+            _sendMail.CommentSpammed(new CommentSpamEventArgs(new Mock<Comment>().Object, new Mock<User>().Object,"http://dotnetshoutout.com"));
 
             _emailSender.Verify();
         }
@@ -66,9 +66,9 @@ namespace Kigg.Core.Test
         [Fact]
         public void StoryApproved_Should_SendMail()
         {
-            _emailSender.Setup(es => es.NotifyStoryApprove(It.IsAny<string>(), It.IsAny<IStory>(), It.IsAny<IUser>())).Verifiable();
+            _emailSender.Setup(es => es.NotifyStoryApprove(It.IsAny<string>(), It.IsAny<Story>(), It.IsAny<User>())).Verifiable();
 
-            _sendMail.StoryApproved(new StoryApproveEventArgs(new Mock<IStory>().Object, new Mock<IUser>().Object, "http://dotnetshoutout.com"));
+            _sendMail.StoryApproved(new StoryApproveEventArgs(new Mock<Story>().Object, new Mock<User>().Object, "http://dotnetshoutout.com"));
 
             _emailSender.Verify();
         }
@@ -76,9 +76,9 @@ namespace Kigg.Core.Test
         [Fact]
         public void StoryDeleted_Should_SendMail()
         {
-            _emailSender.Setup(es => es.NotifyStoryDelete(It.IsAny<IStory>(), It.IsAny<IUser>())).Verifiable();
+            _emailSender.Setup(es => es.NotifyStoryDelete(It.IsAny<Story>(), It.IsAny<User>())).Verifiable();
 
-            _sendMail.StoryDeleted(new StoryDeleteEventArgs(new Mock<IStory>().Object, new Mock<IUser>().Object));
+            _sendMail.StoryDeleted(new StoryDeleteEventArgs(new Mock<Story>().Object, new Mock<User>().Object));
 
             _emailSender.Verify();
         }
@@ -86,9 +86,9 @@ namespace Kigg.Core.Test
         [Fact]
         public void StoryMarkedAsSpam_Should_SendMail()
         {
-            _emailSender.Setup(es => es.NotifyStoryMarkedAsSpam(It.IsAny<string>(), It.IsAny<IStory>(), It.IsAny<IUser>())).Verifiable();
+            _emailSender.Setup(es => es.NotifyStoryMarkedAsSpam(It.IsAny<string>(), It.IsAny<Story>(), It.IsAny<User>())).Verifiable();
 
-            _sendMail.StoryMarkedAsSpam(new StoryMarkAsSpamEventArgs(new Mock<IStory>().Object, new Mock<IUser>().Object, It.IsAny<string>()));
+            _sendMail.StoryMarkedAsSpam(new StoryMarkAsSpamEventArgs(new Mock<Story>().Object, new Mock<User>().Object, It.IsAny<string>()));
 
             _emailSender.Verify();
         }
@@ -96,9 +96,9 @@ namespace Kigg.Core.Test
         [Fact]
         public void StorySpammed_Should_SendMail()
         {
-            _emailSender.Setup(es => es.NotifyConfirmSpamStory(It.IsAny<string>(), It.IsAny<IStory>(), It.IsAny<IUser>())).Verifiable();
+            _emailSender.Setup(es => es.NotifyConfirmSpamStory(It.IsAny<string>(), It.IsAny<Story>(), It.IsAny<User>())).Verifiable();
 
-            _sendMail.StorySpammed(new StorySpamEventArgs(new Mock<IStory>().Object, new Mock<IUser>().Object, "http://dotnetshoutout.com"));
+            _sendMail.StorySpammed(new StorySpamEventArgs(new Mock<Story>().Object, new Mock<User>().Object, "http://dotnetshoutout.com"));
 
             _emailSender.Verify();
         }
@@ -116,9 +116,9 @@ namespace Kigg.Core.Test
         [Fact]
         public void PossibleSpamStoryDetected_Should_SendMail()
         {
-            _emailSender.Setup(es => es.NotifySpamStory(It.IsAny<string>(), It.IsAny<IStory>(), It.IsAny<string>())).Verifiable();
+            _emailSender.Setup(es => es.NotifySpamStory(It.IsAny<string>(), It.IsAny<Story>(), It.IsAny<string>())).Verifiable();
 
-            _sendMail.PossibleSpamStoryDetected(new PossibleSpamStoryEventArgs(new Mock<IStory>().Object, "default","http://dotnetshoutout.com/Dummy-Story"));
+            _sendMail.PossibleSpamStoryDetected(new PossibleSpamStoryEventArgs(new Mock<Story>().Object, "default","http://dotnetshoutout.com/Dummy-Story"));
 
             _emailSender.Verify();
         }
@@ -126,9 +126,9 @@ namespace Kigg.Core.Test
         [Fact]
         public void PossibleSpamCommentDetected_Should_SendMail()
         {
-            _emailSender.Setup(es => es.NotifySpamComment(It.IsAny<string>(), It.IsAny<IComment>(), It.IsAny<string>())).Verifiable();
+            _emailSender.Setup(es => es.NotifySpamComment(It.IsAny<string>(), It.IsAny<Comment>(), It.IsAny<string>())).Verifiable();
 
-            _sendMail.PossibleSpamCommentDetected(new PossibleSpamCommentEventArgs(new Mock<IComment>().Object, "default", "http://dotnetshoutout.com/Dummy-Story"));
+            _sendMail.PossibleSpamCommentDetected(new PossibleSpamCommentEventArgs(new Mock<Comment>().Object, "default", "http://dotnetshoutout.com/Dummy-Story"));
 
             _emailSender.Verify();
         }

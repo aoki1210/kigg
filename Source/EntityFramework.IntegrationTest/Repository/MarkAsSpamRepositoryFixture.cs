@@ -106,7 +106,7 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
             }
         }
 
-        private StoryMarkAsSpam CreateNewMarkAsSpam(IStory forStory, IUser byUser)
+        private StoryMarkAsSpam CreateNewMarkAsSpam(Story forStory, User byUser)
         {
             return (StoryMarkAsSpam)_domainFactory.CreateMarkAsSpam(forStory, 
                                                                     SystemTime.Now(),

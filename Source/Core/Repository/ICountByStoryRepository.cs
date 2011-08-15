@@ -4,6 +4,6 @@
 
     public interface ICountByStoryRepository
     {
-        int CountByStory(Guid storyId);
+        int CountByStory(long storyId);
     }
 }

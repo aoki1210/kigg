@@ -103,7 +103,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void FindAll_Should_Log_Info_When_Categories_Exist()
         {
-            FindAll(new List<ICategory> { CreateStubCategory() });
+            FindAll(new List<Category> { CreateStubCategory() });
 
             log.Verify();
         }
@@ -119,14 +119,14 @@ namespace Kigg.Core.Test
         [Fact]
         public void FindAll_Should_Use_InnerRepository()
         {
-            FindAll(new List<ICategory> { CreateStubCategory() });
+            FindAll(new List<Category> { CreateStubCategory() });
 
             _innerRepository.Verify();
         }
 
         private void Add()
         {
-            _innerRepository.Setup(r => r.Add(It.IsAny<ICategory>())).Verifiable();
+            _innerRepository.Setup(r => r.Add(It.IsAny<Category>())).Verifiable();
             log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
             _loggingRepository.Add(CreateStubCategory());
@@ -134,15 +134,15 @@ namespace Kigg.Core.Test
 
         private void Remove()
         {
-            _innerRepository.Setup(r => r.Remove(It.IsAny<ICategory>())).Verifiable();
+            _innerRepository.Setup(r => r.Remove(It.IsAny<Category>())).Verifiable();
             log.Setup(l => l.Warning(It.IsAny<string>())).Verifiable();
 
             _loggingRepository.Remove(CreateStubCategory());
         }
 
-        private void FindById(ICategory result)
+        private void FindById(Category result)
         {
-            _innerRepository.Setup(r => r.FindById(It.IsAny<Guid>())).Returns(result).Verifiable();
+            _innerRepository.Setup(r => r.FindById(It.IsAny<long>())).Returns(result).Verifiable();
             log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
             if (result == null)
@@ -150,10 +150,10 @@ namespace Kigg.Core.Test
                 log.Setup(l => l.Warning(It.IsAny<string>())).Verifiable();
             }
 
-            _loggingRepository.FindById(Guid.NewGuid());
+            _loggingRepository.FindById(1);
         }
 
-        private void FindByUniqueName(ICategory result)
+        private void FindByUniqueName(Category result)
         {
             _innerRepository.Setup(r => r.FindByUniqueName(It.IsAny<string>())).Returns(result).Verifiable();
             log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
@@ -166,7 +166,7 @@ namespace Kigg.Core.Test
             _loggingRepository.FindByUniqueName("acategory");
         }
 
-        private void FindAll(ICollection<ICategory> result)
+        private void FindAll(ICollection<Category> result)
         {
             _innerRepository.Setup(r => r.FindAll()).Returns(result).Verifiable();
             log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();

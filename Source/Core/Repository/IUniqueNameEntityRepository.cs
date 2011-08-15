@@ -6,7 +6,7 @@ namespace Kigg.Repository
 
     public interface IUniqueNameEntityRepository<TEntity> : IRepository<TEntity> where TEntity : IUniqueNameEntity
     {
-        TEntity FindById(Guid id);
+        TEntity FindById(long id);
 
         TEntity FindByUniqueName(string uniqueName);
     }

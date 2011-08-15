@@ -11,6 +11,6 @@ namespace Kigg.Service
             get;
         }
 
-        double Calculate(DateTime publishingTimestamp, IStory story);
+        double Calculate(DateTime publishingTimestamp, Story story);
     }
 }

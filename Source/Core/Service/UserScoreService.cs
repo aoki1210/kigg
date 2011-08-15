@@ -233,18 +233,18 @@ namespace Kigg.Service
             }
         }
 
-        private static bool CanChangeScoreForStory(IStory theStory, IUser theUser)
+        private static bool CanChangeScoreForStory(Story theStory, User theUser)
         {
             return !theStory.HasExpired() && theUser.IsPublicUser();
         }
 
-        private void StoryRemoved(IStory theStory, UserAction action)
+        private void StoryRemoved(Story theStory, UserAction action)
         {
             Check.Argument.IsNotNull(theStory, "theStory");
 
             DateTime expireDate = theStory.CreatedAt.AddHours(_settings.MaximumAgeOfStoryInHoursToPublish);
 
-            foreach (IMarkAsSpam markAsSpam in theStory.MarkAsSpams)
+            foreach (MarkAsSpam markAsSpam in theStory.MarkAsSpams)
             {
                 if (markAsSpam.ByUser.IsPublicUser() && (markAsSpam.MarkedAt <= expireDate))
                 {
@@ -252,7 +252,7 @@ namespace Kigg.Service
                 }
             }
 
-            foreach (IComment comment in theStory.Comments)
+            foreach (Comment comment in theStory.Comments)
             {
                 if (comment.ByUser.IsPublicUser() && (comment.CreatedAt <= expireDate))
                 {
@@ -260,7 +260,7 @@ namespace Kigg.Service
                 }
             }
 
-            foreach (IVote vote in theStory.Votes)
+            foreach (Vote vote in theStory.Votes)
             {
                 if (!theStory.IsPostedBy(vote.ByUser))
                 {
@@ -276,7 +276,7 @@ namespace Kigg.Service
             }
         }
 
-        private void StorySubmitted(IUser ofUser)
+        private void StorySubmitted(User ofUser)
         {
             if (ofUser.IsPublicUser())
             {

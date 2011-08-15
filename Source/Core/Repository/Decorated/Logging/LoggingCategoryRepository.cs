@@ -1,6 +1,6 @@
 namespace Kigg.Repository
 {
-    using System;
+    //using System;
     using System.Collections.Generic;
 
     using DomainObjects;
@@ -12,7 +12,7 @@ namespace Kigg.Repository
         {
         }
 
-        public override void Add(ICategory entity)
+        public override void Add(Category entity)
         {
             Check.Argument.IsNotNull(entity, "entity");
 
@@ -21,7 +21,7 @@ namespace Kigg.Repository
             Log.Info("Category added: {0}, {1}", entity.Id, entity.Name);
         }
 
-        public override void Remove(ICategory entity)
+        public override void Remove(Category entity)
         {
             Check.Argument.IsNotNull(entity, "entity");
 
@@ -30,9 +30,9 @@ namespace Kigg.Repository
             Log.Warning("Category removed: {0}, {1}", entity.Id, entity.Name);
         }
 
-        public override ICategory FindById(Guid id)
+        public override Category FindById(long id)
         {
-            Check.Argument.IsNotEmpty(id, "id");
+            //Check.Argument.IsNotEmpty(id, "id");
 
             Log.Info("Retrieving category with id: {0}", id);
 
@@ -50,7 +50,7 @@ namespace Kigg.Repository
             return result;
         }
 
-        public override ICategory FindByUniqueName(string uniqueName)
+        public override Category FindByUniqueName(string uniqueName)
         {
             Check.Argument.IsNotEmpty(uniqueName, "uniqueName");
 
@@ -70,7 +70,7 @@ namespace Kigg.Repository
             return result;
         }
 
-        public override ICollection<ICategory> FindAll()
+        public override ICollection<Category> FindAll()
         {
             Log.Info("Retrieving all Category");
 

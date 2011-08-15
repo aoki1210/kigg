@@ -18,31 +18,31 @@
         }
 
         [DebuggerStepThrough]
-        public virtual void Add(ICategory entity)
+        public virtual void Add(Category entity)
         {
             _innerRepository.Add(entity);
         }
 
         [DebuggerStepThrough]
-        public virtual void Remove(ICategory entity)
+        public virtual void Remove(Category entity)
         {
             _innerRepository.Remove(entity);
         }
 
         [DebuggerStepThrough]
-        public virtual ICategory FindById(Guid id)
+        public virtual Category FindById(long id)
         {
             return _innerRepository.FindById(id);
         }
 
         [DebuggerStepThrough]
-        public virtual ICategory FindByUniqueName(string uniqueName)
+        public virtual Category FindByUniqueName(string uniqueName)
         {
             return _innerRepository.FindByUniqueName(uniqueName);
         }
 
         [DebuggerStepThrough]
-        public virtual ICollection<ICategory> FindAll()
+        public virtual ICollection<Category> FindAll()
         {
             return _innerRepository.FindAll();
         }

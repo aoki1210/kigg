@@ -13,11 +13,11 @@ namespace Kigg.Core.Test
 
     public class StoryExtensionFixture : BaseFixture
     {
-        private readonly Mock<IStory> _story;
+        private readonly Mock<Story> _story;
 
         public StoryExtensionFixture()
         {
-            _story = new Mock<IStory>();
+            _story = new Mock<Story>();
         }
 
         [Fact]
@@ -65,14 +65,14 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsPostedBy_Should_Be_True_When_PostedBy_User_Id_Is_Same()
         {
-            var userId = Guid.NewGuid();
+            var userId = 1;
 
-            var postedByUser = new Mock<IUser>();
+            var postedByUser = new Mock<User>();
 
             postedByUser.SetupGet(u => u.Id).Returns(userId);
             _story.SetupGet(s => s.PostedBy).Returns(postedByUser.Object);
 
-            var checkingUser = new Mock<IUser>();
+            var checkingUser = new Mock<User>();
             checkingUser.SetupGet(u => u.Id).Returns(userId);
 
             Assert.True(_story.Object.IsPostedBy(checkingUser.Object));
@@ -164,12 +164,12 @@ namespace Kigg.Core.Test
             var now = SystemTime.Now();
 
             domFactory.Setup(f => f.CreateStoryView(_story.Object, now, "127.0.0.1")).Returns(
-                It.IsAny<IStoryView>()).Verifiable();
+                It.IsAny<StoryView>()).Verifiable();
             
             _story.Object.AddView(now, "127.0.0.1");
 
             domFactory.Verify();
-            repository.Verify(r => r.Add(It.IsAny<IStoryView>()),Times.AtMostOnce());
+            repository.Verify(r => r.Add(It.IsAny<StoryView>()),Times.AtMostOnce());
             
         }
         
@@ -181,13 +181,13 @@ namespace Kigg.Core.Test
 
             var now = SystemTime.Now();
 
-            domFactory.Setup(f => f.CreateStoryVote(_story.Object, now, It.IsAny<IUser>(), "127.0.0.1")).Returns(
-                It.IsAny<IVote>()).Verifiable();
+            domFactory.Setup(f => f.CreateStoryVote(_story.Object, now, It.IsAny<User>(), "127.0.0.1")).Returns(
+                It.IsAny<Vote>()).Verifiable();
 
-            _story.Object.AddVote(now, new Mock<IUser>().Object, "127.0.0.1");
+            _story.Object.AddVote(now, new Mock<User>().Object, "127.0.0.1");
 
             domFactory.Verify();
-            repository.Verify(r => r.Add(It.IsAny<IVote>()),Times.AtMostOnce());
+            repository.Verify(r => r.Add(It.IsAny<Vote>()),Times.AtMostOnce());
         }
         
         [Fact]
@@ -195,7 +195,7 @@ namespace Kigg.Core.Test
         {
             var repository = SetupResolve<IVoteRepository>();
 
-            var vote = new Mock<IVote>().Object;
+            var vote = new Mock<Vote>().Object;
 
             _story.Object.RemoveVote(vote);
 
@@ -207,11 +207,11 @@ namespace Kigg.Core.Test
         {
             var repository = SetupResolve<IVoteRepository>();
 
-            var user = new Mock<IUser>().Object;
+            var user = new Mock<User>().Object;
             
             _story.Object.GetVote(user);
 
-            repository.Verify(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>()),Times.AtMostOnce());
+            repository.Verify(r => r.FindById(It.IsAny<long>(), It.IsAny<long>()),Times.AtMostOnce());
         }
 
         [Fact]
@@ -222,12 +222,12 @@ namespace Kigg.Core.Test
 
             var now = SystemTime.Now();
 
-            domFactory.Setup(f => f.CreateMarkAsSpam(_story.Object, now, It.IsAny<IUser>(), "127.0.0.1")).Returns(It.IsAny<IMarkAsSpam>()).Verifiable();
+            domFactory.Setup(f => f.CreateMarkAsSpam(_story.Object, now, It.IsAny<User>(), "127.0.0.1")).Returns(It.IsAny<MarkAsSpam>()).Verifiable();
 
-            _story.Object.MarkSpam(now, new Mock<IUser>().Object, "127.0.0.1");
+            _story.Object.MarkSpam(now, new Mock<User>().Object, "127.0.0.1");
 
             domFactory.Verify();
-            repository.Verify(r => r.Add(It.IsAny<IMarkAsSpam>()),Times.AtMostOnce());
+            repository.Verify(r => r.Add(It.IsAny<MarkAsSpam>()),Times.AtMostOnce());
         }
 
         [Fact]
@@ -235,11 +235,11 @@ namespace Kigg.Core.Test
         {
             var repository = SetupResolve<IMarkAsSpamRepository>();
 
-            var user = new Mock<IUser>().Object;
+            var user = new Mock<User>().Object;
 
             _story.Object.GetMarkAsSpam(user);
 
-            repository.Verify(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>()),Times.AtMostOnce());
+            repository.Verify(r => r.FindById(It.IsAny<long>(), It.IsAny<long>()),Times.AtMostOnce());
         }
 
         [Fact]
@@ -247,7 +247,7 @@ namespace Kigg.Core.Test
         {
             var repository = SetupResolve<IMarkAsSpamRepository>();
 
-            var spam = new Mock<IMarkAsSpam>().Object;
+            var spam = new Mock<MarkAsSpam>().Object;
             
             _story.Object.UnmarkSpam(spam);
 
@@ -262,13 +262,13 @@ namespace Kigg.Core.Test
 
             var now = SystemTime.Now();
 
-            domFactory.Setup(f => f.CreateComment(_story.Object, "dummy content", now, It.IsAny<IUser>(), "127.0.0.1")).Returns(
-                It.IsAny<IComment>()).Verifiable();
+            domFactory.Setup(f => f.CreateComment(_story.Object, "dummy content", now, It.IsAny<User>(), "127.0.0.1")).Returns(
+                It.IsAny<Comment>()).Verifiable();
 
-            _story.Object.AddComment("dummy content",now, new Mock<IUser>().Object, "127.0.0.1");
+            _story.Object.AddComment("dummy content",now, new Mock<User>().Object, "127.0.0.1");
 
             domFactory.Verify();
-            repository.Verify(r => r.Add(It.IsAny<IComment>()), Times.AtMostOnce());
+            repository.Verify(r => r.Add(It.IsAny<Comment>()), Times.AtMostOnce());
         }
 
         [Fact]
@@ -276,9 +276,9 @@ namespace Kigg.Core.Test
         {
             var repository = SetupResolve<ICommentRepository>();
 
-            _story.Object.FindComment(It.IsAny<Guid>());
+            _story.Object.FindComment(It.IsAny<long>());
 
-            repository.Verify(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>()), Times.AtMostOnce());
+            repository.Verify(r => r.FindById(It.IsAny<long>(), It.IsAny<long>()), Times.AtMostOnce());
         }
 
         [Fact]
@@ -286,7 +286,7 @@ namespace Kigg.Core.Test
         {
             var repository = SetupResolve<ICommentRepository>();
 
-            var comment = new Mock<IComment>().Object;
+            var comment = new Mock<Comment>().Object;
 
             _story.Object.DeleteComment(comment);
 
@@ -298,11 +298,11 @@ namespace Kigg.Core.Test
         {
             var repository = SetupResolve<ICommentSubscribtionRepository>();
 
-            var user = new Mock<IUser>().Object;
+            var user = new Mock<User>().Object;
 
             _story.Object.GetCommentSubscribtion(user);
 
-            repository.Verify(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>()), Times.AtMostOnce());
+            repository.Verify(r => r.FindById(It.IsAny<long>(), It.IsAny<long>()), Times.AtMostOnce());
         }
 
         [Fact]
@@ -310,9 +310,9 @@ namespace Kigg.Core.Test
         {
             var repository = SetupResolve<ICommentSubscribtionRepository>();
             
-            repository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(null as ICommentSubscribtion);
+            repository.Setup(r => r.FindById(It.IsAny<long>(), It.IsAny<long>())).Returns(null as CommentSubscribtion);
 
-            repository.Verify(r => r.Add(It.IsAny<ICommentSubscribtion>()), Times.AtMostOnce());
+            repository.Verify(r => r.Add(It.IsAny<CommentSubscribtion>()), Times.AtMostOnce());
         }
 
         [Fact]
@@ -320,10 +320,10 @@ namespace Kigg.Core.Test
         {
             var repository = SetupResolve<ICommentSubscribtionRepository>();
 
-            repository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(
-                new Mock<ICommentSubscribtion>().Object);
+            repository.Setup(r => r.FindById(It.IsAny<long>(), It.IsAny<long>())).Returns(
+                new Mock<CommentSubscribtion>().Object);
 
-            repository.Verify(r => r.Add(It.IsAny<ICommentSubscribtion>()), Times.Never());
+            repository.Verify(r => r.Add(It.IsAny<CommentSubscribtion>()), Times.Never());
         }
 
         [Fact]
@@ -331,10 +331,10 @@ namespace Kigg.Core.Test
         {
             var repository = SetupResolve<ICommentSubscribtionRepository>();
             
-            repository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(
-                new Mock<ICommentSubscribtion>().Object);
+            repository.Setup(r => r.FindById(It.IsAny<long>(), It.IsAny<long>())).Returns(
+                new Mock<CommentSubscribtion>().Object);
 
-            repository.Verify(r => r.Remove(It.IsAny<ICommentSubscribtion>()), Times.AtMostOnce());
+            repository.Verify(r => r.Remove(It.IsAny<CommentSubscribtion>()), Times.AtMostOnce());
         }
 
         [Fact]
@@ -342,9 +342,9 @@ namespace Kigg.Core.Test
         {
             var repository = SetupResolve<ICommentSubscribtionRepository>();
 
-            repository.Setup(r => r.FindById(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(null as ICommentSubscribtion);
+            repository.Setup(r => r.FindById(It.IsAny<long>(), It.IsAny<long>())).Returns(null as CommentSubscribtion);
 
-            repository.Verify(r => r.Remove(It.IsAny<ICommentSubscribtion>()), Times.Never());
+            repository.Verify(r => r.Remove(It.IsAny<CommentSubscribtion>()), Times.Never());
         }
 
         private void SetupCountByStoryRepository<T>(int count) where T : class, ICountByStoryRepository

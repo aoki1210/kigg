@@ -36,7 +36,7 @@ namespace Kigg.Infrastructure
         {
             if (_userRepository.FindByUserName(defaultUser.UserName) == null)
             {
-                IUser user = _factory.CreateUser(defaultUser.UserName, defaultUser.Email, defaultUser.Password);
+                User user = _factory.CreateUser(defaultUser.UserName, defaultUser.Email, defaultUser.Password);
 
                 user.Role = defaultUser.Role;
                 user.IsActive = true;

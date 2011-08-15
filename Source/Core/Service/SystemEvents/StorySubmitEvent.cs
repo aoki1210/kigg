@@ -8,13 +8,13 @@ namespace Kigg.Service
     public class StorySubmitEventArgs
     {
         [DebuggerStepThrough]
-        public StorySubmitEventArgs(IStory story, string detailUrl)
+        public StorySubmitEventArgs(Story story, string detailUrl)
         {
             Story = story;
             DetailUrl = detailUrl;
         }
 
-        public IStory Story
+        public Story Story
         {
             get;
             private set;

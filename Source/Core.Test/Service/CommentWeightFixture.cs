@@ -57,37 +57,37 @@ namespace Kigg.Core.Test
             Assert.Equal((OwnerScore + SameIpScore + DifferentIpScore), _strategy.Calculate(SystemTime.Now(), story.Object));
         }
 
-        private Mock<IStory> Setup(string ownerIp, params string[] ipAddresses)
+        private Mock<Story> Setup(string ownerIp, params string[] ipAddresses)
         {
-            var comments = new List<IComment>();
-            var ownerId = Guid.NewGuid();
+            var comments = new List<Comment>();
+            var ownerId = 1;
 
-            var story = new Mock<IStory>();
-            var owner = new Mock<IUser>();
+            var story = new Mock<Story>();
+            var owner = new Mock<User>();
 
             owner.SetupGet(u => u.Id).Returns(ownerId);
             story.SetupGet(s => s.PostedBy).Returns(owner.Object);
             story.SetupGet(s => s.FromIPAddress).Returns(ownerIp);
 
-            var ownerComment = new Mock<IComment>();
+            var ownerComment = new Mock<Comment>();
             ownerComment.SetupGet(c => c.ByUser).Returns(owner.Object);
             ownerComment.SetupGet(c => c.FromIPAddress).Returns(ownerIp);
 
             comments.Add(ownerComment.Object);
-
+            int id = 1;
             foreach(string ip in ipAddresses)
             {
-                var user = new Mock<IUser>();
-                user.SetupGet(u => u.Id).Returns(Guid.NewGuid());
+                var user = new Mock<User>();
+                user.SetupGet(u => u.Id).Returns(++id);
 
-                var comment = new Mock<IComment>();
+                var comment = new Mock<Comment>();
                 comment.SetupGet(c => c.FromIPAddress).Returns(ip);
                 comment.SetupGet(c => c.ByUser).Returns(user.Object);
 
                 comments.Add(comment.Object);
             }
 
-            _repository.Setup(r => r.FindAfter(It.IsAny<Guid>(), It.IsAny<DateTime>())).Returns(comments).Verifiable();
+            _repository.Setup(r => r.FindAfter(It.IsAny<long>(), It.IsAny<DateTime>())).Returns(comments).Verifiable();
 
             return story;
         }

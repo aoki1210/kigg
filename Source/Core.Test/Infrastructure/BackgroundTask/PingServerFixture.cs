@@ -31,7 +31,7 @@ namespace Kigg.Core.Test
         {
             SetupHttpForm();
 
-            _pingServer.StorySubmitted(new StorySubmitEventArgs(new Mock<IStory>().Object, string.Empty));
+            _pingServer.StorySubmitted(new StorySubmitEventArgs(new Mock<Story>().Object, string.Empty));
 
             _httpForm.Verify();
         }
@@ -41,7 +41,7 @@ namespace Kigg.Core.Test
         {
             SetupHttpForm();
 
-            _pingServer.StoryApproved(new StoryApproveEventArgs(new Mock<IStory>().Object, new Mock<IUser>().Object,string.Empty));
+            _pingServer.StoryApproved(new StoryApproveEventArgs(new Mock<Story>().Object, new Mock<User>().Object,string.Empty));
 
             _httpForm.Verify();
         }

@@ -60,20 +60,20 @@ namespace Kigg.Core.Test
             const string mailTemplate = "The following comments has been submitted by <%=userName%> in <%=detailUrl%> :\r\n\r\n" +
                                         "<%=comment%>";
 
-            var user = new Mock<IUser>();
+            var user = new Mock<User>();
 
             user.SetupGet(u => u.UserName).Returns("Dummy user");
             user.SetupGet(u => u.Email).Returns("dummy@users.com");
 
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
             story.SetupGet(s => s.Title).Returns("A dummy story");
 
-            var comment = new Mock<IComment>();
+            var comment = new Mock<Comment>();
             comment.SetupGet(c => c.ByUser).Returns(user.Object);
             comment.SetupGet(c => c.TextBody).Returns("The is a dummy comment");
             comment.SetupGet(c => c.ForStory).Returns(story.Object);
 
-            var subscriber = new Mock<IUser>();
+            var subscriber = new Mock<User>();
             subscriber.SetupGet(u => u.Email).Returns("seconddummy@users.com");
 
             _file.Setup(f => f.ReadAllText(It.IsAny<string>())).Returns(mailTemplate).Verifiable();
@@ -91,11 +91,11 @@ namespace Kigg.Core.Test
                                         "Original Url: <%=originalUrl%>" +
                                         "User: <%=userName%>";
 
-            var user = new Mock<IUser>();
+            var user = new Mock<User>();
 
             user.SetupGet(u => u.UserName).Returns("Dummy user");
 
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
 
             story.SetupGet(s => s.Title).Returns("A dummy story");
             story.SetupGet(s => s.Url).Returns("http://www.dummystory.com");
@@ -117,13 +117,13 @@ namespace Kigg.Core.Test
                                         "Original Url: <%=originalUrl%>" +
                                         "User: <%=postedByUserName%>";
 
-            var markedBy = new Mock<IUser>();
+            var markedBy = new Mock<User>();
             markedBy.SetupGet(u => u.UserName).Returns("Marked By");
 
-            var postedBy = new Mock<IUser>();
+            var postedBy = new Mock<User>();
             postedBy.SetupGet(u => u.UserName).Returns("Posted By");
 
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
 
             story.SetupGet(s => s.Title).Returns("A dummy story");
             story.SetupGet(s => s.Url).Returns("http://www.dummystory.com");
@@ -143,11 +143,11 @@ namespace Kigg.Core.Test
                                         "User: <%=userName%>" +
                                         "Comment: <%=comment%>";
 
-            var user = new Mock<IUser>();
+            var user = new Mock<User>();
 
             user.SetupGet(u => u.UserName).Returns("Dummy user");
 
-            var comment = new Mock<IComment>();
+            var comment = new Mock<Comment>();
 
             comment.SetupGet(c => c.HtmlBody).Returns("<p>A dummy story");
             comment.SetupGet(c => c.ByUser).Returns(user.Object);
@@ -168,13 +168,13 @@ namespace Kigg.Core.Test
                                         "Original Url: <%=originalUrl%>" +
                                         "User: <%=postedByUserName%>";
 
-            var approvedBy = new Mock<IUser>();
+            var approvedBy = new Mock<User>();
             approvedBy.SetupGet(u => u.UserName).Returns("Approved By");
 
-            var postedBy = new Mock<IUser>();
+            var postedBy = new Mock<User>();
             postedBy.SetupGet(u => u.UserName).Returns("Posted By");
 
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
 
             story.SetupGet(s => s.Title).Returns("A dummy story");
             story.SetupGet(s => s.Url).Returns("http://www.dummystory.com");
@@ -196,13 +196,13 @@ namespace Kigg.Core.Test
                                         "Original Url: <%=originalUrl%>" +
                                         "User: <%=postedByUserName%>";
 
-            var confirmedBy = new Mock<IUser>();
+            var confirmedBy = new Mock<User>();
             confirmedBy.SetupGet(u => u.UserName).Returns("Marked By");
 
-            var postedBy = new Mock<IUser>();
+            var postedBy = new Mock<User>();
             postedBy.SetupGet(u => u.UserName).Returns("Posted By");
 
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
 
             story.SetupGet(s => s.Title).Returns("A dummy story");
             story.SetupGet(s => s.Url).Returns("http://www.dummystory.com");
@@ -223,15 +223,15 @@ namespace Kigg.Core.Test
                                         "User: <%=postedByUserName%>" +
                                         "Comment: <%=comment%>";
 
-            var confirmedBy = new Mock<IUser>();
+            var confirmedBy = new Mock<User>();
 
             confirmedBy.SetupGet(u => u.UserName).Returns("Confirmed By");
 
-            var postedBy = new Mock<IUser>();
+            var postedBy = new Mock<User>();
 
             postedBy.SetupGet(u => u.UserName).Returns("Posted By");
 
-            var comment = new Mock<IComment>();
+            var comment = new Mock<Comment>();
 
             comment.SetupGet(c => c.HtmlBody).Returns("<p>A dummy story");
             comment.SetupGet(c => c.ByUser).Returns(postedBy.Object);
@@ -251,15 +251,15 @@ namespace Kigg.Core.Test
                                         "User: <%=postedByUserName%>" +
                                         "Comment: <%=comment%>";
 
-            var offendedBy = new Mock<IUser>();
+            var offendedBy = new Mock<User>();
 
             offendedBy.SetupGet(u => u.UserName).Returns("Offended By");
 
-            var postedBy = new Mock<IUser>();
+            var postedBy = new Mock<User>();
 
             postedBy.SetupGet(u => u.UserName).Returns("Posted By");
 
-            var comment = new Mock<IComment>();
+            var comment = new Mock<Comment>();
 
             comment.SetupGet(c => c.HtmlBody).Returns("<p>A dummy story");
             comment.SetupGet(c => c.ByUser).Returns(postedBy.Object);
@@ -279,10 +279,10 @@ namespace Kigg.Core.Test
                                         "Url: <%=url%>" +
                                         "User: <%=postedByUserName%>";
 
-            var postedBy = new Mock<IUser>();
+            var postedBy = new Mock<User>();
             postedBy.SetupGet(u => u.UserName).Returns("Posted By");
 
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
 
             story.SetupGet(s => s.Title).Returns("A dummy story");
             story.SetupGet(s => s.Url).Returns("http://www.dummystory.com");
@@ -290,7 +290,7 @@ namespace Kigg.Core.Test
 
             _file.Setup(f => f.ReadAllText(It.IsAny<string>())).Returns(mailTemplate).Verifiable();
 
-            var deletedBy = new Mock<IUser>();
+            var deletedBy = new Mock<User>();
             deletedBy.SetupGet(u => u.UserName).Returns("Deleted By");
 
             _emailSender.NotifyStoryDelete(story.Object, deletedBy.Object);
@@ -303,10 +303,10 @@ namespace Kigg.Core.Test
         {
             const string mailTemplate = "Story Published: <%=timestamp%>\r\n";
 
-            var category = new Mock<ICategory>();
+            var category = new Mock<Category>();
             category.SetupGet(c => c.Name).Returns("Dummy");
 
-            var story = new Mock<IStory>();
+            var story = new Mock<Story>();
             story.SetupGet(s => s.Title).Returns("A dummy story");
             story.SetupGet(s => s.BelongsTo).Returns(category.Object);
             story.SetupGet(s => s.Url).Returns("http://dummystory.com");

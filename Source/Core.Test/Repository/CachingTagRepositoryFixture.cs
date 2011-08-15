@@ -36,9 +36,9 @@ namespace Kigg.Core.Test
         {
             var repository = new CachingTagRepository(_innerRepository.Object, 3);
 
-            cache.Setup(c => c.Set(It.IsAny<string>(), It.IsAny<ICollection<ITag>>(), It.IsAny<DateTime>())).Verifiable();
+            cache.Setup(c => c.Set(It.IsAny<string>(), It.IsAny<ICollection<Tag>>(), It.IsAny<DateTime>())).Verifiable();
 
-            _innerRepository.Setup(r => r.FindByUsage(It.IsAny<int>())).Returns(new List<ITag> { CreateStubTag() }).Verifiable();
+            _innerRepository.Setup(r => r.FindByUsage(It.IsAny<int>())).Returns(new List<Tag> { CreateStubTag() }).Verifiable();
 
             repository.FindByUsage(1);
         }

@@ -32,9 +32,9 @@ namespace Kigg.Core.Test
         [Fact]
         public void Excecute_Should_Create_Users()
         {
-            _userRepository.Setup(r => r.FindByUserName(It.IsAny<string>())).Returns((IUser) null).Verifiable();
-            _factory.Setup(f => f.CreateUser(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new Mock<IUser>().Object).Verifiable();
-            _userRepository.Setup(r => r.Add(It.IsAny<IUser>())).Verifiable();
+            _userRepository.Setup(r => r.FindByUserName(It.IsAny<string>())).Returns((User) null).Verifiable();
+            _factory.Setup(f => f.CreateUser(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(new Mock<User>().Object).Verifiable();
+            _userRepository.Setup(r => r.Add(It.IsAny<User>())).Verifiable();
             unitOfWork.Setup(u => u.Commit()).Verifiable();
 
             _task.Execute();

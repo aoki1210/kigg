@@ -56,7 +56,7 @@ namespace Kigg.Service
             _storyWeightCalculators = storyWeightCalculators;
         }
 
-        public virtual StoryCreateResult Create(IUser byUser, string url, string title, string category, string description, string tags, string userIPAddress, string userAgent, string urlReferer, NameValueCollection serverVariables, Func<IStory, string> buildDetailUrl)
+        public virtual StoryCreateResult Create(User byUser, string url, string title, string category, string description, string tags, string userIPAddress, string userAgent, string urlReferer, NameValueCollection serverVariables, Func<Story, string> buildDetailUrl)
         {
             StoryCreateResult result = ValidateCreate(byUser, url, title, category, description, userIPAddress, userAgent);
 
@@ -72,14 +72,14 @@ namespace Kigg.Service
             {
                 using (IUnitOfWork unitOfWork = UnitOfWork.Begin())
                 {
-                    IStory alreadyExists = _storyRepository.FindByUrl(url);
+                    Story alreadyExists = _storyRepository.FindByUrl(url);
 
                     if (alreadyExists != null)
                     {
                         return new StoryCreateResult { ErrorMessage = "Story with the same url already exists.", DetailUrl = buildDetailUrl(alreadyExists) };
                     }
 
-                    ICategory storyCategory = _categoryRepository.FindByUniqueName(category);
+                    Category storyCategory = _categoryRepository.FindByUniqueName(category);
 
                     if (storyCategory == null)
                     {
@@ -106,7 +106,7 @@ namespace Kigg.Service
                     }
 
                     // If we are here which means story is not spam
-                    IStory story = _factory.CreateStory(storyCategory, byUser, userIPAddress, title.StripHtml(), description, url);
+                    Story story = _factory.CreateStory(storyCategory, byUser, userIPAddress, title.StripHtml(), description, url);
 
                     _storyRepository.Add(story);
 
@@ -142,7 +142,7 @@ namespace Kigg.Service
             return result;
         }
 
-        public virtual void Update(IStory theStory, string uniqueName, DateTime createdAt, string title, string category, string description, string tags)
+        public virtual void Update(Story theStory, string uniqueName, DateTime createdAt, string title, string category, string description, string tags)
         {
             Check.Argument.IsNotNull(theStory, "theStory");
 
@@ -168,7 +168,7 @@ namespace Kigg.Service
                 if ((!string.IsNullOrEmpty(category)) &&
                     (string.Compare(category, theStory.BelongsTo.UniqueName, StringComparison.OrdinalIgnoreCase) != 0))
                 {
-                    ICategory storyCategory = _categoryRepository.FindByUniqueName(category);
+                    Category storyCategory = _categoryRepository.FindByUniqueName(category);
                     theStory.ChangeCategory(storyCategory);
                 }
 
@@ -183,7 +183,7 @@ namespace Kigg.Service
             }
         }
 
-        public virtual void Delete(IStory theStory, IUser byUser)
+        public virtual void Delete(Story theStory, User byUser)
         {
             Check.Argument.IsNotNull(theStory, "theStory");
             Check.Argument.IsNotNull(byUser, "byUser");
@@ -201,7 +201,7 @@ namespace Kigg.Service
             }
         }
 
-        public virtual void View(IStory theStory, IUser byUser, string fromIPAddress)
+        public virtual void View(Story theStory, User byUser, string fromIPAddress)
         {
             Check.Argument.IsNotNull(theStory, "theStory");
             Check.Argument.IsNotEmpty(fromIPAddress, "fromIPAddress");
@@ -216,7 +216,7 @@ namespace Kigg.Service
             }
         }
 
-        public virtual void Promote(IStory theStory, IUser byUser, string fromIPAddress)
+        public virtual void Promote(Story theStory, User byUser, string fromIPAddress)
         {
             Check.Argument.IsNotNull(theStory, "theStory");
             Check.Argument.IsNotNull(byUser, "byUser");
@@ -233,7 +233,7 @@ namespace Kigg.Service
             }
         }
 
-        public virtual void Demote(IStory theStory, IUser byUser)
+        public virtual void Demote(Story theStory, User byUser)
         {
             Check.Argument.IsNotNull(theStory, "theStory");
             Check.Argument.IsNotNull(byUser, "byUser");
@@ -249,7 +249,7 @@ namespace Kigg.Service
             }
         }
 
-        public virtual void MarkAsSpam(IStory theStory, string storyUrl, IUser byUser, string fromIPAddress)
+        public virtual void MarkAsSpam(Story theStory, string storyUrl, User byUser, string fromIPAddress)
         {
             Check.Argument.IsNotNull(theStory, "theStory");
             Check.Argument.IsNotEmpty(storyUrl, "storyUrl");
@@ -267,7 +267,7 @@ namespace Kigg.Service
             }
         }
 
-        public virtual void UnmarkAsSpam(IStory theStory, IUser byUser)
+        public virtual void UnmarkAsSpam(Story theStory, User byUser)
         {
             Check.Argument.IsNotNull(theStory, "theStory");
             Check.Argument.IsNotNull(byUser, "byUser");
@@ -283,7 +283,7 @@ namespace Kigg.Service
             }
         }
 
-        public virtual CommentCreateResult Comment(IStory forStory, string storyUrl, IUser byUser, string content, bool subscribe, string userIPAddress, string userAgent, string urlReferer, NameValueCollection serverVariables)
+        public virtual CommentCreateResult Comment(Story forStory, string storyUrl, User byUser, string content, bool subscribe, string userIPAddress, string userAgent, string urlReferer, NameValueCollection serverVariables)
         {
             CommentCreateResult result = ValidateComment(forStory, byUser, content, userIPAddress, userAgent);
 
@@ -303,7 +303,7 @@ namespace Kigg.Service
 
                 using(IUnitOfWork unitOfWork = UnitOfWork.Begin())
                 {
-                    IComment comment = forStory.PostComment(content, SystemTime.Now(), byUser, userIPAddress);
+                    Comment comment = forStory.PostComment(content, SystemTime.Now(), byUser, userIPAddress);
 
                     if (subscribe)
                     {
@@ -332,7 +332,7 @@ namespace Kigg.Service
             return result;
         }
 
-        public virtual void Spam(IStory theStory, string storyUrl, IUser byUser)
+        public virtual void Spam(Story theStory, string storyUrl, User byUser)
         {
             Check.Argument.IsNotNull(theStory, "theStory");
             Check.Argument.IsNotEmpty(storyUrl, "storyUrl");
@@ -354,7 +354,7 @@ namespace Kigg.Service
             }
         }
 
-        public virtual void Spam(IComment theComment, string storyUrl, IUser byUser)
+        public virtual void Spam(Comment theComment, string storyUrl, User byUser)
         {
             Check.Argument.IsNotNull(theComment, "theComment");
 
@@ -371,7 +371,7 @@ namespace Kigg.Service
             }
         }
 
-        public virtual void MarkAsOffended(IComment theComment, string storyUrl, IUser byUser)
+        public virtual void MarkAsOffended(Comment theComment, string storyUrl, User byUser)
         {
             Check.Argument.IsNotNull(theComment, "theComment");
             Check.Argument.IsNotEmpty(storyUrl, "storyUrl");
@@ -413,7 +413,7 @@ namespace Kigg.Service
             }
         }
 
-        public virtual void Approve(IStory theStory, string storyUrl, IUser byUser)
+        public virtual void Approve(Story theStory, string storyUrl, User byUser)
         {
             Check.Argument.IsNotNull(theStory, "theStory");
             Check.Argument.IsNotEmpty(storyUrl, "storyUrl");
@@ -432,7 +432,7 @@ namespace Kigg.Service
             }
         }
 
-        private static SpamCheckContent CreateSpamCheckContent(IUser user, string userIpAddress, string userAgent, string url, string referer, string content, string type, NameValueCollection serverVariables)
+        private static SpamCheckContent CreateSpamCheckContent(User user, string userIpAddress, string userAgent, string url, string referer, string content, string type, NameValueCollection serverVariables)
         {
             SpamCheckContent checkContentToCheck = new SpamCheckContent
                                              {
@@ -453,7 +453,7 @@ namespace Kigg.Service
             return checkContentToCheck;
         }
 
-        private static StoryCreateResult ValidateCreate(IUser byUser, string url, string title, string category, string description, string userIPAddress, string userAgent)
+        private static StoryCreateResult ValidateCreate(User byUser, string url, string title, string category, string description, string userIPAddress, string userAgent)
         {
             StoryCreateResult result = null;
 
@@ -501,7 +501,7 @@ namespace Kigg.Service
             return result;
         }
 
-        private static CommentCreateResult ValidateComment(IStory forStory, IUser byUser, string content, string userIPAddress, string userAgent)
+        private static CommentCreateResult ValidateComment(Story forStory, User byUser, string content, string userIPAddress, string userAgent)
         {
             CommentCreateResult result = null;
 
@@ -533,12 +533,12 @@ namespace Kigg.Service
             return result;
         }
 
-        private bool ShouldCheckSpamForUser(IUser user)
+        private bool ShouldCheckSpamForUser(User user)
         {
             return !user.CanModerate() && (_storyRepository.CountPostedByUser(user.Id) <= _settings.StorySumittedThresholdOfUserToSpamCheck);
         }
 
-        private T EnsureNotSpam<T>(IUser byUser, string userIPAddress, string userAgent, string url, string urlReferer, string content, string contentType, NameValueCollection serverVariables, string logMessage, string errorMessage) where T : BaseServiceResult, new()
+        private T EnsureNotSpam<T>(User byUser, string userIPAddress, string userAgent, string url, string urlReferer, string content, string contentType, NameValueCollection serverVariables, string logMessage, string errorMessage) where T : BaseServiceResult, new()
         {
             bool isSpam = _spamProtection.IsSpam(CreateSpamCheckContent(byUser, userIPAddress, userAgent, url, urlReferer, content, contentType, serverVariables));
 
@@ -569,7 +569,7 @@ namespace Kigg.Service
 
                         if (!string.IsNullOrEmpty(tagName))
                         {
-                            ITag tag = _tagRepository.FindByName(tagName);
+                            Tag tag = _tagRepository.FindByName(tagName);
 
                             if (tag == null)
                             {
@@ -598,9 +598,9 @@ namespace Kigg.Service
 
             if (publishableCount > 0)
             {
-                ICollection<IStory> stories = _storyRepository.FindPublishable(minimumDate, maximumDate, 0, publishableCount).Result;
+                ICollection<Story> stories = _storyRepository.FindPublishable(minimumDate, maximumDate, 0, publishableCount).Result;
 
-                foreach (IStory story in stories)
+                foreach (Story story in stories)
                 {
                     PublishedStory publishedStory = new PublishedStory(story);
 
@@ -620,9 +620,9 @@ namespace Kigg.Service
         {
             foreach(PublishedStory publishableStory in publishableStories)
             {
-                ICollection<IMarkAsSpam> markedAsSpams = _markAsSpamRepository.FindAfter(publishableStory.Story.Id, publishableStory.Story.LastProcessedAt ?? publishableStory.Story.CreatedAt);
+                ICollection<MarkAsSpam> markedAsSpams = _markAsSpamRepository.FindAfter(publishableStory.Story.Id, publishableStory.Story.LastProcessedAt ?? publishableStory.Story.CreatedAt);
 
-                foreach (IMarkAsSpam markedAsSpam in markedAsSpams)
+                foreach (MarkAsSpam markedAsSpam in markedAsSpams)
                 {
                     _eventAggregator.GetEvent<StoryIncorrectlyMarkedAsSpamEvent>().Publish(new StoryIncorrectlyMarkedAsSpamEventArgs(publishableStory.Story, markedAsSpam.ByUser));
                 }

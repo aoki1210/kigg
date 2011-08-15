@@ -26,7 +26,7 @@ namespace Kigg.Infrastructure
 
             content = content.StripHtml().ToUpperInvariant();
 
-            foreach (ITag tag in _tagRepository.FindByUsage(_topTags))
+            foreach (Tag tag in _tagRepository.FindByUsage(_topTags))
             {
                 if (content.Contains(tag.Name.ToUpperInvariant()))
                 {

@@ -28,16 +28,16 @@ namespace Kigg.Service
             _moderatorMultiply = moderatorMultiply;
         }
 
-        public override double Calculate(DateTime publishingTimestamp, IStory story)
+        public override double Calculate(DateTime publishingTimestamp, Story story)
         {
             Check.Argument.IsNotNull(story, "story");
 
             double maxScore = double.MinValue;
             double userScore = 0;
 
-            IEnumerable<IUser> users = _voteRepository.FindAfter(story.Id, story.LastProcessedAt ?? story.CreatedAt).Select(v => v.ByUser);
+            IEnumerable<User> users = _voteRepository.FindAfter(story.Id, story.LastProcessedAt ?? story.CreatedAt).Select(v => v.ByUser);
 
-            foreach (IUser user in users.Where(u => u.IsPublicUser()))
+            foreach (User user in users.Where(u => u.IsPublicUser()))
             {
                 double score = (Convert.ToDouble(user.CurrentScore) * _scorePercent);
 

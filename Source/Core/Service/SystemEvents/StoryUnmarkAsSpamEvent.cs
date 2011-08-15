@@ -7,19 +7,19 @@ namespace Kigg.Service
     public class StoryUnmarkAsSpamEventArgs
     {
         [DebuggerStepThrough]
-        public StoryUnmarkAsSpamEventArgs(IStory story, IUser user)
+        public StoryUnmarkAsSpamEventArgs(Story story, User user)
         {
             Story = story;
             User = user;
         }
 
-        public IStory Story
+        public Story Story
         {
             get;
             private set;
         }
 
-        public IUser User
+        public User User
         {
             get;
             private set;

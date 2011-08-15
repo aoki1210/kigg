@@ -24,11 +24,11 @@ namespace Kigg.Service
             _differentIpWeight = differentIPAddressWeight;
         }
 
-        public override double Calculate(DateTime publishingTimestamp, IStory story)
+        public override double Calculate(DateTime publishingTimestamp, Story story)
         {
             Check.Argument.IsNotNull(story, "story");
 
-            ICollection<IVote> votes = _voteRepository.FindAfter(story.Id, story.LastProcessedAt ?? story.CreatedAt);
+            ICollection<Vote> votes = _voteRepository.FindAfter(story.Id, story.LastProcessedAt ?? story.CreatedAt);
 
             double total = votes.Sum(v => (string.Compare(v.FromIPAddress, story.FromIPAddress, StringComparison.OrdinalIgnoreCase) == 0) ? _sameIpWeight : _differentIpWeight);
 
