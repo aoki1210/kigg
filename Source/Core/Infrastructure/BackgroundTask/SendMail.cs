@@ -1,43 +1,45 @@
 namespace Kigg.Infrastructure
 {
+    using System;
+
     using Service;
 
     public class SendMail : BaseBackgroundTask
     {
-        private readonly IEmailSender _emailSender;
+        private readonly IEmailSender emailSender;
 
-        private SubscriptionToken _commentSubmitToken;
-        private SubscriptionToken _commentMarkAsOffendedToken;
-        private SubscriptionToken _commentSpamToken;
-        private SubscriptionToken _storyApproveToken;
-        private SubscriptionToken _storyDeleteToken;
-        private SubscriptionToken _storyMarkAsSpamToken;
-        private SubscriptionToken _storySpamToken;
-        private SubscriptionToken _storyPublishToken;
-        private SubscriptionToken _possibleStorySpamToken;
-        private SubscriptionToken _possibleCommentSpamToken;
+        private SubscriptionToken commentSubmitToken;
+        private SubscriptionToken commentMarkAsOffendedToken;
+        private SubscriptionToken commentSpamToken;
+        private SubscriptionToken storyApproveToken;
+        private SubscriptionToken storyDeleteToken;
+        private SubscriptionToken storyMarkAsSpamToken;
+        private SubscriptionToken storySpamToken;
+        private SubscriptionToken storyPublishToken;
+        private SubscriptionToken possibleStorySpamToken;
+        private SubscriptionToken possibleCommentSpamToken;
 
         public SendMail(IEventAggregator eventAggregator, IEmailSender emailSender) : base(eventAggregator)
         {
             Check.Argument.IsNotNull(emailSender, "emailSender");
 
-            _emailSender = emailSender;
+            this.emailSender = emailSender;
         }
 
         protected override void OnStart()
         {
             if (!IsRunning)
             {
-                _commentSubmitToken = Subscribe<CommentSubmitEvent, CommentSubmitEventArgs>(CommentSubmitted);
-                _commentMarkAsOffendedToken = Subscribe<CommentMarkAsOffendedEvent, CommentMarkAsOffendedEventArgs>(CommentMarkedAsOffended);
-                _commentSpamToken = Subscribe<CommentSpamEvent, CommentSpamEventArgs>(CommentSpammed);
-                _storyApproveToken = Subscribe<StoryApproveEvent, StoryApproveEventArgs>(StoryApproved);
-                _storyDeleteToken = Subscribe<StoryDeleteEvent, StoryDeleteEventArgs>(StoryDeleted);
-                _storyMarkAsSpamToken = Subscribe<StoryMarkAsSpamEvent, StoryMarkAsSpamEventArgs>(StoryMarkedAsSpam);
-                _storySpamToken = Subscribe<StorySpamEvent, StorySpamEventArgs>(StorySpammed);
-                _storyPublishToken = Subscribe<StoryPublishEvent, StoryPublishEventArgs>(StoryPublished);
-                _possibleStorySpamToken = Subscribe<PossibleSpamStoryEvent, PossibleSpamStoryEventArgs>(PossibleSpamStoryDetected);
-                _possibleCommentSpamToken = Subscribe<PossibleSpamCommentEvent, PossibleSpamCommentEventArgs>(PossibleSpamCommentDetected);
+                commentSubmitToken = Subscribe<CommentSubmitEvent, CommentSubmitEventArgs>(CommentSubmitted);
+                commentMarkAsOffendedToken = Subscribe<CommentMarkAsOffendedEvent, CommentMarkAsOffendedEventArgs>(CommentMarkedAsOffended);
+                commentSpamToken = Subscribe<CommentSpamEvent, CommentSpamEventArgs>(CommentSpammed);
+                storyApproveToken = Subscribe<StoryApproveEvent, StoryApproveEventArgs>(StoryApproved);
+                storyDeleteToken = Subscribe<StoryDeleteEvent, StoryDeleteEventArgs>(StoryDeleted);
+                storyMarkAsSpamToken = Subscribe<StoryMarkAsSpamEvent, StoryMarkAsSpamEventArgs>(StoryMarkedAsSpam);
+                storySpamToken = Subscribe<StorySpamEvent, StorySpamEventArgs>(StorySpammed);
+                storyPublishToken = Subscribe<StoryPublishEvent, StoryPublishEventArgs>(StoryPublished);
+                possibleStorySpamToken = Subscribe<PossibleSpamStoryEvent, PossibleSpamStoryEventArgs>(PossibleSpamStoryDetected);
+                possibleCommentSpamToken = Subscribe<PossibleSpamCommentEvent, PossibleSpamCommentEventArgs>(PossibleSpamCommentDetected);
             }
         }
 
@@ -45,67 +47,68 @@ namespace Kigg.Infrastructure
         {
             if (IsRunning)
             {
-                Unsubscribe<CommentSubmitEvent>(_commentSubmitToken);
-                Unsubscribe<CommentMarkAsOffendedEvent>(_commentMarkAsOffendedToken);
-                Unsubscribe<CommentSpamEvent>(_commentSpamToken);
-                Unsubscribe<StoryApproveEvent>(_storyApproveToken);
-                Unsubscribe<StoryDeleteEvent>(_storyDeleteToken);
-                Unsubscribe<StoryMarkAsSpamEvent>(_storyMarkAsSpamToken);
-                Unsubscribe<StorySpamEvent>(_storySpamToken);
-                Unsubscribe<StoryPublishEvent>(_storyPublishToken);
-                Unsubscribe<PossibleSpamStoryEvent>(_possibleStorySpamToken);
-                Unsubscribe<PossibleSpamCommentEvent>(_possibleCommentSpamToken);
+                Unsubscribe<CommentSubmitEvent>(commentSubmitToken);
+                Unsubscribe<CommentMarkAsOffendedEvent>(commentMarkAsOffendedToken);
+                Unsubscribe<CommentSpamEvent>(commentSpamToken);
+                Unsubscribe<StoryApproveEvent>(storyApproveToken);
+                Unsubscribe<StoryDeleteEvent>(storyDeleteToken);
+                Unsubscribe<StoryMarkAsSpamEvent>(storyMarkAsSpamToken);
+                Unsubscribe<StorySpamEvent>(storySpamToken);
+                Unsubscribe<StoryPublishEvent>(storyPublishToken);
+                Unsubscribe<PossibleSpamStoryEvent>(possibleStorySpamToken);
+                Unsubscribe<PossibleSpamCommentEvent>(possibleCommentSpamToken);
             }
         }
 
         internal void CommentSubmitted(CommentSubmitEventArgs eventArgs)
         {
-            _emailSender.SendComment(eventArgs.DetailUrl, eventArgs.Comment, eventArgs.Comment.ForStory.Subscribers);
+            throw new NotImplementedException();
+            //_emailSender.SendComment(eventArgs.DetailUrl, eventArgs.Comment, eventArgs.Comment.ForStory.Subscribers);
         }
 
         internal void CommentMarkedAsOffended(CommentMarkAsOffendedEventArgs eventArgs)
         {
-            _emailSender.NotifyCommentAsOffended(eventArgs.DetailUrl, eventArgs.Comment, eventArgs.User);
+            emailSender.NotifyCommentAsOffended(eventArgs.DetailUrl, eventArgs.Comment, eventArgs.User);
         }
 
         internal void CommentSpammed(CommentSpamEventArgs eventArgs)
         {
-            _emailSender.NotifyConfirmSpamComment(eventArgs.DetailUrl, eventArgs.Comment, eventArgs.User);
+            emailSender.NotifyConfirmSpamComment(eventArgs.DetailUrl, eventArgs.Comment, eventArgs.User);
         }
 
         internal void StoryApproved(StoryApproveEventArgs eventArgs)
         {
-            _emailSender.NotifyStoryApprove(eventArgs.DetailUrl, eventArgs.Story, eventArgs.User);
+            emailSender.NotifyStoryApprove(eventArgs.DetailUrl, eventArgs.Story, eventArgs.User);
         }
 
         internal void StoryDeleted(StoryDeleteEventArgs eventArgs)
         {
-            _emailSender.NotifyStoryDelete(eventArgs.Story, eventArgs.User);
+            emailSender.NotifyStoryDelete(eventArgs.Story, eventArgs.User);
         }
 
         internal void StoryMarkedAsSpam(StoryMarkAsSpamEventArgs eventArgs)
         {
-            _emailSender.NotifyStoryMarkedAsSpam(eventArgs.DetailUrl, eventArgs.Story, eventArgs.User);
+            emailSender.NotifyStoryMarkedAsSpam(eventArgs.DetailUrl, eventArgs.Story, eventArgs.User);
         }
 
         internal void StorySpammed(StorySpamEventArgs eventArgs)
         {
-            _emailSender.NotifyConfirmSpamStory(eventArgs.DetailUrl, eventArgs.Story, eventArgs.User);
+            emailSender.NotifyConfirmSpamStory(eventArgs.DetailUrl, eventArgs.Story, eventArgs.User);
         }
 
         internal void StoryPublished(StoryPublishEventArgs eventArgs)
         {
-            _emailSender.NotifyPublishedStories(eventArgs.Timestamp, eventArgs.PublishedStories);
+            emailSender.NotifyPublishedStories(eventArgs.Timestamp, eventArgs.PublishedStories);
         }
 
         internal void PossibleSpamStoryDetected(PossibleSpamStoryEventArgs eventArgs)
         {
-            _emailSender.NotifySpamStory(eventArgs.DetailUrl, eventArgs.Story, eventArgs.Source);
+            emailSender.NotifySpamStory(eventArgs.DetailUrl, eventArgs.Story, eventArgs.Source);
         }
 
         internal void PossibleSpamCommentDetected(PossibleSpamCommentEventArgs eventArgs)
         {
-            _emailSender.NotifySpamComment(eventArgs.DetailUrl, eventArgs.Comment, eventArgs.Source);
+            emailSender.NotifySpamComment(eventArgs.DetailUrl, eventArgs.Comment, eventArgs.Source);
         }
     }
 }

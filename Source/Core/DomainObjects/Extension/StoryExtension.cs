@@ -34,13 +34,7 @@
         {
             return story.ApprovedAt.HasValue;
         }
-
-        [DebuggerStepThrough]
-        public static bool HasComments(this Story story)
-        {
-            return story.CommentCount > 0;
-        }
-
+        
         [DebuggerStepThrough]
         public static bool IsPostedBy(this Story story, User byUser)
         {
