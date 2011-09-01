@@ -119,7 +119,7 @@
     <Compile Include="Extension\EnumerableExtension.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helper\Constants.cs" />
-    <Compile Include="Helper\DisposableResource.cs" />
+    <Compile Include="Helper\Disposable.cs" />
     <Compile Include="Helper\SystemTime.cs" />
     <Compile Include="Infrastructure\BackgroundTask\BaseBackgroundTask.cs" />
     <Compile Include="Infrastructure\BackgroundTask\IBackgroundTask.cs" />
