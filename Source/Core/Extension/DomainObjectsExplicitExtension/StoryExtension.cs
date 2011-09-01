@@ -56,7 +56,7 @@
         {
             Check.Argument.IsNotNull(forStory, "forStory");
             Check.Argument.IsNotInvalidDate(at, "at");
-            Check.Argument.IsNotEmpty(fromIpAddress, "fromIpAddress");
+            Check.Argument.IsNotNullOrEmpty(fromIpAddress, "fromIpAddress");
 
             var view = IoC.Resolve<IDomainObjectFactory>().CreateStoryView(forStory, at, fromIpAddress);
             IoC.Resolve<IStoryViewRepository>().Add(view);
@@ -70,7 +70,7 @@
             Check.Argument.IsNotNull(forStory, "forStory");
             Check.Argument.IsNotInFuture(at, "at");
             Check.Argument.IsNotNull(byUser, "byUser");
-            Check.Argument.IsNotEmpty(fromIpAddress, "fromIpAddress");
+            Check.Argument.IsNotNullOrEmpty(fromIpAddress, "fromIpAddress");
 
             var vote = IoC.Resolve<IDomainObjectFactory>().CreateStoryVote(forStory, at, byUser, fromIpAddress);
             IoC.Resolve<IVoteRepository>().Add(vote);
@@ -100,7 +100,7 @@
             Check.Argument.IsNotNull(forStory, "forStory");
             Check.Argument.IsNotInFuture(at, "at");
             Check.Argument.IsNotNull(byUser, "byUser");
-            Check.Argument.IsNotEmpty(fromIpAddress, "fromIpAddress");
+            Check.Argument.IsNotNullOrEmpty(fromIpAddress, "fromIpAddress");
 
             var spamStory = IoC.Resolve<IDomainObjectFactory>().CreateMarkAsSpam(forStory, at, byUser, fromIpAddress);
             IoC.Resolve<IMarkAsSpamRepository>().Add(spamStory);

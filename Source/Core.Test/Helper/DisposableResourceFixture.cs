@@ -24,7 +24,7 @@ namespace Kigg.Core.Test
             GC.Collect();
         }
 
-        private class DisposableResourceTestDouble  : DisposableResource
+        private class DisposableResourceTestDouble  : Disposable
         {
             public bool IsDisposed;
 

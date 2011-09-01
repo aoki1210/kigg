@@ -11,7 +11,7 @@ namespace Kigg.Infrastructure
         [DebuggerStepThrough]
         public static void Info(string message)
         {
-            Check.Argument.IsNotEmpty(message, "message");
+            Check.Argument.IsNotNullOrEmpty(message, "message");
 
             GetLog().Info(message);
         }
@@ -20,7 +20,7 @@ namespace Kigg.Infrastructure
         [DebuggerStepThrough]
         public static void Info(string format, params object[] args)
         {
-            Check.Argument.IsNotEmpty(format, "format");
+            Check.Argument.IsNotNullOrEmpty(format, "format");
 
             GetLog().Info(Format(format, args));
         }
@@ -29,7 +29,7 @@ namespace Kigg.Infrastructure
         [DebuggerStepThrough]
         public static void Warning(string message)
         {
-            Check.Argument.IsNotEmpty(message, "message");
+            Check.Argument.IsNotNullOrEmpty(message, "message");
 
             GetLog().Warning(message);
         }
@@ -38,7 +38,7 @@ namespace Kigg.Infrastructure
         [DebuggerStepThrough]
         public static void Warning(string format, params object[] args)
         {
-            Check.Argument.IsNotEmpty(format, "format");
+            Check.Argument.IsNotNullOrEmpty(format, "format");
 
             GetLog().Warning(Format(format, args));
         }
@@ -47,7 +47,7 @@ namespace Kigg.Infrastructure
         [DebuggerStepThrough]
         public static void Error(string message)
         {
-            Check.Argument.IsNotEmpty(message, "message");
+            Check.Argument.IsNotNullOrEmpty(message, "message");
 
             GetLog().Error(message);
         }
@@ -56,7 +56,7 @@ namespace Kigg.Infrastructure
         [DebuggerStepThrough]
         public static void Error(string format, params object[] args)
         {
-            Check.Argument.IsNotEmpty(format, "format");
+            Check.Argument.IsNotNullOrEmpty(format, "format");
 
             GetLog().Error(Format(format, args));
         }
@@ -79,7 +79,7 @@ namespace Kigg.Infrastructure
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static string Format(string format, params object[] args)
         {
-            Check.Argument.IsNotEmpty(format, "format");
+            Check.Argument.IsNotNullOrEmpty(format, "format");
 
             return format.FormatWith(args);
         }

@@ -37,7 +37,7 @@ using System.Collections.Generic;
         [DebuggerStepThrough]
         public static string FormatWith(this string target, params object[] args)
         {
-            Check.Argument.IsNotEmpty(target, "target");
+            Check.Argument.IsNotNullOrEmpty(target, "target");
 
             return string.Format(Constants.CurrentCulture, target, args);
         }
@@ -45,7 +45,7 @@ using System.Collections.Generic;
         [DebuggerStepThrough]
         public static string Hash(this string target)
         {
-            Check.Argument.IsNotEmpty(target, "target");
+            Check.Argument.IsNotNullOrEmpty(target, "target");
 
             using (MD5 md5 = MD5.Create())
             {
@@ -61,7 +61,7 @@ using System.Collections.Generic;
         {
             const int DotCount = 3;
 
-            Check.Argument.IsNotEmpty(target, "target");
+            Check.Argument.IsNotNullOrEmpty(target, "target");
             Check.Argument.IsNotNegativeOrZero(index, "index");
 
             return (target.Length <= index) ? target : string.Concat(target.Substring(0, index - DotCount), new string('.', DotCount));

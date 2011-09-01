@@ -20,7 +20,7 @@ namespace Kigg.Infrastructure
             Check.Argument.IsNotNull(settings, "settings");
             Check.Argument.IsNotNull(httpForm, "httpForm");
             Check.Argument.IsNotNull(contentService, "contentService");
-            Check.Argument.IsNotEmpty(textFormat, "textFormat");
+            Check.Argument.IsNotNullOrEmpty(textFormat, "textFormat");
 
             _settings = settings;
             _httpForm = httpForm;

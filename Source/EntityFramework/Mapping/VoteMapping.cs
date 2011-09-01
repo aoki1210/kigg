@@ -1,7 +1,6 @@
 ﻿namespace Kigg.Infrastructure.EntityFramework.Mapping
 {
     using System.Data.Entity.ModelConfiguration;
-    using System.ComponentModel.DataAnnotations;
 
     using DomainObjects;
 

@@ -9,7 +9,7 @@
     using Microsoft.Practices.Unity;
     using Microsoft.Practices.Unity.Configuration;
 
-    public class UnityDependencyResolver : DisposableResource, IDependencyResolver
+    public class UnityDependencyResolver : Disposable, IDependencyResolver
     {
         private readonly IUnityContainer _container;
 
@@ -56,7 +56,7 @@
         public T Resolve<T>(Type type, string name)
         {
             Check.Argument.IsNotNull(type, "type");
-            Check.Argument.IsNotEmpty(name, "name");
+            Check.Argument.IsNotNullOrEmpty(name, "name");
 
             return (T) _container.Resolve(type, name);
         }
@@ -70,7 +70,7 @@
         [DebuggerStepThrough]
         public T Resolve<T>(string name)
         {
-            Check.Argument.IsNotEmpty(name, "name");
+            Check.Argument.IsNotNullOrEmpty(name, "name");
 
             return _container.Resolve<T>(name);
         }
@@ -99,14 +99,12 @@
         }
 
         [DebuggerStepThrough]
-        protected override void Dispose(bool disposing)
+        protected override void DisposeCore()
         {
-            if (disposing)
+            if (_container != null)
             {
                 _container.Dispose();
             }
-
-            base.Dispose(disposing);
         }
     }
 }

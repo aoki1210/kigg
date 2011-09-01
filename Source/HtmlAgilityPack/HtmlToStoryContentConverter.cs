@@ -47,7 +47,7 @@ namespace Kigg.Infrastructure.HtmlAgilityPack
         public virtual StoryContent Convert(string url, string html)
         {
             Check.Argument.IsNotInvalidWebUrl(url, "url");
-            Check.Argument.IsNotEmpty(html, "html");
+            Check.Argument.IsNotNullOrEmpty(html, "html");
 
             Document doc = new Document();
             doc.LoadHtml(html);

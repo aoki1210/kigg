@@ -23,10 +23,10 @@ namespace Kigg.Infrastructure
 
         public GenericExternalSpamProtection(string name, string baseUrl, string apiKey, string version, IConfigurationSettings settings, IHttpForm httpForm)
         {
-            Check.Argument.IsNotEmpty(name, "name");
-            Check.Argument.IsNotEmpty(baseUrl, "baseUrl");
-            Check.Argument.IsNotEmpty(apiKey, "apiKey");
-            Check.Argument.IsNotEmpty(version, "version");
+            Check.Argument.IsNotNullOrEmpty(name, "name");
+            Check.Argument.IsNotNullOrEmpty(baseUrl, "baseUrl");
+            Check.Argument.IsNotNullOrEmpty(apiKey, "apiKey");
+            Check.Argument.IsNotNullOrEmpty(version, "version");
             Check.Argument.IsNotNull(settings, "settings");
             Check.Argument.IsNotNull(httpForm, "httpForm");
 

@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Web;
 
-    public class UnityPerWebRequestLifetimeModule : DisposableResource, IHttpModule
+    public class UnityPerWebRequestLifetimeModule : Disposable, IHttpModule
     {
         private static readonly object Key = new object();
 

@@ -52,7 +52,7 @@ namespace Kigg.Repository
 
         public override Tag FindByUniqueName(string uniqueName)
         {
-            Check.Argument.IsNotEmpty(uniqueName, "uniqueName");
+            Check.Argument.IsNotNullOrEmpty(uniqueName, "uniqueName");
 
             Log.Info("Retrieving tag with unique name: {0}", uniqueName);
 
@@ -72,7 +72,7 @@ namespace Kigg.Repository
 
         public override Tag FindByName(string name)
         {
-            Check.Argument.IsNotEmpty(name, "name");
+            Check.Argument.IsNotNullOrEmpty(name, "name");
 
             Log.Info("Retrieving tag with name: {0}".FormatWith(name));
 
@@ -92,7 +92,7 @@ namespace Kigg.Repository
 
         public override ICollection<Tag> FindMatching(string name, int max)
         {
-            Check.Argument.IsNotEmpty(name, "name");
+            Check.Argument.IsNotNullOrEmpty(name, "name");
             Check.Argument.IsNotNegativeOrZero(max, "max");
 
             Log.Info("Retrieving tags by name like : {0}, {1}", name, max);

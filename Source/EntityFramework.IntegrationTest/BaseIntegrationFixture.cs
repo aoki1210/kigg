@@ -22,8 +22,12 @@ namespace Kigg.Infrastructure.EF.IntegrationTest
         
         protected BaseIntegrationFixture()
         {
+            var dbProvFactory = System.Data.Common.DbProviderFactories.GetFactory("System.Data.SqlClient");
+            var connString =
+                "Data Source=.;Initial Catalog=KiGG;Integrated Security=True;MultipleActiveResultSets=False";
+            var fac = new KiggDbFactory(dbProvFactory, connString);
             //_connectionString = CreateConnectionString();
-            dbContext = new KiggDbContext("Data Source=.;Initial Catalog=KiGG;Integrated Security=True;MultipleActiveResultSets=False");
+            dbContext = fac.Get(); //new KiggDbContext("Data Source=.;Initial Catalog=KiGG;Integrated Security=True;MultipleActiveResultSets=False");
             //_dbFactory = new DatabaseFactory(_connectionString);
             //_domainFactory = new DomainObjectFactory();
 

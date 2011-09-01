@@ -20,8 +20,8 @@ namespace Kigg.Infrastructure
             Check.Argument.IsNotNull(httpForm, "httpForm");
             Check.Argument.IsNotNull(converter, "converter");
             Check.Argument.IsNotNull(fileReader, "fileReader");
-            Check.Argument.IsNotEmpty(blockedUrlPrefixFilePath, "blockedUrlPrefixFilePath");
-            Check.Argument.IsNotEmpty(shortUrlProviderFormat, "shortUrlProviderFormat");
+            Check.Argument.IsNotNullOrEmpty(blockedUrlPrefixFilePath, "blockedUrlPrefixFilePath");
+            Check.Argument.IsNotNullOrEmpty(shortUrlProviderFormat, "shortUrlProviderFormat");
 
             _httpForm = httpForm;
             _converter = converter;
@@ -63,7 +63,7 @@ namespace Kigg.Infrastructure
 
         public virtual string ShortUrl(string url)
         {
-            Check.Argument.IsNotEmpty(url, "url");
+            Check.Argument.IsNotNullOrEmpty(url, "url");
 
             string shortUrl = _httpForm.Get(new HttpFormGetRequest { Url = _shortUrlProviderFormat.FormatWith(url.UrlEncode()) } ).Response;
 

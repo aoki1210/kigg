@@ -204,7 +204,7 @@ namespace Kigg.Service
         public virtual void View(Story theStory, User byUser, string fromIPAddress)
         {
             Check.Argument.IsNotNull(theStory, "theStory");
-            Check.Argument.IsNotEmpty(fromIPAddress, "fromIPAddress");
+            Check.Argument.IsNotNullOrEmpty(fromIPAddress, "fromIPAddress");
 
             using(IUnitOfWork unitOfWork = UnitOfWork.Begin())
             {
@@ -220,7 +220,7 @@ namespace Kigg.Service
         {
             Check.Argument.IsNotNull(theStory, "theStory");
             Check.Argument.IsNotNull(byUser, "byUser");
-            Check.Argument.IsNotEmpty(fromIPAddress, "fromIPAddress");
+            Check.Argument.IsNotNullOrEmpty(fromIPAddress, "fromIPAddress");
 
             using(IUnitOfWork unitOfWork = UnitOfWork.Begin())
             {
@@ -252,9 +252,9 @@ namespace Kigg.Service
         public virtual void MarkAsSpam(Story theStory, string storyUrl, User byUser, string fromIPAddress)
         {
             Check.Argument.IsNotNull(theStory, "theStory");
-            Check.Argument.IsNotEmpty(storyUrl, "storyUrl");
+            Check.Argument.IsNotNullOrEmpty(storyUrl, "storyUrl");
             Check.Argument.IsNotNull(byUser, "byUser");
-            Check.Argument.IsNotEmpty(fromIPAddress, "fromIPAddress");
+            Check.Argument.IsNotNullOrEmpty(fromIPAddress, "fromIPAddress");
 
             using(IUnitOfWork unitOfWork = UnitOfWork.Begin())
             {
@@ -335,7 +335,7 @@ namespace Kigg.Service
         public virtual void Spam(Story theStory, string storyUrl, User byUser)
         {
             Check.Argument.IsNotNull(theStory, "theStory");
-            Check.Argument.IsNotEmpty(storyUrl, "storyUrl");
+            Check.Argument.IsNotNullOrEmpty(storyUrl, "storyUrl");
             Check.Argument.IsNotNull(byUser, "byUser");
 
             if (!theStory.IsPublished())
@@ -374,7 +374,7 @@ namespace Kigg.Service
         public virtual void MarkAsOffended(Comment theComment, string storyUrl, User byUser)
         {
             Check.Argument.IsNotNull(theComment, "theComment");
-            Check.Argument.IsNotEmpty(storyUrl, "storyUrl");
+            Check.Argument.IsNotNullOrEmpty(storyUrl, "storyUrl");
             Check.Argument.IsNotNull(byUser, "byUser");
 
             if (!theComment.IsOffended)
@@ -416,7 +416,7 @@ namespace Kigg.Service
         public virtual void Approve(Story theStory, string storyUrl, User byUser)
         {
             Check.Argument.IsNotNull(theStory, "theStory");
-            Check.Argument.IsNotEmpty(storyUrl, "storyUrl");
+            Check.Argument.IsNotNullOrEmpty(storyUrl, "storyUrl");
             Check.Argument.IsNotNull(byUser, "byUser");
 
             if (!theStory.IsApproved())

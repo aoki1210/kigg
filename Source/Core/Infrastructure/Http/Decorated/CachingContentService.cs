@@ -39,7 +39,7 @@ namespace Kigg.Infrastructure
 
         public override string ShortUrl(string url)
         {
-            Check.Argument.IsNotEmpty(url, "url");
+            Check.Argument.IsNotNullOrEmpty(url, "url");
 
             string cacheKey = "shortUrl:{0}".FormatWith(url);
 

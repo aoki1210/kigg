@@ -52,7 +52,7 @@ namespace Kigg.Repository
 
         public override User FindByUserName(string userName)
         {
-            Check.Argument.IsNotEmpty(userName, "userName");
+            Check.Argument.IsNotNullOrEmpty(userName, "userName");
 
             Log.Info("Retrieving user with userName: {0}", userName);
 
