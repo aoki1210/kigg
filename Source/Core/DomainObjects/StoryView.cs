@@ -4,6 +4,8 @@ namespace Kigg.DomainObjects
 
     public class StoryView
     {
+        public virtual long Id { get; set; }
+
         public virtual Story ForStory { get; set; }
 
         public virtual string FromIPAddress { get; set; }

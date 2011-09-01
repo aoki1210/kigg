@@ -20,7 +20,7 @@ namespace Kigg.Infrastructure
         {
             Check.Argument.IsNotNull(settings, "settings");
             Check.Argument.IsNotNull(httpForm, "httpForm");
-            Check.Argument.IsNotEmpty(url, "url");
+            Check.Argument.IsNotNullOrEmpty(url, "url");
             Check.Argument.IsNotNegative(intervalInMinutes, "intervalInMinutes");
 
             _settings = settings;

@@ -10,8 +10,8 @@ namespace Kigg.Infrastructure
 
         public PageGlimpseThumbnail(string key, string baseUrl, IHttpForm httpForm)
         {
-            Check.Argument.IsNotEmpty(key, "key");
-            Check.Argument.IsNotEmpty(baseUrl, "baseUrl");
+            Check.Argument.IsNotNullOrEmpty(key, "key");
+            Check.Argument.IsNotNullOrEmpty(baseUrl, "baseUrl");
             Check.Argument.IsNotNull(httpForm, "httpForm");
 
             _key = key;

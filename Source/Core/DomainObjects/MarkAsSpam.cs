@@ -4,6 +4,10 @@ namespace Kigg.DomainObjects
 
     public class MarkAsSpam
     {
+        public virtual long UserId { get; set; }
+
+        public virtual long StoryId { get; set; }
+
         public virtual Story ForStory { get; set; }
 
         public virtual User ByUser { get; set; }

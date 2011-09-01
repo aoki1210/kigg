@@ -26,7 +26,7 @@
             }
 
             [DebuggerStepThrough]
-            public static void IsNotEmpty(string argument, string argumentName)
+            public static void IsNotNullOrEmpty(string argument, string argumentName)
             {
                 if (string.IsNullOrEmpty((argument ?? string.Empty).Trim()))
                 {
@@ -192,7 +192,7 @@
             [DebuggerStepThrough]
             public static void IsNotInvalidEmail(string argument, string argumentName)
             {
-                IsNotEmpty(argument, argumentName);
+                IsNotNullOrEmpty(argument, argumentName);
 
                 if (!argument.IsEmail())
                 {
@@ -203,7 +203,7 @@
             [DebuggerStepThrough]
             public static void IsNotInvalidWebUrl(string argument, string argumentName)
             {
-                IsNotEmpty(argument, argumentName);
+                IsNotNullOrEmpty(argument, argumentName);
 
                 if (!argument.IsWebUrl())
                 {

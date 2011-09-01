@@ -20,8 +20,8 @@ namespace Kigg.Infrastructure
 
         public DefensioSpamProtection(string apiKey, string version, IConfigurationSettings settings, IHttpForm httpForm)
         {
-            Check.Argument.IsNotEmpty(apiKey, "apiKey");
-            Check.Argument.IsNotEmpty(apiKey, "version");
+            Check.Argument.IsNotNullOrEmpty(apiKey, "apiKey");
+            Check.Argument.IsNotNullOrEmpty(apiKey, "version");
             Check.Argument.IsNotNull(settings, "settings");
             Check.Argument.IsNotNull(httpForm, "httpForm");
 

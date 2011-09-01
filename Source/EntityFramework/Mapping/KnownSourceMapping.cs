@@ -14,6 +14,8 @@
             Property(s => s.CreatedAt).IsRequired();
             Property(s => s.Url).IsRequired().IsUnicode().HasMaxLength(450);
             this.Property<KnownSource, int>("GradeInternal").HasColumnName("Grade").IsRequired();
+
+            ToTable("KnownSource");
         }
     }
 }

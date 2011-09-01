@@ -20,7 +20,7 @@ namespace Kigg.Infrastructure
 
         public EmailSender(string templateDirectory, bool enableSsl, IConfigurationSettings settings, IFile file)
         {
-            Check.Argument.IsNotEmpty(templateDirectory, "templateDirectory");
+            Check.Argument.IsNotNullOrEmpty(templateDirectory, "templateDirectory");
             Check.Argument.IsNotNull(settings, "settings");
             Check.Argument.IsNotNull(file, "file");
 
@@ -33,9 +33,9 @@ namespace Kigg.Infrastructure
         public void SendRegistrationInfo(string email, string userName, string password, string activateUrl)
         {
             Check.Argument.IsNotInvalidEmail(email, "email");
-            Check.Argument.IsNotEmpty(userName, "userName");
-            Check.Argument.IsNotEmpty(password, "password");
-            Check.Argument.IsNotEmpty(activateUrl, "activateUrl");
+            Check.Argument.IsNotNullOrEmpty(userName, "userName");
+            Check.Argument.IsNotNullOrEmpty(password, "password");
+            Check.Argument.IsNotNullOrEmpty(activateUrl, "activateUrl");
 
             string body = PrepareMailBodyWith("Registration", "userName", userName, "password", password, "url", activateUrl);
 
@@ -45,8 +45,8 @@ namespace Kigg.Infrastructure
         public void SendNewPassword(string email, string userName, string password)
         {
             Check.Argument.IsNotInvalidEmail(email, "email");
-            Check.Argument.IsNotEmpty(userName, "userName");
-            Check.Argument.IsNotEmpty(password, "password");
+            Check.Argument.IsNotNullOrEmpty(userName, "userName");
+            Check.Argument.IsNotNullOrEmpty(password, "password");
 
             string body = PrepareMailBodyWith("NewPassword", "userName", userName, "password", password);
 
@@ -55,7 +55,7 @@ namespace Kigg.Infrastructure
 
         public void SendComment(string url, Comment comment, IEnumerable<User> users)
         {
-            Check.Argument.IsNotEmpty(url, "url");
+            Check.Argument.IsNotNullOrEmpty(url, "url");
             Check.Argument.IsNotNull(comment, "comment");
             Check.Argument.IsNotNull(users, "users");
 
@@ -73,9 +73,9 @@ namespace Kigg.Infrastructure
 
         public void NotifySpamStory(string url, Story story, string source)
         {
-            Check.Argument.IsNotEmpty(url, "storyUrl");
+            Check.Argument.IsNotNullOrEmpty(url, "storyUrl");
             Check.Argument.IsNotNull(story, "story");
-            Check.Argument.IsNotEmpty(source, "source");
+            Check.Argument.IsNotNullOrEmpty(source, "source");
 
             string body = PrepareMailBodyWith("SpamStory", "title", story.Title, "siteUrl", url, "originalUrl", story.Url, "userName", story.PostedBy.UserName, "protection", source);
 
@@ -84,7 +84,7 @@ namespace Kigg.Infrastructure
 
         public void NotifyStoryMarkedAsSpam(string url, Story story, User byUser)
         {
-            Check.Argument.IsNotEmpty(url, "url");
+            Check.Argument.IsNotNullOrEmpty(url, "url");
             Check.Argument.IsNotNull(story, "story");
             Check.Argument.IsNotNull(byUser, "byUser");
 
@@ -95,9 +95,9 @@ namespace Kigg.Infrastructure
 
         public void NotifySpamComment(string url, Comment comment, string source)
         {
-            Check.Argument.IsNotEmpty(url, "url");
+            Check.Argument.IsNotNullOrEmpty(url, "url");
             Check.Argument.IsNotNull(comment, "comment");
-            Check.Argument.IsNotEmpty(source, "source");
+            Check.Argument.IsNotNullOrEmpty(source, "source");
 
             string body = PrepareMailBodyWith("SpamComment", "siteUrl", url, "userName", comment.ByUser.UserName, "comment", comment.HtmlBody, "protection", source);
 
@@ -106,7 +106,7 @@ namespace Kigg.Infrastructure
 
         public void NotifyStoryApprove(string url, Story story, User byUser)
         {
-            Check.Argument.IsNotEmpty(url, "url");
+            Check.Argument.IsNotNullOrEmpty(url, "url");
             Check.Argument.IsNotNull(story, "story");
             Check.Argument.IsNotNull(byUser, "byUser");
 
@@ -117,7 +117,7 @@ namespace Kigg.Infrastructure
 
         public void NotifyConfirmSpamStory(string url, Story story, User byUser)
         {
-            Check.Argument.IsNotEmpty(url, "url");
+            Check.Argument.IsNotNullOrEmpty(url, "url");
             Check.Argument.IsNotNull(story, "story");
             Check.Argument.IsNotNull(byUser, "byUser");
 
@@ -130,7 +130,7 @@ namespace Kigg.Infrastructure
 
         public void NotifyConfirmSpamComment(string url, Comment comment, User byUser)
         {
-            Check.Argument.IsNotEmpty(url, "url");
+            Check.Argument.IsNotNullOrEmpty(url, "url");
             Check.Argument.IsNotNull(comment, "comment");
             Check.Argument.IsNotNull(byUser, "byUser");
 
@@ -141,7 +141,7 @@ namespace Kigg.Infrastructure
 
         public void NotifyCommentAsOffended(string url, Comment comment, User byUser)
         {
-            Check.Argument.IsNotEmpty(url, "url");
+            Check.Argument.IsNotNullOrEmpty(url, "url");
             Check.Argument.IsNotNull(comment, "comment");
             Check.Argument.IsNotNull(byUser, "byUser");
 
@@ -218,8 +218,8 @@ namespace Kigg.Infrastructure
         public void NotifyFeedback(string email, string name, string content)
         {
             Check.Argument.IsNotInvalidEmail(email, "email");
-            Check.Argument.IsNotEmpty(name, "name");
-            Check.Argument.IsNotEmpty(content, "content");
+            Check.Argument.IsNotNullOrEmpty(name, "name");
+            Check.Argument.IsNotNullOrEmpty(content, "content");
 
             string body = PrepareMailBodyWith("Feedback", "name", name, "email", email, "content", content);
 

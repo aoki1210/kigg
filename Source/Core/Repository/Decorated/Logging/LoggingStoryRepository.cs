@@ -51,7 +51,7 @@ namespace Kigg.Repository
 
         public override Story FindByUniqueName(string uniqueName)
         {
-            Check.Argument.IsNotEmpty(uniqueName, "uniqueName");
+            Check.Argument.IsNotNullOrEmpty(uniqueName, "uniqueName");
 
             Log.Info("Retrieving story with unique name: {0}", uniqueName);
 
@@ -242,7 +242,7 @@ namespace Kigg.Repository
 
         public override PagedResult<Story> Search(string query, int start, int max)
         {
-            Check.Argument.IsNotEmpty(query, "query");
+            Check.Argument.IsNotNullOrEmpty(query, "query");
             Check.Argument.IsNotNegative(start, "start");
             Check.Argument.IsNotNegative(max, "max");
 

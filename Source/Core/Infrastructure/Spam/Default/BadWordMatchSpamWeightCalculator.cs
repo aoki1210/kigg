@@ -13,7 +13,7 @@ namespace Kigg.Infrastructure
         public BadWordMatchSpamWeightCalculator(IFile file, string fileName)
         {
             Check.Argument.IsNotNull(file, "file");
-            Check.Argument.IsNotEmpty(fileName, "fileName");
+            Check.Argument.IsNotNullOrEmpty(fileName, "fileName");
 
             BuildBadWordExpressions(file, fileName);
         }

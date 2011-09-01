@@ -32,7 +32,7 @@
         [MethodImpl(MethodImplOptions.NoInlining)]
         public void Info(string message)
         {
-            Check.Argument.IsNotEmpty(message, "message");
+            Check.Argument.IsNotNullOrEmpty(message, "message");
 
             Write(BuildEntry(message, TraceEventType.Information));
         }
@@ -40,7 +40,7 @@
         [MethodImpl(MethodImplOptions.NoInlining)]
         public void Warning(string message)
         {
-            Check.Argument.IsNotEmpty(message, "message");
+            Check.Argument.IsNotNullOrEmpty(message, "message");
 
             Write(BuildEntry(message, TraceEventType.Warning));
         }
@@ -48,7 +48,7 @@
         [MethodImpl(MethodImplOptions.NoInlining)]
         public void Error(string message)
         {
-            Check.Argument.IsNotEmpty(message, "message");
+            Check.Argument.IsNotNullOrEmpty(message, "message");
 
             Write(BuildEntry(message, TraceEventType.Error));
         }

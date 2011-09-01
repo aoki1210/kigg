@@ -38,9 +38,9 @@ namespace Kigg.Infrastructure
             Check.Argument.IsNotNull(userName, "userName");
             Check.Argument.IsNotNull(password, "password");
             Check.Argument.IsNotNull(source, "source");
-            Check.Argument.IsNotEmpty(statusUrl, "statusUrl");
-            Check.Argument.IsNotEmpty(directMessageUrl, "directMessageUrl");
-            Check.Argument.IsNotEmpty(directMessageRecipients, "directMessageRecipients");
+            Check.Argument.IsNotNullOrEmpty(statusUrl, "statusUrl");
+            Check.Argument.IsNotNullOrEmpty(directMessageUrl, "directMessageUrl");
+            Check.Argument.IsNotNullOrEmpty(directMessageRecipients, "directMessageRecipients");
 
             _contentService = contentService;
             _httpForm = httpForm;

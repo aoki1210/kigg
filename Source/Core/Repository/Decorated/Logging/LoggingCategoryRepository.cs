@@ -52,7 +52,7 @@ namespace Kigg.Repository
 
         public override Category FindByUniqueName(string uniqueName)
         {
-            Check.Argument.IsNotEmpty(uniqueName, "uniqueName");
+            Check.Argument.IsNotNullOrEmpty(uniqueName, "uniqueName");
 
             Log.Info("Retrieving category with unique name: {0}", uniqueName);
 

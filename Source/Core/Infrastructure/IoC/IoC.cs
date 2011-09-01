@@ -44,7 +44,7 @@
         public static T Resolve<T>(Type type, string name)
         {
             Check.Argument.IsNotNull(type, "type");
-            Check.Argument.IsNotEmpty(name, "name");
+            Check.Argument.IsNotNullOrEmpty(name, "name");
 
             return _resolver.Resolve<T>(type, name);
         }
@@ -58,7 +58,7 @@
         [DebuggerStepThrough]
         public static T Resolve<T>(string name)
         {
-            Check.Argument.IsNotEmpty(name, "name");
+            Check.Argument.IsNotNullOrEmpty(name, "name");
 
             return _resolver.Resolve<T>(name);
         }

@@ -28,13 +28,13 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsNotEmpty_With_Empty_String_Should_Throw_Exception()
         {
-            Assert.Throws<ArgumentException>(() => Check.Argument.IsNotEmpty(string.Empty, "Empty"));
+            Assert.Throws<ArgumentException>(() => Check.Argument.IsNotNullOrEmpty(string.Empty, "Empty"));
         }
 
         [Fact]
         public void IsNotEmpty_With_NonEmpty_String_Should_Not_Throw_Exception()
         {
-            Assert.DoesNotThrow(() => Check.Argument.IsNotEmpty("AString", "NonEmpty"));
+            Assert.DoesNotThrow(() => Check.Argument.IsNotNullOrEmpty("AString", "NonEmpty"));
         }
 
         [Fact]

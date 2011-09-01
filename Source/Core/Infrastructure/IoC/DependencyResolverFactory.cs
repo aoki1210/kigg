@@ -8,7 +8,7 @@
 
         public DependencyResolverFactory(string resolverTypeName)
         {
-            Check.Argument.IsNotEmpty(resolverTypeName, "resolverTypeName");
+            Check.Argument.IsNotNullOrEmpty(resolverTypeName, "resolverTypeName");
 
             _resolverType = Type.GetType(resolverTypeName, true, true);
         }

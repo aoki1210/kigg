@@ -44,7 +44,7 @@ namespace Kigg.Infrastructure
 
         public override string ShortUrl(string url)
         {
-            Check.Argument.IsNotEmpty(url, "url");
+            Check.Argument.IsNotNullOrEmpty(url, "url");
 
             Log.Info("Shortening url: {0}", url);
 

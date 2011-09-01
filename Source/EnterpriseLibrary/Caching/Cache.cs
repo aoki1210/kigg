@@ -36,21 +36,21 @@
 
         public bool Contains(string key)
         {
-            Check.Argument.IsNotEmpty(key, "key");
+            Check.Argument.IsNotNullOrEmpty(key, "key");
 
             return _manager.Contains(key);
         }
 
         public T Get<T>(string key)
         {
-            Check.Argument.IsNotEmpty(key, "key");
+            Check.Argument.IsNotNullOrEmpty(key, "key");
 
             return (T) _manager.GetData(key);
         }
 
         public bool TryGet<T>(string key, out T value)
         {
-            Check.Argument.IsNotEmpty(key, "key");
+            Check.Argument.IsNotNullOrEmpty(key, "key");
 
             value = default(T);
 
@@ -71,7 +71,7 @@
 
         public void Set<T>(string key, T value)
         {
-            Check.Argument.IsNotEmpty(key, "key");
+            Check.Argument.IsNotNullOrEmpty(key, "key");
 
             RemoveIfExists(key);
 
@@ -80,7 +80,7 @@
 
         public void Set<T>(string key, T value, DateTime absoluteExpiration)
         {
-            Check.Argument.IsNotEmpty(key, "key");
+            Check.Argument.IsNotNullOrEmpty(key, "key");
             Check.Argument.IsNotInPast(absoluteExpiration, "absoluteExpiration");
 
             RemoveIfExists(key);
@@ -90,7 +90,7 @@
 
         public void Set<T>(string key, T value, TimeSpan slidingExpiration)
         {
-            Check.Argument.IsNotEmpty(key, "key");
+            Check.Argument.IsNotNullOrEmpty(key, "key");
             Check.Argument.IsNotNegativeOrZero(slidingExpiration, "absoluteExpiration");
 
             RemoveIfExists(key);
@@ -100,7 +100,7 @@
 
         public void Remove(string key)
         {
-            Check.Argument.IsNotEmpty(key, "key");
+            Check.Argument.IsNotNullOrEmpty(key, "key");
 
             _manager.Remove(key);
         }

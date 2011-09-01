@@ -11,7 +11,7 @@ namespace Kigg.Service
 
         protected StoryWeightBaseCalculator(string name)
         {
-            Check.Argument.IsNotEmpty(name, "name");
+            Check.Argument.IsNotNullOrEmpty(name, "name");
 
             _name = name;
         }

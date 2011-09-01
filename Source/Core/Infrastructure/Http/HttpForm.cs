@@ -23,7 +23,7 @@ namespace Kigg.Infrastructure
 
         public HttpForm(string userAgent, int timeout, bool requestCompressed, int maximumRedirects)
         {
-            Check.Argument.IsNotEmpty(userAgent, "userAgent");
+            Check.Argument.IsNotNullOrEmpty(userAgent, "userAgent");
             Check.Argument.IsNotNegative(timeout, "timeout");
             Check.Argument.IsNotNegative(maximumRedirects, "maximumRedirects");
 
@@ -36,7 +36,7 @@ namespace Kigg.Infrastructure
         public HttpFormResponse Get(HttpFormGetRequest getRequest)
         {
             Check.Argument.IsNotNull(getRequest, "getRequest");
-            Check.Argument.IsNotEmpty(getRequest.Url, "getRequest.Url");
+            Check.Argument.IsNotNullOrEmpty(getRequest.Url, "getRequest.Url");
 
             WebRequest request = CreateRequest(getRequest.Url, getRequest.UserName, getRequest.Password, getRequest.ContentType, getRequest.Headers, getRequest.Cookies, false);
 
@@ -51,7 +51,7 @@ namespace Kigg.Infrastructure
         public void GetAsync(HttpFormGetRequest getRequest, Action<HttpFormResponse> onComplete, Action<Exception> onError)
         {
             Check.Argument.IsNotNull(getRequest, "getRequest");
-            Check.Argument.IsNotEmpty(getRequest.Url, "getRequest.Url");
+            Check.Argument.IsNotNullOrEmpty(getRequest.Url, "getRequest.Url");
 
             WebRequest request = CreateRequest(getRequest.Url, getRequest.UserName, getRequest.Password, getRequest.ContentType, getRequest.Headers, getRequest.Cookies, false);
 
@@ -105,7 +105,7 @@ namespace Kigg.Infrastructure
         internal HttpFormResponse Post(HttpFormGetRequest postRequest, string rawData)
         {
             Check.Argument.IsNotNull(postRequest, "postRequest");
-            Check.Argument.IsNotEmpty(postRequest.Url, "postRequest.Url");
+            Check.Argument.IsNotNullOrEmpty(postRequest.Url, "postRequest.Url");
 
             WebRequest request = CreateRequest(postRequest.Url, postRequest.UserName, postRequest.Password, postRequest.ContentType, postRequest.Headers, postRequest.Cookies, true);
 
@@ -117,7 +117,7 @@ namespace Kigg.Infrastructure
         internal void PostAsync(HttpFormGetRequest postRequest, string rawData, Action<HttpFormResponse> onComplete, Action<Exception> onError)
         {
             Check.Argument.IsNotNull(postRequest, "postRequest");
-            Check.Argument.IsNotEmpty(postRequest.Url, "postRequest.Url");
+            Check.Argument.IsNotNullOrEmpty(postRequest.Url, "postRequest.Url");
 
             WebRequest request = CreateRequest(postRequest.Url, postRequest.UserName, postRequest.Password, postRequest.ContentType, postRequest.Headers, postRequest.Cookies, true);
 
