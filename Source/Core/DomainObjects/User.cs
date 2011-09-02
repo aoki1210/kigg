@@ -29,13 +29,7 @@
 
         public virtual DateTime CreatedAt { get; set; }
 
-        protected virtual int RoleInternal { get; set; }
-
-        public Roles Role
-        {
-            get { return (Roles)RoleInternal; }
-            set { RoleInternal = (int)value; }
-        }
+        public virtual Roles Role { get; set; }
 
         public virtual ICollection<Tag> Tags{get; protected set;}
 
