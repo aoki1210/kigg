@@ -121,7 +121,8 @@
     <Compile Include="KiggDbFactoryFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="KiGGDbContextFixture.cs" />
-    <Compile Include="Query\CategoryByIdQueryFixture.cs" />
+    <Compile Include="Query\CategoryFindByUniqueKeyQueryFixture.cs" />
+    <Compile Include="Query\CategoryFindListQueryFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Kigg.Core.csproj">
