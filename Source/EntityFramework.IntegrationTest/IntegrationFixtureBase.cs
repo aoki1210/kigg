@@ -2,6 +2,7 @@
 {
     using System.Data.Common;
     using System.Configuration;
+    using System.Collections.Generic;
 
     using DomainObjects;
 
@@ -25,7 +26,7 @@
         {
             var category = new Category { Name = "C#", UniqueName = "C-Sharp", CreatedAt = SystemTime.Now() };
 
-            if(persist)
+            if (persist)
             {
                 Context.Categories.Add(category);
 
@@ -35,9 +36,33 @@
             return category;
         }
 
+        protected IList<Category> NewCategoryList(bool persist)
+        {
+            var categories = new List<Category>(11);
+            for (int i = 1; i < 11; i++)
+            {
+                var category = new Category
+                                   {
+                                       Name = "Category {0}".FormatWith(i),
+                                       UniqueName = "Category-{0}".FormatWith(i),
+                                       CreatedAt = SystemTime.Now()
+                                   };
+
+                categories.Add(category);
+            }
+
+            if (persist)
+            {
+                categories.ForEach(c => Context.Categories.Add(c));
+                Context.SaveChanges();
+            }
+
+            return categories;
+        }
+
         protected override void DisposeCore()
         {
-            if(dbFactory != null)
+            if (dbFactory != null)
             {
                 dbFactory.Dispose();
             }
