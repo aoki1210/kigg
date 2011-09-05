@@ -2,12 +2,15 @@
 {
     public abstract class QueryBase<TResult> : IQuery<TResult>
     {
-        protected QueryBase(bool useCompiled)
+        protected readonly KiggDbContext context;
+        protected QueryBase(KiggDbContext context, bool useCompiled)
         {
+            this.context = context;
             UseCompiled = useCompiled;
         }
 
-        protected QueryBase():this(true)
+        protected QueryBase(KiggDbContext context)
+            : this(context, true)
         {
             
         }
@@ -18,6 +21,6 @@
             private set;
         }
 
-        public abstract TResult Execute(KiggDbContext context);
+        public abstract TResult Execute(); 
     }
 }
