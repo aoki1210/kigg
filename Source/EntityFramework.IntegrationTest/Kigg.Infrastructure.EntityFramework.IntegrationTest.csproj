@@ -123,6 +123,8 @@
     <Compile Include="KiGGDbContextFixture.cs" />
     <Compile Include="Query\CategoryFindByUniqueKeyQueryFixture.cs" />
     <Compile Include="Query\CategoryFindListQueryFixture.cs" />
+    <Compile Include="Query\UserFindListQueryFixture.cs" />
+    <Compile Include="Query\UserFindByUniqueKeyQueryFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Kigg.Core.csproj">

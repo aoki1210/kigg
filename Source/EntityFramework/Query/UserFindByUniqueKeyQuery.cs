@@ -6,11 +6,11 @@
 
     using DomainObjects;
 
-    public class CategoryFindByUniqueKeyQuery : QueryBase<Category>
+    public class UserFindByUniqueKeyQuery : QueryBase<User>
     {
-        private readonly Expression<Func<Category, bool>> predicate;
+        private readonly Expression<Func<User, bool>> predicate;
 
-        public CategoryFindByUniqueKeyQuery(KiggDbContext context, Expression<Func<Category, bool>> predicate)
+        public UserFindByUniqueKeyQuery(KiggDbContext context, Expression<Func<User, bool>> predicate)
             : base(context)
         {
             Check.Argument.IsNotNull(predicate, "predicate");
@@ -18,10 +18,9 @@
             this.predicate = predicate;
         }
 
-        public override Category Execute()
+        public override User Execute()
         {
-            return context.Categories.Single(predicate);
+            return context.Users.Single(predicate);
         }
-
     }
 }

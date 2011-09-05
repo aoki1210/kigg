@@ -35,6 +35,28 @@
 
             return category;
         }
+        protected User NewUser(bool persist)
+        {
+            var user = new User
+                           {
+                               UserName = "mosessaur",
+                               Email = "mosessaur@twitter.com",
+                               Role = Roles.User,
+                               CreatedAt = SystemTime.Now(),
+                               LastActivityAt = SystemTime.Now(),
+                               IsLockedOut = false,
+                               IsActive = true,
+                           };
+
+            if (persist)
+            {
+                Context.Users.Add(user);
+
+                Context.SaveChanges();
+            }
+
+            return user;
+        }
 
         protected IList<Category> NewCategoryList(bool persist)
         {
@@ -58,6 +80,33 @@
             }
 
             return categories;
+        }
+        protected IList<User> NewUserList(bool persist)
+        {
+            var users = new List<User>(11);
+            for (int i = 1; i < 11; i++)
+            {
+                var user = new User
+                {
+                    UserName = "user{0}".FormatWith(i),
+                    Email = "user{0}@twitter.com".FormatWith(i),
+                    Role = Roles.User,
+                    CreatedAt = SystemTime.Now(),
+                    LastActivityAt = SystemTime.Now(),
+                    IsLockedOut = false,
+                    IsActive = true,
+                };
+
+                users.Add(user);
+            }
+
+            if (persist)
+            {
+                users.ForEach(c => Context.Users.Add(c));
+                Context.SaveChanges();
+            }
+
+            return users;
         }
 
         protected override void DisposeCore()

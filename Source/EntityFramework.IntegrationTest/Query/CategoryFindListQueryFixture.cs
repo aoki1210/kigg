@@ -17,9 +17,9 @@
         {
             IList<Category> categories = NewCategoryList(true);
 
-            var query = new CategoryFindListQuery();
+            var query = new CategoryFindListQuery(Context);
 
-            var result = query.Execute(Context);
+            var result = query.Execute();
 
             Assert.Equal(categories.Count, result.Count());
         }
@@ -32,11 +32,27 @@
             
             var expectedCount = categories.Count(c => c.Id > 5);
 
-            var query = new CategoryFindListQuery(c => c.Id > 5);
+            var query = new CategoryFindListQuery(Context, c => c.Id > 5);
 
-            var result = query.Execute(Context);
+            var result = query.Execute();
 
             Assert.Equal(expectedCount, result.Count());
+        }
+
+        [Fact]
+        [AutoRollback]
+        public void Excute_should_return_correct_ordered_categories_list_when_orderd_decending_by_category_name()
+        {
+            NewCategoryList(true);
+
+            var query = new CategoryFindListQuery(Context);
+
+            var result = query.OrderByDescending(c => c.Name).Execute().ToList();
+
+            long expectedHighestId = result.First().Id;
+            long expectedLowestId = result.Last().Id;
+            
+            Assert.True(expectedHighestId > expectedLowestId);
         }
     }
 }

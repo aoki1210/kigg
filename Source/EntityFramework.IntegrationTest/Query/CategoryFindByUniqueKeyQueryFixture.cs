@@ -13,9 +13,9 @@
         {
             var category = NewCategory(true);
 
-            var query = new CategoryFindByUniqueKeyQuery(c => c.Id == category.Id);
+            var query = new CategoryFindByUniqueKeyQuery(Context, c => c.Id == category.Id);
 
-            var result = query.Execute(Context);
+            var result = query.Execute();
 
             Assert.Equal(category.Id, result.Id);
         }
@@ -26,9 +26,9 @@
         {
             var category = NewCategory(true);
 
-            var query = new CategoryFindByUniqueKeyQuery(c => c.UniqueName == category.UniqueName);
+            var query = new CategoryFindByUniqueKeyQuery(Context, c => c.UniqueName == category.UniqueName);
 
-            var result = query.Execute(Context);
+            var result = query.Execute();
 
             Assert.Equal(category.Id, result.Id);
         }

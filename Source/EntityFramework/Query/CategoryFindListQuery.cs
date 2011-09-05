@@ -7,31 +7,35 @@
 
     using DomainObjects;
 
-    public class CategoryFindListQuery : QueryBase<IEnumerable<Category>>
+    public class CategoryFindListQuery : OrderedQueryBase<Category, IEnumerable<Category>>
     {
-        private static readonly Expression<Func<KiggDbContext, Expression<Func<Category, bool>>, IQueryable<Category>>> expressionWithCondition = (ctx, predicate) => ctx.Categories.Where(predicate);
-        private static readonly Func<KiggDbContext, Expression<Func<Category, bool>>, IQueryable<Category>> plainQueryWithCondition = expressionWithCondition.Compile();
+        private IQueryable<Category> query;
 
-        private static readonly Expression<Func<KiggDbContext, IQueryable<Category>>> expression = (ctx) => ctx.Categories;
-        private static readonly Func<KiggDbContext, IQueryable<Category>> plainQuery = expression.Compile();
-
-        private readonly Expression<Func<Category, bool>> predicate;
-
-        public CategoryFindListQuery()
-            : this(null)
+        public CategoryFindListQuery(KiggDbContext context) : base(context)
         {
-
+            query = base.context.Categories;
         }
 
-        public CategoryFindListQuery(Expression<Func<Category, bool>> predicate)
+        public CategoryFindListQuery(KiggDbContext context, Expression<Func<Category, bool>> predicate): base(context)
         {
-            this.predicate = predicate;
+            query = base.context.Categories.Where(predicate);
         }
 
-        public override IEnumerable<Category> Execute(KiggDbContext context)
+        public override IEnumerable<Category> Execute()
         {
-            return (predicate == null) ? plainQuery(context)
-                                       : plainQueryWithCondition(context, predicate);
+            return query.AsEnumerable();
+        }
+
+        public override IQuery<IEnumerable<Category>> OrderBy<TKey>(Expression<Func<Category, TKey>> orderBy)
+        {
+            query = query.OrderBy(orderBy);
+            return this;
+        }
+
+        public override IQuery<IEnumerable<Category>> OrderByDescending<TKey>(Expression<Func<Category, TKey>> orderBy)
+        {
+            query = query.OrderByDescending(orderBy);
+            return this;
         }
     }
 }
