@@ -13,7 +13,7 @@
     {
         [Fact]
         [AutoRollback]
-        public void Excute_should_return_all_users_when_no_filter_provided()
+        public void Execute_should_return_all_users_when_no_filter_provided()
         {
             IList<User> users = NewUserList(true);
 
@@ -26,7 +26,7 @@
 
         [Fact]
         [AutoRollback]
-        public void Excute_should_return_correct_users_list_when_filter_provided()
+        public void Execute_should_return_correct_users_list_when_filter_provided()
         {
             IList<User> users = NewUserList(true);
             
@@ -41,7 +41,7 @@
 
         [Fact]
         [AutoRollback]
-        public void Excute_should_return_correct_ordered_users_list_when_orderd_decending_by_username()
+        public void Execute_should_return_correct_ordered_users_list_when_orderd_decending_by_username()
         {
             NewUserList(true);
 

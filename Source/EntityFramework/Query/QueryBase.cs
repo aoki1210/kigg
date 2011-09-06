@@ -5,6 +5,8 @@
         protected readonly KiggDbContext context;
         protected QueryBase(KiggDbContext context, bool useCompiled)
         {
+            Check.Argument.IsNotNull(context, "context");
+
             this.context = context;
             UseCompiled = useCompiled;
         }

@@ -1,5 +1,4 @@
-﻿
-namespace Kigg.Infrastructure.EntityFramework.Query
+﻿namespace Kigg.Infrastructure.EntityFramework.Query
 {
     using System;
     using System.Collections.Generic;
@@ -9,7 +8,10 @@ namespace Kigg.Infrastructure.EntityFramework.Query
         where TResult : class, IEnumerable<TEntity>
         where TEntity: class
     {
-        IQuery<TResult> OrderBy<TKey>(Expression<Func<TEntity, TKey>> orderBy);
-        IQuery<TResult> OrderByDescending<TKey>(Expression<Func<TEntity, TKey>> orderBy);
+        IOrderedQuery<TEntity, TResult> OrderBy<TKey>(Expression<Func<TEntity, TKey>> orderBy);
+        IOrderedQuery<TEntity, TResult> ThenBy<TKey>(Expression<Func<TEntity, TKey>> orderBy);
+        IOrderedQuery<TEntity, TResult> OrderByDescending<TKey>(Expression<Func<TEntity, TKey>> orderBy);
+        IOrderedQuery<TEntity, TResult> ThenByDescending<TKey>(Expression<Func<TEntity, TKey>> orderBy);
+        IOrderedQuery<TEntity, TResult> Page(int pageIndex, int pageSize);
     }
 }
