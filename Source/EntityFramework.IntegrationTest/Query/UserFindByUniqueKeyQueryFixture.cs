@@ -9,7 +9,7 @@
     {
         [Fact]
         [AutoRollback]
-        public void Excute_should_return_correct_user_when_fetching_by_id()
+        public void Execute_should_return_correct_user_when_fetching_by_id()
         {
             var user = NewUser(true);
 
@@ -22,7 +22,7 @@
 
         [Fact]
         [AutoRollback]
-        public void Excute_should_return_correct_user_when_fetching_by_username()
+        public void Execute_should_return_correct_user_when_fetching_by_username()
         {
             var user = NewUser(true);
 
@@ -35,7 +35,7 @@
 
         [Fact]
         [AutoRollback]
-        public void Excute_should_return_correct_user_when_fetching_by_email()
+        public void Execute_should_return_correct_user_when_fetching_by_email()
         {
             var user = NewUser(true);
 

@@ -9,7 +9,7 @@
     {
         [Fact]
         [AutoRollback]
-        public void Excute_should_return_correct_category_when_fetching_by_id()
+        public void Execute_should_return_correct_category_when_fetching_by_id()
         {
             var category = NewCategory(true);
 
@@ -22,7 +22,7 @@
 
         [Fact]
         [AutoRollback]
-        public void Excute_should_return_correct_category_when_fetching_by_unique_name()
+        public void Execute_should_return_correct_category_when_fetching_by_unique_name()
         {
             var category = NewCategory(true);
 

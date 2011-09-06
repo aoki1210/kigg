@@ -108,6 +108,27 @@
 
             return users;
         }
+        protected IList<UserScore> GenerateScoreForUser(User user, int score, int count, bool persist)
+        {
+            var scores = new List<UserScore>();
+            for (int i = 0; i < count; i++)
+            {
+                var userScore = new UserScore
+                                {
+                                    ScoredBy = user,
+                                    Action = UserAction.StorySubmitted,
+                                    Score = score,
+                                    CreatedAt = SystemTime.Now().AddDays(-i)
+                                };
+                scores.Add(userScore);
+            }
+            if (persist)
+            {
+                scores.ForEach(us => Context.Scores.Add(us));
+                Context.SaveChanges();
+            }
+            return scores;
+        }
 
         protected override void DisposeCore()
         {

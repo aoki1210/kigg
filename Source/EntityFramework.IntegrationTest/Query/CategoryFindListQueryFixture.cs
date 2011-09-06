@@ -13,7 +13,7 @@
     {
         [Fact]
         [AutoRollback]
-        public void Excute_should_return_all_categories_when_no_filter_provided()
+        public void Execute_should_return_all_categories_when_no_filter_provided()
         {
             IList<Category> categories = NewCategoryList(true);
 
@@ -26,7 +26,7 @@
 
         [Fact]
         [AutoRollback]
-        public void Excute_should_return_correct_categories_list_when_filter_provided()
+        public void Execute_should_return_correct_categories_list_when_filter_provided()
         {
             IList<Category> categories = NewCategoryList(true);
             
@@ -41,7 +41,7 @@
 
         [Fact]
         [AutoRollback]
-        public void Excute_should_return_correct_ordered_categories_list_when_orderd_decending_by_category_name()
+        public void Execute_should_return_correct_ordered_categories_list_when_orderd_decending_by_category_name()
         {
             NewCategoryList(true);
 
