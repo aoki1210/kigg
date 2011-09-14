@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{3080B81C-4C17-4478-B4A5-F6E508F7892F}</ProjectGuid>
+    <ProjectGuid>{7AEA11B2-945D-42FB-A9F0-97745DA88393}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Kigg.Infrastructure.EntityFramework.IntegrationTest</RootNamespace>
-    <AssemblyName>Kigg.Infrastructure.EntityFramework.IntegrationTest</AssemblyName>
+    <RootNamespace>Kigg.Infrastructure.EntityFramework</RootNamespace>
+    <AssemblyName>Kigg.Infrastructure.EntityFramework</AssemblyName>
     <TargetFrameworkVersion>v4.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SignAssembly>true</SignAssembly>
@@ -57,7 +57,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'SqlServer|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\SqlServer\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;SqlServer</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
@@ -68,7 +68,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'MySql|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\MySql\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;MySql</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
@@ -89,10 +89,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Moq, Version=3.0.308.2, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\References\moq\Moq.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core">
@@ -102,45 +98,48 @@
     <Reference Include="System.Data.Entity">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Transactions" />
-    <Reference Include="System.Xml" />
-    <Reference Include="xunit, Version=1.1.0.1323, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\References\xunit\xunit.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.extensions, Version=1.1.0.1323, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\References\xunit\xunit.extensions.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedFiles\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="IntegrationFixtureBase.cs" />
-    <Compile Include="KiggDbFactoryFixture.cs" />
+    <Compile Include="Extensions\EntityTypeConfigurationExtensions.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="IKiggDbFactory.cs" />
+    <Compile Include="KiggDbContext.cs" />
+    <Compile Include="KiggDbFactory.cs" />
+    <Compile Include="Mapping\CategoryMapping.cs" />
+    <Compile Include="Mapping\CommentMapping.cs" />
+    <Compile Include="Mapping\MarkAsSpamMapping.cs" />
+    <Compile Include="Mapping\StoryViewMapping.cs" />
+    <Compile Include="Mapping\KnownSourceMapping.cs" />
+    <Compile Include="Mapping\StoryMapping.cs" />
+    <Compile Include="Mapping\TagMapping.cs" />
+    <Compile Include="Mapping\UserMapping.cs" />
+    <Compile Include="Mapping\UserScoreMapping.cs" />
+    <Compile Include="Mapping\VoteMapping.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="KiGGDbContextFixture.cs" />
-    <Compile Include="Query\CategoryFindByUniqueKeyQueryFixture.cs" />
-    <Compile Include="Query\CategoryFindListQueryFixture.cs" />
-    <Compile Include="Query\TagFindListQueryFixture.cs" />
-    <Compile Include="Query\TagFindByUniqueKeyQueryFixture.cs" />
-    <Compile Include="Query\UserFindListQueryFixture.cs" />
-    <Compile Include="Query\UserFindByUniqueKeyQueryFixture.cs" />
-    <Compile Include="Query\UserFindTopByScoredQueryFixture.cs" />
+    <Compile Include="Query\CategoryFindByUniqueKeyQuery.cs" />
+    <Compile Include="Query\CategoryFindListQuery.cs" />
+    <Compile Include="Query\IQueryFactory.cs" />
+    <Compile Include="Query\QueryFactory.cs" />
+    <Compile Include="Query\TagFindListQuery.cs" />
+    <Compile Include="Query\TagFindByUniqueKeyQuery.cs" />
+    <Compile Include="Query\IOrderedQuery.cs" />
+    <Compile Include="Query\OrderedQueryBase.cs" />
+    <Compile Include="Query\UserFindListQuery.cs" />
+    <Compile Include="Query\UserFindByUniqueKeyQuery.cs" />
+    <Compile Include="Query\IQuery.cs" />
+    <Compile Include="Query\QueryBase.cs" />
+    <Compile Include="Query\UserFindTopByScoredQuery.cs" />
+    <Compile Include="RepositoryBase.cs" />
+    <Compile Include="TagRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Kigg.Core.csproj">
       <Project>{04A61455-9656-4E67-A8D6-9FBA348F0FB3}</Project>
       <Name>Kigg.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\EntityFramework\Kigg.Infrastructure.EntityFramework.csproj">
-      <Project>{7AEA11B2-945D-42FB-A9F0-97745DA88393}</Project>
-      <Name>Kigg.Infrastructure.EntityFramework</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -159,10 +158,6 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="DomainObjects\" />
-    <Folder Include="Repository\Database\" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -171,4 +166,8 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
 </Project>

@@ -7,7 +7,7 @@
 
     using DomainObjects;
 
-    public class UserFindTopByScoredQuery : OrderedQueryBase<User, IEnumerable<User>>
+    public class UserFindTopByScoredQuery : OrderedQueryBase<User>
     {
         private readonly IQueryable<User> originalQuery;
 
@@ -39,19 +39,19 @@
             return originalQuery.Count();
         }
 
-        public override IOrderedQuery<User, IEnumerable<User>> OrderBy<TKey>(Expression<Func<User, TKey>> orderBy)
+        public override IOrderedQuery<User> OrderBy<TKey>(Expression<Func<User, TKey>> orderBy)
         {
             throw new NotSupportedException();
         }
-        public override IOrderedQuery<User, IEnumerable<User>> ThenBy<TKey>(Expression<Func<User, TKey>> orderBy)
+        public override IOrderedQuery<User> ThenBy<TKey>(Expression<Func<User, TKey>> orderBy)
         {
             throw new NotSupportedException();
         }
-        public override IOrderedQuery<User, IEnumerable<User>> OrderByDescending<TKey>(Expression<Func<User, TKey>> orderBy)
+        public override IOrderedQuery<User> OrderByDescending<TKey>(Expression<Func<User, TKey>> orderBy)
         {
             throw new NotSupportedException();
         }
-        public override IOrderedQuery<User, IEnumerable<User>> ThenByDescending<TKey>(Expression<Func<User, TKey>> orderBy)
+        public override IOrderedQuery<User> ThenByDescending<TKey>(Expression<Func<User, TKey>> orderBy)
         {
             throw new NotSupportedException();
         }

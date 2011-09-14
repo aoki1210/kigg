@@ -26,7 +26,7 @@
             Property(s => s.UrlHash).IsRequired().IsUnicode().IsFixedLength().HasMaxLength(24);
             HasRequired(s => s.PostedBy).WithMany().Map(m => m.MapKey("UserId"));
             HasRequired(s => s.BelongsTo).WithMany().Map(m => m.MapKey("CategoryId"));
-            HasMany(s => s.Tags).WithMany().Map(m => m.MapLeftKey("StoryId").MapRightKey("TagId").ToTable("StoryTag"));
+            HasMany(s => s.Tags).WithMany(t => t.Stories).Map(m => m.MapLeftKey("StoryId").MapRightKey("TagId").ToTable("StoryTag"));
             
             ToTable("Story");
         }

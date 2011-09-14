@@ -7,7 +7,7 @@
 
     using DomainObjects;
 
-    public class CategoryFindListQuery : OrderedQueryBase<Category, IEnumerable<Category>>
+    public class CategoryFindListQuery : OrderedQueryBase<Category>
     {
         public CategoryFindListQuery(KiggDbContext context) : base(context)
         {

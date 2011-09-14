@@ -48,19 +48,19 @@
         }
 
         [DebuggerStepThrough]
-        public virtual ICollection<Tag> FindMatching(string name, int max)
+        public virtual IEnumerable<Tag> FindMatching(string name, int max)
         {
             return _innerRepository.FindMatching(name, max);
         }
 
         [DebuggerStepThrough]
-        public virtual ICollection<Tag> FindByUsage(int top)
+        public virtual IEnumerable<Tag> FindByUsage(int top)
         {
             return _innerRepository.FindByUsage(top);
         }
 
         [DebuggerStepThrough]
-        public virtual ICollection<Tag> FindAll()
+        public virtual IEnumerable<Tag> FindAll()
         {
             return _innerRepository.FindAll();
         }
