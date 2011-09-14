@@ -1,6 +1,7 @@
 namespace Kigg
 {
     using System;
+    using System.Linq;
     using System.Collections.Generic;
     using System.Diagnostics;
 
@@ -13,6 +14,12 @@ namespace Kigg
             {
                 action(item);
             }
+        }
+
+        [DebuggerStepThrough]
+        public static bool IsNullOrEmpty<T>(this IEnumerable<T> enumerable)
+        {
+            return (enumerable == null) || (enumerable.Count() == 0);
         }
     }
 }

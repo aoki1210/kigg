@@ -35,6 +35,19 @@
 
             return category;
         }
+        protected Tag NewTag(bool persist)
+        {
+            var tag = new Tag { Name = "C#", UniqueName = "C-Sharp", CreatedAt = SystemTime.Now()};
+
+            if (persist)
+            {
+                Context.Tags.Add(tag);
+
+                Context.SaveChanges();
+            }
+
+            return tag;
+        }
         protected User NewUser(bool persist)
         {
             var user = new User
@@ -80,6 +93,29 @@
             }
 
             return categories;
+        }
+        protected IList<Tag> NewTagList(bool persist)
+        {
+            var tags = new List<Tag>(11);
+            for (int i = 1; i < 11; i++)
+            {
+                var tag = new Tag
+                {
+                    Name = "Tag {0}".FormatWith(i),
+                    UniqueName = "Tag-{0}".FormatWith(i),
+                    CreatedAt = SystemTime.Now()
+                };
+
+                tags.Add(tag);
+            }
+
+            if (persist)
+            {
+                tags.ForEach(t => Context.Tags.Add(t));
+                Context.SaveChanges();
+            }
+
+            return tags;
         }
         protected IList<User> NewUserList(bool persist)
         {

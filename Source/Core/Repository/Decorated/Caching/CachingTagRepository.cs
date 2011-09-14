@@ -16,13 +16,13 @@ namespace Kigg.Repository
             _cacheDurationInMinutes = cacheDurationInMinutes;
         }
 
-        public override ICollection<Tag> FindByUsage(int top)
+        public override IEnumerable<Tag> FindByUsage(int top)
         {
             Check.Argument.IsNotNegativeOrZero(top, "top");
 
             string cacheKey = "tagsByUsage:{0}".FormatWith(top);
 
-            ICollection<Tag> result;
+            IEnumerable<Tag> result;
 
             Cache.TryGet(cacheKey, out result);
 

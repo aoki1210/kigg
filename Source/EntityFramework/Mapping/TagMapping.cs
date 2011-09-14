@@ -14,7 +14,7 @@
             Property(t => t.CreatedAt).IsRequired();
             Property(t => t.Name).IsRequired().IsUnicode().HasMaxLength(64);
             Property(t => t.UniqueName).IsRequired().IsUnicode().HasMaxLength(64);
-            
+            HasMany(t => t.Stories).WithMany(s => s.Tags).Map(m => m.MapLeftKey("TagId").MapRightKey("StoryId").ToTable("StoryTag"));
             ToTable("Tag");
         }
     }

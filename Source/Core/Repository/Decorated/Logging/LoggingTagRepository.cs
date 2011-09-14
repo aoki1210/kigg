@@ -90,7 +90,7 @@ namespace Kigg.Repository
             return result;
         }
 
-        public override ICollection<Tag> FindMatching(string name, int max)
+        public override IEnumerable<Tag> FindMatching(string name, int max)
         {
             Check.Argument.IsNotNullOrEmpty(name, "name");
             Check.Argument.IsNotNegativeOrZero(max, "max");
@@ -111,7 +111,7 @@ namespace Kigg.Repository
             return result;
         }
 
-        public override ICollection<Tag> FindByUsage(int top)
+        public override IEnumerable<Tag> FindByUsage(int top)
         {
             Check.Argument.IsNotNegativeOrZero(top, "top");
 
@@ -131,7 +131,7 @@ namespace Kigg.Repository
             return result;
         }
 
-        public override ICollection<Tag> FindAll()
+        public override IEnumerable<Tag> FindAll()
         {
             Log.Info("Retrieving all tag");
 
