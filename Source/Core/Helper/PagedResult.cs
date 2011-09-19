@@ -6,46 +6,30 @@ namespace Kigg
 
     public class PagedResult<T>
     {
-        private readonly ReadOnlyCollection<T> _result;
-        private readonly int _total;
-
         public PagedResult(IEnumerable<T> result, int total)
         {
             Check.Argument.IsNotNull(result, "result");
             Check.Argument.IsNotNegative(total, "total");
 
-            _result = new ReadOnlyCollection<T>(new List<T>(result));
-            _total = total;
+            Result = new ReadOnlyCollection<T>(new List<T>(result));
+            Total = total;
         }
 
-        public PagedResult() : this(new List<T>(), 0)
+        public PagedResult()
+            : this(new List<T>(), 0)
         {
         }
 
-        public ICollection<T> Result
-        {
-            [DebuggerStepThrough]
-            get
-            {
-                return _result;
-            }
-        }
+        public ICollection<T> Result { get; private set; }
 
-        public int Total
-        {
-            [DebuggerStepThrough]
-            get
-            {
-                return _total;
-            }
-        }
+        public int Total { get; private set; }
 
         public bool IsEmpty
         {
             [DebuggerStepThrough]
             get
             {
-                return _result.Count == 0;
+                return Result.Count == 0 || Total == 0;
             }
         }
     }

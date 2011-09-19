@@ -21,6 +21,10 @@ namespace Kigg.Infrastructure.EntityFramework.Query
         {
         }
 
+        public virtual long Count()
+        {
+            return Query.Count();
+        }
         public virtual IOrderedQuery<TEntity> OrderBy<TKey>(Expression<Func<TEntity, TKey>> orderBy)
         {
             Query = Query.OrderBy(orderBy);

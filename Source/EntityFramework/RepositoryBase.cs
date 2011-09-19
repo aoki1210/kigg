@@ -5,8 +5,10 @@
     
     using Query;
     using DomainObjects;
+    using Repository;
 
-    public abstract class RepositoryBase<TEntity> where TEntity : class, IEntity
+    public abstract class RepositoryBase<TEntity> : IRepository<TEntity> 
+        where TEntity : class, IEntity
     {
         private KiggDbContext dbContext;
 
@@ -47,15 +49,16 @@
             DbContext.Set<TEntity>().Add(entity);
         }
 
-        public virtual void Delete(TEntity entity)
+        public virtual void Remove(TEntity entity)
         {
             Check.Argument.IsNotNull(entity, "entity");
 
             DbContext.Set<TEntity>().Remove(entity);
         }
 
-        public virtual TEntity GetById(long id)
+        public virtual TEntity FindById(long id)
         {
+            Check.Argument.IsNotNegativeOrZero(id, "id");
             return DbContext.Set<TEntity>().SingleOrDefault(entity => entity.Id == id);
         }
     }

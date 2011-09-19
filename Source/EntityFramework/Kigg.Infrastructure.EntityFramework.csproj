@@ -122,6 +122,7 @@
     <Compile Include="Query\CategoryFindByUniqueKeyQuery.cs" />
     <Compile Include="Query\CategoryFindListQuery.cs" />
     <Compile Include="Query\IQueryFactory.cs" />
+    <Compile Include="Query\CalculateUserScoreByIdQuery.cs" />
     <Compile Include="Query\QueryFactory.cs" />
     <Compile Include="Query\TagFindListQuery.cs" />
     <Compile Include="Query\TagFindByUniqueKeyQuery.cs" />
@@ -131,7 +132,7 @@
     <Compile Include="Query\UserFindByUniqueKeyQuery.cs" />
     <Compile Include="Query\IQuery.cs" />
     <Compile Include="Query\QueryBase.cs" />
-    <Compile Include="Query\UserFindTopByScoredQuery.cs" />
+    <Compile Include="Query\UserFindTopScoredListQuery.cs" />
     <Compile Include="RepositoryBase.cs" />
     <Compile Include="TagRepository.cs" />
   </ItemGroup>

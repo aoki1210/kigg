@@ -127,7 +127,7 @@
     <Compile Include="Query\TagFindByUniqueKeyQueryFixture.cs" />
     <Compile Include="Query\UserFindListQueryFixture.cs" />
     <Compile Include="Query\UserFindByUniqueKeyQueryFixture.cs" />
-    <Compile Include="Query\UserFindTopByScoredQueryFixture.cs" />
+    <Compile Include="Query\UserFindTopScoredListQueryFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Kigg.Core.csproj">
