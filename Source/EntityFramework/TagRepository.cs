@@ -1,6 +1,4 @@
-﻿
-
-namespace Kigg.Infrastructure.EntityFramework
+﻿namespace Kigg.Infrastructure.EntityFramework
 {
     using System.Collections.Generic;
     using DomainObjects;
@@ -13,13 +11,20 @@ namespace Kigg.Infrastructure.EntityFramework
             : base(dbContextFactory, queryFactory)
         {
         }
-
+        
         public Tag FindByName(string name)
         {
             Check.Argument.IsNotNullOrEmpty(name, "name");
 
             var query = QueryFactory.CreateFindTagByName(name);
             
+            return query.Execute();
+        }
+
+        public Tag FindByUniqueName(string uniqueName)
+        {
+            var query = QueryFactory.CreateFindTagByUniqueName(uniqueName);
+
             return query.Execute();
         }
 
@@ -44,22 +49,8 @@ namespace Kigg.Infrastructure.EntityFramework
 
         public IEnumerable<Tag> FindAll()
         {
-            throw new System.NotImplementedException();
-        }
-
-        public Tag FindById(long id)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Tag FindByUniqueName(string uniqueName)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void Remove(Tag entity)
-        {
-            throw new System.NotImplementedException();
+            var query = QueryFactory.CreateFindAllTags(t => t.Name);
+            return query.Execute();
         }
     }
 }

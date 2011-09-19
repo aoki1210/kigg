@@ -1,17 +1,13 @@
-﻿using System;
-
-namespace Kigg.Infrastructure.EntityFramework.IntegrationTest.Query
+﻿namespace Kigg.Infrastructure.EntityFramework.IntegrationTest.Query
 {
     using System.Linq;
-    using System.Collections.Generic;
-
+    
     using Xunit;
     using Xunit.Extensions;
 
-    using DomainObjects;
     using EntityFramework.Query;
 
-    public class UserFindTopByScoredQueryFixture : IntegrationFixtureBase
+    public class UserFindTopScoredListQueryFixture : IntegrationFixtureBase
     {
         [Fact]
         [AutoRollback]
@@ -25,7 +21,7 @@ namespace Kigg.Infrastructure.EntityFramework.IntegrationTest.Query
             //Generates 10 score entries each equal to 10pts for the last 10 days (including today)
             GenerateScoreForUser(user2, 10, 10, true);
             
-            var query = new UserFindTopByScoredQuery(Context, SystemTime.Now().AddDays(-10) ,SystemTime.Now());
+            var query = new UserFindTopScoredListQuery(Context, SystemTime.Now().AddDays(-10) ,SystemTime.Now());
             var result = query.Execute().ToList();
             var topUser = result.First();
             Assert.Equal(user1.Id, topUser.Id);

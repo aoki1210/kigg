@@ -7,11 +7,11 @@
 
     using DomainObjects;
 
-    public class UserFindTopByScoredQuery : OrderedQueryBase<User>
+    public class UserFindTopScoredListQuery : OrderedQueryBase<User>
     {
         private readonly IQueryable<User> originalQuery;
 
-        public UserFindTopByScoredQuery(KiggDbContext context, DateTime startTimestamp, DateTime endTimestamp)
+        public UserFindTopScoredListQuery(KiggDbContext context, DateTime startTimestamp, DateTime endTimestamp)
             : base(context)
         {
             var userWithScore = context.Scores
@@ -34,7 +34,7 @@
             return Query.AsEnumerable();
         }
 
-        public int Count()
+        public override long Count()
         {
             return originalQuery.Count();
         }
