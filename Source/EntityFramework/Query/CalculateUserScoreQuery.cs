@@ -6,11 +6,11 @@
 
     using DomainObjects;
 
-    public class CalculateUserScoreByIdQuery : QueryBase<decimal>
+    public class CalculateUserScoreQuery : QueryBase<decimal>
     {
         private readonly Expression<Func<UserScore, bool>> predicate;
 
-        public CalculateUserScoreByIdQuery(KiggDbContext context, Expression<Func<UserScore, bool>> predicate)
+        public CalculateUserScoreQuery(KiggDbContext context, Expression<Func<UserScore, bool>> predicate)
             : base(context)
         {
             Check.Argument.IsNotNull(predicate, "predicate");

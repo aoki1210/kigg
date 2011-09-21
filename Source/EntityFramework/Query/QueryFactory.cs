@@ -31,6 +31,40 @@
             this.dbContextFactory = dbContextFactory;
         }
 
+        public IQuery<Category> CreateFindCategoryByUniqueName(string uniqueName)
+        {
+            var query = new CategoryFindByUniqueKeyQuery(DbContext, c => c.UniqueName == uniqueName);
+
+            return query;
+        }
+
+        public IQuery<Category> CreateFindCategoryByName(string name)
+        {
+            var query = new CategoryFindByUniqueKeyQuery(DbContext, c => c.Name == name);
+
+            return query;
+        }
+
+        public IOrderedQuery<Category> CreateFindAllCategories<TKey>(Expression<Func<Category, TKey>> orderBy)
+        {
+            IOrderedQuery<Category> query = new CategoryFindListQuery(DbContext);
+            query = query.OrderBy(orderBy);
+            return query;
+        }
+
+        public IQuery<KnownSource> CreateFindKnownSourceByUrl(string url)
+        {
+            var query = new KnownSourceFindByUrlQuery(DbContext, url);
+            return query;
+        }
+
+        public IOrderedQuery<KnownSource> CreateFindAllKnownSources<TKey>(Expression<Func<KnownSource, TKey>> orderBy)
+        {
+            IOrderedQuery<KnownSource> query = new KnownSourceFindListQuery(DbContext);
+            query = query.OrderBy(orderBy);
+            return query;
+        }
+        
         public IQuery<Tag> CreateFindTagByUniqueName(string uniqueName)
         {
             var query = new TagFindByUniqueKeyQuery(DbContext, t => t.UniqueName == uniqueName);
@@ -83,13 +117,19 @@
             return query;
         }
 
+        public IQuery<int> CreateCountVotesByStoryId(long id)
+        {
+            Check.Argument.IsNotNegativeOrZero(id, "id");
+            var query = new CountVotesQuery(DbContext, v => v.StoryId == id);
+            return query;
+        }
         public IQuery<decimal> CreateCalculateUserScoreById(long id, DateTime startDate, DateTime endDate)
         {
             Check.Argument.IsNotNegativeOrZero(id, "id");
             Check.Argument.IsNotInFuture(startDate, "startDate");
             Check.Argument.IsNotInFuture(endDate, "endDate");
 
-            var query = new CalculateUserScoreByIdQuery(DbContext,
+            var query = new CalculateUserScoreQuery(DbContext,
                                                         us =>
                                                         (us.ScoredBy.Id == id) &&
                                                         (us.CreatedAt >= startDate && us.CreatedAt <= endDate));
