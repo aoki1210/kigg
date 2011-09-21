@@ -8,7 +8,10 @@
     public interface IQueryFactory
     {
         bool UseCompiled { get; }
-
+        
+        IQuery<Category> CreateFindCategoryByName(string name);
+        IQuery<Category> CreateFindCategoryByUniqueName(string uniqueName);
+        IOrderedQuery<Category> CreateFindAllCategories<TKey>(Expression<Func<Category, TKey>> orderBy);
         IQuery<User> CreateFindUserByEmail(string email);
         IQuery<User> CreateFindUserByUserName(string userName);
         IOrderedQuery<User> CreateFindTopScoredUsers(DateTime startDate, DateTime endDate, int start, int max);
@@ -19,5 +22,8 @@
         IOrderedQuery<Tag> CreateFindTagsByMatchingName(string name, int max);
         IOrderedQuery<Tag> CreateFindTagsByUsage(int max);
         IOrderedQuery<Tag> CreateFindAllTags<TKey>(Expression<Func<Tag, TKey>> orderBy);
+        IQuery<KnownSource> CreateFindKnownSourceByUrl(string url);
+        IOrderedQuery<KnownSource> CreateFindAllKnownSources<TKey>(Expression<Func<KnownSource, TKey>> orderBy);
+        IQuery<int> CreateCountVotesByStoryId(long id);
     }
 }

@@ -6,10 +6,10 @@ namespace Kigg.Infrastructure.EntityFramework.Query
     using System.Collections.Generic;
     using System.Linq.Expressions;
 
-    public abstract class OrderedQueryBase<TEntity> : QueryBase<IEnumerable<TEntity>>, IOrderedQuery<TEntity>
-        where TEntity : class
+    public abstract class OrderedQueryBase<TResult> : QueryBase<IEnumerable<TResult>>, IOrderedQuery<TResult>
+        where TResult : class
     {
-        protected IQueryable<TEntity> Query { get; set; }
+        protected IQueryable<TResult> Query { get; set; }
 
         protected OrderedQueryBase(KiggDbContext context, bool useCompiled)
             : base(context, useCompiled)
@@ -25,27 +25,27 @@ namespace Kigg.Infrastructure.EntityFramework.Query
         {
             return Query.Count();
         }
-        public virtual IOrderedQuery<TEntity> OrderBy<TKey>(Expression<Func<TEntity, TKey>> orderBy)
+        public virtual IOrderedQuery<TResult> OrderBy<TKey>(Expression<Func<TResult, TKey>> orderBy)
         {
             Query = Query.OrderBy(orderBy);
             return this;
         }
-        public virtual IOrderedQuery<TEntity> ThenBy<TKey>(Expression<Func<TEntity, TKey>> orderBy)
+        public virtual IOrderedQuery<TResult> ThenBy<TKey>(Expression<Func<TResult, TKey>> orderBy)
         {
-            Query = ((IOrderedQueryable<TEntity>)Query).ThenBy(orderBy);
+            Query = ((IOrderedQueryable<TResult>)Query).ThenBy(orderBy);
             return this;
         }
-        public virtual IOrderedQuery<TEntity> OrderByDescending<TKey>(Expression<Func<TEntity, TKey>> orderBy)
+        public virtual IOrderedQuery<TResult> OrderByDescending<TKey>(Expression<Func<TResult, TKey>> orderBy)
         {
             Query = Query.OrderByDescending(orderBy);
             return this;
         }
-        public virtual IOrderedQuery<TEntity> ThenByDescending<TKey>(Expression<Func<TEntity, TKey>> orderBy)
+        public virtual IOrderedQuery<TResult> ThenByDescending<TKey>(Expression<Func<TResult, TKey>> orderBy)
         {
-            Query = ((IOrderedQueryable<TEntity>)Query).ThenByDescending(orderBy);
+            Query = ((IOrderedQueryable<TResult>)Query).ThenByDescending(orderBy);
             return this;
         }
-        public virtual IOrderedQuery<TEntity> Page(int pageIndex, int pageSize)
+        public virtual IOrderedQuery<TResult> Page(int pageIndex, int pageSize)
         {
             Check.Argument.IsNotNegative(pageIndex, "pageIndex");
             Check.Argument.IsNotNegativeOrZero(pageSize, "pageSize");
@@ -53,7 +53,7 @@ namespace Kigg.Infrastructure.EntityFramework.Query
             Query = Query.Skip(pageIndex).Take(pageSize);
             return this;
         }
-        public virtual IOrderedQuery<TEntity> Limit(int max)
+        public virtual IOrderedQuery<TResult> Limit(int max)
         {
             Check.Argument.IsNotNegativeOrZero(max, "max");
             
