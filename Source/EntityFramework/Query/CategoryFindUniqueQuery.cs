@@ -6,11 +6,11 @@
 
     using DomainObjects;
 
-    public class TagFindByUniqueKeyQuery : QueryBase<Tag>
+    public class CategoryFindUniqueQuery : QueryBase<Category>
     {
-        private readonly Expression<Func<Tag, bool>> predicate;
+        private readonly Expression<Func<Category, bool>> predicate;
 
-        public TagFindByUniqueKeyQuery(KiggDbContext context, Expression<Func<Tag, bool>> predicate)
+        public CategoryFindUniqueQuery(KiggDbContext context, Expression<Func<Category, bool>> predicate)
             : base(context)
         {
             Check.Argument.IsNotNull(predicate, "predicate");
@@ -18,9 +18,9 @@
             this.predicate = predicate;
         }
 
-        public override Tag Execute()
+        public override Category Execute()
         {
-            return context.Tags.Single(predicate);
+            return context.Categories.Single(predicate);
         }
 
     }

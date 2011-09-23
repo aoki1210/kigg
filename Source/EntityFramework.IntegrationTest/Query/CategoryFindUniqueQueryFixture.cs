@@ -5,7 +5,7 @@
 
     using EntityFramework.Query;
 
-    public class CategoryFindByUniqueKeyQueryFixture : IntegrationFixtureBase
+    public class CategoryFindUniqueQueryFixture : IntegrationFixtureBase
     {
         [Fact]
         [AutoRollback]
@@ -13,7 +13,7 @@
         {
             var category = NewCategory(true);
 
-            var query = new CategoryFindByUniqueKeyQuery(Context, c => c.Id == category.Id);
+            var query = new CategoryFindUniqueQuery(Context, c => c.Id == category.Id);
 
             var result = query.Execute();
 
@@ -26,7 +26,7 @@
         {
             var category = NewCategory(true);
 
-            var query = new CategoryFindByUniqueKeyQuery(Context, c => c.UniqueName == category.UniqueName);
+            var query = new CategoryFindUniqueQuery(Context, c => c.UniqueName == category.UniqueName);
 
             var result = query.Execute();
 

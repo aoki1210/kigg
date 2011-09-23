@@ -7,7 +7,7 @@
     public interface IOrderedQuery<TResult> : IQuery<IEnumerable<TResult>> 
         where TResult: class
     {
-        long Count();
+        long CountAllRecords();
         IOrderedQuery<TResult> OrderBy<TKey>(Expression<Func<TResult, TKey>> orderBy);
         IOrderedQuery<TResult> ThenBy<TKey>(Expression<Func<TResult, TKey>> orderBy);
         IOrderedQuery<TResult> OrderByDescending<TKey>(Expression<Func<TResult, TKey>> orderBy);

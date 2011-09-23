@@ -5,7 +5,7 @@
 
     using EntityFramework.Query;
 
-    public class TagFindByUniqueKeyQueryFixture : IntegrationFixtureBase
+    public class TagFindUniqueQueryFixture : IntegrationFixtureBase
     {
         [Fact]
         [AutoRollback]
@@ -13,7 +13,7 @@
         {
             var tag = NewTag(true);
 
-            var query = new TagFindByUniqueKeyQuery(Context, t => t.Id == tag.Id);
+            var query = new TagFindUniqueQuery(Context, t => t.Id == tag.Id);
 
             var result = query.Execute();
 
@@ -26,7 +26,7 @@
         {
             var tag = NewTag(true);
 
-            var query = new TagFindByUniqueKeyQuery(Context, t => t.UniqueName == tag.UniqueName);
+            var query = new TagFindUniqueQuery(Context, t => t.UniqueName == tag.UniqueName);
 
             var result = query.Execute();
 
@@ -39,7 +39,7 @@
         {
             var tag = NewTag(true);
 
-            var query = new TagFindByUniqueKeyQuery(Context, t => t.Name == tag.Name);
+            var query = new TagFindUniqueQuery(Context, t => t.Name == tag.Name);
 
             var result = query.Execute();
 
