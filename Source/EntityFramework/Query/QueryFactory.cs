@@ -31,16 +31,38 @@
             this.dbContextFactory = dbContextFactory;
         }
 
+        public IQuery<int> CreateCountVotesByStoryId(long id)
+        {
+            Check.Argument.IsNotNegativeOrZero(id, "id");
+            var query = new CountVotesQuery(DbContext, v => v.StoryId == id);
+            return query;
+        }
+
+        public IQuery<decimal> CreateCalculateUserScoreById(long id, DateTime startDate, DateTime endDate)
+        {
+            Check.Argument.IsNotNegativeOrZero(id, "id");
+            Check.Argument.IsNotInvalidDate(startDate, "startDate");
+            Check.Argument.IsNotInFuture(startDate, "startDate");
+            Check.Argument.IsNotInvalidDate(endDate, "endDate");
+            Check.Argument.IsNotInFuture(endDate, "endDate");
+
+            var query = new CalculateUserScoreQuery(DbContext,
+                                                        us =>
+                                                        (us.ScoredBy.Id == id) &&
+                                                        (us.CreatedAt >= startDate && us.CreatedAt <= endDate));
+            return query;
+        }
+
         public IQuery<Category> CreateFindCategoryByUniqueName(string uniqueName)
         {
-            var query = new CategoryFindByUniqueKeyQuery(DbContext, c => c.UniqueName == uniqueName);
+            var query = new CategoryFindUniqueQuery(DbContext, c => c.UniqueName == uniqueName);
 
             return query;
         }
 
         public IQuery<Category> CreateFindCategoryByName(string name)
         {
-            var query = new CategoryFindByUniqueKeyQuery(DbContext, c => c.Name == name);
+            var query = new CategoryFindUniqueQuery(DbContext, c => c.Name == name);
 
             return query;
         }
@@ -64,17 +86,17 @@
             query = query.OrderBy(orderBy);
             return query;
         }
-        
+
         public IQuery<Tag> CreateFindTagByUniqueName(string uniqueName)
         {
-            var query = new TagFindByUniqueKeyQuery(DbContext, t => t.UniqueName == uniqueName);
+            var query = new TagFindUniqueQuery(DbContext, t => t.UniqueName == uniqueName);
 
             return query;
         }
 
         public IQuery<Tag> CreateFindTagByName(string name)
         {
-            var query = new TagFindByUniqueKeyQuery(DbContext, t => t.Name == name);
+            var query = new TagFindUniqueQuery(DbContext, t => t.Name == name);
 
             return query;
         }
@@ -102,37 +124,18 @@
             query = query.OrderBy(orderBy);
             return query;
         }
-        
+
         public IQuery<User> CreateFindUserByEmail(string email)
         {
-            var query = new UserFindByUniqueKeyQuery(DbContext, u => u.Email == email);
+            var query = new UserFindUniqueQuery(DbContext, u => u.Email == email);
 
             return query;
         }
 
         public IQuery<User> CreateFindUserByUserName(string userName)
         {
-            var query = new UserFindByUniqueKeyQuery(DbContext, u => u.UserName == userName);
+            var query = new UserFindUniqueQuery(DbContext, u => u.UserName == userName);
 
-            return query;
-        }
-
-        public IQuery<int> CreateCountVotesByStoryId(long id)
-        {
-            Check.Argument.IsNotNegativeOrZero(id, "id");
-            var query = new CountVotesQuery(DbContext, v => v.StoryId == id);
-            return query;
-        }
-        public IQuery<decimal> CreateCalculateUserScoreById(long id, DateTime startDate, DateTime endDate)
-        {
-            Check.Argument.IsNotNegativeOrZero(id, "id");
-            Check.Argument.IsNotInFuture(startDate, "startDate");
-            Check.Argument.IsNotInFuture(endDate, "endDate");
-
-            var query = new CalculateUserScoreQuery(DbContext,
-                                                        us =>
-                                                        (us.ScoredBy.Id == id) &&
-                                                        (us.CreatedAt >= startDate && us.CreatedAt <= endDate));
             return query;
         }
 
@@ -143,10 +146,10 @@
             Check.Argument.IsNotNegative(start, "start");
             Check.Argument.IsNotNegative(max, "max");
 
-            var query = new UserFindTopScoredListQuery(DbContext, startDate, endDate);
+            var query = new UserFindTopScoredListQuery(DbContext, us => (us.ScoredBy.Role == Roles.User) && (!us.ScoredBy.IsLockedOut) && (us.CreatedAt >= startDate && us.CreatedAt <= endDate));
             return query.Page(start, max);
         }
-        
+
         public IOrderedQuery<User> CreateFindAllUsers<TKey>(int start, int max, Expression<Func<User, TKey>> orderBy)
         {
             Check.Argument.IsNotNegative(start, "start");
@@ -154,6 +157,27 @@
 
             var query = new UserFindListQuery(DbContext);
             return query.OrderBy(orderBy).Page(start, max);
+        }
+
+        public IOrderedQuery<Vote> CreateFindVotesForStoryAfterDate(long storyId, DateTime date)
+        {
+            Check.Argument.IsNotNegativeOrZero(storyId, "storyId");
+            Check.Argument.IsNotInFuture(date, "date");
+            Check.Argument.IsNotInvalidDate(date, "date");
+
+            var query = new VoteFindListQuery(DbContext, v => v.StoryId == storyId && v.PromotedAt >= date);
+
+            return query;
+        }
+
+        public IQuery<Vote> CreateFindVoteById(long userId, long storyId)
+        {
+            Check.Argument.IsNotNegativeOrZero(userId, "userId");
+            Check.Argument.IsNotNegativeOrZero(storyId, "storyId");
+
+            var query = new VoteFindUniqueQuery(DbContext, v => v.UserId == userId && v.StoryId == storyId);
+            
+            return query;
         }
     }
 }

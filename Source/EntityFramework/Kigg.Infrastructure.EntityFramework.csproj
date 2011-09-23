@@ -119,7 +119,7 @@
     <Compile Include="Mapping\UserScoreMapping.cs" />
     <Compile Include="Mapping\VoteMapping.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Query\CategoryFindByUniqueKeyQuery.cs" />
+    <Compile Include="Query\CategoryFindUniqueQuery.cs" />
     <Compile Include="Query\CategoryFindListQuery.cs" />
     <Compile Include="Query\CountVotesQuery.cs" />
     <Compile Include="Query\IQueryFactory.cs" />
@@ -128,14 +128,16 @@
     <Compile Include="Query\KnownSourceFindListQuery.cs" />
     <Compile Include="Query\QueryFactory.cs" />
     <Compile Include="Query\TagFindListQuery.cs" />
-    <Compile Include="Query\TagFindByUniqueKeyQuery.cs" />
+    <Compile Include="Query\TagFindUniqueQuery.cs" />
     <Compile Include="Query\IOrderedQuery.cs" />
     <Compile Include="Query\OrderedQueryBase.cs" />
     <Compile Include="Query\UserFindListQuery.cs" />
-    <Compile Include="Query\UserFindByUniqueKeyQuery.cs" />
+    <Compile Include="Query\UserFindUniqueQuery.cs" />
     <Compile Include="Query\IQuery.cs" />
     <Compile Include="Query\QueryBase.cs" />
     <Compile Include="Query\UserFindTopScoredListQuery.cs" />
+    <Compile Include="Query\VoteFindListQuery.cs" />
+    <Compile Include="Query\VoteFindUniqueQuery.cs" />
     <Compile Include="RepositoryBase.cs" />
     <Compile Include="TagRepository.cs" />
   </ItemGroup>

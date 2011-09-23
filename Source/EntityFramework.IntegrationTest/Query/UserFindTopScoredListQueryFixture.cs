@@ -1,7 +1,7 @@
 ﻿namespace Kigg.Infrastructure.EntityFramework.IntegrationTest.Query
 {
     using System.Linq;
-    
+
     using Xunit;
     using Xunit.Extensions;
 
@@ -20,8 +20,11 @@
             GenerateScoreForUser(user1, 30, 5, true);
             //Generates 10 score entries each equal to 10pts for the last 10 days (including today)
             GenerateScoreForUser(user2, 10, 10, true);
-            
-            var query = new UserFindTopScoredListQuery(Context, SystemTime.Now().AddDays(-10) ,SystemTime.Now());
+
+            var startDate = SystemTime.Now().AddDays(-10);
+            var endDate = SystemTime.Now();
+            var query = new UserFindTopScoredListQuery(Context, us =>
+                                                        us.CreatedAt >= startDate && us.CreatedAt <= endDate);
             var result = query.Execute().ToList();
             var topUser = result.First();
             Assert.Equal(user1.Id, topUser.Id);

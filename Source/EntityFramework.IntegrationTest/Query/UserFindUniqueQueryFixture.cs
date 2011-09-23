@@ -5,7 +5,7 @@
 
     using EntityFramework.Query;
 
-    public class UserFindByUniqueKeyQueryFixture : IntegrationFixtureBase
+    public class UserFindUniqueQueryFixture : IntegrationFixtureBase
     {
         [Fact]
         [AutoRollback]
@@ -13,7 +13,7 @@
         {
             var user = NewUser(true);
 
-            var query = new UserFindByUniqueKeyQuery(Context, c => c.Id == user.Id);
+            var query = new UserFindUniqueQuery(Context, c => c.Id == user.Id);
 
             var result = query.Execute();
 
@@ -26,7 +26,7 @@
         {
             var user = NewUser(true);
 
-            var query = new UserFindByUniqueKeyQuery(Context, c => c.UserName == user.UserName);
+            var query = new UserFindUniqueQuery(Context, c => c.UserName == user.UserName);
 
             var result = query.Execute();
 
@@ -39,7 +39,7 @@
         {
             var user = NewUser(true);
 
-            var query = new UserFindByUniqueKeyQuery(Context, c => c.Email == user.Email);
+            var query = new UserFindUniqueQuery(Context, c => c.Email == user.Email);
 
             var result = query.Execute();
 

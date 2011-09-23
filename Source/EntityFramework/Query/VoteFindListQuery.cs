@@ -6,19 +6,19 @@
     using System.Collections.Generic;
 
     using DomainObjects;
-
-    public class TagFindListQuery : OrderedQueryBase<Tag>
+    public class VoteFindListQuery : OrderedQueryBase<Vote>
     {
-        public TagFindListQuery(KiggDbContext context) : base(context)
+        public VoteFindListQuery(KiggDbContext context) : base(context)
         {
+            Query = base.context.Votes;
         }
 
-        public TagFindListQuery(KiggDbContext context, Expression<Func<Tag, bool>> predicate)
+        public VoteFindListQuery(KiggDbContext context, Expression<Func<Vote, bool>> predicate)
             : base(context, predicate)
         {
         }
 
-        public override IEnumerable<Tag> Execute()
+        public override IEnumerable<Vote> Execute()
         {
             return Query.AsEnumerable();
         }

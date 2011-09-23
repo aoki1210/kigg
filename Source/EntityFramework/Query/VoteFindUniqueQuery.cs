@@ -6,11 +6,11 @@
 
     using DomainObjects;
 
-    public class UserFindByUniqueKeyQuery : QueryBase<User>
+    public class VoteFindUniqueQuery : QueryBase<Vote>
     {
-        private readonly Expression<Func<User, bool>> predicate;
+        private readonly Expression<Func<Vote, bool>> predicate;
 
-        public UserFindByUniqueKeyQuery(KiggDbContext context, Expression<Func<User, bool>> predicate)
+        public VoteFindUniqueQuery(KiggDbContext context, Expression<Func<Vote, bool>> predicate)
             : base(context)
         {
             Check.Argument.IsNotNull(predicate, "predicate");
@@ -18,9 +18,9 @@
             this.predicate = predicate;
         }
 
-        public override User Execute()
+        public override Vote Execute()
         {
-            return context.Users.Single(predicate);
+            return context.Votes.Single(predicate);
         }
     }
 }

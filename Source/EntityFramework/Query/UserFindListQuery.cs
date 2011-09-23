@@ -9,7 +9,6 @@
 
     public class UserFindListQuery : OrderedQueryBase<User>
     {
-        private readonly IQueryable<User> originalQuery;
         public UserFindListQuery(KiggDbContext context)
             : base(context)
         {
@@ -17,17 +16,10 @@
         }
 
         public UserFindListQuery(KiggDbContext context, Expression<Func<User, bool>> predicate)
-            : base(context)
+            : base(context, predicate)
         {
-            originalQuery = base.context.Users.Where(predicate);
-            Query = originalQuery;
         }
-
-        public override long Count()
-        {
-            return originalQuery.Count();
-        }
-
+        
         public override IEnumerable<User> Execute()
         {
             return Query.AsEnumerable();

@@ -9,21 +9,32 @@ namespace Kigg.Infrastructure.EntityFramework.Query
     public abstract class OrderedQueryBase<TResult> : QueryBase<IEnumerable<TResult>>, IOrderedQuery<TResult>
         where TResult : class
     {
+        protected IQueryable<TResult> OriginalQuery { get; set; }
+
         protected IQueryable<TResult> Query { get; set; }
 
         protected OrderedQueryBase(KiggDbContext context, bool useCompiled)
             : base(context, useCompiled)
         {
+            OriginalQuery = context.Set<TResult>();
+            Query = OriginalQuery;
         }
 
         protected OrderedQueryBase(KiggDbContext context)
-            : base(context)
+            : this(context, true)
         {
         }
 
-        public virtual long Count()
+        protected OrderedQueryBase(KiggDbContext context, Expression<Func<TResult, bool>> predicate)
+            : this(context, true)
         {
-            return Query.Count();
+            OriginalQuery = context.Set<TResult>().Where(predicate);
+            Query = OriginalQuery;
+        }
+
+        public virtual long CountAllRecords()
+        {
+            return OriginalQuery.Count();
         }
         public virtual IOrderedQuery<TResult> OrderBy<TKey>(Expression<Func<TResult, TKey>> orderBy)
         {
@@ -56,7 +67,7 @@ namespace Kigg.Infrastructure.EntityFramework.Query
         public virtual IOrderedQuery<TResult> Limit(int max)
         {
             Check.Argument.IsNotNegativeOrZero(max, "max");
-            
+
             Query = Query.Take(max);
             return this;
         }
