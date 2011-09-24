@@ -26,5 +26,6 @@
         public IDbSet<KnownSource> KnownSources { get; set; }
         public IDbSet<Comment> Comments { get; set; }
         internal IDbSet<Vote> Votes { get; set; }
+        internal IDbSet<StoryView> Views { get; set; }
     }
 }
