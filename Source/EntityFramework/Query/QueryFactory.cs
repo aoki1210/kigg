@@ -34,7 +34,18 @@
         public IQuery<int> CreateCountVotesByStoryId(long id)
         {
             Check.Argument.IsNotNegativeOrZero(id, "id");
+
             var query = new CountVotesQuery(DbContext, v => v.StoryId == id);
+            
+            return query;
+        }
+
+        public IQuery<int> CreateCountStoryViewsByStoryId(long id)
+        {
+            Check.Argument.IsNotNegativeOrZero(id, "id");
+
+            var query = new CountStoryViewsQuery(DbContext, v => v.ForStory.Id == id);
+            
             return query;
         }
 
@@ -50,6 +61,7 @@
                                                         us =>
                                                         (us.ScoredBy.Id == id) &&
                                                         (us.CreatedAt >= startDate && us.CreatedAt <= endDate));
+            
             return query;
         }
 
@@ -141,7 +153,9 @@
 
         public IOrderedQuery<User> CreateFindTopScoredUsers(DateTime startDate, DateTime endDate, int start, int max)
         {
+            Check.Argument.IsNotInvalidDate(startDate, "startDate");
             Check.Argument.IsNotInFuture(startDate, "startDate");
+            Check.Argument.IsNotInvalidDate(endDate, "endDate");
             Check.Argument.IsNotInFuture(endDate, "endDate");
             Check.Argument.IsNotNegative(start, "start");
             Check.Argument.IsNotNegative(max, "max");
@@ -159,7 +173,7 @@
             return query.OrderBy(orderBy).Page(start, max);
         }
 
-        public IOrderedQuery<Vote> CreateFindVotesForStoryAfterDate(long storyId, DateTime date)
+        public IOrderedQuery<Vote> CreateFindStoryVotesAfterDate(long storyId, DateTime date)
         {
             Check.Argument.IsNotNegativeOrZero(storyId, "storyId");
             Check.Argument.IsNotInFuture(date, "date");
@@ -177,6 +191,40 @@
 
             var query = new VoteFindUniqueQuery(DbContext, v => v.UserId == userId && v.StoryId == storyId);
             
+            return query;
+        }
+
+        public IOrderedQuery<StoryView> CreateFindStoryViewsAfterDate(long storyId, DateTime date)
+        {
+            Check.Argument.IsNotNegativeOrZero(storyId, "storyId");
+            Check.Argument.IsNotInFuture(date, "date");
+            Check.Argument.IsNotInvalidDate(date, "date");
+
+            var query = new StoryViewFindListQuery(DbContext, v => v.ForStory.Id == storyId && v.ViewedAt >= date);
+
+            return query;
+        }
+
+        public IOrderedQuery<Comment> CreateFindCommentsForStoryAfterDate(long storyId, DateTime date, int start, int max)
+        {
+            Check.Argument.IsNotNegativeOrZero(storyId, "storyId");
+            Check.Argument.IsNotInvalidDate(date, "date");
+
+            IOrderedQuery<Comment> query = new CommentFindListQuery(DbContext, c => c.ForStory.Id == storyId && c.CreatedAt >= date);
+
+            query = query.OrderBy(c => c.CreatedAt);
+
+            query = query.Page(start, max);
+
+            return query;
+        }
+
+        public IQuery<Comment> CreateFindCommentById(long id)
+        {
+            Check.Argument.IsNotNegativeOrZero(id, "id");
+
+            var query = new CommentFindUniqueQuery(DbContext, c => c.Id == id);
+
             return query;
         }
     }

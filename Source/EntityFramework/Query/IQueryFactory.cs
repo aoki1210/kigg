@@ -11,6 +11,7 @@
 
         IQuery<decimal> CreateCalculateUserScoreById(long id, DateTime startDate, DateTime endDate);
         IQuery<int> CreateCountVotesByStoryId(long id);
+        IQuery<int> CreateCountStoryViewsByStoryId(long id);
         IQuery<Category> CreateFindCategoryByName(string name);
         IQuery<Category> CreateFindCategoryByUniqueName(string uniqueName);
         IOrderedQuery<Category> CreateFindAllCategories<TKey>(Expression<Func<Category, TKey>> orderBy);
@@ -25,6 +26,10 @@
         IOrderedQuery<Tag> CreateFindAllTags<TKey>(Expression<Func<Tag, TKey>> orderBy);
         IQuery<KnownSource> CreateFindKnownSourceByUrl(string url);
         IOrderedQuery<KnownSource> CreateFindAllKnownSources<TKey>(Expression<Func<KnownSource, TKey>> orderBy);
-        IOrderedQuery<Vote> CreateFindVotesForStoryAfterDate(long storyId, DateTime date);
+        IQuery<Vote> CreateFindVoteById(long userId, long storyId);        
+        IOrderedQuery<Vote> CreateFindStoryVotesAfterDate(long storyId, DateTime date);
+        IOrderedQuery<StoryView> CreateFindStoryViewsAfterDate(long storyId, DateTime date);
+        IQuery<Comment> CreateFindCommentById(long id);
+        IOrderedQuery<Comment> CreateFindCommentsForStoryAfterDate(long storyId, DateTime date, int start, int max);
     }
 }
