@@ -2,7 +2,7 @@ namespace Kigg.DomainObjects
 {
     using System;
 
-    public class MarkAsSpam
+    public class MarkAsSpam : IDomainObject
     {
         public virtual long UserId { get; set; }
 

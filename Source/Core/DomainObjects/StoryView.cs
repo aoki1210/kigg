@@ -2,7 +2,7 @@ namespace Kigg.DomainObjects
 {
     using System;
 
-    public class StoryView
+    public class StoryView : IDomainObject
     {
         public virtual long Id { get; set; }
 

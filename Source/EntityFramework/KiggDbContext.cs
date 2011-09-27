@@ -27,5 +27,10 @@
         public IDbSet<Comment> Comments { get; set; }
         internal IDbSet<Vote> Votes { get; set; }
         internal IDbSet<StoryView> Views { get; set; }
+
+        public new IDbSet<TEntity> Set<TEntity>() where TEntity: class
+        {
+            return base.Set<TEntity>();
+        }
     }
 }

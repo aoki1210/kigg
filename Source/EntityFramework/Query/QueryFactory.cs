@@ -36,7 +36,7 @@
             Check.Argument.IsNotNegativeOrZero(id, "id");
 
             var query = new CountVotesQuery(DbContext, v => v.StoryId == id);
-            
+
             return query;
         }
 
@@ -45,7 +45,7 @@
             Check.Argument.IsNotNegativeOrZero(id, "id");
 
             var query = new CountStoryViewsQuery(DbContext, v => v.ForStory.Id == id);
-            
+
             return query;
         }
 
@@ -61,20 +61,20 @@
                                                         us =>
                                                         (us.ScoredBy.Id == id) &&
                                                         (us.CreatedAt >= startDate && us.CreatedAt <= endDate));
-            
-            return query;
-        }
-
-        public IQuery<Category> CreateFindCategoryByUniqueName(string uniqueName)
-        {
-            var query = new CategoryFindUniqueQuery(DbContext, c => c.UniqueName == uniqueName);
 
             return query;
         }
 
-        public IQuery<Category> CreateFindCategoryByName(string name)
+        public IQuery<Category> CreateFindUniqueCategoryByUniqueName(string uniqueName)
         {
-            var query = new CategoryFindUniqueQuery(DbContext, c => c.Name == name);
+            var query = CreateFindUniqueDomainObjectQuery<Category>(c => c.UniqueName == uniqueName);
+
+            return query;
+        }
+
+        public IQuery<Category> CreateFindUniqueCategoryByName(string name)
+        {
+            var query = CreateFindUniqueDomainObjectQuery<Category>( c => c.Name == name);
 
             return query;
         }
@@ -88,7 +88,7 @@
 
         public IQuery<KnownSource> CreateFindKnownSourceByUrl(string url)
         {
-            var query = new KnownSourceFindByUrlQuery(DbContext, url);
+            var query = CreateFindUniqueDomainObjectQuery<KnownSource>(k => k.Url == url);
             return query;
         }
 
@@ -101,14 +101,14 @@
 
         public IQuery<Tag> CreateFindTagByUniqueName(string uniqueName)
         {
-            var query = new TagFindUniqueQuery(DbContext, t => t.UniqueName == uniqueName);
+            var query = CreateFindUniqueDomainObjectQuery<Tag>(t => t.UniqueName == uniqueName);
 
             return query;
         }
 
         public IQuery<Tag> CreateFindTagByName(string name)
         {
-            var query = new TagFindUniqueQuery(DbContext, t => t.Name == name);
+            var query = CreateFindUniqueDomainObjectQuery<Tag>(t => t.Name == name);
 
             return query;
         }
@@ -139,14 +139,14 @@
 
         public IQuery<User> CreateFindUserByEmail(string email)
         {
-            var query = new UserFindUniqueQuery(DbContext, u => u.Email == email);
+            var query = CreateFindUniqueDomainObjectQuery<User>(u => u.Email == email);
 
             return query;
         }
 
         public IQuery<User> CreateFindUserByUserName(string userName)
         {
-            var query = new UserFindUniqueQuery(DbContext, u => u.UserName == userName);
+            var query = CreateFindUniqueDomainObjectQuery<User>(u => u.UserName == userName);
 
             return query;
         }
@@ -189,8 +189,8 @@
             Check.Argument.IsNotNegativeOrZero(userId, "userId");
             Check.Argument.IsNotNegativeOrZero(storyId, "storyId");
 
-            var query = new VoteFindUniqueQuery(DbContext, v => v.UserId == userId && v.StoryId == storyId);
-            
+            var query = CreateFindUniqueDomainObjectQuery<Vote>(v => v.UserId == userId && v.StoryId == storyId);
+
             return query;
         }
 
@@ -223,9 +223,15 @@
         {
             Check.Argument.IsNotNegativeOrZero(id, "id");
 
-            var query = new CommentFindUniqueQuery(DbContext, c => c.Id == id);
+            var query = CreateFindUniqueDomainObjectQuery<Comment>(c => c.Id == id);
 
             return query;
+        }
+
+        private DomainObjectFindUniqueQuery<TResult> CreateFindUniqueDomainObjectQuery<TResult>(Expression<Func<TResult, bool>> predicate)
+            where TResult : class, IDomainObject
+        {
+            return new DomainObjectFindUniqueQuery<TResult>(DbContext, predicate);
         }
     }
 }
