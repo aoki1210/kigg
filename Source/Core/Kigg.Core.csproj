@@ -105,6 +105,7 @@
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="DomainObjects\CommentSubscribtion.cs" />
+    <Compile Include="DomainObjects\Interfaces\IDomainObject.cs" />
     <Compile Include="DomainObjects\KnownSource.cs" />
     <Compile Include="DomainObjects\Interfaces\ITagContainer.cs" />
     <Compile Include="DomainObjects\KnownSourceGrade.cs" />

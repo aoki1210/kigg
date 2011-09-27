@@ -121,12 +121,10 @@
     <Compile Include="KiggDbFactoryFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="KiGGDbContextFixture.cs" />
-    <Compile Include="Query\CategoryFindUniqueQueryFixture.cs" />
+    <Compile Include="Query\DomainObjectFindUniqueQueryFixture.cs" />
     <Compile Include="Query\CategoryFindListQueryFixture.cs" />
     <Compile Include="Query\TagFindListQueryFixture.cs" />
-    <Compile Include="Query\TagFindUniqueQueryFixture.cs" />
     <Compile Include="Query\UserFindListQueryFixture.cs" />
-    <Compile Include="Query\UserFindUniqueQueryFixture.cs" />
     <Compile Include="Query\UserFindTopScoredListQueryFixture.cs" />
   </ItemGroup>
   <ItemGroup>

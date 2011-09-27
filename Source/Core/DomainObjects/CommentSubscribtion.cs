@@ -1,6 +1,6 @@
 namespace Kigg.DomainObjects
 {
-    public class CommentSubscribtion
+    public class CommentSubscribtion : IDomainObject
     {
         public virtual Story ForStory { get; set; }
 

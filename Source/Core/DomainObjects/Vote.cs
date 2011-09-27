@@ -2,7 +2,7 @@ namespace Kigg.DomainObjects
 {
     using System;
 
-    public class Vote
+    public class Vote : IDomainObject
     {
         public virtual long UserId { get; set; }
         

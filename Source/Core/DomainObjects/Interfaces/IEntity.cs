@@ -2,7 +2,7 @@ namespace Kigg.DomainObjects
 {
     using System;
 
-    public interface IEntity
+    public interface IEntity : IDomainObject
     {
         long Id
         {

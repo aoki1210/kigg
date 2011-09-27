@@ -12,8 +12,8 @@
         IQuery<decimal> CreateCalculateUserScoreById(long id, DateTime startDate, DateTime endDate);
         IQuery<int> CreateCountVotesByStoryId(long id);
         IQuery<int> CreateCountStoryViewsByStoryId(long id);
-        IQuery<Category> CreateFindCategoryByName(string name);
-        IQuery<Category> CreateFindCategoryByUniqueName(string uniqueName);
+        IQuery<Category> CreateFindUniqueCategoryByName(string name);
+        IQuery<Category> CreateFindUniqueCategoryByUniqueName(string uniqueName);
         IOrderedQuery<Category> CreateFindAllCategories<TKey>(Expression<Func<Category, TKey>> orderBy);
         IQuery<User> CreateFindUserByEmail(string email);
         IQuery<User> CreateFindUserByUserName(string userName);
