@@ -81,8 +81,10 @@
 
         public IOrderedQuery<Category> CreateFindAllCategories<TKey>(Expression<Func<Category, TKey>> orderBy)
         {
-            IOrderedQuery<Category> query = new CategoryFindListQuery(DbContext);
+            IOrderedQuery<Category> query = CreateFindDomainObjectListQuery<Category>();
+            
             query = query.OrderBy(orderBy);
+            
             return query;
         }
 
@@ -94,8 +96,10 @@
 
         public IOrderedQuery<KnownSource> CreateFindAllKnownSources<TKey>(Expression<Func<KnownSource, TKey>> orderBy)
         {
-            IOrderedQuery<KnownSource> query = new KnownSourceFindListQuery(DbContext);
+            IOrderedQuery<KnownSource> query = CreateFindDomainObjectListQuery<KnownSource>();
+
             query = query.OrderBy(orderBy);
+            
             return query;
         }
 
@@ -115,14 +119,17 @@
 
         public IOrderedQuery<Tag> CreateFindTagsByMatchingName(string name, int max)
         {
-            IOrderedQuery<Tag> query = new TagFindListQuery(DbContext, t => t.Name.StartsWith(name));
+            IOrderedQuery<Tag> query = CreateFindDomainObjectListQuery<Tag>(t => t.Name.StartsWith(name));
+            
             query = query.OrderBy(t => t.Name).Limit(max);
+            
             return query;
         }
 
         public IOrderedQuery<Tag> CreateFindTagsByUsage(int max)
         {
-            IOrderedQuery<Tag> query = new TagFindListQuery(DbContext, t => t.Stories.Any());
+            IOrderedQuery<Tag> query = CreateFindDomainObjectListQuery<Tag>(t => t.Stories.Any());
+            
             query = query.OrderByDescending(t => t.Stories.Count(st => st.ApprovedAt != null))
                          .ThenBy(t => t.Name)
                          .Limit(max);
@@ -132,8 +139,17 @@
 
         public IOrderedQuery<Tag> CreateFindAllTags<TKey>(Expression<Func<Tag, TKey>> orderBy)
         {
-            IOrderedQuery<Tag> query = new TagFindListQuery(DbContext);
+            IOrderedQuery<Tag> query = CreateFindDomainObjectListQuery<Tag>();
+
             query = query.OrderBy(orderBy);
+            
+            return query;
+        }
+
+        public IQuery<User> CreateFindUserById(long id)
+        {
+            var query = CreateFindUniqueDomainObjectQuery<User>(u => u.Id == id);
+
             return query;
         }
 
@@ -169,7 +185,8 @@
             Check.Argument.IsNotNegative(start, "start");
             Check.Argument.IsNotNegative(max, "max");
 
-            var query = new UserFindListQuery(DbContext);
+            var query = CreateFindDomainObjectListQuery<User>();
+
             return query.OrderBy(orderBy).Page(start, max);
         }
 
@@ -179,7 +196,7 @@
             Check.Argument.IsNotInFuture(date, "date");
             Check.Argument.IsNotInvalidDate(date, "date");
 
-            var query = new VoteFindListQuery(DbContext, v => v.StoryId == storyId && v.PromotedAt >= date);
+            var query = CreateFindDomainObjectListQuery<Vote>(v => v.StoryId == storyId && v.PromotedAt >= date);
 
             return query;
         }
@@ -200,7 +217,7 @@
             Check.Argument.IsNotInFuture(date, "date");
             Check.Argument.IsNotInvalidDate(date, "date");
 
-            var query = new StoryViewFindListQuery(DbContext, v => v.ForStory.Id == storyId && v.ViewedAt >= date);
+            var query = CreateFindDomainObjectListQuery<StoryView>(v => v.ForStory.Id == storyId && v.ViewedAt >= date);
 
             return query;
         }
@@ -210,7 +227,7 @@
             Check.Argument.IsNotNegativeOrZero(storyId, "storyId");
             Check.Argument.IsNotInvalidDate(date, "date");
 
-            IOrderedQuery<Comment> query = new CommentFindListQuery(DbContext, c => c.ForStory.Id == storyId && c.CreatedAt >= date);
+            IOrderedQuery<Comment> query = CreateFindDomainObjectListQuery<Comment>(c => c.ForStory.Id == storyId && c.CreatedAt >= date);
 
             query = query.OrderBy(c => c.CreatedAt);
 
@@ -228,10 +245,46 @@
             return query;
         }
 
+        public IQuery<Story> CreateFindStoryById(long id)
+        {
+            var query = CreateFindUniqueDomainObjectQuery<Story>(u => u.Id == id);
+
+            return query;
+        }
+
+        public IQuery<Story> CreateFindStoryByUniqueName(string uniqueName)
+        {
+            var query = CreateFindUniqueDomainObjectQuery<Story>(u => u.UniqueName == uniqueName);
+
+            return query;
+        }
+
+        public IQuery<Story> CreateFindStoryByUrl(string url)
+        {
+            var query = CreateFindUniqueDomainObjectQuery<Story>(u => u.Url == url);
+
+            return query;
+        }
+
         private DomainObjectFindUniqueQuery<TResult> CreateFindUniqueDomainObjectQuery<TResult>(Expression<Func<TResult, bool>> predicate)
             where TResult : class, IDomainObject
         {
             return new DomainObjectFindUniqueQuery<TResult>(DbContext, predicate);
+        }
+
+        private DomainObjectFindListQuery<TResult> CreateFindDomainObjectListQuery<TResult>()
+            where TResult : class, IDomainObject
+        {
+            return CreateFindDomainObjectListQuery<TResult>(null);
+        }
+
+        private DomainObjectFindListQuery<TResult> CreateFindDomainObjectListQuery<TResult>(Expression<Func<TResult, bool>> predicate)
+            where TResult : class, IDomainObject
+        {
+
+            return (predicate != null)
+                       ? new DomainObjectFindListQuery<TResult>(DbContext, predicate)
+                       : new DomainObjectFindListQuery<TResult>(DbContext);
         }
     }
 }

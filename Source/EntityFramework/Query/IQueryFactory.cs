@@ -15,8 +15,12 @@
         IQuery<Category> CreateFindUniqueCategoryByName(string name);
         IQuery<Category> CreateFindUniqueCategoryByUniqueName(string uniqueName);
         IOrderedQuery<Category> CreateFindAllCategories<TKey>(Expression<Func<Category, TKey>> orderBy);
+        IQuery<User> CreateFindUserById(long id);
         IQuery<User> CreateFindUserByEmail(string email);
         IQuery<User> CreateFindUserByUserName(string userName);
+        IQuery<Story> CreateFindStoryById(long id);
+        IQuery<Story> CreateFindStoryByUniqueName(string uniqueName);
+        IQuery<Story> CreateFindStoryByUrl(string url);
         IOrderedQuery<User> CreateFindTopScoredUsers(DateTime startDate, DateTime endDate, int start, int max);
         IOrderedQuery<User> CreateFindAllUsers<TKey>(int start, int max, Expression<Func<User, TKey>> orderBy);
         IQuery<Tag> CreateFindTagByUniqueName(string uniqueName);

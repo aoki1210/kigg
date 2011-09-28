@@ -1,13 +1,15 @@
-﻿using System.Linq;
-
+﻿
 namespace Kigg.Infrastructure.EntityFramework.Query
 {
     using System;
-    using System.Collections.Generic;
+    using System.Linq;
     using System.Linq.Expressions;
+    using System.Collections.Generic;
+    
+    using DomainObjects;
 
     public abstract class OrderedQueryBase<TResult> : QueryBase<IEnumerable<TResult>>, IOrderedQuery<TResult>
-        where TResult : class
+        where TResult : class, IDomainObject
     {
         protected IQueryable<TResult> OriginalQuery { get; set; }
 

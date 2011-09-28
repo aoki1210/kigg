@@ -122,9 +122,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="KiGGDbContextFixture.cs" />
     <Compile Include="Query\DomainObjectFindUniqueQueryFixture.cs" />
-    <Compile Include="Query\CategoryFindListQueryFixture.cs" />
-    <Compile Include="Query\TagFindListQueryFixture.cs" />
-    <Compile Include="Query\UserFindListQueryFixture.cs" />
+    <Compile Include="Query\DomainObjectFindListQueryFixture.cs" />
     <Compile Include="Query\UserFindTopScoredListQueryFixture.cs" />
   </ItemGroup>
   <ItemGroup>
