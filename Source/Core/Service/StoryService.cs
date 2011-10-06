@@ -594,7 +594,7 @@ namespace Kigg.Service
             DateTime minimumDate = currentTime.AddHours(-_settings.MaximumAgeOfStoryInHoursToPublish);
             DateTime maximumDate = currentTime.AddHours(-_settings.MinimumAgeOfStoryInHoursToPublish);
 
-            int publishableCount = _storyRepository.CountByPublishable(minimumDate, maximumDate);
+            int publishableCount = _storyRepository.CountPublishable(minimumDate, maximumDate);
 
             if (publishableCount > 0)
             {

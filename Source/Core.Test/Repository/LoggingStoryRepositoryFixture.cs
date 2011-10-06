@@ -731,18 +731,18 @@ namespace Kigg.Core.Test
 
         private void CountByPublished()
         {
-            _innerRepository.Setup(r => r.CountByPublished()).Returns(10).Verifiable();
+            _innerRepository.Setup(r => r.CountPublished()).Returns(10).Verifiable();
             log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
-            _loggingRepository.CountByPublished();
+            _loggingRepository.CountPublished();
         }
 
         private void CountByUpcoming()
         {
-            _innerRepository.Setup(r => r.CountByUpcoming()).Returns(10).Verifiable();
+            _innerRepository.Setup(r => r.CountUpcoming()).Returns(10).Verifiable();
             log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
-            _loggingRepository.CountByUpcoming();
+            _loggingRepository.CountUpcoming();
         }
 
         private void CountByCategory()
@@ -763,26 +763,26 @@ namespace Kigg.Core.Test
 
         private void CountByNew()
         {
-            _innerRepository.Setup(r => r.CountByNew()).Returns(0).Verifiable();
+            _innerRepository.Setup(r => r.CountNew()).Returns(0).Verifiable();
             log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
-            _loggingRepository.CountByNew();
+            _loggingRepository.CountNew();
         }
 
         private void CountByUnapproved()
         {
-            _innerRepository.Setup(r => r.CountByUnapproved()).Returns(0).Verifiable();
+            _innerRepository.Setup(r => r.CountUnapproved()).Returns(0).Verifiable();
             log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
-            _loggingRepository.CountByUnapproved();
+            _loggingRepository.CountUnapproved();
         }
 
         private void CountByPublishable()
         {
-            _innerRepository.Setup(r => r.CountByPublishable(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(0).Verifiable();
+            _innerRepository.Setup(r => r.CountPublishable(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(0).Verifiable();
             log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
-            _loggingRepository.CountByPublishable(SystemTime.Now().AddDays(-7), SystemTime.Now().AddHours(-4));
+            _loggingRepository.CountPublishable(SystemTime.Now().AddDays(-7), SystemTime.Now().AddHours(-4));
         }
 
         private void CountPostedByUser()

@@ -13,8 +13,6 @@ namespace Kigg.DomainObjects
 
         void RemoveTag(Tag tag);
 
-        void RemoveAllTags();
-
         bool ContainsTag(Tag tag);
     }
 }

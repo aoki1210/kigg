@@ -88,12 +88,7 @@
         {
             throw new NotImplementedException();
         }
-
-        public void RemoveAllTags()
-        {
-            throw new NotImplementedException();
-        }
-
+        
         public bool ContainsTag(Tag tag)
         {
             throw new NotImplementedException();

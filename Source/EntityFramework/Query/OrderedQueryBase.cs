@@ -34,7 +34,7 @@ namespace Kigg.Infrastructure.EntityFramework.Query
             Query = OriginalQuery;
         }
 
-        public virtual long CountAllRecords()
+        public virtual int Count()
         {
             return OriginalQuery.Count();
         }

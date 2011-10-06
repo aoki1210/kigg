@@ -32,7 +32,7 @@
             return Query.AsEnumerable();
         }
 
-        public override long CountAllRecords()
+        public override int Count()
         {
             return OriginalQuery.Count();
         }
