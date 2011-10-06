@@ -26,8 +26,6 @@ namespace Kigg.Repository
 
         PagedResult<Story> FindByTag(string tag, int start, int max);
 
-        PagedResult<Story> Search(string query, int start, int max);
-
         PagedResult<Story> FindPostedByUser(long userId, int start, int max);
 
         PagedResult<Story> FindPostedByUser(string userName, int start, int max);
@@ -38,19 +36,19 @@ namespace Kigg.Repository
 
         PagedResult<Story> FindCommentedByUser(long userId, int start, int max);
 
-        int CountByPublished();
+        int CountPublished();
 
-        int CountByUpcoming();
+        int CountUpcoming();
 
         int CountByCategory(long categoryId);
 
         int CountByTag(long tagId);
 
-        int CountByNew();
+        int CountNew();
 
-        int CountByUnapproved();
+        int CountUnapproved();
 
-        int CountByPublishable(DateTime minimumDate, DateTime maximumDate);
+        int CountPublishable(DateTime minimumDate, DateTime maximumDate);
 
         int CountPostedByUser(long userId);
     }

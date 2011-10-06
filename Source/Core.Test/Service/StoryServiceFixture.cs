@@ -1020,7 +1020,7 @@ namespace Kigg.Core.Test
                 stories.Add(new Mock<Story>().Object);
             }
 
-            _storyRepository.Setup(r => r.CountByPublishable(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(PublishableCount).Verifiable();
+            _storyRepository.Setup(r => r.CountPublishable(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(PublishableCount).Verifiable();
             _storyRepository.Setup(r => r.FindPublishable(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<Story>(stories, PublishableCount)).Verifiable();
 
             _voteStrategy.Setup(s => s.Calculate(It.IsAny<DateTime>(), It.IsAny<Story>())).Returns(rnd.Next(2, 100)).Verifiable();

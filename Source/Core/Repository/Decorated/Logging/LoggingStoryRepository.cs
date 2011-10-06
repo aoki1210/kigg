@@ -239,29 +239,6 @@ namespace Kigg.Repository
 
             return pagedResult;
         }
-
-        public override PagedResult<Story> Search(string query, int start, int max)
-        {
-            Check.Argument.IsNotNullOrEmpty(query, "query");
-            Check.Argument.IsNotNegative(start, "start");
-            Check.Argument.IsNotNegative(max, "max");
-
-            Log.Info("Searching stories for query : {0}, {1}, {2}", query, start, max);
-
-            var pagedResult = base.Search(query, start, max);
-
-            if (pagedResult.IsEmpty)
-            {
-                Log.Warning("Did not find any story for query : {0}, {1}, {2}", query, start, max);
-            }
-            else
-            {
-                Log.Info("Stories retrieved for query : {0}, {1}, {2}", query, start, max);
-            }
-
-            return pagedResult;
-        }
-
         public override PagedResult<Story> FindPostedByUser(long userId, int start, int max)
         {
             //Check.Argument.IsNotEmpty(userId, "userId");
@@ -328,22 +305,22 @@ namespace Kigg.Repository
             return pagedResult;
         }
 
-        public override int CountByPublished()
+        public override int CountPublished()
         {
             Log.Info("Retrieving published count");
 
-            var result = base.CountByPublished();
+            var result = base.CountPublished();
 
             Log.Info("Published count retrieved");
 
             return result;
         }
 
-        public override int CountByUpcoming()
+        public override int CountUpcoming()
         {
             Log.Info("Retrieving upcoming count");
 
-            var result = base.CountByUpcoming();
+            var result = base.CountUpcoming();
 
             Log.Info("Upcoming count retrieved");
 
@@ -376,36 +353,36 @@ namespace Kigg.Repository
             return result;
         }
 
-        public override int CountByNew()
+        public override int CountNew()
         {
             Log.Info("Retrieving new count");
 
-            var result = base.CountByNew();
+            var result = base.CountNew();
 
             Log.Info("New count retrieved");
 
             return result;
         }
 
-        public override int CountByUnapproved()
+        public override int CountUnapproved()
         {
             Log.Info("Retrieving unapproved count");
 
-            var result = base.CountByUnapproved();
+            var result = base.CountUnapproved();
 
             Log.Info("Unapproved count retrieved");
 
             return result;
         }
 
-        public override int CountByPublishable(DateTime minimumDate, DateTime maximumDate)
+        public override int CountPublishable(DateTime minimumDate, DateTime maximumDate)
         {
             Check.Argument.IsNotInFuture(minimumDate, "minimumDate");
             Check.Argument.IsNotInFuture(maximumDate, "maximumDate");
 
             Log.Info("Retrieving publishable count: {0}-{1}", minimumDate, maximumDate);
 
-            var result = base.CountByPublishable(minimumDate, maximumDate);
+            var result = base.CountPublishable(minimumDate, maximumDate);
 
             Log.Info("Publishable count retrieved: {0}-{1}", minimumDate, maximumDate);
 

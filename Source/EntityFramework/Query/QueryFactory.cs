@@ -49,6 +49,103 @@
             return query;
         }
 
+        public IQuery<int> CreateCountNewStories()
+        {
+            var query = new CountStoriesQuery(DbContext, s => s.ApprovedAt != null &&
+                                                              s.LastProcessedAt == null);
+
+            return query;
+        }
+
+        public IQuery<int> CreateCountUpcomingStories()
+        {
+            var query = new CountStoriesQuery(DbContext, s => s.ApprovedAt != null &&
+                                                              s.PublishedAt == null &&
+                                                              s.Rank == null);
+
+            return query;
+        }
+
+        public IQuery<int> CreateCountUnapprovedStories()
+        {
+            var query = new CountStoriesQuery(DbContext, s => s.ApprovedAt == null);
+
+            return query;
+        }
+
+        public IQuery<int> CreateCountPublishableStories(DateTime minimumDate, DateTime maximumDate)
+        {
+            var query = new CountStoriesQuery(DbContext, s => (s.ApprovedAt >= minimumDate &&
+                                                               s.ApprovedAt <= maximumDate) &&
+                                                              (s.LastProcessedAt == null ||
+                                                               s.LastProcessedAt <= s.LastActivityAt));
+
+            return query;
+        }
+
+        public IQuery<int> CreateCountPublishedStories()
+        {
+            var query = new CountStoriesQuery(DbContext, s => s.ApprovedAt != null && s.PublishedAt != null);
+
+            return query;
+        }
+
+        public IQuery<int> CreateCountPublishedStoriesByCategory(long categoryId)
+        {
+            var query = new CountStoriesQuery(DbContext,
+                                              s => s.ApprovedAt != null &&
+                                                   s.PublishedAt != null &&
+                                                   s.BelongsTo.Id == categoryId);
+
+            return query;
+        }
+
+        public IQuery<int> CreateCountPublishedStoriesByCategory(string category)
+        {
+            var query = new CountStoriesQuery(DbContext,
+                                              s => s.ApprovedAt != null &&
+                                                   s.PublishedAt != null &&
+                                                   s.BelongsTo.Name == category);
+
+            return query;
+        }
+
+        public IQuery<int> CreateCountStoriesByTag(string tag)
+        {
+            var query = new CountStoriesQuery(DbContext,
+                                              s => s.ApprovedAt != null &&
+                                                   s.Tags.Any(t => t.Name == tag));
+
+            return query;
+        }
+
+        public IQuery<int> CreateCountStoriesByTag(long tagId)
+        {
+            var query = new CountStoriesQuery(DbContext,
+                                              s => s.ApprovedAt != null &&
+                                                   s.Tags.Any(t => t.Id == tagId));
+
+            return query;
+        }
+
+        public IQuery<int> CreateCountPostedStoriesByUser(long userId)
+        {
+            var query = new CountStoriesQuery(DbContext,
+                                              s => s.ApprovedAt != null &&
+                                                   s.PostedBy.Id == userId);
+
+            return query;
+        }
+
+        public IQuery<int> CreateCountPostedStoriesByUser(string userName)
+        {
+            var query = new CountStoriesQuery(DbContext,
+                                              s => s.ApprovedAt != null &&
+                                                   s.PostedBy.UserName == userName);
+
+            return query;
+        }
+
         public IQuery<decimal> CreateCalculateUserScoreById(long id, DateTime startDate, DateTime endDate)
         {
             Check.Argument.IsNotNegativeOrZero(id, "id");
@@ -74,7 +171,7 @@
 
         public IQuery<Category> CreateFindUniqueCategoryByName(string name)
         {
-            var query = CreateFindUniqueDomainObjectQuery<Category>( c => c.Name == name);
+            var query = CreateFindUniqueDomainObjectQuery<Category>(c => c.Name == name);
 
             return query;
         }
@@ -82,9 +179,9 @@
         public IOrderedQuery<Category> CreateFindAllCategories<TKey>(Expression<Func<Category, TKey>> orderBy)
         {
             IOrderedQuery<Category> query = CreateFindDomainObjectListQuery<Category>();
-            
+
             query = query.OrderBy(orderBy);
-            
+
             return query;
         }
 
@@ -99,7 +196,7 @@
             IOrderedQuery<KnownSource> query = CreateFindDomainObjectListQuery<KnownSource>();
 
             query = query.OrderBy(orderBy);
-            
+
             return query;
         }
 
@@ -120,16 +217,16 @@
         public IOrderedQuery<Tag> CreateFindTagsByMatchingName(string name, int max)
         {
             IOrderedQuery<Tag> query = CreateFindDomainObjectListQuery<Tag>(t => t.Name.StartsWith(name));
-            
+
             query = query.OrderBy(t => t.Name).Limit(max);
-            
+
             return query;
         }
 
         public IOrderedQuery<Tag> CreateFindTagsByUsage(int max)
         {
             IOrderedQuery<Tag> query = CreateFindDomainObjectListQuery<Tag>(t => t.Stories.Any());
-            
+
             query = query.OrderByDescending(t => t.Stories.Count(st => st.ApprovedAt != null))
                          .ThenBy(t => t.Name)
                          .Limit(max);
@@ -142,7 +239,7 @@
             IOrderedQuery<Tag> query = CreateFindDomainObjectListQuery<Tag>();
 
             query = query.OrderBy(orderBy);
-            
+
             return query;
         }
 
@@ -259,11 +356,152 @@
             return query;
         }
 
-        public IQuery<Story> CreateFindStoryByUrl(string url)
+        public IQuery<Story> CreateFindStoryByUrl(string urlHash)
         {
-            var query = CreateFindUniqueDomainObjectQuery<Story>(u => u.Url == url);
+            var query = CreateFindUniqueDomainObjectQuery<Story>(u => u.UrlHash == urlHash);
 
             return query;
+        }
+
+        public IOrderedQuery<Story> CreateFindPublishedStories(int start, int max)
+        {
+            IOrderedQuery<Story> query = CreateFindDomainObjectListQuery<Story>(
+                                                                              s =>
+                                                                              s.ApprovedAt != null &&
+                                                                              s.PublishedAt != null &&
+                                                                              s.Rank != null);
+
+            return query.OrderByDescending(s => s.PublishedAt)
+                        .ThenBy(s => s.Rank)
+                        .ThenByDescending(s => s.CreatedAt)
+                        .Page(start, max);
+        }
+
+        public IOrderedQuery<Story> CreateFindPublishedStoriesByCategory(long categoryId, int start, int max)
+        {
+            IOrderedQuery<Story> query = CreateFindDomainObjectListQuery<Story>(
+                                                                              s =>
+                                                                              s.ApprovedAt != null &&
+                                                                              s.PublishedAt != null &&
+                                                                              s.Rank != null &&
+                                                                              s.BelongsTo.Id == categoryId);
+
+            return query.OrderByDescending(s => s.PublishedAt)
+                        .ThenBy(s => s.Rank)
+                        .ThenByDescending(s => s.CreatedAt)
+                        .Page(start, max);
+        }
+
+        public IOrderedQuery<Story> CreateFindPublishedStoriesByCategory(string category, int start, int max)
+        {
+            IOrderedQuery<Story> query = CreateFindDomainObjectListQuery<Story>(
+                                                                              s =>
+                                                                              s.ApprovedAt != null &&
+                                                                              s.PublishedAt != null &&
+                                                                              s.Rank != null &&
+                                                                              s.BelongsTo.Name == category);
+
+            return query.OrderByDescending(s => s.PublishedAt)
+                        .ThenBy(s => s.Rank)
+                        .ThenByDescending(s => s.CreatedAt)
+                        .Page(start, max);
+        }
+
+        public IOrderedQuery<Story> CreateFindUpcomingStories(int start, int max)
+        {
+            IOrderedQuery<Story> query = CreateFindDomainObjectListQuery<Story>(
+                                                                              s =>
+                                                                              s.ApprovedAt != null &&
+                                                                              s.PublishedAt == null &&
+                                                                              s.Rank == null);
+
+            return query.OrderByDescending(s => s.CreatedAt).Page(start, max);
+        }
+
+        public IOrderedQuery<Story> CreateFindStoriesByTag(long tagId, int start, int max)
+        {
+            IOrderedQuery<Story> query = CreateFindDomainObjectListQuery<Story>(s => s.ApprovedAt != null &&
+                                                                                     s.Tags.Any(t => t.Id == tagId));
+
+            return query.OrderByDescending(s => s.CreatedAt).Page(start, max);
+        }
+
+        public IOrderedQuery<Story> CreateFindStoriesByTag(string tag, int start, int max)
+        {
+            IOrderedQuery<Story> query = CreateFindDomainObjectListQuery<Story>(s => s.ApprovedAt != null &&
+                                                                                     s.Tags.Any(t => t.Name == tag));
+
+            return query.OrderByDescending(s => s.CreatedAt).Page(start, max);
+        }
+
+        public IOrderedQuery<Story> CreateFindPostedStoriesByUser(long userId, int start, int max)
+        {
+            IOrderedQuery<Story> query = CreateFindDomainObjectListQuery<Story>(s => s.ApprovedAt != null &&
+                                                                                     s.PostedBy.Id == userId);
+
+            return query.OrderByDescending(s => s.CreatedAt).Page(start, max);
+        }
+
+        public IOrderedQuery<Story> CreateFindPostedStoriesByUser(string userName, int start, int max)
+        {
+            IOrderedQuery<Story> query = CreateFindDomainObjectListQuery<Story>(s => s.ApprovedAt != null &&
+                                                                                     s.PostedBy.UserName == userName);
+
+            return query.OrderByDescending(s => s.CreatedAt).Page(start, max);
+        }
+
+        public IOrderedQuery<Story> CreateFindPromotedStoriesByUser(long userId, int start, int max)
+        {
+            IOrderedQuery<Story> query = CreateFindDomainObjectListQuery<Story>(s => s.ApprovedAt != null &&
+                                                                                     s.Votes.Any(v => v.UserId == userId));
+
+            return query.OrderByDescending(s => s.CreatedAt).Page(start, max);
+        }
+
+        public IOrderedQuery<Story> CreateFindPromotedStoriesByUser(string userName, int start, int max)
+        {
+            IOrderedQuery<Story> query = CreateFindDomainObjectListQuery<Story>(s => s.ApprovedAt != null &&
+                                                                                     s.Votes.Any(v => v.ByUser.UserName == userName));
+
+            return query.OrderByDescending(s => s.CreatedAt).Page(start, max);
+        }
+
+        public IOrderedQuery<Story> CreateFindCommentedStoriesByUser(long userId, int start, int max)
+        {
+            IOrderedQuery<Story> query =
+                CreateFindDomainObjectListQuery<Story>(s => s.Comments.Any(c => c.ByUser.Id == userId));
+
+            return query.OrderByDescending(s => s.CreatedAt).Page(start, max);
+        }
+
+        public IOrderedQuery<Story> CreateFindNewStories(int start, int max)
+        {
+            IOrderedQuery<Story> query = CreateFindDomainObjectListQuery<Story>(
+                                                                              s =>
+                                                                              s.ApprovedAt != null &&
+                                                                              s.LastProcessedAt == null);
+
+            return query.OrderByDescending(s => s.CreatedAt).Page(start, max);
+        }
+
+        public IOrderedQuery<Story> CreateFindUnapprovedStories(int start, int max)
+        {
+            IOrderedQuery<Story> query = CreateFindDomainObjectListQuery<Story>(
+                                                                              s =>
+                                                                              s.ApprovedAt == null);
+
+            return query.OrderByDescending(s => s.CreatedAt).Page(start, max);
+        }
+
+        public IOrderedQuery<Story> CreateFindPublishableStories(DateTime minimumDate, DateTime maximumDate, int start, int max)
+        {
+            IOrderedQuery<Story> query = CreateFindDomainObjectListQuery<Story>(s => (s.ApprovedAt >= minimumDate &&
+                                                                                      s.ApprovedAt <= maximumDate) &&
+                                                                                     (s.LastProcessedAt == null ||
+                                                                                      s.LastProcessedAt <=
+                                                                                      s.LastActivityAt));
+
+            return query.OrderByDescending(s => s.CreatedAt).Page(start, max);
         }
 
         private DomainObjectFindUniqueQuery<TResult> CreateFindUniqueDomainObjectQuery<TResult>(Expression<Func<TResult, bool>> predicate)

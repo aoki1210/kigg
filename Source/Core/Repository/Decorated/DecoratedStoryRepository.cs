@@ -105,12 +105,6 @@
         }
 
         [DebuggerStepThrough]
-        public virtual PagedResult<Story> Search(string query, int start, int max)
-        {
-            return _innerRepository.Search(query, start, max);
-        }
-
-        [DebuggerStepThrough]
         public virtual PagedResult<Story> FindPostedByUser(long userId, int start, int max)
         {
             return _innerRepository.FindPostedByUser(userId, start, max);
@@ -141,15 +135,15 @@
         }
 
         [DebuggerStepThrough]
-        public virtual int CountByPublished()
+        public virtual int CountPublished()
         {
-            return _innerRepository.CountByPublished();
+            return _innerRepository.CountPublished();
         }
 
         [DebuggerStepThrough]
-        public virtual int CountByUpcoming()
+        public virtual int CountUpcoming()
         {
-            return _innerRepository.CountByUpcoming();
+            return _innerRepository.CountUpcoming();
         }
 
         [DebuggerStepThrough]
@@ -165,21 +159,21 @@
         }
 
         [DebuggerStepThrough]
-        public virtual int CountByNew()
+        public virtual int CountNew()
         {
-            return _innerRepository.CountByNew();
+            return _innerRepository.CountNew();
         }
 
         [DebuggerStepThrough]
-        public virtual int CountByUnapproved()
+        public virtual int CountUnapproved()
         {
-            return _innerRepository.CountByUnapproved();
+            return _innerRepository.CountUnapproved();
         }
 
         [DebuggerStepThrough]
-        public virtual int CountByPublishable(DateTime minimumDate, DateTime maximumDate)
+        public virtual int CountPublishable(DateTime minimumDate, DateTime maximumDate)
         {
-            return _innerRepository.CountByPublishable(minimumDate, maximumDate);
+            return _innerRepository.CountPublishable(minimumDate, maximumDate);
         }
 
         [DebuggerStepThrough]

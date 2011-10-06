@@ -1,4 +1,6 @@
-﻿namespace Kigg.Infrastructure.EntityFramework
+﻿using System.Collections.Generic;
+
+namespace Kigg.Infrastructure.EntityFramework
 {
     using System.Data.Common;
     using System.Data.Entity;
@@ -27,10 +29,30 @@
         public IDbSet<Comment> Comments { get; set; }
         internal IDbSet<Vote> Votes { get; set; }
         internal IDbSet<StoryView> Views { get; set; }
+        internal IDbSet<MarkAsSpam> Spams { get; set; }
 
-        public new IDbSet<TEntity> Set<TEntity>() where TEntity: class
+        public virtual new IDbSet<TEntity> Set<TEntity>()
+            where TEntity : class, IDomainObject
         {
             return base.Set<TEntity>();
+        }
+
+        public virtual void Add<TEntity>(TEntity entity)
+            where TEntity : class, IDomainObject
+        {
+            Set<TEntity>().Add(entity);
+        }
+        
+        public virtual void Remove<TEntity>(TEntity entity)
+            where TEntity : class, IDomainObject
+        {
+            Set<TEntity>().Remove(entity);
+        }
+
+        public virtual void Remove<TEntity>(IEnumerable<TEntity> entities)
+            where TEntity : class, IDomainObject
+        {
+            entities.ForEach(entity => Set<TEntity>().Remove(entity));
         }
     }
 }

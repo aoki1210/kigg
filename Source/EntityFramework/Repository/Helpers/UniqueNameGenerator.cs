@@ -1,4 +1,4 @@
-﻿namespace Kigg.EF.Repository
+﻿namespace Kigg.Infrastructure.EntityFramework
 {
     using System;
     using System.Linq;

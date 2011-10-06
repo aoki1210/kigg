@@ -1,4 +1,7 @@
-﻿namespace Kigg.Infrastructure.EntityFramework
+﻿using System;
+using System.Collections.Generic;
+
+namespace Kigg.Infrastructure.EntityFramework
 {
     using System.Linq;
     using System.Diagnostics;
@@ -8,7 +11,7 @@
     using Repository;
 
     public abstract class RepositoryBase<TEntity> : IRepository<TEntity> 
-        where TEntity : class, IEntity
+        where TEntity : class, IEntity, IDomainObject
     {
         private KiggDbContext dbContext;
 
@@ -46,14 +49,14 @@
         {
             Check.Argument.IsNotNull(entity, "entity");
 
-            DbContext.Set<TEntity>().Add(entity);
+            DbContext.Add(entity);
         }
 
         public virtual void Remove(TEntity entity)
         {
             Check.Argument.IsNotNull(entity, "entity");
 
-            DbContext.Set<TEntity>().Remove(entity);
+            DbContext.Remove(entity);
         }
 
         public virtual TEntity FindById(long id)
@@ -61,5 +64,13 @@
             Check.Argument.IsNotNegativeOrZero(id, "id");
             return DbContext.Set<TEntity>().SingleOrDefault(entity => entity.Id == id);
         }
+
+        protected PagedResult<TEntity> CreatePagedResult(IOrderedQuery<TEntity> query)
+        {
+            int total = query.Count();
+
+            return new PagedResult<TEntity>(query.Execute(), total);
+        }
+        
     }
 }
