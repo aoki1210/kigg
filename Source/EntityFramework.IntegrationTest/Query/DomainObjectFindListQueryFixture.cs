@@ -15,7 +15,7 @@
         [AutoRollback]
         public void Execute_should_return_all_users_when_no_filter_provided()
         {
-            IList<User> users = NewUserList(true);
+            IList<User> users = NewDomainObjectList<User>(true);
 
             var query = new DomainObjectFindListQuery<User>(Context);
 
@@ -28,7 +28,7 @@
         [AutoRollback]
         public void Execute_should_return_correct_users_list_when_filter_provided()
         {
-            IList<User> users = NewUserList(true);
+            IList<User> users = NewDomainObjectList<User>(true);
             
             var expectedCount = users.Count(c => c.Id > 5);
 
@@ -43,7 +43,7 @@
         [AutoRollback]
         public void Execute_should_return_correct_ordered_users_list_when_orderd_decending_by_username()
         {
-            NewUserList(true);
+            NewDomainObjectList<User>(true);
 
             var query = new DomainObjectFindListQuery<User>(Context);
 
@@ -59,7 +59,7 @@
         [AutoRollback]
         public void Execute_should_return_all_categories_when_no_filter_provided()
         {
-            IList<Category> categories = NewCategoryList(true);
+            IList<Category> categories = NewDomainObjectList<Category>(true);
 
             var query = new DomainObjectFindListQuery<Category>(Context);
 
@@ -72,7 +72,7 @@
         [AutoRollback]
         public void Execute_should_return_correct_categories_list_when_filter_provided()
         {
-            IList<Category> categories = NewCategoryList(true);
+            IList<Category> categories = NewDomainObjectList<Category>(true);
 
             var expectedCount = categories.Count(c => c.Id > 5);
 
@@ -87,7 +87,7 @@
         [AutoRollback]
         public void Execute_should_return_correct_ordered_categories_list_when_orderd_decending_by_category_name()
         {
-            NewCategoryList(true);
+            NewDomainObjectList<Category>(true);
 
             var query = new DomainObjectFindListQuery<Category>(Context);
 
@@ -103,7 +103,7 @@
         [AutoRollback]
         public void Execute_should_return_all_tags_when_no_filter_provided()
         {
-            IList<Tag> tags = NewTagList(true);
+            IList<Tag> tags = NewDomainObjectList<Tag>(true);
 
             var query = new DomainObjectFindListQuery<Tag>(Context);
 
@@ -116,7 +116,7 @@
         [AutoRollback]
         public void Execute_should_return_correct_tags_list_when_filter_provided()
         {
-            IList<Tag> tags = NewTagList(true);
+            IList<Tag> tags = NewDomainObjectList<Tag>(true);
             
             var expectedCount = tags.Count(t => t.Id > 5);
 
@@ -131,7 +131,7 @@
         [AutoRollback]
         public void Execute_should_return_correct_ordered_tags_list_when_orderd_decending_by_tag_name()
         {
-            NewTagList(true);
+            NewDomainObjectList<Tag>(true);
 
             var query = new DomainObjectFindListQuery<Tag>(Context);
 
