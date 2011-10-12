@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-
-namespace Kigg.Infrastructure.EntityFramework
+﻿namespace Kigg.Infrastructure.EntityFramework
 {
+    using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;

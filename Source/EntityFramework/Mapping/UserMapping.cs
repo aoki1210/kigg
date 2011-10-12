@@ -21,8 +21,7 @@
             Property(u => u.IsLockedOut).IsRequired();
             Property(u => u.LastActivityAt).IsRequired();
             Property(u => u.CreatedAt).IsRequired();
-            //this.Property<User, int>("RoleInternal").HasColumnName("Role").IsRequired();
-            Property(u => u.Role).IsRequired();
+            Property(u => u.Role).HasColumnType("int").IsRequired();
             HasMany(u => u.Tags).WithMany().Map(m => m.MapLeftKey("UserId").MapRightKey("TagId").ToTable("UserTag"));
 
             Ignore(u => u.CurrentScore);

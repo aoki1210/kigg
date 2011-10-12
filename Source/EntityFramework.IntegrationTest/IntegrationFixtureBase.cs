@@ -1,8 +1,13 @@
 ﻿namespace Kigg.Infrastructure.EntityFramework.IntegrationTest
 {
-    using System.Data.Common;
+    using System;
     using System.Configuration;
     using System.Collections.Generic;
+    using System.Linq.Expressions;
+
+    using System.Data.Common;
+
+    using FizzWare.NBuilder;
 
     using DomainObjects;
 
@@ -37,7 +42,7 @@
         }
         protected Tag NewTag(bool persist)
         {
-            var tag = new Tag { Name = "C#", UniqueName = "C-Sharp", CreatedAt = SystemTime.Now()};
+            var tag = new Tag { Name = "C#", UniqueName = "C-Sharp", CreatedAt = SystemTime.Now() };
 
             if (persist)
             {
@@ -71,99 +76,47 @@
             return user;
         }
 
-        protected IList<Category> NewCategoryList(bool persist)
+        protected IList<TDomainObject> NewDomainObjectList<TDomainObject>(bool persist = true)
+            where TDomainObject : class, IDomainObject
         {
-            var categories = new List<Category>(11);
-            for (int i = 1; i < 11; i++)
-            {
-                var category = new Category
-                                   {
-                                       Name = "Category {0}".FormatWith(i),
-                                       UniqueName = "Category-{0}".FormatWith(i),
-                                       CreatedAt = SystemTime.Now()
-                                   };
-
-                categories.Add(category);
-            }
-
-            if (persist)
-            {
-                categories.ForEach(c => Context.Categories.Add(c));
-                Context.SaveChanges();
-            }
-
-            return categories;
+            return NewDomainObjectList<TDomainObject>(10, persist);
         }
-        protected IList<Tag> NewTagList(bool persist)
+
+        protected IList<TDomainObject> NewDomainObjectList<TDomainObject>(int size, bool persist = true)
+            where TDomainObject : class, IDomainObject
         {
-            var tags = new List<Tag>(11);
-            for (int i = 1; i < 11; i++)
+            BuilderSetup.SetCreatePersistenceMethod<IList<TDomainObject>>(list =>
             {
-                var tag = new Tag
-                {
-                    Name = "Tag {0}".FormatWith(i),
-                    UniqueName = "Tag-{0}".FormatWith(i),
-                    CreatedAt = SystemTime.Now()
-                };
-
-                tags.Add(tag);
-            }
-
-            if (persist)
-            {
-                tags.ForEach(t => Context.Tags.Add(t));
+                list.ForEach(
+                    o => Context.Set<TDomainObject>().Add(o));
                 Context.SaveChanges();
-            }
+            });
 
-            return tags;
+            IListBuilder<TDomainObject> builder = Builder<TDomainObject>.CreateListOfSize(size);
+
+            var objects = persist ? builder.Persist() : builder.Build();
+
+            return objects;
         }
-        protected IList<User> NewUserList(bool persist)
+
+        protected IList<TDomainObject> NewDomainObjectList<TDomainObject>(int size, Action<TDomainObject> initializer, bool persist = true)
+            where TDomainObject : class, IDomainObject
         {
-            var users = new List<User>(11);
-            for (int i = 1; i < 11; i++)
-            {
-                var user = new User
-                {
-                    UserName = "user{0}".FormatWith(i),
-                    Email = "user{0}@twitter.com".FormatWith(i),
-                    Role = Roles.User,
-                    CreatedAt = SystemTime.Now(),
-                    LastActivityAt = SystemTime.Now(),
-                    IsLockedOut = false,
-                    IsActive = true,
-                };
+            BuilderSetup.SetCreatePersistenceMethod<IList<TDomainObject>>(list =>
+                                                                              {
+                                                                                  list.ForEach(
+                                                                                      o =>
+                                                                                      Context.Set<TDomainObject>().Add(o));
+                                                                                  Context.SaveChanges();
+                                                                              });
 
-                users.Add(user);
-            }
+            var builder = Builder<TDomainObject>.CreateListOfSize(10)
+                                                .All()
+                                                .Do(initializer);
 
-            if (persist)
-            {
-                users.ForEach(c => Context.Users.Add(c));
-                Context.SaveChanges();
-            }
+            var objects = persist ? builder.Persist() : builder.Build();
 
-            return users;
-        }
-        protected IList<UserScore> GenerateScoreForUser(User user, int score, int count, bool persist)
-        {
-            var scores = new List<UserScore>();
-            for (int i = 0; i < count; i++)
-            {
-                var userScore = new UserScore
-                                {
-                                    ScoredBy = user,
-                                    Action = UserAction.StorySubmitted,
-                                    Score = score,
-                                    CreatedAt = SystemTime.Now().AddDays(-i)
-                                };
-                scores.Add(userScore);
-            }
-            if (persist)
-            {
-                scores.ForEach(us => Context.Scores.Add(us));
-                Context.SaveChanges();
-            }
-            return scores;
+            return objects;
         }
 
         protected override void DisposeCore()
