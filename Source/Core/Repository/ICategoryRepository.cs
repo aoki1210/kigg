@@ -6,6 +6,8 @@ namespace Kigg.Repository
 
     public interface ICategoryRepository : IUniqueNameEntityRepository<Category>
     {
-        ICollection<Category> FindAll();
+        Category FindByName(string name);
+
+        IEnumerable<Category> FindAll();
     }
 }

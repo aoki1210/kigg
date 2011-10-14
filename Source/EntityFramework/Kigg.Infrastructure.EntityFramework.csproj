@@ -102,6 +102,8 @@
     <Compile Include="..\SharedFiles\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="CategoryRepository.cs" />
+    <Compile Include="DomainObjectRepositoryBase.cs" />
     <Compile Include="Extensions\EntityTypeConfigurationExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IKiggDbFactory.cs" />
@@ -132,10 +134,11 @@
     <Compile Include="Query\IQuery.cs" />
     <Compile Include="Query\QueryBase.cs" />
     <Compile Include="Query\UserFindTopScoredListQuery.cs" />
-    <Compile Include="RepositoryBase.cs" />
+    <Compile Include="EntityRepositoryBase.cs" />
     <Compile Include="Repository\Helpers\UniqueNameGenerator.cs" />
     <Compile Include="StoryRepository.cs" />
     <Compile Include="TagRepository.cs" />
+    <Compile Include="VoteRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Kigg.Core.csproj">

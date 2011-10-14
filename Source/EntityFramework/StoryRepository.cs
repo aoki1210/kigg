@@ -8,7 +8,7 @@
     using Repository;
     
 
-    public class StoryRepository : RepositoryBase<Story>, IStoryRepository
+    public class StoryRepository : EntityRepositoryBase<Story>, IStoryRepository
     {
         public StoryRepository(IKiggDbFactory dbContextFactory, IQueryFactory queryFactory)
             : base(dbContextFactory, queryFactory)

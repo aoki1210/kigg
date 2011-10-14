@@ -1,29 +1,45 @@
 ﻿namespace Kigg.Infrastructure.EntityFramework
 {
+    using System;
     using System.Collections.Generic;
+
     using DomainObjects;
     using Repository;
     using Query;
     
-    public class TagRepository : RepositoryBase<Tag>, ITagRepository
+    public class TagRepository : EntityRepositoryBase<Tag>, ITagRepository
     {
         public TagRepository(IKiggDbFactory dbContextFactory, IQueryFactory queryFactory)
             : base(dbContextFactory, queryFactory)
         {
         }
-        
+
+        public override void Add(Tag entity)
+        {
+            Check.Argument.IsNotNull(entity, "entity");
+
+            if (Exists(t => t.Name == entity.Name))
+            {
+                throw new ArgumentException("\"{0}\" tag already exits. Specifiy a diffrent name.".FormatWith(entity.Name), "entity");
+            }
+
+            entity.UniqueName = UniqueNameGenerator.GenerateFrom(DbContext.Tags, entity.Name);
+
+            base.Add(entity);
+        }
+
         public Tag FindByName(string name)
         {
             Check.Argument.IsNotNullOrEmpty(name, "name");
 
-            var query = QueryFactory.CreateFindTagByName(name);
+            var query = QueryFactory.CreateFindUniqueTagByName(name);
             
             return query.Execute();
         }
 
         public Tag FindByUniqueName(string uniqueName)
         {
-            var query = QueryFactory.CreateFindTagByUniqueName(uniqueName);
+            var query = QueryFactory.CreateFindUniqueTagByUniqueName(uniqueName);
 
             return query.Execute();
         }

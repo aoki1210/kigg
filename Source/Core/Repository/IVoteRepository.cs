@@ -9,6 +9,6 @@ namespace Kigg.Repository
     {
         Vote FindById(long storyId, long userId);
 
-        ICollection<Vote> FindAfter(long storyId, DateTime timestamp);
+        IEnumerable<Vote> FindAfter(long storyId, DateTime timestamp);
     }
 }

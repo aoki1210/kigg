@@ -1,6 +1,5 @@
 ﻿namespace Kigg.Repository
 {
-    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
 
@@ -36,13 +35,19 @@
         }
 
         [DebuggerStepThrough]
+        public virtual Category FindByName(string name)
+        {
+            return _innerRepository.FindByName(name);
+        }
+
+        [DebuggerStepThrough]
         public virtual Category FindByUniqueName(string uniqueName)
         {
             return _innerRepository.FindByUniqueName(uniqueName);
         }
 
         [DebuggerStepThrough]
-        public virtual ICollection<Category> FindAll()
+        public virtual IEnumerable<Category> FindAll()
         {
             return _innerRepository.FindAll();
         }

@@ -31,7 +31,7 @@
             this.dbContextFactory = dbContextFactory;
         }
 
-        public IQuery<int> CreateCountVotesByStoryId(long id)
+        public IQuery<int> CreateCountVotesByStory(long id)
         {
             Check.Argument.IsNotNegativeOrZero(id, "id");
 
@@ -40,7 +40,7 @@
             return query;
         }
 
-        public IQuery<int> CreateCountStoryViewsByStoryId(long id)
+        public IQuery<int> CreateCountViewsByStory(long id)
         {
             Check.Argument.IsNotNegativeOrZero(id, "id");
 
@@ -200,14 +200,14 @@
             return query;
         }
 
-        public IQuery<Tag> CreateFindTagByUniqueName(string uniqueName)
+        public IQuery<Tag> CreateFindUniqueTagByUniqueName(string uniqueName)
         {
             var query = CreateFindUniqueDomainObjectQuery<Tag>(t => t.UniqueName == uniqueName);
 
             return query;
         }
 
-        public IQuery<Tag> CreateFindTagByName(string name)
+        public IQuery<Tag> CreateFindUniqueTagByName(string name)
         {
             var query = CreateFindUniqueDomainObjectQuery<Tag>(t => t.Name == name);
 
@@ -287,7 +287,7 @@
             return query.OrderBy(orderBy).Page(start, max);
         }
 
-        public IOrderedQuery<Vote> CreateFindStoryVotesAfterDate(long storyId, DateTime date)
+        public IOrderedQuery<Vote> CreateFindVotesAfterDate(long storyId, DateTime date)
         {
             Check.Argument.IsNotNegativeOrZero(storyId, "storyId");
             Check.Argument.IsNotInFuture(date, "date");

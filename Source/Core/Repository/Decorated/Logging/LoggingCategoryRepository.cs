@@ -70,7 +70,7 @@ namespace Kigg.Repository
             return result;
         }
 
-        public override ICollection<Category> FindAll()
+        public override IEnumerable<Category> FindAll()
         {
             Log.Info("Retrieving all Category");
 

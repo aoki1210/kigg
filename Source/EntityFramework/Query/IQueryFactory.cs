@@ -10,8 +10,8 @@
         bool UseCompiled { get; }
 
         IQuery<decimal> CreateCalculateUserScoreById(long id, DateTime startDate, DateTime endDate);
-        IQuery<int> CreateCountVotesByStoryId(long id);
-        IQuery<int> CreateCountStoryViewsByStoryId(long id);
+        IQuery<int> CreateCountVotesByStory(long id);
+        IQuery<int> CreateCountViewsByStory(long id);
         IQuery<int> CreateCountNewStories();
         IQuery<int> CreateCountUpcomingStories();
         IQuery<int> CreateCountUnapprovedStories();
@@ -48,15 +48,15 @@
         IOrderedQuery<Story> CreateFindCommentedStoriesByUser(long userId, int start, int max);
         IOrderedQuery<User> CreateFindTopScoredUsers(DateTime startDate, DateTime endDate, int start, int max);
         IOrderedQuery<User> CreateFindAllUsers<TKey>(int start, int max, Expression<Func<User, TKey>> orderBy);
-        IQuery<Tag> CreateFindTagByUniqueName(string uniqueName);
-        IQuery<Tag> CreateFindTagByName(string name);
+        IQuery<Tag> CreateFindUniqueTagByUniqueName(string uniqueName);
+        IQuery<Tag> CreateFindUniqueTagByName(string name);
         IOrderedQuery<Tag> CreateFindTagsByMatchingName(string name, int max);
         IOrderedQuery<Tag> CreateFindTagsByUsage(int max);
         IOrderedQuery<Tag> CreateFindAllTags<TKey>(Expression<Func<Tag, TKey>> orderBy);
         IQuery<KnownSource> CreateFindKnownSourceByUrl(string url);
         IOrderedQuery<KnownSource> CreateFindAllKnownSources<TKey>(Expression<Func<KnownSource, TKey>> orderBy);
         IQuery<Vote> CreateFindVoteById(long userId, long storyId);        
-        IOrderedQuery<Vote> CreateFindStoryVotesAfterDate(long storyId, DateTime date);
+        IOrderedQuery<Vote> CreateFindVotesAfterDate(long storyId, DateTime date);
         IOrderedQuery<StoryView> CreateFindStoryViewsAfterDate(long storyId, DateTime date);
         IQuery<Comment> CreateFindCommentById(long id);
         IOrderedQuery<Comment> CreateFindCommentsForStoryAfterDate(long storyId, DateTime date, int start, int max);
