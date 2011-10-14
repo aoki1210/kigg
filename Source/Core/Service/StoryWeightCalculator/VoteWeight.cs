@@ -28,7 +28,7 @@ namespace Kigg.Service
         {
             Check.Argument.IsNotNull(story, "story");
 
-            ICollection<Vote> votes = _voteRepository.FindAfter(story.Id, story.LastProcessedAt ?? story.CreatedAt);
+            IEnumerable<Vote> votes = _voteRepository.FindAfter(story.Id, story.LastProcessedAt ?? story.CreatedAt);
 
             double total = votes.Sum(v => (string.Compare(v.FromIPAddress, story.FromIPAddress, StringComparison.OrdinalIgnoreCase) == 0) ? _sameIpWeight : _differentIpWeight);
 

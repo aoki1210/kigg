@@ -5,10 +5,8 @@ namespace Kigg.Repository
 
     using DomainObjects;
 
-    public interface IUserRepository : IRepository<User>
+    public interface IUserRepository : IEntityRepository<User>
     {
-        User FindById(long id);
-
         User FindByUserName(string userName);
 
         User FindByEmail(string email);

@@ -1,21 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-
 namespace Kigg.Infrastructure.EntityFramework
 {
+    using System;
     using System.Linq;
+    using System.Linq.Expressions;
     using System.Diagnostics;
     
     using Query;
     using DomainObjects;
     using Repository;
 
-    public abstract class RepositoryBase<TEntity> : IRepository<TEntity> 
-        where TEntity : class, IEntity, IDomainObject
+    public abstract class DomainObjectRepositoryBase<TDomainObject> : IRepository<TDomainObject>
+        where TDomainObject : class, IDomainObject
     {
         private KiggDbContext dbContext;
 
-        protected RepositoryBase(IKiggDbFactory dbContextFactory, IQueryFactory queryFactory)
+        protected DomainObjectRepositoryBase(IKiggDbFactory dbContextFactory, IQueryFactory queryFactory)
         {
             Check.Argument.IsNotNull(dbContextFactory, "dbContextFactory");
             Check.Argument.IsNotNull(queryFactory, "queryFactory");
@@ -45,32 +44,30 @@ namespace Kigg.Infrastructure.EntityFramework
             }
         }
 
-        public virtual void Add(TEntity entity)
+        public virtual void Add(TDomainObject entity)
         {
             Check.Argument.IsNotNull(entity, "entity");
 
             DbContext.Add(entity);
         }
 
-        public virtual void Remove(TEntity entity)
+        public virtual void Remove(TDomainObject entity)
         {
             Check.Argument.IsNotNull(entity, "entity");
 
             DbContext.Remove(entity);
         }
 
-        public virtual TEntity FindById(long id)
-        {
-            Check.Argument.IsNotNegativeOrZero(id, "id");
-            return DbContext.Set<TEntity>().SingleOrDefault(entity => entity.Id == id);
-        }
-
-        protected PagedResult<TEntity> CreatePagedResult(IOrderedQuery<TEntity> query)
+        protected PagedResult<TDomainObject> CreatePagedResult(IOrderedQuery<TDomainObject> query)
         {
             int total = query.Count();
 
-            return new PagedResult<TEntity>(query.Execute(), total);
+            return new PagedResult<TDomainObject>(query.Execute(), total);
         }
-        
+
+        protected bool Exists(Expression<Func<TDomainObject,bool>> predicate)
+        {
+            return DbContext.Set<TDomainObject>().Any(predicate);
+        }
     }
 }
