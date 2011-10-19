@@ -244,7 +244,7 @@ namespace Kigg.Service
 
             DateTime expireDate = theStory.CreatedAt.AddHours(_settings.MaximumAgeOfStoryInHoursToPublish);
 
-            foreach (MarkAsSpam markAsSpam in theStory.MarkAsSpams)
+            foreach (SpamVote markAsSpam in theStory.MarkAsSpams)
             {
                 if (markAsSpam.ByUser.IsPublicUser() && (markAsSpam.MarkedAt <= expireDate))
                 {

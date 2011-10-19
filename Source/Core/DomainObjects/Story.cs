@@ -49,7 +49,7 @@
             set;
         }
 
-        protected internal virtual ICollection<MarkAsSpam> MarkAsSpams
+        protected internal virtual ICollection<SpamVote> MarkAsSpams
         {
             get;
             set;

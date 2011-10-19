@@ -16,7 +16,7 @@ namespace Kigg.Service
         private readonly ICategoryRepository _categoryRepository;
         private readonly ITagRepository _tagRepository;
         private readonly IStoryRepository _storyRepository;
-        private readonly IMarkAsSpamRepository _markAsSpamRepository;
+        private readonly ISpamVoteRepository _markAsSpamRepository;
         private readonly IEventAggregator _eventAggregator;
         private readonly ISpamProtection _spamProtection;
         private readonly ISpamPostprocessor _spamPostprocessor;
@@ -25,7 +25,7 @@ namespace Kigg.Service
         private readonly IThumbnail _thumbnail;
         private readonly IStoryWeightCalculator[] _storyWeightCalculators;
 
-        public StoryService(IConfigurationSettings settings, IDomainObjectFactory factory, ICategoryRepository categoryRepository, ITagRepository tagRepository, IStoryRepository storyRepository, IMarkAsSpamRepository markAsSpamRepository, IEventAggregator eventAggregator, ISpamProtection spamProtection, ISpamPostprocessor spamPostprocessor, IContentService contentService, IHtmlSanitizer htmlSanitizer, IThumbnail thumbnail, IStoryWeightCalculator[] storyWeightCalculators)
+        public StoryService(IConfigurationSettings settings, IDomainObjectFactory factory, ICategoryRepository categoryRepository, ITagRepository tagRepository, IStoryRepository storyRepository, ISpamVoteRepository markAsSpamRepository, IEventAggregator eventAggregator, ISpamProtection spamProtection, ISpamPostprocessor spamPostprocessor, IContentService contentService, IHtmlSanitizer htmlSanitizer, IThumbnail thumbnail, IStoryWeightCalculator[] storyWeightCalculators)
         {
             Check.Argument.IsNotNull(settings, "settings");
             Check.Argument.IsNotNull(factory, "factory");
@@ -620,9 +620,9 @@ namespace Kigg.Service
         {
             foreach(PublishedStory publishableStory in publishableStories)
             {
-                ICollection<MarkAsSpam> markedAsSpams = _markAsSpamRepository.FindAfter(publishableStory.Story.Id, publishableStory.Story.LastProcessedAt ?? publishableStory.Story.CreatedAt);
+                IEnumerable<SpamVote> markedAsSpams = _markAsSpamRepository.FindAfter(publishableStory.Story.Id, publishableStory.Story.LastProcessedAt ?? publishableStory.Story.CreatedAt);
 
-                foreach (MarkAsSpam markedAsSpam in markedAsSpams)
+                foreach (SpamVote markedAsSpam in markedAsSpams)
                 {
                     _eventAggregator.GetEvent<StoryIncorrectlyMarkedAsSpamEvent>().Publish(new StoryIncorrectlyMarkedAsSpamEventArgs(publishableStory.Story, markedAsSpam.ByUser));
                 }

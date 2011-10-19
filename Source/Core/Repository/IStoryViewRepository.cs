@@ -7,6 +7,6 @@ namespace Kigg.Repository
 
     public interface IStoryViewRepository : IRepository<StoryView>, ICountByStoryRepository
     {
-        ICollection<StoryView> FindAfter(long storyId, DateTime timestamp);
+        IEnumerable<StoryView> FindAfter(long storyId, DateTime timestamp);
     }
 }

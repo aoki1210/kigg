@@ -17,6 +17,6 @@ namespace Kigg.Repository
 
         PagedResult<User> FindAll(int start, int max);
 
-        ICollection<string> FindIPAddresses(long id);
+        IEnumerable<string> FindIPAddresses(long id);
     }
 }

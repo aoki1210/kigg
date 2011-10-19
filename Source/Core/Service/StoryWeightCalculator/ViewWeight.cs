@@ -25,7 +25,7 @@ namespace Kigg.Service
         {
             Check.Argument.IsNotNull(story, "story");
 
-            ICollection<StoryView> views = _viewRepository.FindAfter(story.Id, story.LastProcessedAt ?? story.CreatedAt);
+            IEnumerable<StoryView> views = _viewRepository.FindAfter(story.Id, story.LastProcessedAt ?? story.CreatedAt);
 
             // Multiply weight for each unique ip address
             return views.Select(v => v.FromIPAddress).Distinct().Count() * _weightMultiply;

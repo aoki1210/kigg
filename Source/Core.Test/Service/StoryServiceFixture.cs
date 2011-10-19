@@ -20,7 +20,7 @@ namespace Kigg.Core.Test
         private readonly Mock<ICategoryRepository> _categoryRepository;
         private readonly Mock<ITagRepository> _tagRepository;
         private readonly Mock<IStoryRepository> _storyRepository;
-        private readonly Mock<IMarkAsSpamRepository> _markAsSpamRepository;
+        private readonly Mock<ISpamVoteRepository> _markAsSpamRepository;
         private readonly Mock<IEventAggregator> _eventAggregator;
         private readonly Mock<ISpamProtection> _spamProtection;
         private readonly Mock<ISpamPostprocessor> _spamPostProcessor;
@@ -56,7 +56,7 @@ namespace Kigg.Core.Test
             _categoryRepository = new Mock<ICategoryRepository>();
             _tagRepository = new Mock<ITagRepository>();
             _storyRepository = new Mock<IStoryRepository>();
-            _markAsSpamRepository = new Mock<IMarkAsSpamRepository>();
+            _markAsSpamRepository = new Mock<ISpamVoteRepository>();
             _eventAggregator = new Mock<IEventAggregator>();
             _spamProtection = new Mock<ISpamProtection>();
             _spamPostProcessor = new Mock<ISpamPostprocessor>();
@@ -1030,7 +1030,7 @@ namespace Kigg.Core.Test
             _freshnessStrategy.Setup(s => s.Calculate(It.IsAny<DateTime>(), It.IsAny<Story>())).Returns(rnd.Next(0, 3)).Verifiable();
             _knownSourceStrategy.Setup(s => s.Calculate(It.IsAny<DateTime>(), It.IsAny<Story>())).Returns(rnd.Next(0, 5)).Verifiable();
 
-            var markAsSpam = new Mock<MarkAsSpam>();
+            var markAsSpam = new Mock<SpamVote>();
 
             markAsSpam.Setup(m => m.ByUser).Returns(new Mock<User>().Object);
             _markAsSpamRepository.Setup(s => s.FindAfter(It.IsAny<long>(), It.IsAny<DateTime>())).Returns(new[] { markAsSpam.Object }).Verifiable();

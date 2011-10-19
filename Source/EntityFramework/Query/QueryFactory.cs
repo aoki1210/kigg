@@ -40,6 +40,15 @@
             return query;
         }
 
+        public IQuery<int> CreateCountSpamVotesByStory(long id)
+        {
+            Check.Argument.IsNotNegativeOrZero(id, "id");
+
+            var query = new CountSpamVotesQuery(DbContext, s => s.StoryId == id);
+
+            return query;
+        }
+
         public IQuery<int> CreateCountViewsByStory(long id)
         {
             Check.Argument.IsNotNegativeOrZero(id, "id");
@@ -284,7 +293,7 @@
 
             var query = CreateFindDomainObjectListQuery<User>();
 
-            return query.OrderBy(orderBy).Page(start, max);
+            return query.OrderBy(orderBy).ThenByDescending(u => u.LastActivityAt).Page(start, max);
         }
 
         public IOrderedQuery<Vote> CreateFindVotesAfterDate(long storyId, DateTime date)
@@ -304,6 +313,27 @@
             Check.Argument.IsNotNegativeOrZero(storyId, "storyId");
 
             var query = CreateFindUniqueDomainObjectQuery<Vote>(v => v.UserId == userId && v.StoryId == storyId);
+
+            return query;
+        }
+
+        public IQuery<SpamVote> CreateFindSpamVoteById(long userId, long storyId)
+        {
+            Check.Argument.IsNotNegativeOrZero(userId, "userId");
+            Check.Argument.IsNotNegativeOrZero(storyId, "storyId");
+
+            var query = CreateFindUniqueDomainObjectQuery<SpamVote>(s => s.UserId == userId && s.StoryId == storyId);
+
+            return query;
+        }
+
+        public IOrderedQuery<SpamVote> CreateFindSpamVotesAfterDate(long storyId, DateTime date)
+        {
+            Check.Argument.IsNotNegativeOrZero(storyId, "storyId");
+            Check.Argument.IsNotInFuture(date, "date");
+            Check.Argument.IsNotInvalidDate(date, "date");
+
+            var query = CreateFindDomainObjectListQuery<SpamVote>(v => v.StoryId == storyId && v.MarkedAt >= date);
 
             return query;
         }

@@ -133,14 +133,14 @@
     <Compile Include="Repository\Decorated\Logging\LoggingUserRepository.cs" />
     <Compile Include="Repository\ICommentRepository.cs" />
     <Compile Include="Repository\ICommentSubscribtionRepository.cs" />
-    <Compile Include="Repository\IMarkAsSpamRepository.cs" />
+    <Compile Include="Repository\ISpamVoteRepository.cs" />
     <Compile Include="Repository\IStoryViewRepository.cs" />
     <Compile Include="Repository\IVoteRepository.cs" />
     <Compile Include="Service\StoryWeightCalculator\CommentWeight.cs" />
     <Compile Include="Service\StoryWeightCalculator\FreshnessWeight.cs" />
     <Compile Include="Service\StoryWeightCalculator\IStoryWeightCalculator.cs" />
     <Compile Include="Service\IUserScoreTable.cs" />
-    <Compile Include="DomainObjects\MarkAsSpam.cs" />
+    <Compile Include="DomainObjects\SpamVote.cs" />
     <Compile Include="DomainObjects\Interfaces\IUniqueNameEntity.cs" />
     <Compile Include="DomainObjects\StoryView.cs" />
     <Compile Include="DomainObjects\Vote.cs" />

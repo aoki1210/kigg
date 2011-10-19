@@ -456,11 +456,11 @@ namespace Kigg.Core.Test
 
             DateTime fakeDate = SystemTime.Now().AddDays(-1);
 
-            List<MarkAsSpam> markAsSpams = new List<MarkAsSpam>();
+            List<SpamVote> markAsSpams = new List<SpamVote>();
 
             for(var i = 1; i <= counter; i++)
             {
-                var markAsSpam = new Mock<MarkAsSpam>();
+                var markAsSpam = new Mock<SpamVote>();
 
                 markAsSpam.SetupGet(m => m.ByUser).Returns(new Mock<User>().Object);
                 markAsSpam.SetupGet(m => m.MarkedAt).Returns(fakeDate.AddHours(1));

@@ -28,7 +28,7 @@
         public IDbSet<Comment> Comments { get; set; }
         internal IDbSet<Vote> Votes { get; set; }
         internal IDbSet<StoryView> Views { get; set; }
-        internal IDbSet<MarkAsSpam> Spams { get; set; }
+        internal IDbSet<SpamVote> Spams { get; set; }
 
         public virtual new IDbSet<TEntity> Set<TEntity>()
             where TEntity : class, IDomainObject

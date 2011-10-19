@@ -28,7 +28,7 @@
         public static int GetMarkAsSpamCount(this Story forStory)
         {
             Check.Argument.IsNotNull(forStory, "forStory");
-            return GetCount<IMarkAsSpamRepository>(forStory.Id);
+            return GetCount<ISpamVoteRepository>(forStory.Id);
         }
 
         [DebuggerStepThrough]
@@ -95,7 +95,7 @@
         }
 
         [DebuggerStepThrough]
-        public static MarkAsSpam MarkSpam(this Story forStory, DateTime at, User byUser, string fromIpAddress)
+        public static SpamVote MarkSpam(this Story forStory, DateTime at, User byUser, string fromIpAddress)
         {
             Check.Argument.IsNotNull(forStory, "forStory");
             Check.Argument.IsNotInFuture(at, "at");
@@ -103,25 +103,25 @@
             Check.Argument.IsNotNullOrEmpty(fromIpAddress, "fromIpAddress");
 
             var spamStory = IoC.Resolve<IDomainObjectFactory>().CreateMarkAsSpam(forStory, at, byUser, fromIpAddress);
-            IoC.Resolve<IMarkAsSpamRepository>().Add(spamStory);
+            IoC.Resolve<ISpamVoteRepository>().Add(spamStory);
             
             return spamStory;
         }
 
         [DebuggerStepThrough]
-        public static void UnmarkSpam(this Story forStory, MarkAsSpam spam)
+        public static void UnmarkSpam(this Story forStory, SpamVote spam)
         {
             Check.Argument.IsNotNull(forStory, "forStory");
             Check.Argument.IsNotNull(spam, "spam");
-            IoC.Resolve<IMarkAsSpamRepository>().Remove(spam);
+            IoC.Resolve<ISpamVoteRepository>().Remove(spam);
         }
 
         [DebuggerStepThrough]
-        public static MarkAsSpam GetMarkAsSpam(this Story forStory, User byUser)
+        public static SpamVote GetMarkAsSpam(this Story forStory, User byUser)
         {
             Check.Argument.IsNotNull(forStory, "forStory");
             Check.Argument.IsNotNull(byUser, "byUser");
-            return IoC.Resolve<IMarkAsSpamRepository>().FindById(forStory.Id, byUser.Id);
+            return IoC.Resolve<ISpamVoteRepository>().FindById(forStory.Id, byUser.Id);
         }
 
         [DebuggerStepThrough]
