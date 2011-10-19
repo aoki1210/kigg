@@ -4,9 +4,9 @@
 
     using DomainObjects;
 
-    public class MarkAsSpamMapping : EntityTypeConfiguration<MarkAsSpam>
+    public class SpamVoteMapping : EntityTypeConfiguration<SpamVote>
     {
-        public MarkAsSpamMapping()
+        public SpamVoteMapping()
         {
             HasKey(s => new {s.UserId, s.StoryId});
             Property(s => s.FromIPAddress).HasColumnName("IPAddress").IsRequired().HasMaxLength(15);

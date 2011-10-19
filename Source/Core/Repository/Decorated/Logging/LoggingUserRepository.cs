@@ -149,7 +149,7 @@ namespace Kigg.Repository
             return pagedResult;
         }
 
-        public override ICollection<string> FindIPAddresses(long id)
+        public override IEnumerable<string> FindIPAddresses(long id)
         {
             //Check.Argument.IsNotEmpty(id, "id");
 

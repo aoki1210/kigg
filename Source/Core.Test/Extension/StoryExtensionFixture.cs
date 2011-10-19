@@ -222,12 +222,12 @@ namespace Kigg.Core.Test
 
             var now = SystemTime.Now();
 
-            domFactory.Setup(f => f.CreateMarkAsSpam(_story.Object, now, It.IsAny<User>(), "127.0.0.1")).Returns(It.IsAny<MarkAsSpam>()).Verifiable();
+            domFactory.Setup(f => f.CreateMarkAsSpam(_story.Object, now, It.IsAny<User>(), "127.0.0.1")).Returns(It.IsAny<SpamVote>()).Verifiable();
 
             _story.Object.MarkSpam(now, new Mock<User>().Object, "127.0.0.1");
 
             domFactory.Verify();
-            repository.Verify(r => r.Add(It.IsAny<MarkAsSpam>()),Times.AtMostOnce());
+            repository.Verify(r => r.Add(It.IsAny<SpamVote>()),Times.AtMostOnce());
         }
 
         [Fact]
@@ -247,7 +247,7 @@ namespace Kigg.Core.Test
         {
             var repository = SetupResolve<IMarkAsSpamRepository>();
 
-            var spam = new Mock<MarkAsSpam>().Object;
+            var spam = new Mock<SpamVote>().Object;
             
             _story.Object.UnmarkSpam(spam);
 

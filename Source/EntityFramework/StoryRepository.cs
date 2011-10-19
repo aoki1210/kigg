@@ -37,7 +37,7 @@
             DbContext.Remove<Tag>(DbContext.Tags.Where(t => t.Stories.Any(s=>s.Id == story.Id)));
             DbContext.Remove<StoryView>(DbContext.Views.Where(v => v.ForStory.Id == story.Id));
             DbContext.Remove<Vote>(DbContext.Votes.Where(v => v.StoryId == story.Id));
-            DbContext.Remove<MarkAsSpam>(DbContext.Spams.Where(s => s.StoryId == story.Id));
+            DbContext.Remove<SpamVote>(DbContext.Spams.Where(s => s.StoryId == story.Id));
             //entity.RemoveAllCommentSubscribers();
             DbContext.Remove<Comment>(DbContext.Comments.Where(c => c.ForStory.Id == story.Id));
             

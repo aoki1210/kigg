@@ -18,7 +18,7 @@
 
         Vote CreateStoryVote(Story forStory, DateTime at, User byUser, string fromIpAddress);
 
-        MarkAsSpam CreateMarkAsSpam(Story forStory, DateTime at, User byUser, string fromIpAddress);
+        SpamVote CreateMarkAsSpam(Story forStory, DateTime at, User byUser, string fromIpAddress);
 
         Comment CreateComment(Story forStory, string content, DateTime at, User byUser, string fromIpAddress);
 

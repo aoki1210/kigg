@@ -66,7 +66,7 @@ namespace Kigg.Repository
         }
 
         [DebuggerStepThrough]
-        public virtual ICollection<string> FindIPAddresses(long id)
+        public virtual IEnumerable<string> FindIPAddresses(long id)
         {
             //Check.Argument.IsNotEmpty(id, "id");
 
