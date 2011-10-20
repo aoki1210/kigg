@@ -1,0 +1,3458 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>System.Data.Entity.Design</name>
+    </assembly>
+    <members>
+        <member name="T:System.Data.Entity.Design.EdmToObjectNamespaceMap">
+            <summary>
+            The class to hold the map entries for the mapping between Edm Namespace and the Object Namespace
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.EdmToObjectNamespaceMap.#ctor">
+            <summary>
+            this is just to keep this class from being creatable outside of this assembly
+            </summary>
+        </member>
+        <member name="T:System.Data.EntityModel.Emitters.AssociationTypeEmitter">
+            <summary>
+            Summary description for NestedTypeEmitter.
+            </summary>
+        </member>
+        <member name="T:System.Data.EntityModel.Emitters.SchemaTypeEmitter">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:System.Data.EntityModel.Emitters.Emitter">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:System.Data.EntityModel.Emitters.Emitter.EntityGetContextPropertyName">
+            <summary>Name of property used to get StorageContext from an Entity</summary>
+        </member>
+        <member name="F:System.Data.EntityModel.Emitters.Emitter.SearcherGetContextPropertyName">
+            <summary>Name of property used to get StorageContext from a StorageSearcher</summary>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.Emitter.#ctor(System.Data.EntityModel.ClientApiGenerator)">
+            <summary>
+            
+            </summary>
+            <param name="generator"></param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.Emitter.EmitExpressionEqualsNull(System.CodeDom.CodeExpression)">
+            <summary>
+            
+            </summary>
+            <param name="expression"></param>
+            <returns></returns>
+        </member>
+        <member name="P:System.Data.EntityModel.Emitters.Emitter.ThisRef">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:System.Data.EntityModel.Emitters.Emitter.Generator">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.MetadataItemEmitter.Validate">
+            <summary>
+            Emitter-specific validation here
+            </summary>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.MetadataItemEmitter.GetAccessibilityCsdlStringFromMemberAttribute(System.CodeDom.MemberAttributes)">
+            <summary>
+            Given a MemberAttribute, returns a string representation used in CSDL. 
+            For e.g: MemebrAttribtue.Family is Protected in our csdl, (protected in C#, Family in VB)
+            Inverse of the method above (GetCodeAccessibilityMemberAttribute)
+            </summary>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.SchemaTypeEmitter.#ctor(System.Data.EntityModel.ClientApiGenerator,System.Data.Metadata.Edm.MetadataItem)">
+            <summary>
+            
+            </summary>
+            <param name="generator"></param>
+            <param name="schemaType"></param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.SchemaTypeEmitter.EmitTypeAttributes(System.CodeDom.CodeTypeDeclaration)">
+            <summary>
+            
+            </summary>
+            <param name="typeDecl"></param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.SchemaTypeEmitter.Validate">
+            <summary>
+            Emitter-specific validation: for SchemaTypeEmitter-derived classes, we
+            check the EdmItemCollection for other entities that have the same name
+            but differ in case
+            </summary>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.SchemaTypeEmitter.EmitTypeAttributes(System.String,System.CodeDom.CodeTypeDeclaration,System.Collections.Generic.List{System.CodeDom.CodeAttributeDeclaration})">
+            <summary>
+            Add attributes to a type's CustomAttributes collection
+            </summary>
+            <param name="itemName">The name of the type</param>
+            <param name="typeDecl">The type to annotate</param>
+            <param name="additionalAttributes">The additional attributes</param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.SchemaTypeEmitter.AddInterfaces(System.String,System.CodeDom.CodeTypeDeclaration,System.Collections.Generic.List{System.Type})">
+            <summary>
+            Add interfaces to the type's list of BaseTypes
+            </summary>
+            <param name="itemName">The name of the type</param>
+            <param name="typeDecl">The type whose list of base types needs to be extended</param>
+            <param name="additionalInterfaces">The interfaces to add to the list of base types</param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.SchemaTypeEmitter.AddMembers(System.String,System.CodeDom.CodeTypeDeclaration,System.Collections.Generic.List{System.CodeDom.CodeTypeMember})">
+            <summary>
+            Add interfaces to the type's list of BaseTypes
+            </summary>
+            <param name="itemName">The name of the type</param>
+            <param name="typeDecl">The type to which members need to be added</param>
+            <param name="additionalMembers">The members to add</param>
+        </member>
+        <member name="P:System.Data.EntityModel.Emitters.SchemaTypeEmitter.Item">
+            <summary>
+            Gets the element that code is being emitted for.
+            </summary>
+        </member>
+        <member name="T:System.Data.EntityModel.Emitters.AttributeEmitter">
+            <summary>
+            Summary description for AttributeEmitter.
+            </summary>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.AttributeEmitter.EmitTypeAttributes(System.Data.EntityModel.Emitters.EntityTypeEmitter,System.CodeDom.CodeTypeDeclaration)">
+            <summary>
+            The method to be called to create the type level attributes for the ItemTypeEmitter
+            </summary>
+            <param name="emitter">The strongly typed emitter</param>
+            <param name="typeDecl">The type declaration to add the attribues to.</param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.AttributeEmitter.EmitTypeAttributes(System.Data.EntityModel.Emitters.StructuredTypeEmitter,System.CodeDom.CodeTypeDeclaration)">
+            <summary>
+            The method to be called to create the type level attributes for the StructuredTypeEmitter
+            </summary>
+            <param name="emitter">The strongly typed emitter</param>
+            <param name="typeDecl">The type declaration to add the attribues to.</param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.AttributeEmitter.EmitTypeAttributes(System.Data.EntityModel.Emitters.SchemaTypeEmitter,System.CodeDom.CodeTypeDeclaration)">
+            <summary>
+            The method to be called to create the type level attributes for the SchemaTypeEmitter
+            </summary>
+            <param name="emitter">The strongly typed emitter</param>
+            <param name="typeDecl">The type declaration to add the attribues to.</param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.AttributeEmitter.EmitSchemaTypeAttribute(System.String,System.Data.EntityModel.Emitters.SchemaTypeEmitter,System.CodeDom.CodeTypeDeclaration)">
+            <summary>
+            Common way to fill out EdmTypeAttribute derived attributes
+            </summary>
+            <param name="attributeName">Unqualified name of the attribute</param>
+            <param name="emitter">The strongly typed emitter</param>
+            <param name="typeDecl">The type declaration to add the attribues to.</param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.AttributeEmitter.EmitSchemaTypeAttribute(System.String,System.Data.Metadata.Edm.EdmType,System.CodeDom.CodeTypeMember)">
+            <summary>
+            Shared code for adding a EdmTypeAttribute derived attribute including parameters to a type or property
+            </summary>
+            <param name="attributeName">Unqualified name of the attribute</param>
+            <param name="type">The type or property type of the code that is having the attribute attached.</param>
+            <param name="member">The type declaration to add the attribues to.</param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.AttributeEmitter.EmitNavigationPropertyAttributes(System.Data.EntityModel.ClientApiGenerator,System.Data.Metadata.Edm.RelationshipEndMember,System.CodeDom.CodeMemberProperty,System.Collections.Generic.List{System.CodeDom.CodeAttributeDeclaration})">
+            <summary>
+            Emit the attributes for the new navigation property
+            </summary>
+            <param name="generator">The ClientApiGenerator instance</param>
+            <param name="targetRelationshipEnd">The relationship end that is being targeted</param>
+            <param name="propertyDecl">The property declaration to attach the attribute to.</param>
+            <param name="additionalAttributes">Additional attributes</param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.AttributeEmitter.EmitPropertyAttributes(System.Data.EntityModel.Emitters.PropertyEmitter,System.CodeDom.CodeMemberProperty,System.Collections.Generic.List{System.CodeDom.CodeAttributeDeclaration})">
+            <summary>
+            The method to be called to create the property level attributes for the PropertyEmitter
+            </summary>
+            <param name="emitter">The strongly typed emitter</param>
+            <param name="propertyDecl">The type declaration to add the attribues to.</param>
+            <param name="additionalAttributes">Additional attributes to emit</param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.AttributeEmitter.EmitTypeAttributes(System.Data.EntityModel.Emitters.ComplexTypeEmitter,System.CodeDom.CodeTypeDeclaration)">
+            <summary>
+            The method to be called to create the type level attributes for the NestedTypeEmitter
+            </summary>
+            <param name="emitter">The strongly typed emitter</param>
+            <param name="typeDecl">The type declaration to add the attribues to.</param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.AttributeEmitter.FQAdoFrameworkDataClassesName(System.String)">
+            <summary>
+            Returns the name qualified with the Ado.Net EDM DataClasses Attribute namespace
+            </summary>
+            <param name="unqualifiedName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.AttributeEmitter.EmitSimpleAttribute(System.String,System.Object[])">
+            <summary>
+            
+            </summary>
+            <param name="attributeType"></param>
+            <param name="arguments"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.AttributeEmitter.AddAttributeArguments(System.CodeDom.CodeAttributeDeclaration,System.Object[])">
+            <summary>
+            
+            </summary>
+            <param name="attribute"></param>
+            <param name="arguments"></param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.AttributeEmitter.AddNamedAttributeArguments(System.CodeDom.CodeAttributeDeclaration,System.Object[])">
+            <summary>
+            
+            </summary>
+            <param name="attribute"></param>
+            <param name="arguments"></param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.AttributeEmitter.AddIgnoreAttributes(System.CodeDom.CodeMemberProperty)">
+            <summary>
+            Adds an XmlIgnore attribute to the given property declaration.  This is 
+            used to explicitly skip certain properties during XML serialization.
+            </summary>
+            <param name="propertyDecl">the property to mark with XmlIgnore</param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.AttributeEmitter.AddBrowsableAttribute(System.CodeDom.CodeMemberProperty)">
+            <summary>
+            Adds an Browsable(false) attribute to the given property declaration.
+            This is used to explicitly avoid display property in the PropertyGrid.
+            </summary>
+            <param name="propertyDecl">the property to mark with XmlIgnore</param>
+        </member>
+        <member name="T:System.Data.EntityModel.ClientApiGenerator">
+            <summary>
+            Summary description for ClientApiGenerator.
+            </summary>
+        </member>
+        <member name="M:System.Data.EntityModel.ClientApiGenerator.GenerateCode(System.Data.Entity.Design.LazyTextWriterCreator,System.String)">
+            <summary>
+            Parses a source Schema and outputs client-side generated code to
+            the output TextWriter.
+            </summary>
+            <param name="schema">The source Schema</param>
+            <param name="output">The TextWriter in which to write the output</param>
+            <param name="outputUri">The Uri for the output. Can be null.</param>
+            <returns>A list of GeneratorErrors.</returns>
+        </member>
+        <member name="M:System.Data.EntityModel.ClientApiGenerator.VerifyLanguageCaseSensitiveCompatibilityForType(System.Data.Metadata.Edm.GlobalItem)">
+            <summary>
+            Verification code invoked for types
+            </summary>
+            <param name="item">The type being generated</param>
+        </member>
+        <member name="M:System.Data.EntityModel.ClientApiGenerator.VerifyLanguageCaseSensitiveCompatibilityForProperty(System.Data.Metadata.Edm.EdmMember)">
+            <summary>
+            Verification code invoked for properties
+            </summary>
+            <param name="item">The property or navigation property being generated</param>
+        </member>
+        <member name="M:System.Data.EntityModel.ClientApiGenerator.VerifyLanguageCaseSensitiveCompatibilityForEntitySet(System.Data.Metadata.Edm.EntityContainer)">
+            <summary>
+            Verification code invoked for entity sets
+            </summary>
+            <param name="item">The entity container being generated</param>
+        </member>
+        <member name="M:System.Data.EntityModel.ClientApiGenerator.RaiseTypeGeneratedEvent(System.Data.Entity.Design.TypeGeneratedEventArgs)">
+            <summary>
+            Helper method that raises the TypeGenerated event
+            </summary>
+            <param name="eventArgs">The event arguments passed to the subscriber</param>
+        </member>
+        <member name="M:System.Data.EntityModel.ClientApiGenerator.RaisePropertyGeneratedEvent(System.Data.Entity.Design.PropertyGeneratedEventArgs)">
+            <summary>
+            Helper method that raises the PropertyGenerated event
+            </summary>
+            <param name="eventArgs">The event arguments passed to the subscriber</param>
+        </member>
+        <member name="P:System.Data.EntityModel.ClientApiGenerator.RealErrorsExist">
+            <summary>
+            Check collection for any real errors (Severity != Warning)
+            </summary>
+        </member>
+        <member name="P:System.Data.EntityModel.ClientApiGenerator.FixUps">
+            <summary>
+            
+            </summary>
+            <value></value>
+        </member>
+        <member name="T:System.Data.EntityModel.Emitters.CommentEmitter">
+            <summary>
+            static helper class for emitting comments.
+            </summary>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.CommentEmitter.EmitSummaryComments(System.Data.Metadata.Edm.MetadataItem,System.CodeDom.CodeCommentStatementCollection)">
+            <summary>
+            emit all the documentation comments for an element's documentation child
+            (if the element does not have a documentation child emit some standard "missing comments" comment
+            </summary>
+            <param name="element">the element whose documentation is to be displayed</param>
+            <param name="commentCollection">the comment collection of the CodeDom object to be commented</param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.CommentEmitter.EmitSummaryComments(System.String,System.CodeDom.CodeCommentStatementCollection)">
+            <summary>
+            Emit summary comments from a string
+            </summary>
+            <param name="summaryComments">the summary comments to be emitted</param>
+            <param name="commentCollection">the comment collection of the CodeDom object to be commented</param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.CommentEmitter.EmitComments(System.String[],System.CodeDom.CodeCommentStatementCollection,System.Boolean)">
+            <summary>
+            Emit some lines of comments
+            </summary>
+            <param name="commentLines">the lines of comments to emit</param>
+            <param name="commentCollection">the comment collection of the CodeDom object to be commented</param>
+            <param name="docComment">true if the comments are 'documentation' comments</param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.CommentEmitter.EmitParamComments(System.CodeDom.CodeParameterDeclarationExpression,System.String,System.CodeDom.CodeCommentStatementCollection)">
+            <summary>
+            Emit documentation comments for a method parameter
+            </summary>
+            <param name="parameter">the parameter being commented</param>
+            <param name="comment">the comment text</param>
+            <param name="commentCollection">the comment collection of the CodeDom object to be commented</param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.CommentEmitter.GetFormattedLines(System.String,System.Boolean)">
+            <summary>
+            'Format' a string of text into lines: separates in to lines on '\n', removes '\r', and removes common leading blanks.
+            </summary>
+            <param name="escapeForXml">if true characters troublesome for xml are converted to entities</param>
+            <param name="text">the text to be formatted</param>
+            <returns>the formatted lines</returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.CommentEmitter.EmitOtherDocumentationComments(System.Data.Metadata.Edm.Documentation,System.CodeDom.CodeCommentStatementCollection)">
+            <summary>
+            Emit the other (than Summary) documentation comments from a Documentation element
+            </summary>
+            <param name="documentation">the schema Docuementation element</param>
+            <param name="commentCollection">the comment collection of the CodeDom object to be commented</param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.CommentEmitter.EmitSummaryComments(System.String[],System.CodeDom.CodeCommentStatementCollection)">
+            <summary>
+            Emit the summary comments
+            </summary>
+            <param name="summaryComments"></param>
+            <param name="commentCollection">the comment collection of the CodeDom object to be commented</param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.CommentEmitter.EmitXmlComments(System.String,System.String[],System.CodeDom.CodeCommentStatementCollection)">
+            <summary>
+            emit documentation comments between xml open and close tags
+            </summary>
+            <param name="tag">the xml tag name</param>
+            <param name="summaryComments">the lines of comments to emit</param>
+            <param name="commentCollection">the comment collection of the CodeDom object to be commented</param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.CommentEmitter.SplitIntoLines(System.String)">
+            <summary>
+            split a string into lines on '\n' chars and remove '\r' chars 
+            </summary>
+            <param name="text">the string to split</param>
+            <returns>the split string</returns>
+        </member>
+        <member name="T:System.Data.EntityModel.Emitters.ComplexTypeEmitter">
+            <summary>
+            Summary description for NestedTypeEmitter.
+            </summary>
+        </member>
+        <member name="T:System.Data.EntityModel.Emitters.StructuredTypeEmitter">
+            <summary>
+            Summary description for StructuredTypeEmitter.
+            </summary>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.StructuredTypeEmitter.EmitApiClass">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.StructuredTypeEmitter.GetBaseType">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.StructuredTypeEmitter.#ctor(System.Data.EntityModel.ClientApiGenerator,System.Data.Metadata.Edm.StructuralType)">
+            <summary>
+            
+            </summary>
+            <param name="generator"></param>
+            <param name="structuredType"></param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.StructuredTypeEmitter.EmitTypeAttributes(System.CodeDom.CodeTypeDeclaration)">
+            <summary>
+            
+            </summary>
+            <param name="typeDecl"></param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.StructuredTypeEmitter.EmitProperties(System.CodeDom.CodeTypeDeclaration)">
+            <summary>
+            
+            </summary>
+            <param name="typeDecl"></param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.StructuredTypeEmitter.EmitFactoryMethod(System.CodeDom.CodeTypeDeclaration)">
+            <summary>
+            Emit static factory method which creates an instance of the class and initializes
+            non-nullable properties (taken as arguments)
+            </summary>
+            <param name="typeDecl"></param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.StructuredTypeEmitter.IncludeFieldInFactoryMethod(System.Data.Metadata.Edm.EdmProperty)">
+            <summary>
+            
+            </summary>
+            <param name="property"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.ComplexTypeEmitter.#ctor(System.Data.EntityModel.ClientApiGenerator,System.Data.Metadata.Edm.ComplexType)">
+            <summary>
+            
+            </summary>
+            <param name="generator"></param>
+            <param name="nestedType"></param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.ComplexTypeEmitter.EmitTypeAttributes(System.CodeDom.CodeTypeDeclaration)">
+            <summary>
+            Apply the attributes to this type.
+            </summary>
+            <param name="typeDecl">The declaration of the type that should have attributes added to it.</param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.ComplexTypeEmitter.GetBaseType">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:System.Data.EntityModel.Emitters.EntityContainerEmitter">
+            <summary>
+            This class is responsible for emiting the code for the EntityContainer schema element
+            </summary>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.EntityContainerEmitter.#ctor(System.Data.EntityModel.ClientApiGenerator,System.Data.Metadata.Edm.EntityContainer)">
+            <summary>
+            
+            </summary>
+            <param name="generator"></param>
+            <param name="entityContainer"></param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.EntityContainerEmitter.EmitApiClass">
+            <summary>
+            Creates the CodeTypeDeclarations necessary to generate the code for the EntityContainer schema element
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.EntityContainerEmitter.Validate">
+            <summary>
+            Emitter-specific validation: check if there exist entity containers and
+            entity sets that have the same name but differ in case
+            </summary>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.EntityContainerEmitter.VerifyEntityTypeAndSetAccessibilityCompatability">
+            <summary>
+            Verify that Entity Set and Type have compatible accessibilty.
+            They are compatible if the generated code will compile.
+            </summary>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.EntityContainerEmitter.AreTypeAndSetAccessCompatible(System.CodeDom.MemberAttributes,System.CodeDom.MemberAttributes)">
+            <summary>
+            Tells whether Entity Type's specified accessibility and Entity Set Property's specified Accessibility will work together (compile) when codegen'd.
+            False if (Type is internal and Set's Property is Public OR, type is internal and Set's property is protected).
+            True otherwise
+            </summary>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.EntityContainerEmitter.CreateConstructors(System.CodeDom.CodeTypeDeclaration)">
+            <summary>
+            Creates the necessary constructors for the entity container.
+            </summary>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.EntityContainerEmitter.CreateContextPartialMethods(System.CodeDom.CodeTypeDeclaration)">
+            <summary>
+            Adds the OnContextCreated partial method for the entity container.
+            </summary>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.EntityContainerEmitter.CreateEntitySetAddObjectProperty(System.Data.Metadata.Edm.EntitySet)">
+            <summary>
+            Create an AddTo-EntitysetName methiod for each entityset in the context.
+            </summary>
+            <param name="set">EntityContainerEntitySet that we will go over to get the existing entitysets.</param>
+            <returns> Method definition </returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.EntityContainerEmitter.CreateFunctionImportStructuralTypeReaderMethod(System.Data.Metadata.Edm.EdmFunction)">
+            <summary>
+            Create a method entry point for a function import yielding an entity reader.
+            </summary>
+            <param name="functionImport">SOM for function import; must not be null and must yield
+            an entity reader.</param>
+            <returns>Method definition.</returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.EntityContainerEmitter.OnContextCreatedCodeMethodInvokeExpression">
+            <summary>
+            return a code expression for invoking OnContextCreated partial method
+            </summary>
+        </member>
+        <member name="P:System.Data.EntityModel.Emitters.EntityContainerEmitter.Item">
+            <summary>
+            Returns the type specific SchemaElement
+            </summary>
+        </member>
+        <member name="T:System.Data.EntityModel.Emitters.EntityTypeEmitter">
+            <summary>
+            Summary description for ItemTypeEmitter.
+            </summary>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.EntityTypeEmitter.#ctor(System.Data.EntityModel.ClientApiGenerator,System.Data.Metadata.Edm.EntityType)">
+            <summary>
+            
+            </summary>
+            <param name="generator"></param>
+            <param name="itemType"></param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.EntityTypeEmitter.EmitProperties(System.CodeDom.CodeTypeDeclaration)">
+            <summary>
+            
+            </summary>
+            <param name="typeDecl"></param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.EntityTypeEmitter.EmitTypeAttributes(System.CodeDom.CodeTypeDeclaration)">
+            <summary>
+            
+            </summary>
+            <param name="typeDecl"></param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.EntityTypeEmitter.GetBaseType">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:System.Data.EntityModel.Emitters.EntityTypeEmitter.Item">
+            <summary>
+            Gets the SchemaElement that this class is generating code for.
+            </summary>
+            <value></value>
+        </member>
+        <member name="T:System.Data.EntityModel.Emitters.FixUp">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.FixUp.#ctor(System.String,System.Data.EntityModel.Emitters.FixUpType)">
+            <summary>
+            
+            </summary>
+            <param name="fqName"></param>
+            <param name="type"></param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.FixUp.Fix(System.Data.Entity.Design.LanguageOption,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="language"></param>
+            <param name="line"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.FixUp.CSMarkMethodAsPartial(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="line"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.FixUp.VBMarkMethodAsPartial(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="line"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.FixUp.CSMarkOverrideMethodAsSealed(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="line"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.FixUp.VBMarkOverrideMethodAsSealed(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="line"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.FixUp.CSMarkPropertySetAsInternal(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="line"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.FixUp.VBMarkPropertySetAsInternal(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="line"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.FixUp.CSMarkClassAsStatic(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="line"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.FixUp.InsertBefore(System.String,System.String,System.String)">
+            <summary>
+            Inserts one keyword before another one.
+            Does nothing if the keyword to be inserted already exists in the line OR if the keyword to insert before doesn't
+            </summary>
+            <param name="line">line of text to examine</param>
+            <param name="searchText">keyword to search for </param>
+            <param name="insertText">keyword to be inserted</param>
+            <returns>the possibly modified line line</returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.FixUp.IndexOfKeyword(System.String,System.String)">
+            <summary>
+            Finds location of a keyword in a line.
+            keyword must be at the beginning of the line or preceeded by whitespace AND at the end of the line or followed by whitespace
+            </summary>
+            <param name="line">line to seach</param>
+            <param name="keyword">keyword to search for</param>
+            <returns>location of first character of keyword</returns>
+        </member>
+        <member name="P:System.Data.EntityModel.Emitters.FixUp.Class">
+            <summary>
+            
+            </summary>
+            <value></value>
+        </member>
+        <member name="P:System.Data.EntityModel.Emitters.FixUp.Property">
+            <summary>
+            
+            </summary>
+            <value></value>
+        </member>
+        <member name="P:System.Data.EntityModel.Emitters.FixUp.Method">
+            <summary>
+            
+            </summary>
+            <value></value>
+        </member>
+        <member name="P:System.Data.EntityModel.Emitters.FixUp.Type">
+            <summary>
+            
+            </summary>
+            <value></value>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.FixUpCollection.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.FixUpCollection.Do(System.IO.TextReader,System.IO.TextWriter,System.Data.Entity.Design.LanguageOption,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="reader"></param>
+            <param name="writer"></param>
+            <param name="language"></param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.FixUpCollection.CopyFile(System.IO.TextReader,System.IO.TextWriter)">
+            <summary>
+            
+            </summary>
+            <param name="reader"></param>
+            <param name="writer"></param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.FixUpCollection.DoFixUpsForCS(System.IO.TextReader,System.IO.TextWriter,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="reader"></param>
+            <param name="writer"></param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.FixUpCollection.DoFixUpsForVB(System.IO.TextReader,System.IO.TextWriter)">
+            <summary>
+            
+            </summary>
+            <param name="reader"></param>
+            <param name="writer"></param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.FixUpCollection.IsClassWanted(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="className"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.FixUpCollection.IsCSClassDefinition(System.String,System.String@)">
+            <summary>
+            
+            </summary>
+            <param name="line"></param>
+            <param name="className"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.FixUpCollection.FixUpClassDecl(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="className"></param>
+            <param name="line"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.FixUpCollection.GetCSDeclType(System.String,System.String@)">
+            <summary>
+            
+            </summary>
+            <param name="line"></param>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.FixUpCollection.FixUpMethodDecl(System.String,System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="className"></param>
+            <param name="methodName"></param>
+            <param name="line"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.FixUpCollection.FixUpSetter(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="className"></param>
+            <param name="propertyName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.FixUpCollection.GetVBStatementType(System.Collections.Generic.Stack{System.Data.EntityModel.Emitters.FixUpCollection.VBStatementType},System.String,System.String@)">
+            <summary>
+            
+            </summary>
+            <param name="context"></param>
+            <param name="line"></param>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.FixUpCollection.NormalizeForVB(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="line"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.FixUpCollection.LineIsVBBeginSetterGetter(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="line"></param>
+            <param name="keyword"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.FixUpCollection.IndexOfKeyword(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="line"></param>
+            <param name="keyword"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.FixUpCollection.LineIsVBBeginClassMethodProperty(System.String,System.String,System.String@)">
+            <summary>
+            
+            </summary>
+            <param name="line"></param>
+            <param name="keyword"></param>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="P:System.Data.EntityModel.Emitters.FixUpCollection.Language">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:System.Data.EntityModel.Emitters.FixUpCollection.ClassFixUps">
+            <summary>
+            
+            </summary>
+            <value></value>
+        </member>
+        <member name="T:System.Data.EntityModel.Emitters.FixUpType">
+            <summary>
+            Types of fix ups the client code generator can perform on the generated code
+            </summary>
+        </member>
+        <member name="F:System.Data.EntityModel.Emitters.FixUpType.MarkOverrideMethodAsSealed">
+            <summary>Mark an override method as final (sealed)</summary>
+        </member>
+        <member name="F:System.Data.EntityModel.Emitters.FixUpType.MarkPropertySetAsInternal">
+            <summary>Mark a property setter as internal</summary>
+        </member>
+        <member name="F:System.Data.EntityModel.Emitters.FixUpType.MarkClassAsStatic">
+            <summary>Mark a class as static</summary>
+        </member>
+        <member name="F:System.Data.EntityModel.Emitters.FixUpType.MarkPropertyGetAsPrivate">
+            <summary>Mark a property getter as private</summary>
+        </member>
+        <member name="F:System.Data.EntityModel.Emitters.FixUpType.MarkPropertyGetAsInternal">
+            <summary>Mark a property getter as internal</summary>
+        </member>
+        <member name="F:System.Data.EntityModel.Emitters.FixUpType.MarkPropertyGetAsPublic">
+            <summary>Mark a property getter as public</summary>
+        </member>
+        <member name="F:System.Data.EntityModel.Emitters.FixUpType.MarkPropertySetAsPrivate">
+            <summary>Mark a property setter as private</summary>
+        </member>
+        <member name="F:System.Data.EntityModel.Emitters.FixUpType.MarkPropertySetAsPublic">
+            <summary>Mark a property setter as public</summary>
+        </member>
+        <member name="F:System.Data.EntityModel.Emitters.FixUpType.MarkAbstractMethodAsPartial">
+            <summary>Mark a method as partial</summary>
+        </member>
+        <member name="F:System.Data.EntityModel.Emitters.FixUpType.MarkPropertyGetAsProtected">
+            <summary>Mark a property getter as protected</summary>
+        </member>
+        <member name="F:System.Data.EntityModel.Emitters.FixUpType.MarkPropertySetAsProtected">
+            <summary>Mark a property setter as protected</summary>
+        </member>
+        <member name="T:System.Data.EntityModel.Emitters.NamespaceEmitter">
+            <summary>
+            This class is responsible for Emitting the code to create the CLR namespace container and assembly level attributes
+            </summary>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.NamespaceEmitter.#ctor(System.Data.EntityModel.ClientApiGenerator,System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="generator"></param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.NamespaceEmitter.Emit">
+            <summary>
+            Creates the CodeTypeDeclarations necessary to generate the code
+            </summary>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.NamespaceEmitter.CreateElementEmitter(System.Data.Metadata.Edm.GlobalItem)">
+            <summary>
+            Create an Emitter for a schema type element
+            </summary>
+            <param name="element"></param>
+            <returns></returns>
+        </member>
+        <member name="P:System.Data.EntityModel.Emitters.NamespaceEmitter.CompileUnit">
+            <summary>
+            Gets the compile unit (top level codedom object)
+            </summary>
+            <value></value>
+        </member>
+        <member name="T:System.Data.EntityModel.Emitters.NamespaceEmitter.Pair`2">
+            <summary>
+            Reponsible for relating two objects together into a pair
+            </summary>
+            <typeparam name="T1"></typeparam>
+            <typeparam name="T2"></typeparam>
+        </member>
+        <member name="T:System.Data.EntityModel.Emitters.NavigationPropertyEmitter">
+            <summary>
+            Summary description for NavigationPropertyEmitter.
+            </summary>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.PropertyEmitterBase.EmitProperty(System.CodeDom.CodeTypeDeclaration)">
+            <summary>
+            This is where the derived classes supply their emit logic.
+            </summary>
+            <param name="typeDecl">The CodeDom representation of the type that the property is being added to.</param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.PropertyEmitterBase.Validate">
+            <summary>
+            Validation logic specific to property emitters
+            </summary>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.PropertyEmitterBase.VerifyGetterAndSetterAccessibilityCompatability">
+            <summary>
+            The compiler ensures accessibility on a Setter/Getter is more restrictive than on the Property.
+            However accessibility modifiers are not well ordered. Internal and Protected don't go well together 
+            because neither is more restrictive than others.
+            </summary>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.PropertyEmitterBase.Emit(System.CodeDom.CodeTypeDeclaration)">
+            <summary>
+            Main method for Emitting property code.
+            </summary>
+            <param name="typeDecl">The CodeDom representation of the type that the property is being added to.</param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.NavigationPropertyEmitter.#ctor(System.Data.EntityModel.ClientApiGenerator,System.Data.Metadata.Edm.NavigationProperty,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="generator"></param>
+            <param name="navigationProperty"></param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.NavigationPropertyEmitter.EmitProperty(System.CodeDom.CodeTypeDeclaration)">
+            <summary>
+            Generate the navigation property
+            </summary>
+            <param name="typeDecl">The type to add the property to.</param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.NavigationPropertyEmitter.EmitNavigationProperty(System.CodeDom.CodeTypeDeclaration)">
+            <summary>
+            Generate the navigation property specified 
+            </summary>
+            <param name="typeDecl">The type to add the property to.</param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.NavigationPropertyEmitter.EmitNavigationProperty(System.Data.Metadata.Edm.RelationshipEndMember,System.Boolean)">
+            <summary>
+            Generate a navigation property
+            </summary>
+            <param name="target">the other end</param>
+            <param name="referenceProperty">True to emit Reference navigation property</param>
+            <returns>the generated property</returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.NavigationPropertyEmitter.GetReturnType(System.Data.Metadata.Edm.RelationshipEndMember,System.Boolean)">
+            <summary>
+            Get the return type for the get method, given the target end
+            </summary>
+            <param name="target"></param>
+            <param name="referenceMethod">true if the is the return type for a reference property</param>
+            <returns>the return type for a target</returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.NavigationPropertyEmitter.EmitGetMethod(System.Data.Metadata.Edm.RelationshipEndMember)">
+            <summary>
+            Emit the GetRelatedCollection or GetRelatedReference methods
+            </summary>
+            <param name="target">Target end of the relationship</param>        
+            <returns>Expression to invoke the appropriate method</returns>
+        </member>
+        <member name="P:System.Data.EntityModel.Emitters.NavigationPropertyEmitter.Item">
+            <summary>
+            Gives the SchemaElement back cast to the most
+            appropriate type
+            </summary>
+        </member>
+        <member name="T:System.Data.EntityModel.Emitters.PropertyEmitter">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.PropertyEmitter.#ctor(System.Data.EntityModel.ClientApiGenerator,System.Data.Metadata.Edm.EdmProperty,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="generator"></param>
+            <param name="property"></param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.PropertyEmitter.EmitPropertyDeclaration(System.CodeDom.CodeTypeReference)">
+            <summary>
+            Emit the declaration of the property for the class.
+            </summary>
+            <returns>The Property declaration pieces of the CodeDom.</returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.PropertyEmitter.EmitProperty(System.CodeDom.CodeTypeDeclaration)">
+            <summary>
+            Main method for Emitting property code.
+            </summary>
+            <param name="typeDecl">The CodeDom representation of the type that the property is being added to.</param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.PropertyEmitter.EmitPropertyOnChangePartialMethods(System.CodeDom.CodeTypeDeclaration,System.CodeDom.CodeTypeReference)">
+            <summary>
+            Emit these methods as "abstract" and fix them up later to be "partial".
+            CodeDOM does not support partial methods
+            </summary>
+            <param name="typeDecl"></param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.PropertyEmitter.CreateEdmStructuralObjectRef(System.Data.EntityModel.Emitters.TypeReference)">
+            <summary>
+            Get a reference to the base class DataObject
+            </summary>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.PropertyEmitter.EmitCustomAttributes(System.CodeDom.CodeMemberProperty,System.Collections.Generic.List{System.CodeDom.CodeAttributeDeclaration})">
+            <summary>
+            
+            </summary>
+            <param name="memberProperty"></param>
+            <param name="additionalAttributes">Additional attributes to emit</param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.PropertyEmitter.EmitPropertyGetterBody(System.CodeDom.CodeStatementCollection)">
+            <summary>
+            
+            </summary>
+            <param name="statements"></param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.PropertyEmitter.EmitPropertySetter(System.CodeDom.CodeMemberProperty,System.Collections.Generic.List{System.CodeDom.CodeStatement})">
+            <summary>
+            
+            </summary>
+            <param name="memberProperty"></param>
+            <param name="additionalSetStatements">Additional statements to emit</param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.PropertyEmitter.EmitPropertySetterBody(System.CodeDom.CodeStatementCollection,System.Collections.Generic.List{System.CodeDom.CodeStatement})">
+            <summary>
+            This is a control function to delegate the creation of the 
+            setter statments to the correct code path
+            </summary>
+            <param name="statements">The collection that the setter statements should be added to.</param>
+            <param name="additionalSetStatements">Additional statements to emit</param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.PropertyEmitter.AddGetterSetterFixUp(System.Data.EntityModel.Emitters.FixUpCollection,System.String,System.CodeDom.MemberAttributes,System.CodeDom.MemberAttributes,System.Boolean)">
+            <summary>
+            Do the fixups to allow get and set statements in properties
+            to have different accessibility than the property itself.
+            </summary>
+            <param name="accessibility">The accessibility for the getter or setter</param>
+            <param name="propertyAccessibility">The property's accessibility</param>
+            <param name="isGetter">True if this is a getter, false if a setter</param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.PropertyEmitter.EmitScalarTypePropertySetStatements(System.CodeDom.CodeStatementCollection,System.Data.Metadata.Edm.CollectionKind)">
+            <summary>
+            Emit the set statements for a property that is a scalar type
+            </summary>
+            <param name="statements">The statement collection to add the set statements to.</param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.PropertyEmitter.EmitComplexTypePropertySetStatements(System.CodeDom.CodeStatementCollection,System.Data.Metadata.Edm.CollectionKind)">
+            <summary>
+            Emit the property set statments to properly set a ComplexType.
+            </summary>
+            <param name="statements">The collection of statements that the set statements should be added to.</param>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.PropertyEmitter.GetType(System.Data.Metadata.Edm.EdmProperty,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="property"></param>
+            <param name="getElementType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.PropertyEmitter.HasDefault(System.Data.Metadata.Edm.EdmProperty)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.PropertyEmitter.GetDefaultValueExpression(System.Data.Metadata.Edm.EdmProperty)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.PropertyEmitter.GetCodeExpressionFromBinary(System.Object)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.PropertyEmitter.GetCodeExpressionFromGuid(System.Object)">
+            <summary>
+            
+            </summary>
+            <value></value>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.PropertyEmitter.GetCodeExpressionFromDateTimeDefaultValue(System.Object,System.Data.Metadata.Edm.EdmProperty)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:System.Data.EntityModel.Emitters.PropertyEmitter.PropertyType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:System.Data.EntityModel.Emitters.PropertyEmitter.EntityPropertyName">
+            <summary>
+            Name of the associated Entity property for Ref(T) properties
+            </summary>
+        </member>
+        <member name="P:System.Data.EntityModel.Emitters.PropertyEmitter.HidesBaseClassProperty">
+            <summary>
+            See if a property names will hide a base class member name
+            </summary>
+        </member>
+        <member name="P:System.Data.EntityModel.Emitters.PropertyEmitter.FieldRef">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:System.Data.EntityModel.Emitters.PropertyEmitter.ComplexPropertyInitializedFieldRef">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:System.Data.EntityModel.Emitters.PropertyEmitter.FieldName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:System.Data.EntityModel.Emitters.PropertyEmitter.ComplexPropertyInitializedFieldName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:System.Data.EntityModel.Emitters.PropertyEmitter.IsVirtualProperty">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:System.Data.EntityModel.Emitters.TypeReference">
+            <summary>
+            Summary description for TypeReferences.
+            </summary>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.TypeReference.ForType(System.Type)">
+            <summary>
+            Get TypeReference for a type represented by a Type object
+            </summary>
+            <param name="type">the type object</param>
+            <returns>the associated TypeReference object</returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.TypeReference.ForType(System.Type,System.CodeDom.CodeTypeReference)">
+            <summary>
+            Get TypeReference for a type represented by a Generic Type object.
+            We don't cache the TypeReference for generic type object since the type would be the same
+            irresepective of the generic arguments. We could potentially cache it using both the type name
+            and generic type arguments.
+            </summary>
+            <param name="type">the generic type object</param>
+            <returns>the associated TypeReference object</returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.TypeReference.FromString(System.String)">
+            <summary>
+            Get TypeReference for a type represented by a namespace quailifed string 
+            </summary>
+            <param name="type">namespace qualified string</param>
+            <returns>the TypeReference</returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.TypeReference.FromString(System.String,System.Boolean)">
+            <summary>
+            Get TypeReference for a type represented by a namespace quailifed string,
+            with optional global qualifier
+            </summary>
+            <param name="type">namespace qualified string</param>
+            <param name="addGlobalQualifier">indicates whether the global qualifier should be added</param>
+            <returns>the TypeReference</returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.TypeReference.AdoFrameworkType(System.String)">
+            <summary>
+            Get TypeReference for a framework type
+            </summary>
+            <param name="name">unqualified name of the framework type</param>
+            <returns>the TypeReference</returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.TypeReference.AdoFrameworkDataClassesType(System.String)">
+            <summary>
+            Get TypeReference for a framework DataClasses type
+            </summary>
+            <param name="name">unqualified name of the framework DataClass type</param>
+            <returns>the TypeReference</returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.TypeReference.AdoFrameworkMetadataEdmType(System.String)">
+            <summary>
+            Get TypeReference for a framework Metadata Edm type
+            </summary>
+            <param name="name">unqualified name of the framework metadata edm type</param>
+            <returns>the TypeReference</returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.TypeReference.AdoEntityClientType(System.String)">
+            <summary>
+            Get TypeReference for a framework Entity Client type
+            </summary>
+            <param name="name">unqualified name of the framework type</param>
+            <returns>the TypeReference</returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.TypeReference.AdoFrameworkGenericClass(System.String,System.CodeDom.CodeTypeReference)">
+            <summary>
+            Get TypeReference for a bound generic framework class
+            </summary>
+            <param name="name">the name of the generic framework class</param>
+            <param name="typeParameter">the type parameter for the framework class</param>
+            <returns>TypeReference for the bound framework class</returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.TypeReference.AdoFrameworkGenericDataClass(System.String,System.CodeDom.CodeTypeReference)">
+            <summary>
+            Get TypeReference for a bound generic framework data class
+            </summary>
+            <param name="name">the name of the generic framework data class</param>
+            <param name="typeParameter">the type parameter for the framework data class</param>
+            <returns>TypeReference for the bound framework data class</returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.TypeReference.FrameworkGenericClass(System.String,System.String,System.CodeDom.CodeTypeReference)">
+            <summary>
+            Get TypeReference for a bound generic framework class
+            </summary>
+            <param name="namespaceName">the namespace of the generic framework class</param>
+            <param name="name">the name of the generic framework class</param>
+            <param name="typeParameter">the type parameter for the framework class</param>
+            <returns>TypeReference for the bound framework class</returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.TypeReference.NullableForType(System.Type)">
+            <summary>
+            Get TypeReference for a bound Nullable&lt;T&gt;
+            </summary>
+            <param name="innerType">Type of the Nullable&lt;T&gt; type parameter</param>
+            <returns>TypeReference for a bound Nullable&lt;T&gt;</returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.TypeReference.ObjectResult(System.CodeDom.CodeTypeReference)">
+            <summary>
+            Gets an ObjectResult of elementType CodeTypeReference. 
+            </summary>
+        </member>
+        <member name="P:System.Data.EntityModel.Emitters.TypeReference.ByteArray">
+            <summary>
+            Gets a CodeTypeReference to the System.Byte[] type.
+            </summary>
+            <value></value>
+        </member>
+        <member name="P:System.Data.EntityModel.Emitters.TypeReference.DateTime">
+            <summary>
+            Gets a CodeTypeReference object for the System.DateTime type.
+            </summary>
+        </member>
+        <member name="P:System.Data.EntityModel.Emitters.TypeReference.Guid">
+            <summary>
+            Gets a CodeTypeReference object for the System.Guid type.
+            </summary>
+        </member>
+        <member name="P:System.Data.EntityModel.Emitters.TypeReference.ObjectContext">
+            <summary>
+            TypeReference for the Framework's ObjectContext class
+            </summary>
+        </member>
+        <member name="P:System.Data.EntityModel.Emitters.TypeReference.ComplexTypeBaseClass">
+            <summary>
+            TypeReference for the Framework base class to types that can used in InlineObjectCollection
+            </summary>
+        </member>
+        <member name="P:System.Data.EntityModel.Emitters.TypeReference.EntityTypeBaseClass">
+            <summary>
+            TypeReference for the Framework base class for EntityTypes
+            </summary>
+        </member>
+        <member name="P:System.Data.EntityModel.Emitters.TypeReference.IEntityWithRelationshipsTypeBaseClass">
+            <summary>
+            TypeReference for the Framework base class for IEntityWithRelationships
+            </summary>
+        </member>
+        <member name="P:System.Data.EntityModel.Emitters.TypeReference.String">
+            <summary>
+            Gets a CodeTypeReference object for the System.String type.
+            </summary>
+        </member>
+        <member name="T:System.Data.EntityModel.Emitters.Utils">
+            <summary>
+            Summary description for Utils
+            </summary>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.Utils.InitializeTypeReservedNames">
+            <summary>
+            Initialize some statics that cannot be initialized in member declaration...
+            </summary>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.Utils.CamelCase(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="text"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.Utils.FieldNameFromPropName(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="propName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.Utils.ComplexPropertyInitializedNameFromPropName(System.String)">
+            <summary>
+            Generate the name of a field that is used to indicate whether a complex property has been explicitly initialized
+            </summary>
+            <param name="propName">Name of the property associated that with this field</param>
+            <returns>Generated field name</returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.Utils.PrivateMemberPrefix(System.Data.EntityModel.Emitters.PrivateMemberPrefixId)">
+            <summary>
+            get the prefix ussed for a private member
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.Utils.FQAdoFrameworkName(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.Utils.FQAdoFrameworkDataClassesName(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.Utils.FQAdoFrameworkMetadataEdmName(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="name">unqualifed name of the type</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.Utils.FQAdoEntityClientName(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.Utils.TryGetPrimitiveTypeKind(System.Data.Metadata.Edm.EdmType,System.Data.Metadata.Edm.PrimitiveTypeKind@)">
+            <summary>
+            
+            </summary>
+            <param name="element"></param>
+            <param name="modelType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.Utils.SplitName(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.EntityModel.Emitters.Utils.DoesTypeReserveMemberName(System.Data.Metadata.Edm.StructuralType,System.String,System.StringComparison)">
+            <summary>
+            check if a name is reserved for a type
+            </summary>
+            <param name="type">the object representing the schema type being defined</param>
+            <param name="name">the member name</param>
+            <returns>true if the name is reserved by the type</returns>
+        </member>
+        <member name="T:System.Data.Entity.Design.TypeGeneratedEventHandler">
+            <summary>
+            Event handler for the OnTypeGenerated event
+            </summary>
+            <param name="sender">The source of the event</param>
+            <param name="e">The event args</param>
+        </member>
+        <member name="T:System.Data.Entity.Design.PropertyGeneratedEventHandler">
+            <summary>
+            Event handler for the OnPropertyGenerated event
+            </summary>
+            <param name="sender">The source of the event</param>
+            <param name="e">The event args</param>
+        </member>
+        <member name="T:System.Data.Entity.Design.EntityClassGenerator">
+            <summary>
+            Summary description for CodeGenerator.
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityClassGenerator.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityClassGenerator.#ctor(System.Data.Entity.Design.LanguageOption)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityClassGenerator.RaiseTypeGeneratedEvent(System.Data.Entity.Design.TypeGeneratedEventArgs)">
+            <summary>
+            Helper method that raises the TypeGenerated event
+            </summary>
+            <param name="eventArgs">The event arguments passed to the subscriber</param>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityClassGenerator.RaisePropertyGeneratedEvent(System.Data.Entity.Design.PropertyGeneratedEventArgs)">
+            <summary>
+            Helper method that raises the PropertyGenerated event
+            </summary>
+            <param name="eventArgs">The event arguments passed to the subscriber</param>
+        </member>
+        <member name="E:System.Data.Entity.Design.EntityClassGenerator.OnTypeGenerated">
+            <summary>
+            The event that is raised when a type is generated
+            </summary>
+        </member>
+        <member name="E:System.Data.Entity.Design.EntityClassGenerator.OnPropertyGenerated">
+            <summary>
+            The event that is raised when a property is generated
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.EntityClassGenerator.LanguageOption">
+            <summary>
+            Gets and Sets the Language to use for code generation.
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.EntityClassGenerator.EdmToObjectNamespaceMap">
+            <summary>
+            Gets the map entries use to customize the namespace of .net types that are generated
+            and referenced by the generated code
+            </summary>
+        </member>
+        <member name="T:System.Data.Entity.Design.LanguageOption">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:System.Data.Entity.Design.LanguageOption.GenerateCSharpCode">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:System.Data.Entity.Design.LanguageOption.GenerateVBCode">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:System.Data.Entity.Design.LazyTextWriterCreator">
+            <summary>
+            This class is responsible for abstracting the knowledge
+            of whether the user provided a TextWriter or a FilePath.
+            
+            If the user gave us a filePath we try not to create the TextWriter
+            till we absolutely need it in order to prevent the file from being created
+            in error cases.
+            </summary>
+        </member>
+        <member name="T:System.Data.Entity.Design.PropertyGeneratedEventArgs">
+            <summary>
+            This class encapsulates the EventArgs dispatched as part of the event
+            raised when a property is generated.
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.PropertyGeneratedEventArgs.#ctor">
+            <summary>
+            Default constructor
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.PropertyGeneratedEventArgs.#ctor(System.Data.Metadata.Edm.MetadataItem,System.String,System.CodeDom.CodeTypeReference)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="propertySource">The event source</param>
+            <param name="backingFieldName">The name of the field corresponding to the property</param>
+            <param name="returnType">The property return type</param>
+        </member>
+        <member name="P:System.Data.Entity.Design.PropertyGeneratedEventArgs.PropertySource">
+            <summary>
+            The Metadata object that is the source of the property
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.PropertyGeneratedEventArgs.BackingFieldName">
+            <summary>
+            The name of the field that backs the property; can be null in the case of
+            navigation property
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.PropertyGeneratedEventArgs.ReturnType">
+            <summary>
+            The type of the property by default; if changed by the user, the new value
+            will be used by the code generator
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.PropertyGeneratedEventArgs.AdditionalGetStatements">
+            <summary>
+            Statements to be included in the property's getter
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.PropertyGeneratedEventArgs.AdditionalSetStatements">
+            <summary>
+            Statements to be included in the property's setter
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.PropertyGeneratedEventArgs.AdditionalAttributes">
+            <summary>
+            Attributes to be added to the property's CustomAttributes collection
+            </summary>
+        </member>
+        <member name="T:System.Data.Entity.Design.TerminalErrorException">
+            <summary>
+            This class is used to interupt the normal flow of CodeGenerator.Start 
+            when errors are found during schema parsing, or too many errors have
+            been found.
+            </summary>
+        </member>
+        <member name="T:System.Data.Entity.Design.TypeGeneratedEventArgs">
+            <summary>
+            This class encapsulates the EventArgs dispatched as part of the event
+            raised when a type is generated.
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.TypeGeneratedEventArgs.#ctor">
+            <summary>
+            Default constructor
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.TypeGeneratedEventArgs.#ctor(System.Data.Metadata.Edm.GlobalItem,System.CodeDom.CodeTypeReference)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="typeSource">The source of the event</param>
+            <param name="baseType">The base type of the type being generated</param>
+        </member>
+        <member name="P:System.Data.Entity.Design.TypeGeneratedEventArgs.BaseType">
+            <summary>
+            The type appropriate for the TypeSource
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.TypeGeneratedEventArgs.AdditionalInterfaces">
+            <summary>
+            Interfaces to be included in the new type's definition
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.TypeGeneratedEventArgs.AdditionalMembers">
+            <summary>
+            Members to be included in the new type's definition
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.TypeGeneratedEventArgs.AdditionalAttributes">
+            <summary>
+            Attributes to be added to the property's CustomAttributes collection
+            </summary>
+        </member>
+        <member name="T:System.Data.Entity.Design.AspNet.BuildProviderUtils">
+            <summary>
+            A place to put common methods used by our build providers
+            </summary>
+            
+        </member>
+        <member name="M:System.Data.Entity.Design.AspNet.BuildProviderUtils.#ctor">
+            <summary>
+            Default constructor
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.AspNet.BuildProviderUtils.GetResourceNameForVirtualPath(System.String)">
+            <summary>
+            Transforms a virtual path string into a valid resource name.
+            </summary>
+            <param name="virtualPath"></param>
+            <returns></returns>
+        </member>
+        <member name="T:System.Data.Entity.Design.AspNet.EntityDesignerBuildProvider">
+            <summary>
+            The ASP .NET Build provider for the CSDL in ADO .NET
+            </summary>
+            
+        </member>
+        <member name="M:System.Data.Entity.Design.AspNet.EntityDesignerBuildProvider.#ctor">
+            <summary>
+            Default constructor
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.AspNet.EntityDesignerBuildProvider.GetResultFlags(System.CodeDom.Compiler.CompilerResults)">
+            <summary>
+            We want ASP .NET to always reset the app domain when we have to rebuild
+            </summary>
+            <param name="results"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.AspNet.EntityDesignerBuildProvider.GenerateCode(System.Web.Compilation.AssemblyBuilder)">
+            <summary>
+            Extract the CSDL, SSDL and MSL nodes from the EDMX file and store them
+            as embedded resources
+            </summary>
+            <param name="assemblyBuilder"></param>
+        </member>
+        <member name="T:System.Data.Entity.Design.AspNet.EntityModelBuildProvider">
+            <summary>
+            The ASP .NET Build provider for the CSDL in ADO .NET
+            </summary>
+            
+        </member>
+        <member name="M:System.Data.Entity.Design.AspNet.EntityModelBuildProvider.#ctor">
+            <summary>
+            Default constructor
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.AspNet.EntityModelBuildProvider.GetResultFlags(System.CodeDom.Compiler.CompilerResults)">
+            <summary>
+            We want ASP .NET to always reset the app domain when we have to rebuild
+            </summary>
+            <param name="results"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.AspNet.EntityModelBuildProvider.GenerateCode(System.Web.Compilation.AssemblyBuilder)">
+            <summary>
+            
+            </summary>
+            <param name="assemblyBuilder"></param>
+        </member>
+        <member name="T:System.Data.Entity.Design.AspNet.MappingModelBuildProvider">
+            <summary>
+            The ASP .NET Build provider for the MSL in ADO .NET
+            </summary>
+            
+        </member>
+        <member name="M:System.Data.Entity.Design.AspNet.MappingModelBuildProvider.#ctor">
+            <summary>
+            Default constructor
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.AspNet.MappingModelBuildProvider.GetResultFlags(System.CodeDom.Compiler.CompilerResults)">
+            <summary>
+            We want ASP .NET to always reset the app domain when we have to rebuild
+            </summary>
+            <param name="results"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.AspNet.MappingModelBuildProvider.GenerateCode(System.Web.Compilation.AssemblyBuilder)">
+            <summary>
+            
+            </summary>
+            <param name="assemblyBuilder"></param>
+        </member>
+        <member name="T:System.Data.Entity.Design.AspNet.StorageModelBuildProvider">
+            <summary>
+            The ASP .NET Build provider for the SSDL in ADO .NET
+            </summary>
+            
+        </member>
+        <member name="M:System.Data.Entity.Design.AspNet.StorageModelBuildProvider.#ctor">
+            <summary>
+            Default constructor
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.AspNet.StorageModelBuildProvider.GetResultFlags(System.CodeDom.Compiler.CompilerResults)">
+            <summary>
+            We want ASP .NET to always reset the app domain when we have to rebuild
+            </summary>
+            <param name="results"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.AspNet.StorageModelBuildProvider.GenerateCode(System.Web.Compilation.AssemblyBuilder)">
+            <summary>
+            
+            </summary>
+            <param name="assemblyBuilder"></param>
+        </member>
+        <member name="T:System.Data.Entity.Design.Common.MetadataItemSerializer">
+            <summary>
+            This class is reponsible for serailizing Edm Metadata out to the appropriate file .csdl or .ssdl
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Common.MetadataItemSerializer.SkipFacet(System.Data.Metadata.Edm.Facet,System.Data.Metadata.Edm.FacetDescription)">
+            <summary>
+            Should this facet be skipped ?
+            A facet should be skipped if it satsifies one of the following
+              - the providerFacetDescription is null - (ie) the provider knows of no such facet
+              - the facetDescription indicates that the facet must have a constant value
+              - the facet value is null
+              - the facet value is the default value for the facet, and the facet is not required
+              - we're emitting a model schema, and the facet in question is one of the following
+                  - MaxLength, FixedLength, Unicode, Collation, Precision, Scale, DateTimeKind
+            </summary>
+            <param name="facet">the facet in question</param>
+            <param name="providerFacetDescription">facet description in the provider</param>
+            <returns>true, if the facet should be skipped</returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.Common.MetadataUtil.CheckIfAllErrorsAreWarnings(System.Collections.Generic.IList{System.Data.Metadata.Edm.EdmSchemaError})">
+            <summary>
+            Check if all the SchemaErrors have the serverity of SchemaErrorSeverity.Warning
+            </summary>
+            <param name="schemaErrors"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.Common.MetadataUtil.IsNullOrEmptyOrWhiteSpace(System.String)">
+            <summary>
+              This private static method checks a string to make sure that it is not empty.
+              Comparing with String.Empty is not sufficient since a string with nothing
+              but white space isn't considered "empty" by that rationale.
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Common.MetadataUtil.Entityize(System.String)">
+            <summary>
+            replace troublesome xml characters with equivalent entities
+            </summary>
+            <param name="text">text that make have characters troublesome in xml</param>
+            <returns>text with troublesome characters replaced with equivalent entities</returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.Common.MetadataUtil.CombineErrorMessage(System.Collections.Generic.IEnumerable{System.Data.Metadata.Edm.EdmSchemaError})">
+            <summary>
+            Returns the single error message from the list of errors
+            </summary>
+            <param name="errors"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.Common.MetadataUtil.IsEnumerationType(System.Data.Metadata.Edm.EdmType)">
+            <summary>
+            determines if type is of EnumerationType.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="T:System.Data.Entity.Design.Common.UniqueIdentifierService">
+            <summary>
+            Service making names within a scope unique. Initialize a new instance
+            for every scope.
+            
+            CONSIDER(CMeek):: if nested scopes are required, this class could be extended to maintain
+            a stack of identifier dictionaries (and externally exposed Enter/LeaveScope).
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Common.UniqueIdentifierService.RegisterUsedIdentifier(System.String)">
+            <summary>
+            This method can be used in when you have an
+            identifier that you know can't be used, but you don't want
+            an adjusted version of it
+            </summary>
+            <param name="identifier"></param>
+        </member>
+        <member name="M:System.Data.Entity.Design.Common.UniqueIdentifierService.AdjustIdentifier(System.String,System.Object)">
+            <summary>
+            Given an identifier, makes it unique within the scope by adding
+            a suffix (1, 2, 3, ...), and returns the adjusted identifier.
+            </summary>
+            <param name="identifier">Identifier. Must not be null or empty.</param>
+            <param name="value">Object associated with this identifier in case it is required to
+            retrieve the adjusted identifier. If not null, must not exist in the current scope already.</param>
+            <returns>Identifier adjusted to be unique within the scope.</returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.Common.UniqueIdentifierService.AdjustIdentifier(System.String)">
+            <summary>
+            Simple overload when you don't need to track back to an object
+            </summary>
+            <param name="identifier"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.Common.UniqueIdentifierService.TryGetAdjustedName(System.Object,System.String@)">
+            <summary>
+            Determines the adjusted name for an identifier if it has been registered in this scope.
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityDesignerUtils.ExtractConceptualMappingAndStorageNodes(System.IO.StreamReader,System.Xml.XmlElement@,System.Xml.XmlElement@,System.Xml.XmlElement@,System.String@)">
+             <summary>
+             Extract the Conceptual, Mapping and Storage nodes from an EDMX input streams, and extract the value of the metadataArtifactProcessing property.
+             </summary>
+             <param name="edmxInputStream"></param>
+             <param name="conceptualSchemaNode"></param>
+             <param name="mappingNode"></param>
+             <param name="storageSchemaNode"></param>
+            
+        </member>
+        <member name="T:System.Data.Entity.Design.EntityModelSchemaGenerator">
+            <summary>
+            The class creates a default CCMapping between an EntityContainer in S space
+            and an EntityContainer in C space. The Mapping will be created based on the
+            declared types of extents. So Inheritance does not work.
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityModelSchemaGenerator.#ctor(System.Data.Metadata.Edm.EntityContainer)">
+            <summary>
+            Constructs an EntityModelGenerator
+            </summary>
+            <param name="storeEntityContainer"></param>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityModelSchemaGenerator.#ctor(System.Data.Metadata.Edm.EntityContainer,System.String,System.String)">
+            <summary>
+            Constructs an EntityModelGenerator
+            </summary>
+            <param name="storeEntityContainer">The Store EntityContainer to create the Model Metadata from.</param>
+            <param name="namespaceName">The name to give the namespace. If null, the name of the storeEntityContainer will be used.</param>
+            <param name="modelEntityContainerName">The name to give the Model EntityContainer. If null, a modified version of the namespace of the of a type referenced in storeEntityContainer will be used.</param>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityModelSchemaGenerator.#ctor(System.Data.Metadata.Edm.StoreItemCollection,System.String,System.String)">
+            <summary>
+            Constructs an EntityModelGenerator
+            </summary>
+            <param name="storeItemCollection">The StoreItemCollection that contains an EntityContainer and other items to create the Model Metadata from.</param>
+            <param name="namespaceName">The name to give the namespace. If null, the name of the storeEntityContainer will be used.</param>
+            <param name="modelEntityContainerName">The name to give the Model EntityContainer. If null, a modified version of the namespace of the of a type referenced in storeEntityContainer will be used.</param>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityModelSchemaGenerator.GenerateMetadata">
+            <summary>
+            This method reads the s-space metadata objects and creates
+            corresponding c-space metadata objects
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityModelSchemaGenerator.GenerateMetadata(System.Version)">
+            <summary>
+            This method reads the s-space metadata objects and creates
+            corresponding c-space metadata objects
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityModelSchemaGenerator.WriteModelSchema(System.String)">
+            <summary>
+            Writes the Schema to xml
+            </summary>
+            <param name="outputFileName">The name of the file to write the xml to.</param>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityModelSchemaGenerator.WriteModelSchema(System.Xml.XmlWriter)">
+            <summary>
+            Writes the Schema to xml.
+            </summary>
+            <param name="writer">The XmlWriter to write the xml to.</param>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityModelSchemaGenerator.WriteStorageMapping(System.String)">
+            <summary>
+            Writes the cs mapping Schema to xml
+            </summary>
+            <param name="outputFileName">The name of the file to write the xml to.</param>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityModelSchemaGenerator.WriteStorageMapping(System.Xml.XmlWriter)">
+            <summary>
+            Writes the Schema to xml.
+            </summary>
+            <param name="writer">The XmlWriter to write the xml to.</param>
+        </member>
+        <member name="P:System.Data.Entity.Design.EntityModelSchemaGenerator.EntityContainer">
+            <summary>
+            Gets the EntityContainer that was created
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.EntityModelSchemaGenerator.EdmItemCollection">
+            <summary>
+            Gets the EntityContainer that was created
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.EntityModelSchemaGenerator.GenerateForeignKeyProperties">
+            <summary>
+            Indicates whether foreign key properties should be exposed on entity types.
+            </summary>
+        </member>
+        <member name="T:System.Data.Entity.Design.EntityStoreSchemaFilterEffect">
+            <summary>
+            The effect that the filter entry should have on the results
+            
+            When a database object matchs the pattern for both an allow and exclude EntityStoreSchemaFilterEntry,
+            the database object will be excluded.
+            </summary>
+        </member>
+        <member name="F:System.Data.Entity.Design.EntityStoreSchemaFilterEffect.Allow">
+            <summary>Allow the entries that match the specified pattern.</summary>
+        </member>
+        <member name="F:System.Data.Entity.Design.EntityStoreSchemaFilterEffect.Exclude">
+            <summary>Exclude the entries that match the specified pattern.</summary>
+        </member>
+        <member name="T:System.Data.Entity.Design.EntityStoreSchemaFilterEntry">
+            <summary>
+            This class represent a single filter entry
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityStoreSchemaFilterEntry.#ctor(System.String,System.String,System.String,System.Data.Entity.Design.EntityStoreSchemaFilterObjectTypes,System.Data.Entity.Design.EntityStoreSchemaFilterEffect)">
+            <summary>
+            Creates a EntityStoreSchemaFilterEntry
+            </summary>
+            <param name="catalog">The pattern to use to select the appropriate catalog or null to not limit by catalog.</param>
+            <param name="schema">The pattern to use to select the appropriate schema or null to not limit by schema.</param>
+            <param name="name">The pattern to use to select the appropriate name or null to not limit by name.</param>
+            <param name="types">The type of objects to apply this filter to.</param>
+            <param name="effect">The effect that this filter should have on the results.</param>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityStoreSchemaFilterEntry.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Creates a EntityStoreSchemaFilterEntry
+            </summary>
+            <param name="catalog">The pattern to use to select the appropriate catalog or null to not limit by catalog.</param>
+            <param name="schema">The pattern to use to select the appropriate schema or null to not limit by schema.</param>
+            <param name="name">The pattern to use to select the appropriate name or null to not limit by name.</param>
+        </member>
+        <member name="P:System.Data.Entity.Design.EntityStoreSchemaFilterEntry.Catalog">
+            <summary>
+            Gets the pattern that will be used to select the appropriate catalog.
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.EntityStoreSchemaFilterEntry.Schema">
+            <summary>
+            Gets the pattern that will be used to select the appropriate schema.
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.EntityStoreSchemaFilterEntry.Name">
+            <summary>
+            Gets the pattern that will be used to select the appropriate name.
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.EntityStoreSchemaFilterEntry.Types">
+            <summary>
+            Gets the types of objects that this filter applies to.
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.EntityStoreSchemaFilterEntry.Effect">
+            <summary>
+            Gets the effect that this filter has on results.
+            </summary>
+        </member>
+        <member name="T:System.Data.Entity.Design.EntityStoreSchemaFilterObjectTypes">
+            <summary>
+            The type of store object to apply this filter to
+            </summary>
+        </member>
+        <member name="F:System.Data.Entity.Design.EntityStoreSchemaFilterObjectTypes.None">
+            <summary>
+            The value that this enum will initilize to.  
+            This is not a valid value to be use.
+            </summary>
+        </member>
+        <member name="F:System.Data.Entity.Design.EntityStoreSchemaFilterObjectTypes.Table">
+            <summary>Apply this filter to table object types.</summary>
+        </member>
+        <member name="F:System.Data.Entity.Design.EntityStoreSchemaFilterObjectTypes.View">
+            <summary>Apply this filter to view object types.</summary>
+        </member>
+        <member name="F:System.Data.Entity.Design.EntityStoreSchemaFilterObjectTypes.Function">
+            <summary>Apply this filter to function object types.</summary>
+        </member>
+        <member name="F:System.Data.Entity.Design.EntityStoreSchemaFilterObjectTypes.All">
+            <summary>Apply this filter to all possible object types.</summary>
+        </member>
+        <member name="T:System.Data.Entity.Design.EntityViewGenerator">
+            <summary>
+            EntityViewGenerator class produces the views for the extents in the passed in StorageMappingItemCollection.
+            The views are written as code to the passed in output stream. There are a set of options that user
+            can use to control the code generation process. The options should be apssed into the constrcutor.
+            While storing the views in the code, the view generator class also stores a Hash value produced based
+            on the content of the views and the names of extents. We also generate a hash for each schema file( csdl, ssdl and msl) 
+            that was used in view generation process and store the hash in the generated code.The entity runtime will try to discover this
+            type and if it does discover it will use the generated views in this type. The discovery process is
+            explained in detail in the comments for StorageMappingItemCollection class. 
+            The runtime will throw an exception if any of the the hash values produced in the design time does not match
+            the hash values produced at the runtime.
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityViewGenerator.#ctor(System.Data.Entity.Design.LanguageOption)">
+            <summary>
+            Create the instance of ViewGenerator with the given language option.
+            </summary>
+            <param name="languageOption">Language Option for generated code.</param>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityViewGenerator.#ctor">
+            <summary>
+            Create the instance of ViewGenerator using C# as the default 
+            language option.
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityViewGenerator.GenerateViews(System.Data.Mapping.StorageMappingItemCollection,System.String)">
+            <summary>
+            Generates the views for the extents in the mapping item collection and produces
+            the code for a type that will cache these views. The methods also produces
+            a hash based on the StorageEntityContainerMapping, which contains all the 
+            metadata and mapping. It also produces a hash based
+            on the view content and the name of the extents.
+            </summary>
+            <param name="mappingCollection">Mapping Item Collection for which views should be generated</param>
+            <param name="outputUri">Uri to which generated code needs to be written</param>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityViewGenerator.GenerateViews(System.Data.Mapping.StorageMappingItemCollection,System.IO.TextWriter)">
+            <summary>
+            Generates the views for the extents in the mapping item collection and produces
+            the code for a type that will cache these views. The methods also produces
+            a hash based on the storageEntityContainerMapping object, which contains all the 
+            metadata and mapping. It also produces a hash based
+            on the view content and the name of the extents.
+            </summary>
+            <param name="mappingCollection">Mapping Item Collection for which views should be generated</param>
+            <param name="outputWriter">Output writer to which we want to write the code</param>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityViewGenerator.GenerateViews(System.Data.Mapping.StorageMappingItemCollection,System.IO.TextWriter,System.Version)">
+            <summary>
+            Generates the views for the extents in the mapping item collection and produces
+            the code for a type that will cache these views. The methods also produces
+            a hash based on the storageEntityContainerMapping object, which contains all the 
+            metadata and mapping. It also produces a hash based
+            on the view content and the name of the extents.
+            </summary>
+            <param name="mappingCollection">Mapping Item Collection for which views should be generated</param>
+            <param name="outputWriter">Output writer to which we want to write the code</param>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityViewGenerator.Validate(System.Data.Mapping.StorageMappingItemCollection,System.Version)">
+            <summary>
+            Validates the mappingCollections and returns the schemaErrors.
+            </summary>
+            <param name="mappingCollection"></param>
+            <returns>list of EdmSchemaError</returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityViewGenerator.Validate(System.Data.Mapping.StorageMappingItemCollection)">
+            <summary>
+            Validates the mappingCollections and returns the schemaErrors.
+            </summary>
+            <param name="mappingCollection"></param>
+            <returns>list of EdmSchemaError</returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityViewGenerator.GenerateAndStoreViews(System.Data.Mapping.StorageMappingItemCollection,System.Collections.Generic.Dictionary{System.Data.Metadata.Edm.EntitySetBase,System.String},System.IO.TextWriter,System.CodeDom.Compiler.CodeDomProvider,System.Collections.Generic.IList{System.Data.Metadata.Edm.EdmSchemaError})">
+            <summary>
+            Generates the code to store the views in a C# or a VB file based on the
+            options passed in by the user.
+            </summary>
+            <param name="mappingCollection"></param>
+            <param name="generatedViews"></param>
+            <param name="sourceWriter"></param>
+            <param name="provider"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityViewGenerator.GenerateCode(System.IO.TextWriter,System.CodeDom.Compiler.CodeDomProvider,System.CodeDom.CodeCompileUnit)">
+            <summary>
+            Write code to the given stream from the compile unit.
+            </summary>
+            <param name="sourceWriter"></param>
+            <param name="provider"></param>
+            <param name="compileUnit"></param>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityViewGenerator.CreateAndAddGetViewAtMethod(System.CodeDom.CodeTypeDeclaration,System.Collections.Generic.Dictionary{System.Data.Metadata.Edm.EntitySetBase,System.String})">
+            <summary>
+            Generate Code to put the views in the generated code.
+            </summary>
+            <param name="typeDeclaration"></param>
+            <param name="generatedViews"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityViewGenerator.CreateConstructorForViewStoringType">
+            <summary>
+            Get the constructor for the type that will contain the generated views
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityViewGenerator.CreateTypeForStoringViews(System.String)">
+            <summary>
+            Get the type declaration for the type that will contain the views.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:System.Data.Entity.Design.EntityViewGenerator.LanguageOption">
+            <summary>
+            Language Option for generated code.
+            </summary>
+        </member>
+        <member name="T:System.Data.Entity.Design.MetadataItemCollectionFactory">
+            <summary>
+            Factory for creating ItemCollections. This class is to be used for 
+            design time scenarios. The consumers of the methods in this class
+            will get an error list instead of an exception if there are errors in schema files. 
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.MetadataItemCollectionFactory.CreateEdmItemCollection(System.Collections.Generic.IEnumerable{System.Xml.XmlReader},System.Collections.Generic.IList{System.Data.Metadata.Edm.EdmSchemaError}@)">
+            <summary>
+            Create an EdmItemCollection with the passed in parameters.
+            Add any errors caused during the ItemCollection creation
+            to the error list passed in.
+            </summary>
+            <param name="readers"></param>
+            <param name="errors"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.MetadataItemCollectionFactory.CreateEdmItemCollection(System.Collections.Generic.IEnumerable{System.Xml.XmlReader},System.Version,System.Collections.Generic.IList{System.Data.Metadata.Edm.EdmSchemaError}@)">
+            <summary>
+            Create an EdmItemCollection with the passed in parameters.
+            Add any errors caused during the ItemCollection creation
+            to the error list passed in.
+            </summary>
+            <param name="readers"></param>
+            <param name="targetEntityFrameworkVersion"></param>
+            <param name="errors"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.MetadataItemCollectionFactory.CreateStoreItemCollection(System.Collections.Generic.IEnumerable{System.Xml.XmlReader},System.Collections.Generic.IList{System.Data.Metadata.Edm.EdmSchemaError}@)">
+            <summary>
+            Create an StoreItemCollection with the passed in parameters.
+            Add any errors caused during the ItemCollection creation
+            to the error list passed in.
+            </summary>
+            <param name="connection"></param>
+            <param name="readers"></param>
+            <param name="errors"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.MetadataItemCollectionFactory.CreateStoreItemCollection(System.Collections.Generic.IEnumerable{System.Xml.XmlReader},System.Version,System.Collections.Generic.IList{System.Data.Metadata.Edm.EdmSchemaError}@)">
+            <summary>
+            Create an StoreItemCollection with the passed in parameters.
+            Add any errors caused during the ItemCollection creation
+            to the error list passed in.
+            </summary>
+            <param name="connection"></param>
+            <param name="readers"></param>
+            <param name="targetEntityFrameworkVersion"></param>
+            <param name="errors"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.MetadataItemCollectionFactory.CreateStorageMappingItemCollection(System.Data.Metadata.Edm.EdmItemCollection,System.Data.Metadata.Edm.StoreItemCollection,System.Collections.Generic.IEnumerable{System.Xml.XmlReader},System.Collections.Generic.IList{System.Data.Metadata.Edm.EdmSchemaError}@)">
+            <summary>
+            Create a StorageMappingItemCollection with the passed in parameters.
+            Add any errors caused during the ItemCollection creation
+            to the error list passed in.
+            </summary>
+            <param name="edmCollection"></param>
+            <param name="storeCollection"></param>
+            <param name="readers"></param>
+            <param name="errors"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.MetadataItemCollectionFactory.CreateStorageMappingItemCollection(System.Data.Metadata.Edm.EdmItemCollection,System.Data.Metadata.Edm.StoreItemCollection,System.Collections.Generic.IEnumerable{System.Xml.XmlReader},System.Version,System.Collections.Generic.IList{System.Data.Metadata.Edm.EdmSchemaError}@)">
+            <summary>
+            Create a StorageMappingItemCollection with the passed in parameters.
+            Add any errors caused during the ItemCollection creation
+            to the error list passed in.
+            </summary>
+            <param name="edmCollection"></param>
+            <param name="storeCollection"></param>
+            <param name="readers"></param>
+            <param name="targetEntityFrameworkVersion"></param>
+            <param name="errors"></param>
+            <returns></returns>
+        </member>
+        <member name="T:System.Data.Entity.Design.SsdlGenerator.EntityStoreSchemaGeneratorDatabaseSchemaLoader">
+            <summary>
+            Responsible for Loading Database Schema Information
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.EntityStoreSchemaGeneratorDatabaseSchemaLoader.InnerConnection">
+            <summary>
+            The underlying connection that this DbSchemaLoader class is using
+            This is used to get the provider manifest information only.
+            </summary>
+        </member>
+        <member name="T:System.Data.Entity.Design.SsdlGenerator.FunctionDetailsReader">
+            <summary>
+            The purpose of this class is to give us strongly typed access to the results of the reader.
+            NOTE: this class will dispose of the command when the reader is disposed.
+            </summary>
+        </member>
+        <member name="F:System.Data.Entity.Design.SsdlGenerator.ModelBuilderErrorCode.RelationshipSpansSchemas">
+            <summary>
+            was unable to find an entity container that 
+            the the type should go into
+            </summary>
+        </member>
+        <member name="F:System.Data.Entity.Design.SsdlGenerator.ModelBuilderErrorCode.NoPrimaryKeyDefined">
+            <summary>
+            No primary key is defined for the table
+            </summary>
+        </member>
+        <member name="F:System.Data.Entity.Design.SsdlGenerator.ModelBuilderErrorCode.UnknownError">
+            <summary>
+            Unknown error
+            </summary>
+        </member>
+        <member name="F:System.Data.Entity.Design.SsdlGenerator.ModelBuilderErrorCode.MissingEntity">
+            <summary>
+            The entity referenced by the relationship was
+            not found in database
+            </summary>
+        </member>
+        <member name="F:System.Data.Entity.Design.SsdlGenerator.ModelBuilderErrorCode.UnsupportedType">
+            <summary>
+            The entity referenced by the relationship was
+            not found in database
+            </summary>
+        </member>
+        <member name="F:System.Data.Entity.Design.SsdlGenerator.ModelBuilderErrorCode.FacetValueOutOfRange">
+            <summary>
+            The value given for the facet does not 
+            fit in the range given by the facet description
+            </summary>
+        </member>
+        <member name="F:System.Data.Entity.Design.SsdlGenerator.ModelBuilderErrorCode.AssociationMissingKeyColumn">
+            <summary>
+            The association must be skipped because a neede key column
+            is missing
+            </summary>
+        </member>
+        <member name="F:System.Data.Entity.Design.SsdlGenerator.ModelBuilderErrorCode.PrimaryKeyCannotBeForeignKey">
+            <summary>
+            PrimaryKey of a table cannot be the foreignKey in a relationship
+            </summary>
+        </member>
+        <member name="F:System.Data.Entity.Design.SsdlGenerator.ModelBuilderErrorCode.OneToOneAssociationFound">
+            <summary>
+            Found an usupported one to one association
+            </summary>
+        </member>
+        <member name="F:System.Data.Entity.Design.SsdlGenerator.ModelBuilderErrorCode.ClientAutoGenNotAllowed">
+            <summary>
+            The ClientAutoGenerated facet can only be set true on properties of type int16, int32, or in64.
+            All other types that have the ServerGeneratedPattern on the store property will not 
+            get the ClientAutoGenerated facet set.
+            </summary>
+        </member>
+        <member name="F:System.Data.Entity.Design.SsdlGenerator.ModelBuilderErrorCode.UnsupportedModelGenerationConcept">
+            <summary>
+            concepts that model generator can't handle
+            </summary>
+        </member>
+        <member name="F:System.Data.Entity.Design.SsdlGenerator.ModelBuilderErrorCode.ParameterDirectionNotValid">
+            <summary>A value other than IN, OUT, or INOUT was given</summary>
+        </member>
+        <member name="F:System.Data.Entity.Design.SsdlGenerator.ModelBuilderErrorCode.CannotCreateEntityWithoutPrimaryKey">
+            <summary>
+            Cannot create entity type without keys. The system tried to infer a candidate key from the existing columns 
+            and create a read-only view but there are no combination of existing columns that could be used to make 
+            a candidate key. 
+            </summary>
+        </member>
+        <member name="F:System.Data.Entity.Design.SsdlGenerator.ModelBuilderErrorCode.CodeGenNamespaceCannotBeDetermined">
+            <summary>No types were available to determine the namespace from</summary>
+        </member>
+        <member name="F:System.Data.Entity.Design.SsdlGenerator.ModelBuilderErrorCode.CodeGenSourceFilePathIsInvalid">
+            <summary>There is a problem with the sourceFilePath provided to codegen</summary>
+        </member>
+        <member name="F:System.Data.Entity.Design.SsdlGenerator.ModelBuilderErrorCode.CodeGenAdditionalEdmSchemaIsInvalid">
+            <summary>There is a problem with the sourceFilePath provided to codegen</summary>
+        </member>
+        <member name="F:System.Data.Entity.Design.SsdlGenerator.ModelBuilderErrorCode.GeneratedNavigationPropertyNameConflict">
+            <summary>The navigation property created a generated property name that conflicts with a real property</summary>
+        </member>
+        <member name="F:System.Data.Entity.Design.SsdlGenerator.ModelBuilderErrorCode.InvalidAttributeSuppliedForProperty">
+            <summary>Invalid Attribute Supplied For Property</summary>
+        </member>
+        <member name="F:System.Data.Entity.Design.SsdlGenerator.ModelBuilderErrorCode.MissingTvfReturnTable">
+            <summary>
+            The tvf return table info was not found in database
+            </summary>
+        </member>
+        <member name="T:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsCollection">
+            <summary>
+            Strongly type data table for holding the RelationshipDetails
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsCollection.#ctor">
+            <summary>
+            Constructs a RelationsipDetailsDataTable
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsCollection.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Constructs a new instance RelationshipDetailDataTable with a given SerializationInfo and StreamingContext
+            </summary>
+            <param name="serializationInfo"></param>
+            <param name="streamingContext"></param>
+        </member>
+        <member name="M:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsCollection.GetEnumerator">
+            <summary>
+            Gets an enumerator over the rows.
+            </summary>
+            <returns>The row enumerator</returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsCollection.CreateInstance">
+            <summary>
+            Creates an instance of this table
+            </summary>
+            <returns>The newly created instance.</returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsCollection.NewRowFromBuilder(System.Data.DataRowBuilder)">
+            <summary>
+            Create a new row from a DataRowBuilder object.
+            </summary>
+            <param name="builder">The builder to create the row from.</param>
+            <returns>The row that was created.</returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsCollection.GetRowType">
+            <summary>
+            Gets the Type that this row is.
+            </summary>
+            <returns>The type of this row.</returns>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsCollection.PKCatalogColumn">
+            <summary>
+            Gets the PkCatalog column
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsCollection.PKSchemaColumn">
+            <summary>
+            Gets the PkSchema column
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsCollection.PKTableColumn">
+            <summary>
+            Gets the PkTable column
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsCollection.PKColumnColumn">
+            <summary>
+            Gets the PkColumn column
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsCollection.FKCatalogColumn">
+            <summary>
+            Gets the FkCatalog column
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsCollection.FKSchemaColumn">
+            <summary>
+            Gets the FkSchema column
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsCollection.FKTableColumn">
+            <summary>
+            Gets the FkTable column
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsCollection.FKColumnColumn">
+            <summary>
+            Gets the FkColumn column
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsCollection.OrdinalColumn">
+            <summary>
+            Gets the Ordinal column
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsCollection.RelationshipNameColumn">
+            <summary>
+            Gets the RelationshipName column
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsCollection.RelationshipIsCascadeDeleteColumn">
+            <summary>
+            Gets the IsCascadeDelete value
+            </summary>
+        </member>
+        <member name="T:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsRow">
+            <summary>
+            Strongly typed RelationshipDetail row
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsRow.IsPKCatalogNull">
+            <summary>
+            Determines if the PkCatalog column value is null
+            </summary>
+            <returns>true if the value is null, otherwise false.</returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsRow.IsPKSchemaNull">
+            <summary>
+            Determines if the PkSchema column value is null
+            </summary>
+            <returns>true if the value is null, otherwise false.</returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsRow.IsPKTableNull">
+            <summary>
+            Determines if the PkTable column value is null
+            </summary>
+            <returns>true if the value is null, otherwise false.</returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsRow.IsPKColumnNull">
+            <summary>
+            Determines if the PkColumn column value is null
+            </summary>
+            <returns>true if the value is null, otherwise false.</returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsRow.IsFKCatalogNull">
+            <summary>
+            Determines if the FkCatalog column value is null
+            </summary>
+            <returns>true if the value is null, otherwise false.</returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsRow.IsFKSchemaNull">
+            <summary>
+            Determines if the FkSchema column value is null
+            </summary>
+            <returns>true if the value is null, otherwise false.</returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsRow.IsFKTableNull">
+            <summary>
+            Determines if the FkTable column value is null
+            </summary>
+            <returns>true if the value is null, otherwise false.</returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsRow.IsFKColumnNull">
+            <summary>
+            Determines if the FkColumn column value is null
+            </summary>
+            <returns>true if the value is null, otherwise false.</returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsRow.IsOrdinalNull">
+            <summary>
+            Determines if the Ordinal column value is null
+            </summary>
+            <returns>true if the value is null, otherwise false.</returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsRow.IsRelationshipNameNull">
+            <summary>
+            Determines if the RelationshipName column value is null
+            </summary>
+            <returns>true if the value is null, otherwise false.</returns>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsRow.Table">
+            <summary>
+            Gets a strongly typed table
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsRow.PKCatalog">
+            <summary>
+            Gets the PkCatalog column value
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsRow.PKSchema">
+            <summary>
+            Gets the PkSchema column value
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsRow.PKTable">
+            <summary>
+            Gets the PkTable column value
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsRow.PKColumn">
+            <summary>
+            Gets the PkColumn column value
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsRow.FKCatalog">
+            <summary>
+            Gets the FkCatalog column value
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsRow.FKSchema">
+            <summary>
+            Gets the FkSchema column value
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsRow.FKTable">
+            <summary>
+            Gets the FkTable column value
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsRow.FKColumn">
+            <summary>
+            Gets the FkColumn column value
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsRow.Ordinal">
+            <summary>
+            Gets the Ordinal column value
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsRow.RelationshipName">
+            <summary>
+            Gets the RelationshipName column value
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsRow.RelationshipId">
+            <summary>
+            Gets the RelationshipName column value
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.RelationshipDetailsRow.RelationshipIsCascadeDelete">
+            <summary>
+            Gets the IsCascadeDelete column value
+            </summary>
+        </member>
+        <member name="T:System.Data.Entity.Design.SsdlGenerator.TableDetailsCollection">
+            <summary>
+            Strongly typed DataTable for TableDetails
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.SsdlGenerator.TableDetailsCollection.#ctor">
+            <summary>
+            Constructs a TableDetailsDataTable
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.SsdlGenerator.TableDetailsCollection.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Constructs a new instance TableDetailsDataTable with a given SerializationInfo and StreamingContext
+            </summary>
+            <param name="serializationInfo"></param>
+            <param name="streamingContext"></param>
+        </member>
+        <member name="M:System.Data.Entity.Design.SsdlGenerator.TableDetailsCollection.GetEnumerator">
+            <summary>
+            Gets an enumerator over the rows.
+            </summary>
+            <returns>The row enumerator</returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.SsdlGenerator.TableDetailsCollection.CreateInstance">
+            <summary>
+            Creates an instance of this table
+            </summary>
+            <returns>The newly created instance.</returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.SsdlGenerator.TableDetailsCollection.NewRowFromBuilder(System.Data.DataRowBuilder)">
+            <summary>
+            Create a new row from a DataRowBuilder object.
+            </summary>
+            <param name="builder">The builder to create the row from.</param>
+            <returns>The row that was created.</returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.SsdlGenerator.TableDetailsCollection.GetRowType">
+            <summary>
+            Gets the Type that this row is.
+            </summary>
+            <returns>The type of this row.</returns>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.TableDetailsCollection.CatalogColumn">
+            <summary>
+            Gets the Catalog column
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.TableDetailsCollection.SchemaColumn">
+            <summary>
+            Gets the Schema column
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.TableDetailsCollection.TableNameColumn">
+            <summary>
+            Gets the TableName column
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.TableDetailsCollection.ColumnNameColumn">
+            <summary>
+            Gets the ColumnName column
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.TableDetailsCollection.IsNullableColumn">
+            <summary>
+            Gets the IsNullable column
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.TableDetailsCollection.DataTypeColumn">
+            <summary>
+            Gets the DataType column
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.TableDetailsCollection.MaximumLengthColumn">
+            <summary>
+            Gets the MaximumLength column
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.TableDetailsCollection.PrecisionColumn">
+            <summary>
+            Gets the Precision column
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.TableDetailsCollection.DateTimePrecisionColumn">
+            <summary>
+            Gets the Precision column
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.TableDetailsCollection.ScaleColumn">
+            <summary>
+            Gets the Scale column
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.TableDetailsCollection.IsIdentityColumn">
+            <summary>
+            Gets the IsIdentityColumn column
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.TableDetailsCollection.IsServerGeneratedColumn">
+            <summary>
+            Gets the IsIdentityColumn column
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.TableDetailsCollection.IsPrimaryKeyColumn">
+            <summary>
+            Gets the IsPrimaryKey column
+            </summary>
+        </member>
+        <member name="T:System.Data.Entity.Design.SsdlGenerator.TableDetailsRow">
+            <summary>
+            Strongly typed DataTable for TableDetails
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.SsdlGenerator.TableDetailsRow.IsCatalogNull">
+            <summary>
+            Determines if the Catalog column value is null
+            </summary>
+            <returns>true if the value is null, otherwise false.</returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.SsdlGenerator.TableDetailsRow.IsSchemaNull">
+            <summary>
+            Determines if the Schema column value is null
+            </summary>
+            <returns>true if the value is null, otherwise false.</returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.SsdlGenerator.TableDetailsRow.IsDataTypeNull">
+            <summary>
+            Determines if the DataType column value is null
+            </summary>
+            <returns>true if the value is null, otherwise false.</returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.SsdlGenerator.TableDetailsRow.IsMaximumLengthNull">
+            <summary>
+            Determines if the MaximumLength column value is null
+            </summary>
+            <returns>true if the value is null, otherwise false.</returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.SsdlGenerator.TableDetailsRow.IsPrecisionNull">
+            <summary>
+            Determines if the Precision column value is null
+            </summary>
+            <returns>true if the value is null, otherwise false.</returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.SsdlGenerator.TableDetailsRow.IsDateTimePrecisionNull">
+            <summary>
+            Determines if the DateTime Precision column value is null
+            </summary>
+            <returns>true if the value is null, otherwise false.</returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.SsdlGenerator.TableDetailsRow.IsScaleNull">
+            <summary>
+            Determines if the Scale column value is null
+            </summary>
+            <returns>true if the value is null, otherwise false.</returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.SsdlGenerator.TableDetailsRow.IsIsIdentityNull">
+            <summary>
+            Determines if the IsIdentity column value is null
+            </summary>
+            <returns>true if the value is null, otherwise false.</returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.SsdlGenerator.TableDetailsRow.IsIsServerGeneratedNull">
+            <summary>
+            Determines if the IsIdentity column value is null
+            </summary>
+            <returns>true if the value is null, otherwise false.</returns>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.TableDetailsRow.Table">
+            <summary>
+            Gets a strongly typed table
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.TableDetailsRow.Catalog">
+            <summary>
+            Gets the Catalog column value
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.TableDetailsRow.Schema">
+            <summary>
+            Gets the Schema column value
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.TableDetailsRow.TableName">
+            <summary>
+            Gets the TableName column value
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.TableDetailsRow.ColumnName">
+            <summary>
+            Gets the ColumnName column value
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.TableDetailsRow.IsNullable">
+            <summary>
+            Gets the IsNullable column value
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.TableDetailsRow.DataType">
+            <summary>
+            Gets the DataType column value
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.TableDetailsRow.MaximumLength">
+            <summary>
+            Gets the MaximumLength column value
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.TableDetailsRow.DateTimePrecision">
+            <summary>
+            Gets the DateTime Precision column value
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.TableDetailsRow.Precision">
+            <summary>
+            Gets the Precision column value
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.TableDetailsRow.Scale">
+            <summary>
+            Gets the Scale column value
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.TableDetailsRow.IsIdentity">
+            <summary>
+            Gets the IsServerGenerated column value
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.TableDetailsRow.IsServerGenerated">
+            <summary>
+            Gets the IsServerGenerated column value
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.SsdlGenerator.TableDetailsRow.IsPrimaryKey">
+            <summary>
+            Gets the IsPrimaryKey column value
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityFrameworkVersions.GetSchemaXsd(System.Version,System.Data.Metadata.Edm.DataSpace)">
+            <summary>
+            Returns the stream of the XSD corosponding tot he frameworkVersion, and dataSpace passed in
+            </summary>
+            <param name="entityFrameworkVersion">The version of the EntityFramework that you want the Schema XSD for.</param>
+            <param name="dataSpace">The data space of the schem XSD that you want.</param>
+            <returns>Stream version of the XSD</returns>
+        </member>
+        <member name="T:System.Data.Entity.Design.EntityStoreSchemaGenerator">
+            <summary>
+            Responsible for Loading Database Schema Information
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityStoreSchemaGenerator.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Creates a new EntityStoreGenerator
+            </summary>
+            <param name="providerInvariantName">The name of the provider to use to load the schema information.</param>
+            <param name="connectionString">A connection string to the DB that should be loaded from.</param>
+            <param name="namespaceName">The namespace name to use for the store metadata that is generated.</param>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityStoreSchemaGenerator.GenerateStoreMetadata">
+            <summary>
+            Creates a Metadata schema from the DbSchemaLoader that was passed in
+            </summary>
+            <returns>The new metadata for the schema that was loaded</returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityStoreSchemaGenerator.GenerateStoreMetadata(System.Collections.Generic.IEnumerable{System.Data.Entity.Design.EntityStoreSchemaFilterEntry})">
+            <summary>
+            Creates a Metadata schema from the DbSchemaLoader that was passed in
+            </summary>
+            <param name="filters">The filters to be applied during generation.</param>
+            <returns>The new metadata for the schema that was loaded</returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityStoreSchemaGenerator.GenerateStoreMetadata(System.Collections.Generic.IEnumerable{System.Data.Entity.Design.EntityStoreSchemaFilterEntry},System.Version)">
+            <summary>
+            Creates a Metadata schema from the DbSchemaLoader that was passed in
+            </summary>
+            <param name="filters">The filters to be applied during generation.</param>
+            <param name="targetFrameworkMoniker">The filters to be applied during generation.</param>
+            <returns>The new metadata for the schema that was loaded</returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityStoreSchemaGenerator.WriteStoreSchema(System.String)">
+            <summary>
+            Writes the Schema to xml
+            </summary>
+            <param name="outputFileName">The name of the file to write the xml to.</param>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityStoreSchemaGenerator.WriteStoreSchema(System.Xml.XmlWriter)">
+            <summary>
+            Writes the Schema to xml.
+            </summary>
+            <param name="writer">The XmlWriter to write the xml to.</param>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityStoreSchemaGenerator.CreateStoreSchemaConnection(System.String,System.String)">
+            <summary>
+            Creates an EntityConnection loaded with the providers metadata for the store schema.
+            Store schema model is the one used in <see cref="F:System.Data.Entity.Design.EntityFrameworkVersions.Version2"/>.
+            </summary>
+            <param name="providerInvariantName">The provider invariant name.</param>
+            <param name="connectionString">The connection for the providers connection.</param>
+            <returns>An EntityConnection that can query the ConceptualSchemaDefinition for the provider.</returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityStoreSchemaGenerator.CreateStoreSchemaConnection(System.String,System.String,System.Version)">
+            <summary>
+            Creates an EntityConnection loaded with the providers metadata for the store schema.
+            </summary>
+            <param name="providerInvariantName">The provider invariant name.</param>
+            <param name="connectionString">The connection for the providers connection.</param>
+            <returns>An EntityConnection that can query the ConceptualSchemaDefinition for the provider.</returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityStoreSchemaGenerator.FixupKeylessEntitySets(System.Data.Metadata.Edm.EntityContainer,System.Data.Entity.Design.EntityStoreSchemaGenerator.LoadMethodSessionState)">
+            <summary>
+            Populates DefiningQuery attribute of RO view entities
+            </summary>
+            <param name="viewEntitySets"></param>
+            <param name="entityContainer"></param>
+            <param name="session"></param>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityStoreSchemaGenerator.CreateMetadataWorkspace(System.Data.Metadata.Edm.EntityContainer,System.Data.Entity.Design.EntityStoreSchemaGenerator.LoadMethodSessionState)">
+            <summary>
+            Creates 'transient' metadataworkspace based on store schema (EntityContainer) and trivial C-S mapping
+            </summary>
+            <param name="entityContainer"></param>
+            <param name="session"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityStoreSchemaGenerator.FixupViewEntitySetDefiningQuery(System.Data.Metadata.Edm.EntitySet,System.Data.Metadata.Edm.MetadataWorkspace)">
+            <summary>
+            Generates provider specific, read only SQL and updates entitySet DefiningQuery 
+            </summary>
+            <param name="entitySet"></param>
+            <param name="metadataWorkspace"></param>
+        </member>
+        <member name="P:System.Data.Entity.Design.EntityStoreSchemaGenerator.EntityContainer">
+            <summary>
+            Gets the EntityContainer that was created
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.EntityStoreSchemaGenerator.StoreItemCollection">
+            <summary>
+            Gets the StoreItemCollection that was created
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.EntityStoreSchemaGenerator.GenerateForeignKeyProperties">
+            <summary>
+            Indicates whether the given storage model will be used to produce an entity model with foreign keys.
+            </summary>
+        </member>
+        <member name="T:System.Data.Entity.Design.PluralizationServices.BidirectionalDictionary`2">
+            <summary>
+            This class provide service for both the singularization and pluralization, it takes the word pairs
+            in the ctor following the rules that the first one is singular and the second one is plural.
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.PluralizationServices.PluralizationService.CreateService(System.Globalization.CultureInfo)">
+            <summary>
+            Factory method for PluralizationService. Only support english pluralization.
+            Please set the PluralizationService on the System.Data.Entity.Design.EntityModelSchemaGenerator
+            to extend the service to other locales.
+            </summary>
+            <param name="culture">CultureInfo</param>
+            <returns>PluralizationService</returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.PluralizationServices.EnglishPluralizationService.Capitalize(System.String,System.Func{System.String,System.String})">
+            <summary>
+            captalize the return word if the parameter is capitalized
+            if word is "Table", then return "Tables"
+            </summary>
+            <param name="word"></param>
+            <param name="action"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.PluralizationServices.EnglishPluralizationService.GetSuffixWord(System.String,System.String@)">
+            <summary>
+            separate one combine word in to two parts, prefix word and the last word(suffix word)
+            </summary>
+            <param name="word"></param>
+            <param name="prefixWord"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.PluralizationServices.EnglishPluralizationService.IsNoOpWord(System.String)">
+            <summary>
+            return true when the word is "[\s]*" or leading or tailing with spaces
+            or contains non alphabetical characters
+            </summary>
+            <param name="word"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Data.Entity.Design.PluralizationServices.EnglishPluralizationService.AddWord(System.String,System.String)">
+            <summary>
+            This method allow you to add word to internal PluralizationService of English.
+            If the singluar or the plural value was already added by this method, then an ArgumentException will be thrown.
+            </summary>
+            <param name="singular"></param>
+            <param name="plural"></param>
+        </member>
+        <member name="M:System.Data.Entity.Design.EntityDesignPluralizationHandler.#ctor(System.Data.Entity.Design.PluralizationServices.PluralizationService)">
+            <summary>
+            Handler for pluralization service in Entity Design
+            </summary>
+            <param name="doPluralization">overall switch for the service, the service only start working when the value is true</param>
+            <param name="userDictionaryPath"></param>
+            <param name="errors"></param>
+        </member>
+        <member name="P:System.Data.Entity.Design.EntityDesignPluralizationHandler.Service">
+            <summary>
+            user might set the service to null, so we have to check the null when using this property
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.EntityCodeGenerator.EdmToObjectNamespaceMap">
+            <summary>
+            Gets the map entries use to customize the namespace of .net types that are generated
+            and referenced by the generated code
+            </summary>
+        </member>
+        <member name="M:System.Data.EDesignResDescriptionAttribute.#ctor(System.String)">
+            <summary>
+                Constructs a new sys description.
+            </summary>
+            <param name='description'>
+                description text.
+            </param>
+        </member>
+        <member name="P:System.Data.EDesignResDescriptionAttribute.Description">
+            <summary>
+                Retrieves the description text.
+            </summary>
+            <returns>
+                description
+            </returns>
+        </member>
+        <member name="T:System.Data.EDesignRes">
+             <summary>
+                AutoGenerated resource class. Usage:
+            
+                    string s = EDesignRes.GetString(EDesignRes.MyIdenfitier);
+             </summary>
+        </member>
+        <member name="T:System.Data.Entity.Design.Strings">
+            <summary>
+               Strongly-typed and parameterized string resources.
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.StonglyTypedAccessToNullValue(System.Object,System.Object)">
+            <summary>
+            A string like "The value for column '{0}' in table '{1}' is DBNull."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.NoPrimaryKeyDefined(System.Object)">
+            <summary>
+            A string like "The table/view '{0}' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.InvalidTypeForPrimaryKey(System.Object,System.Object,System.Object)">
+            <summary>
+            A string like "The table/view '{0}' has column '{1}' defined as a primary key, but the column type '{2}' is not a valid type for a key in the EDM. An attempt will be made to define the table/view as a read-only table/view."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.CannotCreateEntityWithNoPrimaryKeyDefined(System.Object)">
+            <summary>
+            A string like "The table/view '{0}' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.TableReferencedByAssociationWasNotFound(System.Object)">
+            <summary>
+            A string like "The table '{0}' is referenced by a relationship, but cannot be found."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.TableReferencedByTvfWasNotFound(System.Object)">
+            <summary>
+            A string like "The return table of the function '{0}' is not defined. Either all columns have been excluded or the table has no columns. The function has been excluded. To use the function, you will need to review your schema, specify the return type of the function, and uncomment it."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.UnsupportedDataType(System.Object,System.Object,System.Object)">
+            <summary>
+            A string like "The data type '{0}' is not supported; the column '{2}' in table '{1}' was excluded."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.UnsupportedDataTypeUnknownType(System.Object,System.Object)">
+            <summary>
+            A string like "The data type of  the column '{0}' is not supported so the column '{0}' in table '{1}' was excluded."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.UnsupportedFunctionReturnDataType(System.Object,System.Object)">
+            <summary>
+            A string like "The function '{0}' has a return data type '{1}' that is not supported. The function was excluded."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.UnsupportedFunctionParameterDataType(System.Object,System.Object,System.Object,System.Object)">
+            <summary>
+            A string like "The function '{0}' has a parameter '{1}' at parameter index {2} that has a data type '{3}' which is not supported. The function was excluded."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.UnsupportedDbRelationship(System.Object)">
+            <summary>
+            A string like "The relationship '{0}' has columns that are not part of the key of the table on the primary side of the relationship. The relationship was excluded."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.ParameterDirectionNotValid(System.Object,System.Object,System.Object)">
+            <summary>
+            A string like "The function '{0}' has a parameter '{1}' that has a parameter direction value '{2}', which is not valid. Please use 'IN', 'OUT', or 'INOUT'."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.InvalidStringArgument(System.Object)">
+            <summary>
+            A string like "Parameter '{0}' is not valid. String arguments cannot be empty."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.Serialization_UnknownGlobalItem(System.Object)">
+            <summary>
+            A string like "The GlobalItem of type '{0}' is not a serializable type."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.ReservedNamespace(System.Object)">
+            <summary>
+            A string like "The namespace '{0}' is a system namespace, and cannot be used."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.ColumnFacetValueOutOfRange(System.Object,System.Object,System.Object,System.Object,System.Object,System.Object)">
+            <summary>
+            A string like "The facet '{0}' with a value '{1}' is outside the range {2}-{3} specified by the facet description.  The column '{4}' in the table '{5}' was excluded."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.AssociationMissingKeyColumn(System.Object,System.Object,System.Object)">
+            <summary>
+            A string like "The association between '{0}' and '{1}' will not be created because the key column '{2}' was not found to be part of the table definition (see previous warnings)."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.InvalidNonStoreEntityContainer(System.Object)">
+            <summary>
+            A string like "The EntityContainer '{0}' is not a store EntityContainer."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.ExcludedColumnWasAKeyColumnEntityIsInvalid(System.Object,System.Object)">
+            <summary>
+            A string like "The column '{0}' on the table/view '{1}' was excluded, and is a key column.  The table/view has been excluded.  Please fix the entity in the schema file, and uncomment."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.ExcludedColumnWasAKeyColumnEntityIsReadOnly(System.Object,System.Object)">
+            <summary>
+            A string like "The column '{0}' on the table/view '{1}' was excluded, and is a key column.  The remaining key(s) were used and table/view has been created as read-only."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.ModelGeneration_UnGeneratableType(System.Object)">
+            <summary>
+            A string like "The GlobalItem of type '{0}' has no model generation patterns defined."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.DuplicateEntityContainerName(System.Object,System.Object)">
+            <summary>
+            A string like "An EntityContainer with the name '{0}' already exists in the EdmItemCollection containing the EntityContainer '{1}'. Please choose a different model EntityContainer name."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.ProviderFactoryReturnedNullFactory(System.Object)">
+            <summary>
+            A string like "The '{0}' DbProviderFactory returned a null value from the CreateConnection method."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.InvalidNamespaceNameArgument(System.Object)">
+            <summary>
+            A string like "The namespaceName parameter '{0}' contains characters that are not valid."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.InvalidEntityContainerNameArgument(System.Object)">
+            <summary>
+            A string like "The modelEntityContainerName parameter '{0}' contains characters that are not valid."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.EntityClient_InvalidStoreProvider(System.Object)">
+            <summary>
+            A string like "The specified store provider '{0}' cannot be found in the configuration, or '{0}' is not valid."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.DbProviderServicesInformationLocationPath(System.Object,System.Object)">
+            <summary>
+            A string like "DbProviderServices://{0}/{1}"
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.UnsupportedForeignKeyPattern(System.Object,System.Object,System.Object,System.Object)">
+            <summary>
+            A string like "The relationship '{0}' uses the set of foreign keys '{1}' that are partially contained in the set of primary keys '{2}' of the table '{3}'.  The set of foreign keys must be fully contained in the set of primary keys, or fully not contained in the set of primary keys to be mapped to a model."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.UnsupportedQueryViewInEntityContainerMapping(System.Object)">
+            <summary>
+            A string like "The EntitySetMapping in EntityContainerMapping for entity container '{0}' contains a query view. Query views are not allowed in compile time view generation, so the view for this EntityContainerMapping will not be generated."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.SharedForeignKey(System.Object,System.Object,System.Object)">
+            <summary>
+            A string like "Foreign key constraint '{0}' has been omitted from the storage model. Column '{1}' of table '{2}' is a foreign key participating in multiple relationships. A one-to-one Entity Model will not validate since data inconsistency is possible."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.UnmappedFunctionImport(System.Object)">
+            <summary>
+            A string like "The function import '{0}' is not mapped to a store function. A function import needs to be mapped for successful execution."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.CannotChangePropertyReturnType(System.Object,System.Object)">
+            <summary>
+            A string like "The return data type of property '{0}' on the type '{1}' cannot be changed."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.CannotChangePropertyReturnTypeToNull(System.Object,System.Object)">
+            <summary>
+            A string like "The return data type of property '{0}' on the type '{1}' cannot be changed to null."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.InvalidAttributeSuppliedForType(System.Object)">
+            <summary>
+            A string like "The custom attribute supplied for type '{0}' is not valid."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.InvalidMemberSuppliedForType(System.Object)">
+            <summary>
+            A string like "The additional member supplied for type '{0}' is not valid."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.InvalidInterfaceSuppliedForType(System.Object)">
+            <summary>
+            A string like "The additional interface supplied for type '{0}' is not valid."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.InvalidAttributeSuppliedForProperty(System.Object)">
+            <summary>
+            A string like "The custom attribute supplied for property '{0}' is not valid."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.InvalidGetStatementSuppliedForProperty(System.Object)">
+            <summary>
+            A string like "The additional get statement supplied for property '{0}' is not valid."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.InvalidSetStatementSuppliedForProperty(System.Object)">
+            <summary>
+            A string like "The additional Set statement supplied for property '{0}' is not valid."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.PropertyExistsWithDifferentCase(System.Object)">
+            <summary>
+            A string like "The property '{0}' differs only in case from an existing property, and is not compatible with the current language option."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.EntitySetExistsWithDifferentCase(System.Object)">
+            <summary>
+            A string like "The entity set '{0}' differs only in case from an existing entity set, and is not compatible with the current language option."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.ItemExistsWithDifferentCase(System.Object,System.Object)">
+            <summary>
+            A string like "The {0} '{1}' differs only in case from an existing {0}, and is not compatible with the current language option."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.NullAdditionalSchema(System.Object,System.Object)">
+            <summary>
+            A string like "The value in the parameter {0} at index {1} is null."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.DuplicateClassName(System.Object,System.Object,System.Object)">
+            <summary>
+            A string like "The {0} '{1}' has the same name as the {2} '{1}'. Duplicate names are not allowed. You must change the name of either the {0} or the {2}."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.MissingPropertyDocumentation(System.Object)">
+            <summary>
+            A string like "There are no comments for property {0} in the schema."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.MissingComplexTypeDocumentation(System.Object)">
+            <summary>
+            A string like "There are no comments for ComplexType {0} in the schema."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.MissingDocumentation(System.Object)">
+            <summary>
+            A string like "There are no comments for {0} in the schema."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.NamespaceComments(System.Object,System.Object)">
+            <summary>
+            A string like "Original file name: {0}\nGeneration date: {1}\n"
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.FactoryMethodSummaryComment(System.Object)">
+            <summary>
+            A string like "Create a new {0} object."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.FactoryParamCommentGeneral(System.Object)">
+            <summary>
+            A string like "Initial value of {0}."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.CtorSummaryComment(System.Object)">
+            <summary>
+            A string like "Initialize a new {0} object."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.EmptyCtorSummaryComment(System.Object,System.Object)">
+            <summary>
+            A string like "Initializes a new {0} object using the connection string found in the '{1}' section of the application configuration file."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.GeneratedNavigationPropertyNameConflict(System.Object,System.Object,System.Object)">
+            <summary>
+            A string like "The NavigationProperty '{0}' on the type '{1}' is the source of a generated property '{2}' which conflicts with a member of the same name."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.GeneratedPropertyAccessibilityConflict(System.Object,System.Object,System.Object)">
+            <summary>
+            A string like "Property '{0}' has '{1}' Get property and '{2}' Set property accessibility specified. {1} and {2} modifiers cannot be combined within a single Property."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.EntityTypeAndSetAccessibilityConflict(System.Object,System.Object,System.Object,System.Object)">
+            <summary>
+            A string like "EntityType '{0}' has '{1}' accessibility and EntitySet '{2}' has a get property with '{3}' accessibility. The get property of the EntitySet must not have less restrictive access than the containing EntityType has."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.GeneratedFactoryMethodNameConflict(System.Object,System.Object)">
+            <summary>
+            A string like "The member '{0}' on the type '{1}' conflicts with the generated factory method."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.UnableToGenerateFunctionImportParameterName(System.Object,System.Object)">
+            <summary>
+            A string like "Unable to generate function import parameter name for the parameter '{0}' of the store function '{1}'. The store function will be ignored and the function import will not be generated."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.IndividualViewComments(System.Object)">
+            <summary>
+            A string like "return view for {0}"
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.TargetVersionEdmOrMslSchemaVersionMismatch(System.Object)">
+            <summary>
+            A string like "The parameter '{0}' has newer versions of the model or mapping schemas than are allowed by the targeted framework."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.TargetVersionSchemaVersionMismatch(System.Object,System.Object)">
+            <summary>
+            A string like "The Target Entity Framework calls for a schema at or less than {0}, and the supplied schema is version {1}."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.DuplicateEntryInUserDictionary(System.Object,System.Object)">
+            <summary>
+            A string like "The {0} value '{1}' already exists in the user-defined dictionary."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.UnsupportedLocaleForPluralizationServices(System.Object)">
+            <summary>
+            A string like "The culture '{0}' is not supported.   Pluralization is currently only supported for the English language."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.Template_DuplicateTopLevelType(System.Object)">
+            <summary>
+            A string like "The type name '{0}' is used for both an EntityContainer and a type.  Duplicates are not allowed, please change one of the names."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.Template_ConflictingGeneratedNavPropName(System.Object,System.Object,System.Object)">
+            <summary>
+            A string like "The NavigationProperty '{0}' on the type '{1}' is the source of a generated property '{2}' which conflicts with a member of the same name."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.Template_FactoryMethodNameConflict(System.Object,System.Object)">
+            <summary>
+            A string like "The member '{0}' on the type '{1}' conflicts with the generated factory method."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.Template_CaseInsensitiveTypeConflict(System.Object)">
+            <summary>
+            A string like "The Type '{0}' is not unique.  This may be caused by the types only differing in case which is not compatible with the current language option."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.Template_CaseInsensitiveEntitySetConflict(System.Object,System.Object)">
+            <summary>
+            A string like "The EntitySet '{0}.{1}' differs only in case from an existing EntitySet, and is not compatible with the current language option."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.Template_CaseInsensitiveMemberConflict(System.Object,System.Object)">
+            <summary>
+            A string like "The Member '{0}.{1}' differs only in case from an existing Member, and is not compatible with the current language option."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.Template_GenCommentAddToMethodCs(System.Object)">
+            <summary>
+            A string like "Deprecated Method for adding a new object to the {0} EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.Template_GenCommentAddToMethodVb(System.Object)">
+            <summary>
+            A string like "Deprecated Method for adding a new object to the {0} EntitySet. Consider using the .Add method of the associated ObjectSet(Of T) property instead."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.Template_CommentFactoryMethodParam(System.Object)">
+            <summary>
+            A string like "Initial value of the {0} property."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.Template_ContextDefaultCtorComment(System.Object,System.Object)">
+            <summary>
+            A string like "Initializes a new {0} object using the connection string found in the '{1}' section of the application configuration file."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.Template_ContextCommonCtorComment(System.Object)">
+            <summary>
+            A string like "Initialize a new {0} object."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.Template_FactoryMethodComment(System.Object)">
+            <summary>
+            A string like "Create a new {0} object."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.EdmSchemaFileNotFound(System.Object)">
+            <summary>
+            A string like "Could not find file '{0}'."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.EntityClient_DoesNotImplementIServiceProvider(System.Object)">
+            <summary>
+            A string like "The store provider factory type '{0}' does not implement the IServiceProvider interface. Use a store provider that implements this interface."
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Strings.EntityClient_ReturnedNullOnProviderMethod(System.Object,System.Object)">
+            <summary>
+            A string like "A null was returned after calling the '{0}' method on a store provider instance of type '{1}'. The store provider might not be functioning correctly."
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.Strings.EntityStoreGeneratorSchemaNotLoaded">
+            <summary>
+            A string like "The store metadata has not been generated yet. Call GenerateStoreMetadata first."
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.Strings.EntityModelGeneratorSchemaNotLoaded">
+            <summary>
+            A string like "The model metadata has not been generated yet. Call GenerateModelMetadata first."
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.Strings.SingleStoreEntityContainerExpected">
+            <summary>
+            A string like "The StoreItemCollection collection must contain exactly one EntityContainer."
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.Strings.ProviderSchemaErrors">
+            <summary>
+            A string like "The provider returned schema mapping information that is not valid."
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.Strings.CodeGenSourceFilePathIsNotAFile">
+            <summary>
+            A string like "The parameter must specify a single file, not multiple."
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.Strings.TargetEntityFrameworkVersionToNewForEntityClassGenerator">
+            <summary>
+            A string like "The EntityClassGenerator is only for use with EntityFrameworkVersions.Version1 and the schemas provided have newer versions of the Model schema.  Consider using EntityCodeGenerator or a template."
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.Strings.MissingDocumentationNoName">
+            <summary>
+            A string like "There are no comments in the schema."
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.Strings.MetadataItemErrorsFoundDuringGeneration">
+            <summary>
+            A string like "Errors Found During Generation:"
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.Strings.UnableToGenerateForeignKeyPropertiesForV1">
+            <summary>
+            A string like "Foreign keys may only be generated when targeting version 4.0 of the .NET Framework or higher."
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.Strings.TypeComments">
+            <summary>
+            A string like "The type contains views for EntitySets and AssociationSets that were generated at design time."
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.Strings.GetViewAtMethodComments">
+            <summary>
+            A string like "The method returns the view for the index given."
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.Strings.ConstructorComments">
+            <summary>
+            A string like "The constructor stores the views for the extents and also the hash values generated based on the metadata and mapping closure and views."
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.Strings.Template_CommentNoDocumentation">
+            <summary>
+            A string like "No Metadata Documentation available."
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.Strings.Template_GeneratedCodeCommentLine1">
+            <summary>
+            A string like "    This code was generated from a template."
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.Strings.Template_GeneratedCodeCommentLine2">
+            <summary>
+            A string like "    Manual changes to this file may cause unexpected behavior in your application."
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.Strings.Template_GeneratedCodeCommentLine3">
+            <summary>
+            A string like "    Manual changes to this file will be overwritten if the code is regenerated."
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.Strings.Template_RegionRelationships">
+            <summary>
+            A string like "EDM Relationship Metadata"
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.Strings.Template_RegionContexts">
+            <summary>
+            A string like "Contexts"
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.Strings.Template_RegionObjectSetProperties">
+            <summary>
+            A string like "ObjectSet Properties"
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.Strings.Template_RegionAddToMethods">
+            <summary>
+            A string like "AddTo Methods"
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.Strings.Template_RegionFunctionImports">
+            <summary>
+            A string like "Function Imports"
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.Strings.Template_RegionEntities">
+            <summary>
+            A string like "Entities"
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.Strings.Template_RegionNavigationProperties">
+            <summary>
+            A string like "Navigation Properties"
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.Strings.Template_RegionComplexTypes">
+            <summary>
+            A string like "ComplexTypes"
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.Strings.Template_RegionFactoryMethod">
+            <summary>
+            A string like "Factory Method"
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.Strings.Template_RegionPrimitiveProperties">
+            <summary>
+            A string like "Primitive Properties"
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.Strings.Template_RegionSimpleProperties">
+            <summary>
+            A string like "Simple Properties"
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.Strings.Template_RegionComplexProperties">
+            <summary>
+            A string like "Complex Properties"
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.Strings.Template_RegionEnumTypes">
+            <summary>
+            A string like "Enums"
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.Strings.Template_RegionConstructors">
+            <summary>
+            A string like "Constructors"
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.Strings.Template_RegionPartialMethods">
+            <summary>
+            A string like "Partial Methods"
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.Strings.Template_ReplaceVsItemTemplateToken">
+            <summary>
+            A string like "Please overwrite the replacement token '$edmxInputFile$' with the actual name of the .edmx file you would like to generate from."
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.Strings.Template_CurrentlyRunningTemplate">
+            <summary>
+            A string like "Currently Running Template"
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.Strings.Template_UnsupportedSchema">
+            <summary>
+            A string like "The input file appears to be using a schema version not supported by this template. This may lead to compile errors. Please use 'Add New Generated Item' to add an updated template."
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.Strings.EdmSchemaNotValid">
+            <summary>
+            A string like "The EDM Schema argument is not valid."
+            </summary>
+        </member>
+        <member name="P:System.Data.Entity.Design.Strings.EntityCodeGenTargetTooLow">
+            <summary>
+            A string like "The EntityCodeGenerator is not for targeting EntityFrameworkVersions.Version1.  Consider using EntityClassGenerator or a template."
+            </summary>
+        </member>
+        <member name="T:System.Data.Entity.Design.Error">
+            <summary>
+               Strongly-typed and parameterized exception factory.
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Error.ArgumentNull(System.String)">
+            <summary>
+            The exception that is thrown when a null reference (Nothing in Visual Basic) is passed to a method that does not accept it as a valid argument.
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Error.ArgumentOutOfRange(System.String)">
+            <summary>
+            The exception that is thrown when the value of an argument is outside the allowable range of values as defined by the invoked method.
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Error.NotImplemented">
+            <summary>
+            The exception that is thrown when the author has yet to implement the logic at this point in the program. This can act as an exception based TODO tag.
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.Design.Error.NotSupported">
+            <summary>
+            The exception that is thrown when an invoked method is not supported, or when there is an attempt to read, seek, or write to a stream that does not support the invoked functionality. 
+            </summary>
+        </member>
+    </members>
+</doc>
