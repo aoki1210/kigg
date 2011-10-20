@@ -37,9 +37,9 @@ namespace Kigg.Service
             // or
             // Give sameIpScore if comment is submitted form the same ip
             // or differntIpScore if from different ip
-            ICollection<Comment> comments = _commentRepository.FindAfter(story.Id, story.LastProcessedAt ?? story.CreatedAt);
+            PagedResult<Comment> comments = _commentRepository.FindAfter(story.Id, story.LastProcessedAt ?? story.CreatedAt);
 
-            double total = comments.Sum(c => story.IsPostedBy(c.ByUser) ? _ownerWeight : string.CompareOrdinal(c.FromIPAddress, story.FromIPAddress) == 0 ? _sameIpAddressWeight : _differentIPAddressWeight);
+            double total = comments.Result.Sum(c => story.IsPostedBy(c.ByUser) ? _ownerWeight : string.CompareOrdinal(c.FromIPAddress, story.FromIPAddress) == 0 ? _sameIpAddressWeight : _differentIPAddressWeight);
 
             return total;
         }

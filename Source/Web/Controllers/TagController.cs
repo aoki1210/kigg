@@ -24,7 +24,7 @@ namespace Kigg.Web
         [OutputCache(CacheProfile = "JsonTagCache"), Compress]
         public ActionResult SuggestTags(string q, int? limit, string client)
         {
-            ICollection<ITag> tags = null;
+            IEnumerable<Tag> tags = null;
 
             q = q.NullSafe();
 
@@ -47,7 +47,7 @@ namespace Kigg.Web
                 }
             }
 
-            tags = tags ?? new List<ITag>();
+            tags = tags ?? new List<Tag>();
             string[] tagNames = tags.Select(t => t.Name).ToArray();
 
             bool isClientBrowserItSelf = (!string.IsNullOrEmpty(client)) &&
@@ -68,7 +68,7 @@ namespace Kigg.Web
         [ValidateInput(false)]
         public ActionResult Tabs()
         {
-            ICollection<ITag> userTags = IsCurrentUserAuthenticated ? CurrentUser.Tags.ToList() : new List<ITag>();
+            ICollection<Tag> userTags = IsCurrentUserAuthenticated ? CurrentUser.Tags.ToList() : new List<Tag>();
 
             TagTabsViewData viewData = new TagTabsViewData
                                            {

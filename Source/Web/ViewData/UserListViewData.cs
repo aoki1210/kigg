@@ -10,7 +10,7 @@ namespace Kigg.Web
     {
         public UserListViewData()
         {
-            Users = new ReadOnlyCollection<IUser>(new List<IUser>());
+            Users = new ReadOnlyCollection<User>(new List<User>());
         }
 
         public int PageCount
@@ -52,7 +52,7 @@ namespace Kigg.Web
             set;
         }
 
-        public ICollection<IUser> Users
+        public ICollection<User> Users
         {
             get;
             set;

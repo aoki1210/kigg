@@ -226,11 +226,11 @@ namespace Kigg.Web
             {
                 XElement urlSet = new XElement(_ns + "urlset", new XAttribute("xmlns", _ns.ToString()), new XAttribute(XNamespace.Xmlns + "news", _googleNews.ToString()));
 
-                PagedResult<IStory> pagedResult = StoryRepository.FindPublished(0, 1000); // Google only supports 1000 story
+                PagedResult<Story> pagedResult = StoryRepository.FindPublished(0, 1000); // Google only supports 1000 story
 
                 int i = 0;
 
-                foreach (IStory story in pagedResult.Result)
+                foreach (Story story in pagedResult.Result)
                 {
                     SiteMapUpdatePriority priority = (i < 50) ? SiteMapUpdatePriority.Critical : SiteMapUpdatePriority.Normal;
 
@@ -255,7 +255,7 @@ namespace Kigg.Web
             return cacheItem;
         }
 
-        private void AddStoryInNewsSiteMap(HttpContextBase context, XContainer target, IStory story, SiteMapUpdatePriority priority, string dateFormat)
+        private void AddStoryInNewsSiteMap(HttpContextBase context, XContainer target, Story story, SiteMapUpdatePriority priority, string dateFormat)
         {
             XElement url = CreateEntry(context, Settings.RootUrl, "Detail", new { name = story.UniqueName }, story.LastActivityAt, SiteMapChangeFrequency.Daily, priority, false);
 
@@ -325,18 +325,18 @@ namespace Kigg.Web
 
         private void AddStoriesInRegularSiteMap(HttpContextBase context, bool forMobile, XContainer target)
         {
-            Action<IStory> addStory = story => target.Add(CreateEntry(context, Settings.RootUrl, "Detail", new { name = story.UniqueName }, story.LastActivityAt, SiteMapChangeFrequency.Weekly, SiteMapUpdatePriority.Critical, forMobile));
+            Action<Story> addStory = story => target.Add(CreateEntry(context, Settings.RootUrl, "Detail", new { name = story.UniqueName }, story.LastActivityAt, SiteMapChangeFrequency.Weekly, SiteMapUpdatePriority.Critical, forMobile));
 
-            ICollection<IStory> publishedStories = StoryRepository.FindPublished(0, PublishedStoryMaxCount).Result;
+            ICollection<Story> publishedStories = StoryRepository.FindPublished(0, PublishedStoryMaxCount).Result;
 
-            foreach (IStory story in publishedStories)
+            foreach (Story story in publishedStories)
             {
                 addStory(story);
             }
 
-            ICollection<IStory> upcomingStories = StoryRepository.FindUpcoming(0, UpcomingStoryMaxCount).Result;
+            ICollection<Story> upcomingStories = StoryRepository.FindUpcoming(0, UpcomingStoryMaxCount).Result;
 
-            foreach (IStory story in upcomingStories)
+            foreach (Story story in upcomingStories)
             {
                 addStory(story);
             }
@@ -346,7 +346,7 @@ namespace Kigg.Web
         {
             string rootUrl = Settings.RootUrl;
 
-            int publishPageCount = PageCalculator.TotalPage(StoryRepository.CountByPublished(), Settings.HtmlStoryPerPage);
+            int publishPageCount = PageCalculator.TotalPage(StoryRepository.CountPublished(), Settings.HtmlStoryPerPage);
             int publishPageCounter = 1;
 
             while (publishPageCounter <= publishPageCount)
@@ -360,7 +360,7 @@ namespace Kigg.Web
         {
             string rootUrl = Settings.RootUrl;
 
-            int upcomingPageCount = PageCalculator.TotalPage(StoryRepository.CountByUpcoming(), Settings.HtmlStoryPerPage);
+            int upcomingPageCount = PageCalculator.TotalPage(StoryRepository.CountUpcoming(), Settings.HtmlStoryPerPage);
             int upcomingPageCounter = 1;
 
             while (upcomingPageCounter <= upcomingPageCount)
@@ -375,7 +375,7 @@ namespace Kigg.Web
             int rowPerPage = Settings.HtmlStoryPerPage;
             string rootUrl = Settings.RootUrl;
 
-            foreach (ICategory category in CategoryRepository.FindAll())
+            foreach (Category category in CategoryRepository.FindAll())
             {
                 int categoryPageCount = PageCalculator.TotalPage(StoryRepository.CountByCategory(category.Id), rowPerPage);
                 int categoryPageCounter = 1;
@@ -393,7 +393,7 @@ namespace Kigg.Web
             int rowPerPage = Settings.HtmlStoryPerPage;
             string rootUrl = Settings.RootUrl;
 
-            foreach (ITag tag in TagRepository.FindByUsage(Settings.TopTags))
+            foreach (Tag tag in TagRepository.FindByUsage(Settings.TopTags))
             {
                 int tagPageCount = PageCalculator.TotalPage(StoryRepository.CountByTag(tag.Id), rowPerPage);
                 int tagPageCounter = 1;
@@ -412,11 +412,11 @@ namespace Kigg.Web
 
             target.Add(CreateEntry(context, rootUrl, "Users", new { page = 1 }, currentDate, SiteMapChangeFrequency.Hourly, SiteMapUpdatePriority.Normal, forMobile));
 
-            ICollection<IUser> topMovers = UserRepository.FindTop(currentDate.AddDays(-1), currentDate, 0, Settings.TopUsers).Result;
+            ICollection<User> topMovers = UserRepository.FindTop(currentDate.AddDays(-1), currentDate, 0, Settings.TopUsers).Result;
 
-            foreach (IUser user in topMovers)
+            foreach (User user in topMovers)
             {
-                target.Add(CreateEntry(context, rootUrl, "User", new { name = user.Id.Shrink(), tab = UserDetailTab.Promoted, page = 1 }, currentDate, SiteMapChangeFrequency.Daily, SiteMapUpdatePriority.Normal, forMobile));
+                target.Add(CreateEntry(context, rootUrl, "User", new { name = user.UserName, tab = UserDetailTab.Promoted, page = 1 }, currentDate, SiteMapChangeFrequency.Daily, SiteMapUpdatePriority.Normal, forMobile));
             }
         }
     }

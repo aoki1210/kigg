@@ -1,6 +1,6 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<StoryItemViewData>" %>
 <script runat="server">
-    string ShareLinks(string id, IEnumerable<string> socialServices)
+    string ShareLinks(long id, IEnumerable<string> socialServices)
     {
         string shareUrl = Url.Content("~/share.axd");
         StringBuilder shareHtml = new StringBuilder();
@@ -15,13 +15,13 @@
         return shareHtml.ToString();
     }
 
-    string TagLinks(IEnumerable<ITag> tags)
+    string TagLinks(IEnumerable<Tag> tags)
     {
         StringBuilder tagHtml = new StringBuilder();
 
         int i = 0;
 
-        foreach(ITag tag in tags)
+        foreach(Tag tag in tags)
         {
             if (i > 0)
             {
@@ -40,12 +40,12 @@
 </script>
 <% const string hDateFormat = "yyyy-MM-ddThh:mm:ssZ"; %>
 <% const string LongDateFormat = "F"; %>
-<% IStory story = Model.Story; %>
-<% IUser user = Model.User; %>
-<% string attributedEncodedStoryId = Html.AttributeEncode(story.Id.Shrink()); %>
+<% Story story = Model.Story; %>
+<% User user = Model.User; %>
+<% string attributedEncodedStoryId = Html.AttributeEncode(story.Id); %>
 <td class="kigg">
     <div class="count">
-        <span id="s-c-<%= attributedEncodedStoryId %>"><%= story.VoteCount %></span>
+        <span id="s-c-<%= story.Id %>"><%= story.VoteCount %></span>
         <br/>
         <%= Model.CountText %>
     </div>
@@ -111,7 +111,7 @@
                                 <span>published</span> <span class="time published" title="<%= story.PublishedAt.Value.ToString(LongDateFormat) %> GMT"><%= story.PublishedAt.Value.ToRelative() %></span> <span>ago</span> 
                         <% } %>
                         <span>posted by</span>
-                        <% string userUrl = Url.RouteUrl("User", new { name = story.PostedBy.Id.Shrink(), tab = UserDetailTab.Promoted, page = 1 }); %>
+                        <% string userUrl = Url.RouteUrl("User", new { name = story.PostedBy.Id, tab = UserDetailTab.Promoted, page = 1 }); %>
                         <a class="vcard author" href="<%= Html.AttributeEncode(userUrl) %>">
                             <img alt="<%= Html.AttributeEncode(story.PostedBy.UserName) %>" src="<%= Html.AttributeEncode(story.PostedBy.GravatarUrl(15)) %>" class="photo gravatar"/><span class="fn"><%=Html.Encode(story.PostedBy.UserName)%></span>
                         </a> 
@@ -150,7 +150,7 @@
                         <% } %>
                          |
                          <span class="share">share:
-                            <%= ShareLinks(story.Id.Shrink(), Model.SocialServices)%>
+                            <%= ShareLinks(story.Id, Model.SocialServices)%>
                          </span>
                          | <span class="source">source: </span><a href="http://<%= Html.AttributeEncode(story.Host()) %>" target="_blank"><%= story.Host()%></a> 
                          <% if (!story.IsPublished()) %>

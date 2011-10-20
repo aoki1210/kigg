@@ -4,7 +4,7 @@ namespace Kigg.Web
 
     public class UserWithScore
     {
-        public IUser User
+        public User User
         {
             get;
             set;

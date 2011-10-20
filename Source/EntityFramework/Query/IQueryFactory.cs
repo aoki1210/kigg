@@ -10,6 +10,7 @@
         bool UseCompiled { get; }
 
         IQuery<decimal> CreateCalculateUserScoreById(long id, DateTime startDate, DateTime endDate);
+        IQuery<int> CreateCountCommentsByStory(long id);
         IQuery<int> CreateCountVotesByStory(long id);
         IQuery<int> CreateCountSpamVotesByStory(long id);
         IQuery<int> CreateCountViewsByStory(long id);
@@ -62,6 +63,6 @@
         IOrderedQuery<SpamVote> CreateFindSpamVotesAfterDate(long storyId, DateTime date);
         IOrderedQuery<StoryView> CreateFindStoryViewsAfterDate(long storyId, DateTime date);
         IQuery<Comment> CreateFindCommentById(long id);
-        IOrderedQuery<Comment> CreateFindCommentsForStoryAfterDate(long storyId, DateTime date, int start, int max);
+        IOrderedQuery<Comment> CreateFindCommentsForStoryAfterDate(long storyId, DateTime date, int? start = null, int? max = null);
     }
 }

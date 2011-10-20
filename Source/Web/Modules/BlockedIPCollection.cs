@@ -8,7 +8,7 @@ namespace Kigg.Web
 
     using Infrastructure;
 
-    public class BlockedIPCollection : DisposableResource, IBlockedIPCollection
+    public class BlockedIPCollection : Disposable, IBlockedIPCollection
     {
         private readonly IFile _file;
         private readonly string _path;
@@ -16,7 +16,7 @@ namespace Kigg.Web
 
         public BlockedIPCollection(string fileName, IFile file)
         {
-            Check.Argument.IsNotEmpty(fileName, "fileName");
+            Check.Argument.IsNotNullOrEmpty(fileName, "fileName");
             Check.Argument.IsNotNull(file, "file");
 
             _path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
@@ -49,7 +49,7 @@ namespace Kigg.Web
 
         public void Add(string item)
         {
-            Check.Argument.IsNotEmpty(item, "item");
+            Check.Argument.IsNotNullOrEmpty(item, "item");
 
             item = item.Trim();
 
@@ -66,7 +66,7 @@ namespace Kigg.Web
 
         public bool Contains(string item)
         {
-            Check.Argument.IsNotEmpty(item, "item");
+            Check.Argument.IsNotNullOrEmpty(item, "item");
 
             return _ipAddresses.Contains(item.Trim());
         }
@@ -78,7 +78,7 @@ namespace Kigg.Web
 
         public bool Remove(string item)
         {
-            Check.Argument.IsNotEmpty(item, "item");
+            Check.Argument.IsNotNullOrEmpty(item, "item");
 
             item = item.Trim();
 
@@ -105,17 +105,17 @@ namespace Kigg.Web
             }
         }
 
-        protected override void Dispose(bool disposing)
+        protected override void DisposeCore()
         {
             Write();
-            base.Dispose(disposing);
+            base.DisposeCore();
         }
 
         private void Read()
         {
             _ipAddresses.Clear();
             _ipAddresses.AddRange(_file.ReadAllLine(_path));
-            _ipAddresses.RemoveAll(ip => string.IsNullOrEmpty(ip));
+            _ipAddresses.RemoveAll(string.IsNullOrEmpty);
         }
 
         private void Write()

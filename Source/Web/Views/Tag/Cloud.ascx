@@ -1,11 +1,11 @@
-﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<ICollection<ITag>>" %>
+﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<ICollection<Tag>>" %>
 <%
 double max = Model.Max(t => t.StoryCount);
-string[] cssClasses = new[] { "tag1", "tag2", "tag3", "tag4", "tag5", "tag6", "tag7" };
+var cssClasses = new[] { "tag1", "tag2", "tag3", "tag4", "tag5", "tag6", "tag7" };
 
-IOrderedEnumerable<ITag> tags = Model.OrderBy(t => t.Name);
+IOrderedEnumerable<Tag> tags = Model.OrderBy(t => t.Name);
 
-foreach (ITag tag in tags)
+foreach (Tag tag in tags)
 {
     int index;
 

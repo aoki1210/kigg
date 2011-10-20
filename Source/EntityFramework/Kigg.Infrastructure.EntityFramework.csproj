@@ -103,6 +103,7 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="CategoryRepository.cs" />
+    <Compile Include="CommentRepository.cs" />
     <Compile Include="DomainObjectRepositoryBase.cs" />
     <Compile Include="Extensions\EntityTypeConfigurationExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />

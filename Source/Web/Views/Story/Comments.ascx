@@ -18,20 +18,20 @@
 
 </script>
 <%
-    IStory story = Model.Story;
+    Story story = Model.Story;
     string message = story.HasComments() ? "{0} {1} posted.".FormatWith(story.CommentCount, (story.CommentCount > 1 ? "comments" : "comment")) : "No comments yet, be the first one to post comment.";
 %>
 <div class="commentMessage"><h2><%= message%></h2></div>
-<div id="commentList">
+<%--<div id="commentList">
     <%if (story.HasComments()) %>
     <%{%>
         <ul>
             <%int i = 0; %>
-            <%foreach (IComment comment in story.Comments) %>
+            <%foreach (Comment comment in story.Comments) %>
             <%{%>
                 <% i += 1;%>
-                <% string commentId = comment.Id.Shrink(); %>
-                <% string userUrl = Url.RouteUrl("User", new { name = comment.ByUser.Id.Shrink(), tab = UserDetailTab.Promoted, page = 1 }); %>
+                <% long commentId = comment.Id; %>
+                <% string userUrl = Url.RouteUrl("User", new { name = comment.ByUser.Id, tab = UserDetailTab.Promoted, page = 1 }); %>
                 <% bool isOwner = story.IsPostedBy(comment.ByUser); %>
                 <% bool canModarate = ((Model.CurrentUser != null) && Model.CurrentUser.CanModerate()); %>
                 <li id="li-<%= Html.AttributeEncode(commentId)%>">
@@ -84,14 +84,14 @@
             <%}%>
         </ul>
     <%}%>
-</div>
+</div>--%>
 <% if (ViewData.Model.IsCurrentUserAuthenticated) %>
 <% {%>
     <div class="form">
         <form id="frmCommentSubmit" action="<%= Url.Action("Post", "Comment") %>" method="post">
             <h3>Post your comment</h3>
             <p>
-                <input type="hidden" id="hidId" name="id" value="<%= story.Id.Shrink() %>"/>
+                <input type="hidden" id="hidId" name="id" value="<%= story.Id %>"/>
                 <input type="hidden" id="hidbody" name="body"/>
                 <textarea id="txtCommentBody" name="commentBody" cols="20" rows="4"></textarea>
                 <span class="error"></span>

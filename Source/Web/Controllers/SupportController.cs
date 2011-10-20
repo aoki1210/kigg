@@ -72,14 +72,14 @@ namespace Kigg.Web
             else
             {
                 viewData.IsAdministrator = CurrentUser.IsAdministrator();
-                viewData.NewCount = _storyRepository.CountByNew();
-                viewData.UnapprovedCount = _storyRepository.CountByUnapproved();
+                viewData.NewCount = _storyRepository.CountNew();
+                viewData.UnapprovedCount = _storyRepository.CountUnapproved();
 
                 DateTime currentTime = SystemTime.Now();
                 DateTime minimumDate = currentTime.AddHours(-Settings.MaximumAgeOfStoryInHoursToPublish);
                 DateTime maximumDate = currentTime.AddHours(-Settings.MinimumAgeOfStoryInHoursToPublish);
 
-                viewData.PublishableCount = _storyRepository.CountByPublishable(minimumDate, maximumDate);
+                viewData.PublishableCount = _storyRepository.CountPublishable(minimumDate, maximumDate);
             }
 
             return View(viewData);

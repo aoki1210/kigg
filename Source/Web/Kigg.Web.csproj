@@ -114,14 +114,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\References\entlib\Microsoft.Practices.Unity.Configuration.dll</HintPath>
     </Reference>
-    <Reference Include="MySql.Data, Version=6.0.3.0, Culture=neutral, PublicKeyToken=92c3c527cdfe7566, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\References\MySqlClient\MySql.Data.dll</HintPath>
-    </Reference>
-    <Reference Include="MySql.Data.Entity, Version=6.0.3.0, Culture=neutral, PublicKeyToken=92c3c527cdfe7566, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\References\MySqlClient\MySql.Data.Entity.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />

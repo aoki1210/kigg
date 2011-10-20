@@ -1,13 +1,13 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<UserMenuViewData>" %>
 <% bool isAuthenticated = Model.IsUserAuthenticated; %>
-<% IUser user = Model.CurrentUser; %>
+<% User user = Model.CurrentUser; %>
 <p class="userLinks">
     Welcome 
     <%if (isAuthenticated) %>
     <%{%>
         <% string userName = user.UserName; %>
         <img class="smoothImage" onload="javascript:SmoothImage.show(this)" alt="<%= Html.AttributeEncode(userName) %>" src="<%= Html.AttributeEncode(user.GravatarUrl(24)) %>"/> 
-        <%= Html.RouteLink(userName, "User", new { name = user.Id.Shrink(), tab = UserDetailTab.Promoted, page = 1 })%>
+        <%= Html.RouteLink(userName, "User", new { name = user.Id, tab = UserDetailTab.Promoted, page = 1 })%>
     <%} %>
     <%else%>
     <%{%>

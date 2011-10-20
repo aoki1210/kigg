@@ -58,6 +58,15 @@
             return query;
         }
 
+        public IQuery<int> CreateCountCommentsByStory(long id)
+        {
+            Check.Argument.IsNotNegativeOrZero(id, "id");
+
+            var query = new CountCommentsQuery(DbContext, c => c.ForStory.Id == id);
+
+            return query;
+        }
+
         public IQuery<int> CreateCountNewStories()
         {
             var query = new CountStoriesQuery(DbContext, s => s.ApprovedAt != null &&
@@ -251,7 +260,7 @@
 
             return query;
         }
-
+        
         public IQuery<User> CreateFindUserById(long id)
         {
             var query = CreateFindUniqueDomainObjectQuery<User>(u => u.Id == id);
@@ -349,7 +358,7 @@
             return query;
         }
 
-        public IOrderedQuery<Comment> CreateFindCommentsForStoryAfterDate(long storyId, DateTime date, int start, int max)
+        public IOrderedQuery<Comment> CreateFindCommentsForStoryAfterDate(long storyId, DateTime date, int? start = null, int? max = null)
         {
             Check.Argument.IsNotNegativeOrZero(storyId, "storyId");
             Check.Argument.IsNotInvalidDate(date, "date");
@@ -358,7 +367,10 @@
 
             query = query.OrderBy(c => c.CreatedAt);
 
-            query = query.Page(start, max);
+            if (start != null && max != null)
+            {
+                query = query.Page(start.Value, max.Value);
+            }
 
             return query;
         }

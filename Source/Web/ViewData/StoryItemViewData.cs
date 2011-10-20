@@ -6,13 +6,13 @@ namespace Kigg.Web
 
     public class StoryItemViewData
     {
-        public IStory Story
+        public Story Story
         {
             get;
             set;
         }
 
-        public IUser User
+        public User User
         {
             get;
             set;

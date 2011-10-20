@@ -10,7 +10,7 @@ namespace Kigg.Web
             set;
         }
 
-        public IUser TheUser
+        public User TheUser
         {
             get;
             set;

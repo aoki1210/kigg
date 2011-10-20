@@ -85,7 +85,7 @@ namespace Kigg.Web
             {
                 AppendTagsInRss(channel, _model.Stories.SelectMany(s => s.Tags).Distinct().OrderBy(t => t.Name), urlHelper);
 
-                foreach (IStory story in _model.Stories)
+                foreach (Story story in _model.Stories)
                 {
                     AppendStoryInRss(channel, story, urlHelper, DateFormat);
                 }
@@ -133,7 +133,7 @@ namespace Kigg.Web
                                 );
         }
 
-        private void AppendStoryInRss(XContainer channel, IStory story, UrlHelper urlHelper, string dateFormat)
+        private void AppendStoryInRss(XContainer channel, Story story, UrlHelper urlHelper, string dateFormat)
         {
             string detailUrl = string.Concat(_model.RootUrl, urlHelper.RouteUrl("Detail", new { name = story.UniqueName }));
             string storyDescription = PrepareDescription(story, detailUrl);
@@ -161,24 +161,24 @@ namespace Kigg.Web
             item.Add(new XElement(_ns + "voteCount", story.VoteCount));
             item.Add(new XElement(_ns + "viewCount", story.ViewCount));
             item.Add(new XElement(_ns + "commentCount", story.CommentCount));
-            item.Add(new XElement(_ns + "id", story.Id.Shrink()));
+            item.Add(new XElement(_ns + "id", story.Id));
 
-            ICategory category = story.BelongsTo;
+            Category category = story.BelongsTo;
 
             string categoryUrl = string.Concat(_model.RootUrl, urlHelper.Action("Category", "Story", new { name = category.UniqueName }));
 
             item.Add(new XElement(_ns + "category", new XAttribute("domain", categoryUrl), category.Name));
 
-            string userUrl = string.Concat(_model.RootUrl, urlHelper.RouteUrl("User", new { name = story.PostedBy.Id.Shrink(), tab = UserDetailTab.Promoted, page = 1 }));
+            string userUrl = string.Concat(_model.RootUrl, urlHelper.RouteUrl("User", new { name = story.PostedBy.Id, tab = UserDetailTab.Promoted, page = 1 }));
 
             item.Add(new XElement(_ns + "contributer", new XAttribute("domain", userUrl), story.PostedBy.UserName));
 
             channel.Add(item);
         }
 
-        private void AppendTagsInRss(XContainer target, IEnumerable<ITag> tags, UrlHelper urlHelper)
+        private void AppendTagsInRss(XContainer target, IEnumerable<Tag> tags, UrlHelper urlHelper)
         {
-            foreach (ITag tag in tags)
+            foreach (Tag tag in tags)
             {
                 string tagUrl = string.Concat(_model.RootUrl, urlHelper.Action("Tags", "Story", new { name = tag.UniqueName }));
 
@@ -200,7 +200,7 @@ namespace Kigg.Web
             {
                 AppendTagsInAtom(feed, _model.Stories.SelectMany(s => s.Tags).Distinct().OrderBy(t => t.Name), urlHelper);
 
-                foreach (IStory story in _model.Stories)
+                foreach (Story story in _model.Stories)
                 {
                     AppendStoryInAtom(feed, story, urlHelper, DateFormat);
                 }
@@ -211,12 +211,12 @@ namespace Kigg.Web
             return doc.ToXml();
         }
 
-        private void AppendStoryInAtom(XContainer feed, IStory story, UrlHelper urlHelper, string dateFormat)
+        private void AppendStoryInAtom(XContainer feed, Story story, UrlHelper urlHelper, string dateFormat)
         {
             string detailUrl = string.Concat(_model.RootUrl, urlHelper.RouteUrl("Detail", new { name = story.UniqueName }));
             string storyDescription = PrepareDescription(story, detailUrl);
 
-            string userUrl = string.Concat(_model.RootUrl, urlHelper.RouteUrl("User", new { name = story.PostedBy.Id.Shrink(), tab = UserDetailTab.Promoted, page = 1 }));
+            string userUrl = string.Concat(_model.RootUrl, urlHelper.RouteUrl("User", new { name = story.PostedBy.Id, tab = UserDetailTab.Promoted, page = 1 }));
 
             XElement entry = new XElement(
                                             atom + "entry",
@@ -243,7 +243,7 @@ namespace Kigg.Web
             entry.Add(new XElement(_ns + "viewCount", story.ViewCount));
             entry.Add(new XElement(_ns + "commentCount", story.CommentCount));
 
-            ICategory category = story.BelongsTo;
+            Category category = story.BelongsTo;
             string categoryUrl = string.Concat(_model.RootUrl, urlHelper.Action("Category", "Story", new { name = category.UniqueName }));
 
             entry.Add(new XElement(_ns + "category", new XAttribute("term", category.Name), new XAttribute("scheme", categoryUrl)));
@@ -276,9 +276,9 @@ namespace Kigg.Web
                                 );
         }
 
-        private void AppendTagsInAtom(XContainer target, IEnumerable<ITag> tags, UrlHelper urlHelper)
+        private void AppendTagsInAtom(XContainer target, IEnumerable<Tag> tags, UrlHelper urlHelper)
         {
-            foreach (ITag tag in tags)
+            foreach (Tag tag in tags)
             {
                 string tagUrl = string.Concat(_model.RootUrl, urlHelper.Action("Tags", "Story", new { name = tag.UniqueName }));
 
@@ -286,7 +286,7 @@ namespace Kigg.Web
             }
         }
 
-        private string PrepareDescription(IStory story, string detailUrl)
+        private string PrepareDescription(Story story, string detailUrl)
         {
             string imageUrl = string.Concat(_model.RootUrl, "/image.axd", "?url=", story.Url.UrlEncode());
 

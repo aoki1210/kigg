@@ -10,7 +10,7 @@ namespace Kigg.Web
     {
         public StoryListViewData()
         {
-            Stories = new ReadOnlyCollection<IStory>(new List<IStory>());
+            Stories = new ReadOnlyCollection<Story>(new List<Story>());
         }
 
         public int PageCount
@@ -64,7 +64,7 @@ namespace Kigg.Web
             set;
         }
 
-        public ICollection<IStory> Stories
+        public ICollection<Story> Stories
         {
             get;
             set;

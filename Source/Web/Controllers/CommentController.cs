@@ -12,9 +12,9 @@ namespace Kigg.Web
     public class CommentController : BaseController
     {
         private readonly IStoryRepository _storyRepository;
-        private readonly IStoryService _storyService;
+        private readonly StoryService _storyService;
 
-        public CommentController(IStoryRepository storyRepository, IStoryService storyService)
+        public CommentController(IStoryRepository storyRepository, StoryService storyService)
         {
             Check.Argument.IsNotNull(storyRepository, "storyRepository");
             Check.Argument.IsNotNull(storyService, "storyService");
@@ -30,9 +30,8 @@ namespace Kigg.Web
         }
 
         [AcceptVerbs(HttpVerbs.Post), ValidateInput(false)]
-        public ActionResult Post(string id, string body, bool? subscribe)
+        public ActionResult Post(long id, string body, bool? subscribe)
         {
-            id = id.NullSafe();
             body = body.NullSafe();
 
             string captchaChallenge = null;
@@ -45,9 +44,8 @@ namespace Kigg.Web
                 captchaResponse = HttpContext.Request.Form[CaptchaValidator.ResponseInputName];
             }
 
-            JsonViewData viewData = Validate<JsonViewData>(
-                                                            new Validation(() => string.IsNullOrEmpty(id), "Story identifier cannot be blank."),
-                                                            new Validation(() => id.ToGuid().IsEmpty(), "Invalid story identifier."),
+            JsonViewData viewData = Validate<JsonViewData>(                                                           
+                                                            new Validation(() => id <= 0, "Invalid story identifier."),
                                                             new Validation(() => string.IsNullOrEmpty(body.NullSafe()), "Comment cannot be blank."),
                                                             new Validation(() => captchaEnabled && string.IsNullOrEmpty(captchaChallenge), "Captcha challenge cannot be blank."),
                                                             new Validation(() => captchaEnabled && string.IsNullOrEmpty(captchaResponse), "Captcha verification words cannot be blank."),
@@ -59,7 +57,7 @@ namespace Kigg.Web
             {
                 try
                 {
-                    IStory story = _storyRepository.FindById(id.ToGuid());
+                    Story story = _storyRepository.FindById(id);
 
                     if (story == null)
                     {
@@ -94,13 +92,11 @@ namespace Kigg.Web
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult ConfirmSpam(string storyId, string commentId)
+        public ActionResult ConfirmSpam(long storyId, long commentId)
         {
             JsonViewData viewData = Validate<JsonViewData>(
-                                                            new Validation(() => string.IsNullOrEmpty(storyId), "Story identifier cannot be blank."),
-                                                            new Validation(() => storyId.ToGuid().IsEmpty(), "Invalid story identifier."),
-                                                            new Validation(() => string.IsNullOrEmpty(commentId), "Comment identifier cannot be blank."),
-                                                            new Validation(() => commentId.ToGuid().IsEmpty(), "Invalid comment identifier."),
+                                                            new Validation(() => storyId <= 0, "Invalid story identifier."), 
+                                                            new Validation(() => commentId <= 0, "Invalid comment identifier."),
                                                             new Validation(() => !IsCurrentUserAuthenticated, "You are currently not authenticated."),
                                                             new Validation(() => !CurrentUser.CanModerate(), "You do not have the privilege to call this method.")
                                                           );
@@ -109,7 +105,7 @@ namespace Kigg.Web
             {
                 try
                 {
-                    IStory story = _storyRepository.FindById(storyId.ToGuid());
+                    Story story = _storyRepository.FindById(storyId);
 
                     if (story == null)
                     {
@@ -117,7 +113,7 @@ namespace Kigg.Web
                     }
                     else
                     {
-                        IComment comment = story.FindComment(commentId.ToGuid());
+                        Comment comment = story.FindComment(commentId);
 
                         if (comment == null)
                         {
@@ -143,13 +139,11 @@ namespace Kigg.Web
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult MarkAsOffended(string storyId, string commentId)
+        public ActionResult MarkAsOffended(long storyId, long commentId)
         {
             JsonViewData viewData = Validate<JsonViewData>(
-                                                            new Validation(() => string.IsNullOrEmpty(storyId), "Story identifier cannot be blank."),
-                                                            new Validation(() => storyId.ToGuid().IsEmpty(), "Invalid story identifier."),
-                                                            new Validation(() => string.IsNullOrEmpty(commentId), "Comment identifier cannot be blank."),
-                                                            new Validation(() => commentId.ToGuid().IsEmpty(), "Invalid comment identifier."),
+                                                            new Validation(() => storyId <= 0, "Invalid story identifier."),
+                                                            new Validation(() => commentId <= 0, "Invalid comment identifier."),
                                                             new Validation(() => !IsCurrentUserAuthenticated, "You are currently not authenticated."),
                                                             new Validation(() => !CurrentUser.CanModerate(), "You do not have the privilege to call this method.")
                                                           );
@@ -158,7 +152,7 @@ namespace Kigg.Web
             {
                 try
                 {
-                    IStory story = _storyRepository.FindById(storyId.ToGuid());
+                    Story story = _storyRepository.FindById(storyId);
 
                     if (story == null)
                     {
@@ -166,7 +160,7 @@ namespace Kigg.Web
                     }
                     else
                     {
-                        IComment comment = story.FindComment(commentId.ToGuid());
+                        Comment comment = story.FindComment(commentId);
 
                         if (comment == null)
                         {

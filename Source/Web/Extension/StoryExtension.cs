@@ -4,7 +4,7 @@ namespace Kigg.Web
 
     public static class StoryExtension
     {
-        public static string StrippedDescription(this IStory story)
+        public static string StrippedDescription(this Story story)
         {
             return story.TextDescription.WrapAt(512);
         }

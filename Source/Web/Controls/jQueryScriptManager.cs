@@ -177,7 +177,7 @@ namespace Kigg.Web
 
         private static void Register(IList<string> target, int order, string parameter, string parameterName)
         {
-            Check.Argument.IsNotEmpty(parameter, parameterName);
+            Check.Argument.IsNotNullOrEmpty(parameter, parameterName);
 
             if (order > -1)
             {

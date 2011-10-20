@@ -25,10 +25,10 @@ namespace Kigg.Web
             Check.Argument.IsNotInvalidWebUrl(verifyUrl, "verifyUrl");
             Check.Argument.IsNotInvalidWebUrl(insecureHost, "insecureHost");
             Check.Argument.IsNotInvalidWebUrl(secureHost, "secureHost");
-            Check.Argument.IsNotEmpty(privateKey, "privateKey");
-            Check.Argument.IsNotEmpty(publicKey, "publicKey");
-            Check.Argument.IsNotEmpty(challengeInputName, "challengeInputName");
-            Check.Argument.IsNotEmpty(responseInputName, "responseInputName");
+            Check.Argument.IsNotNullOrEmpty(privateKey, "privateKey");
+            Check.Argument.IsNotNullOrEmpty(publicKey, "publicKey");
+            Check.Argument.IsNotNullOrEmpty(challengeInputName, "challengeInputName");
+            Check.Argument.IsNotNullOrEmpty(responseInputName, "responseInputName");
             Check.Argument.IsNotNull(httpFrom, "httpFrom");
 
             _verifyUrl = verifyUrl;
@@ -73,9 +73,9 @@ namespace Kigg.Web
 
         public virtual bool Validate(string fromIPAddress, string challenge, string response)
         {
-            Check.Argument.IsNotEmpty(fromIPAddress, "fromIPAddress");
-            Check.Argument.IsNotEmpty(challenge, "challenge");
-            Check.Argument.IsNotEmpty(response, "response");
+            Check.Argument.IsNotNullOrEmpty(fromIPAddress, "fromIPAddress");
+            Check.Argument.IsNotNullOrEmpty(challenge, "challenge");
+            Check.Argument.IsNotNullOrEmpty(response, "response");
 
             try
             {

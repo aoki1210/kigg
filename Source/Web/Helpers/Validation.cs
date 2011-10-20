@@ -8,7 +8,7 @@ namespace Kigg.Web
         public Validation(Expression<Func<bool>> expression, string errorMessage)
         {
             Check.Argument.IsNotNull(expression, "expression");
-            Check.Argument.IsNotEmpty(errorMessage, "errorMessage");
+            Check.Argument.IsNotNullOrEmpty(errorMessage, "errorMessage");
 
             Expression = expression;
             ErrorMessage = errorMessage;

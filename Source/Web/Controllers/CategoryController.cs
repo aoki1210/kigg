@@ -17,7 +17,7 @@ namespace Kigg.Web
             _categoryRepository = categoryRepository;
         }
 
-        private ICollection<ICategory> Categories
+        private IEnumerable<Category> Categories
         {
             get { return _categoryRepository.FindAll(); }
         }

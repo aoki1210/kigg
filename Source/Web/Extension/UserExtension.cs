@@ -8,7 +8,7 @@ namespace Kigg.Web
 
     public static class UserExtension
     {
-        public static string GravatarUrl(this IUser user, int size)
+        public static string GravatarUrl(this User user, int size)
         {
             return GenerateGravatarUrl(((user == null) ? string.Empty : user.Email), size);
         }
