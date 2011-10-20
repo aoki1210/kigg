@@ -6,13 +6,13 @@ namespace Kigg.Web
 
     public class TagTabsViewData
     {
-        public ICollection<ITag> PopularTags
+        public IEnumerable<Tag> PopularTags
         {
             get;
             set;
         }
 
-        public ICollection<ITag> UserTags
+        public IEnumerable<Tag> UserTags
         {
             get;
             set;

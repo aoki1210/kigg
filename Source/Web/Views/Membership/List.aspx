@@ -24,12 +24,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <% foreach (IUser user in Model.Users) %>
+                    <% foreach (User user in Model.Users) %>
                     <% { %>
                             <tr>
                                 <td>
                                     <% string userName = user.UserName; %>
-                                    <a href="<%= Url.RouteUrl("User", new { name = user.Id.Shrink(), tab = UserDetailTab.Promoted, page = 1 }) %>">
+                                    <a href="<%= Url.RouteUrl("User", new { name = user.Id, tab = UserDetailTab.Promoted, page = 1 }) %>">
                                         <img alt="<%= Html.AttributeEncode(userName) %>" src="<%= Html.AttributeEncode(user.GravatarUrl(24)) %>" class="smoothImage" onload="javascript:SmoothImage.show(this)"/>
                                         <%= Html.Encode(userName)%>
                                     </a>

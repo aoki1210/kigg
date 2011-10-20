@@ -137,7 +137,7 @@
         {
             Check.Argument.IsNotNull(forStory, "forStory");
             //Check.Argument.IsNotEmpty(commentId, "commentId");
-            return IoC.Resolve<ICommentRepository>().FindById(forStory.Id, commentId);
+            return IoC.Resolve<ICommentRepository>().FindById(commentId);
         }
 
         [DebuggerStepThrough]

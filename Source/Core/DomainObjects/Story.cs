@@ -79,6 +79,11 @@
             get { throw new NotImplementedException(); }
         }
 
+        public int CommentCount
+        {
+            get { throw new NotImplementedException(); }
+        }
+
         public void AddTag(Tag tag)
         {
             throw new NotImplementedException();
@@ -200,6 +205,16 @@
         }
 
         public void ChangeNameAndCreatedAt(string name, DateTime createdAt)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool HasTags()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool HasComments()
         {
             throw new NotImplementedException();
         }

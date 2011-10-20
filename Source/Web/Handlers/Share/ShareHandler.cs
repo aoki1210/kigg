@@ -36,16 +36,16 @@ namespace Kigg.Web
         {
             const string DefaultService = "msdn";
 
-            Guid id = context.Request.QueryString["id"].ToGuid();
+            long id = context.Request.QueryString["id"].ToLong();
             string service = (context.Request.QueryString["srv"] ?? DefaultService).ToLowerInvariant();
 
-            if (id == Guid.Empty)
+            if (id == 0)
             {
                 RedirectToPrevious(context);
                 return;
             }
 
-            IStory story = StoryRepository.FindById(id);
+            Story story = StoryRepository.FindById(id);
 
             if (story == null)
             {

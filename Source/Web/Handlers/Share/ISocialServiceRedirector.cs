@@ -6,6 +6,6 @@ namespace Kigg.Web
 
     public interface ISocialServiceRedirector
     {
-        void Redirect(HttpContextBase httpContext, IStory story);
+        void Redirect(HttpContextBase httpContext, Story story);
     }
 }

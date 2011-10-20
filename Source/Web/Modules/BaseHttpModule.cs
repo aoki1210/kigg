@@ -2,7 +2,7 @@ namespace Kigg.Web
 {
     using System.Web;
 
-    public abstract class BaseHttpModule : DisposableResource, IHttpModule
+    public abstract class BaseHttpModule : Disposable, IHttpModule
     {
         public void Init(HttpApplication context)
         {

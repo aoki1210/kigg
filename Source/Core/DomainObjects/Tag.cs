@@ -14,5 +14,10 @@
         public virtual DateTime CreatedAt { get; set; }
 
         internal virtual ICollection<Story> Stories { get; set; }
+
+        public int StoryCount
+        {
+            get { throw new NotImplementedException(); }
+        }
     }
 }

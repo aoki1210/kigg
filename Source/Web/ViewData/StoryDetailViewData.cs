@@ -10,7 +10,7 @@ namespace Kigg.Web
             set;
         }
 
-        public IStory Story
+        public Story Story
         {
             get;
             set;

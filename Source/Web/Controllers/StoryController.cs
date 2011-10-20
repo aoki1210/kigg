@@ -15,15 +15,15 @@ namespace Kigg.Web
         private readonly ICategoryRepository _categoryRepository;
         private readonly ITagRepository _tagRepository;
         private readonly IStoryRepository _storyRepository;
-        private readonly IStoryService _storyService;
+        private readonly StoryService _storyService;
         private readonly IContentService _contentService;
         private readonly ISocialServiceRedirector[] _socialServiceRedirectors;
 
-        public StoryController(ICategoryRepository categoryRepository, ITagRepository tagRepository, IStoryRepository storyRepository, IStoryService storyService, IContentService contentService, ISocialServiceRedirector[] socialServiceRedirectors)
+        public StoryController(ICategoryRepository categoryRepository, ITagRepository tagRepository, IStoryRepository storyRepository, StoryService storyService, IContentService contentService, ISocialServiceRedirector[] socialServiceRedirectors)
         {
             Check.Argument.IsNotNull(categoryRepository, "categoryRepository");
             Check.Argument.IsNotNull(tagRepository, "tagRepository");
-            Check.Argument.IsNotNull(storyRepository, "storyRepository");
+            Check.Argument.IsNotNull(storyRepository, "IStoryRepository");
             Check.Argument.IsNotNull(storyService, "storyService");
             Check.Argument.IsNotNull(contentService, "contentService");
             Check.Argument.IsNotEmpty(socialServiceRedirectors, "socialServiceRedirectors");
@@ -53,7 +53,7 @@ namespace Kigg.Web
         public ActionResult Published(int? page)
         {
             StoryListViewData viewData = CreateStoryListViewData<StoryListViewData>(page);
-            PagedResult<IStory> pagedResult = _storyRepository.FindPublished(PageCalculator.StartIndex(page, Settings.HtmlStoryPerPage), Settings.HtmlStoryPerPage);
+            PagedResult<Story> pagedResult = _storyRepository.FindPublished(PageCalculator.StartIndex(page, Settings.HtmlStoryPerPage), Settings.HtmlStoryPerPage);
 
             viewData.Stories = pagedResult.Result;
             viewData.TotalStoryCount = pagedResult.Total;
@@ -96,7 +96,7 @@ namespace Kigg.Web
                 return RedirectToRoute("Published");
             }
 
-            ICategory category = _categoryRepository.FindByUniqueName(name);
+            Category category = _categoryRepository.FindByUniqueName(name);
 
             if (category == null)
             {
@@ -108,7 +108,7 @@ namespace Kigg.Web
 
             if (category != null)
             {
-                PagedResult<IStory> pagedResult = _storyRepository.FindPublishedByCategory(category.Id, PageCalculator.StartIndex(page, Settings.HtmlStoryPerPage), Settings.HtmlStoryPerPage);
+                PagedResult<Story> pagedResult = _storyRepository.FindPublishedByCategory(category.Id, PageCalculator.StartIndex(page, Settings.HtmlStoryPerPage), Settings.HtmlStoryPerPage);
                 viewData.Stories = pagedResult.Result;
                 viewData.TotalStoryCount = pagedResult.Total;
 
@@ -130,7 +130,7 @@ namespace Kigg.Web
         public ActionResult Upcoming(int? page)
         {
             StoryListViewData viewData = CreateStoryListViewData<StoryListViewData>(page);
-            PagedResult<IStory> pagedResult = _storyRepository.FindUpcoming(PageCalculator.StartIndex(page, Settings.HtmlStoryPerPage), Settings.HtmlStoryPerPage);
+            PagedResult<Story> pagedResult = _storyRepository.FindUpcoming(PageCalculator.StartIndex(page, Settings.HtmlStoryPerPage), Settings.HtmlStoryPerPage);
 
             viewData.Stories = pagedResult.Result;
             viewData.TotalStoryCount = pagedResult.Total;
@@ -178,7 +178,7 @@ namespace Kigg.Web
             }
             else
             {
-                PagedResult<IStory> pagedResult = _storyRepository.FindNew(PageCalculator.StartIndex(page, Settings.HtmlStoryPerPage), Settings.HtmlStoryPerPage);
+                PagedResult<Story> pagedResult = _storyRepository.FindNew(PageCalculator.StartIndex(page, Settings.HtmlStoryPerPage), Settings.HtmlStoryPerPage);
 
                 viewData.Stories = pagedResult.Result;
                 viewData.TotalStoryCount = pagedResult.Total;
@@ -203,7 +203,7 @@ namespace Kigg.Web
             }
             else
             {
-                PagedResult<IStory> pagedResult = _storyRepository.FindUnapproved(PageCalculator.StartIndex(page, Settings.HtmlStoryPerPage), Settings.HtmlStoryPerPage);
+                PagedResult<Story> pagedResult = _storyRepository.FindUnapproved(PageCalculator.StartIndex(page, Settings.HtmlStoryPerPage), Settings.HtmlStoryPerPage);
 
                 viewData.Stories = pagedResult.Result;
                 viewData.TotalStoryCount = pagedResult.Total;
@@ -232,7 +232,7 @@ namespace Kigg.Web
                 DateTime minimumDate = currentTime.AddHours(-Settings.MaximumAgeOfStoryInHoursToPublish);
                 DateTime maximumDate = currentTime.AddHours(-Settings.MinimumAgeOfStoryInHoursToPublish);
 
-                PagedResult<IStory> pagedResult = _storyRepository.FindPublishable(minimumDate, maximumDate, PageCalculator.StartIndex(page, Settings.HtmlStoryPerPage), Settings.HtmlStoryPerPage);
+                PagedResult<Story> pagedResult = _storyRepository.FindPublishable(minimumDate, maximumDate, PageCalculator.StartIndex(page, Settings.HtmlStoryPerPage), Settings.HtmlStoryPerPage);
 
                 viewData.Stories = pagedResult.Result;
                 viewData.TotalStoryCount = pagedResult.Total;
@@ -253,7 +253,7 @@ namespace Kigg.Web
                 return RedirectToRoute("Published");
             }
 
-            ITag tag = _tagRepository.FindByUniqueName(name);
+            Tag tag = _tagRepository.FindByUniqueName(name);
 
             if (tag == null)
             {
@@ -265,7 +265,7 @@ namespace Kigg.Web
 
             if (tag != null)
             {
-                PagedResult<IStory> pagedResult = _storyRepository.FindByTag(tag.Id, PageCalculator.StartIndex(page, Settings.HtmlStoryPerPage), Settings.HtmlStoryPerPage);
+                PagedResult<Story> pagedResult = _storyRepository.FindByTag(tag.Id, PageCalculator.StartIndex(page, Settings.HtmlStoryPerPage), Settings.HtmlStoryPerPage);
 
                 viewData.Stories = pagedResult.Result;
                 viewData.TotalStoryCount = pagedResult.Total;
@@ -293,7 +293,8 @@ namespace Kigg.Web
             }
 
             StoryListSearchViewData viewData = CreateStoryListViewData<StoryListSearchViewData>(page);
-            PagedResult<IStory> pagedResult = _storyRepository.Search(q, PageCalculator.StartIndex(page, Settings.HtmlStoryPerPage), Settings.HtmlStoryPerPage);
+            PagedResult<Story> pagedResult = new PagedResult<Story>();
+            //_IStoryRepository.Search(q, PageCalculator.StartIndex(page, Settings.HtmlStoryPerPage), Settings.HtmlStoryPerPage);
 
             viewData.Stories = pagedResult.Result;
             viewData.TotalStoryCount = pagedResult.Total;
@@ -319,7 +320,7 @@ namespace Kigg.Web
                 return RedirectToRoute("Published");
             }
 
-            IStory story = _storyRepository.FindByUniqueName(name);
+            Story story = _storyRepository.FindByUniqueName(name);
 
             if (story == null)
             {
@@ -347,7 +348,7 @@ namespace Kigg.Web
 
             if (isValidUrl)
             {
-                IStory story = _storyRepository.FindByUrl(url);
+                Story story = _storyRepository.FindByUrl(url);
 
                 if (story != null)
                 {
@@ -399,7 +400,7 @@ namespace Kigg.Web
             {
                 try
                 {
-                    IStory story = _storyRepository.FindByUrl(url);
+                    Story story = _storyRepository.FindByUrl(url);
 
                     if (story != null)
                     {
@@ -484,20 +485,17 @@ namespace Kigg.Web
         }
 
         [AcceptVerbs(HttpVerbs.Post), Compress]
-        public ActionResult Click(string id)
+        public ActionResult Click(long id)
         {
-            id = id.NullSafe();
-
             JsonViewData viewData = Validate<JsonViewData>(
-                                                            new Validation(() => string.IsNullOrEmpty(id), "Story identifier cannot be blank."),
-                                                            new Validation(() => id.ToGuid().IsEmpty(), "Invalid story identifier.")
-                                                          );
+                new Validation(() => id <= 0, "Invalid story identifier.")
+                );
 
             if (viewData == null)
             {
                 try
                 {
-                    IStory story = _storyRepository.FindById(id.ToGuid());
+                    Story story = _storyRepository.FindById(id);
 
                     if (story == null)
                     {
@@ -522,21 +520,18 @@ namespace Kigg.Web
         }
 
         [AcceptVerbs(HttpVerbs.Post), Compress]
-        public ActionResult Promote(string id)
+        public ActionResult Promote(long id)
         {
-            id = id.NullSafe();
-
             JsonViewData viewData = Validate<JsonViewData>(
-                                                            new Validation(() => string.IsNullOrEmpty(id), "Story identifier cannot be blank."),
-                                                            new Validation(() => id.ToGuid().IsEmpty(), "Invalid story identifier."),
-                                                            new Validation(() => !IsCurrentUserAuthenticated, "You are currently not authenticated.")
-                                                          );
+                new Validation(() => id <= 0, "Invalid story identifier."),
+                new Validation(() => !IsCurrentUserAuthenticated, "You are currently not authenticated.")
+                );
 
             if (viewData == null)
             {
                 try
                 {
-                    IStory story = _storyRepository.FindById(id.ToGuid());
+                    Story story = _storyRepository.FindById(id);
 
                     if (story == null)
                     {
@@ -570,21 +565,18 @@ namespace Kigg.Web
         }
 
         [AcceptVerbs(HttpVerbs.Post), Compress]
-        public ActionResult Demote(string id)
+        public ActionResult Demote(long id)
         {
-            id = id.NullSafe();
-
             JsonViewData viewData = Validate<JsonViewData>(
-                                                            new Validation(() => string.IsNullOrEmpty(id), "Story identifier cannot be blank."),
-                                                            new Validation(() => id.ToGuid().IsEmpty(), "Invalid story identifier."),
-                                                            new Validation(() => !IsCurrentUserAuthenticated, "You are currently not authenticated.")
-                                                          );
+                new Validation(() => id <= 0, "Invalid story identifier."),
+                new Validation(() => !IsCurrentUserAuthenticated, "You are currently not authenticated.")
+                );
 
             if (viewData == null)
             {
                 try
                 {
-                    IStory story = _storyRepository.FindById(id.ToGuid());
+                    Story story = _storyRepository.FindById(id);
 
                     if (story == null)
                     {
@@ -616,21 +608,18 @@ namespace Kigg.Web
         }
 
         [AcceptVerbs(HttpVerbs.Post), Compress]
-        public ActionResult MarkAsSpam(string id)
+        public ActionResult MarkAsSpam(long id)
         {
-            id = id.NullSafe();
-
             JsonViewData viewData = Validate<JsonViewData>(
-                                                            new Validation(() => string.IsNullOrEmpty(id), "Story identifier cannot be blank."),
-                                                            new Validation(() => id.ToGuid().IsEmpty(), "Invalid story identifier."),
-                                                            new Validation(() => !IsCurrentUserAuthenticated, "You are currently not authenticated.")
-                                                          );
+                new Validation(() => id <= 0, "Invalid story identifier."),
+                new Validation(() => !IsCurrentUserAuthenticated, "You are currently not authenticated.")
+                );
 
             if (viewData == null)
             {
                 try
                 {
-                    IStory story = _storyRepository.FindById(id.ToGuid());
+                    Story story = _storyRepository.FindById(id);
 
                     if (story == null)
                     {
@@ -691,22 +680,19 @@ namespace Kigg.Web
         }
 
         [AcceptVerbs(HttpVerbs.Post), Compress]
-        public ActionResult GetStory(string id)
+        public ActionResult GetStory(long id)
         {
-            id = id.NullSafe();
-
             JsonViewData viewData = Validate<JsonViewData>(
-                                                            new Validation(() => string.IsNullOrEmpty(id), "Story identifier cannot be blank."),
-                                                            new Validation(() => id.ToGuid().IsEmpty(), "Invalid story identifier."),
-                                                            new Validation(() => !IsCurrentUserAuthenticated, "You are currently not authenticated."),
-                                                            new Validation(() => !CurrentUser.CanModerate(), "You do not have the privilege to call this method.")
-                                                          );
+                new Validation(() => id <= 0, "Invalid story identifier."),
+                new Validation(() => !IsCurrentUserAuthenticated, "You are currently not authenticated."),
+                new Validation(() => !CurrentUser.CanModerate(), "You do not have the privilege to call this method.")
+                );
 
             if (viewData == null)
             {
                 try
                 {
-                    IStory story = _storyRepository.FindById(id.ToGuid());
+                    Story story = _storyRepository.FindById(id);
 
                     if (story == null)
                     {
@@ -717,7 +703,7 @@ namespace Kigg.Web
                         return Json(
                                         new
                                         {
-                                            id = story.Id.Shrink(),
+                                            id = story.Id,
                                             name = story.UniqueName,
                                             createdAt = story.CreatedAt.ToString("G", Constants.CurrentCulture),
                                             title = story.Title,
@@ -740,13 +726,13 @@ namespace Kigg.Web
         }
 
         [AcceptVerbs(HttpVerbs.Post), ValidateInput(false), Compress]
-        public ActionResult Update(string id, string name, DateTime createdAt, string title, string category, string description, string tags)
+        public ActionResult Update(long id, string name, DateTime createdAt, string title, string category, string description, string tags)
         {
-            id = id.NullSafe();
+            
 
             JsonViewData viewData = Validate<JsonViewData>(
-                                                            new Validation(() => string.IsNullOrEmpty(id), "Story identifier cannot be blank."),
-                                                            new Validation(() => id.ToGuid().IsEmpty(), "Invalid story identifier."),
+                                                            
+                                                            new Validation(() => id <= 0, "Invalid story identifier."),
                                                             new Validation(() => !IsCurrentUserAuthenticated, "You are currently not authenticated."),
                                                             new Validation(() => !CurrentUser.CanModerate(), "You do not have the privilege to call this method.")
                                                           );
@@ -755,7 +741,7 @@ namespace Kigg.Web
             {
                 try
                 {
-                    IStory story = _storyRepository.FindById(id.ToGuid());
+                    Story story = _storyRepository.FindById(id);
 
                     if (story == null)
                     {
@@ -780,13 +766,13 @@ namespace Kigg.Web
         }
 
         [AcceptVerbs(HttpVerbs.Post), Compress]
-        public ActionResult Delete(string id)
+        public ActionResult Delete(long id)
         {
-            id = id.NullSafe();
+            
 
             JsonViewData viewData = Validate<JsonViewData>(
-                                                            new Validation(() => string.IsNullOrEmpty(id), "Story identifier cannot be blank."),
-                                                            new Validation(() => id.ToGuid().IsEmpty(), "Invalid story identifier."),
+                                                            
+                                                            new Validation(() => id <= 0, "Invalid story identifier."),
                                                             new Validation(() => !IsCurrentUserAuthenticated, "You are currently not authenticated."),
                                                             new Validation(() => !CurrentUser.CanModerate(), "You do not have the privilege to call this method.")
                                                           );
@@ -795,7 +781,7 @@ namespace Kigg.Web
             {
                 try
                 {
-                    IStory story = _storyRepository.FindById(id.ToGuid());
+                    Story story = _storyRepository.FindById(id);
 
                     if (story == null)
                     {
@@ -820,13 +806,13 @@ namespace Kigg.Web
         }
 
         [AcceptVerbs(HttpVerbs.Post), Compress]
-        public ActionResult Approve(string id)
+        public ActionResult Approve(long id)
         {
-            id = id.NullSafe();
+            
 
             JsonViewData viewData = Validate<JsonViewData>(
-                                                            new Validation(() => string.IsNullOrEmpty(id), "Story identifier cannot be blank."),
-                                                            new Validation(() => id.ToGuid().IsEmpty(), "Invalid story identifier."),
+                                                            
+                                                            new Validation(() => id <= 0, "Invalid story identifier."),
                                                             new Validation(() => !IsCurrentUserAuthenticated, "You are currently not authenticated."),
                                                             new Validation(() => !CurrentUser.CanModerate(), "You do not have the privilege to call this method.")
                                                           );
@@ -835,7 +821,7 @@ namespace Kigg.Web
             {
                 try
                 {
-                    IStory story = _storyRepository.FindById(id.ToGuid());
+                    Story story = _storyRepository.FindById(id);
 
                     if (story == null)
                     {
@@ -867,13 +853,13 @@ namespace Kigg.Web
         }
 
         [AcceptVerbs(HttpVerbs.Post), Compress]
-        public ActionResult ConfirmSpam(string id)
+        public ActionResult ConfirmSpam(long id)
         {
-            id = id.NullSafe();
+            
 
             JsonViewData viewData = Validate<JsonViewData>(
-                                                            new Validation(() => string.IsNullOrEmpty(id), "Story identifier cannot be blank."),
-                                                            new Validation(() => id.ToGuid().IsEmpty(), "Invalid story identifier."),
+                                                            
+                                                            new Validation(() => id <= 0, "Invalid story identifier."),
                                                             new Validation(() => !IsCurrentUserAuthenticated, "You are currently not authenticated."),
                                                             new Validation(() => !CurrentUser.CanModerate(), "You do not have the privilege to call this method.")
                                                           );
@@ -882,7 +868,7 @@ namespace Kigg.Web
             {
                 try
                 {
-                    IStory story = _storyRepository.FindById(id.ToGuid());
+                    Story story = _storyRepository.FindById(id);
 
                     if (story == null)
                     {
@@ -908,8 +894,8 @@ namespace Kigg.Web
 
         public ActionResult PromotedBy(string name, int? page)
         {
-            IUser user = UserRepository.FindById(name.ToGuid());
-            PagedResult<IStory> pagedResult = _storyRepository.FindPromotedByUser(user.Id, PageCalculator.StartIndex(page, Settings.HtmlStoryPerPage), Settings.HtmlStoryPerPage);
+            User user = UserRepository.FindById(name.ToLong());
+            PagedResult<Story> pagedResult = _storyRepository.FindPromotedByUser(user.Id, PageCalculator.StartIndex(page, Settings.HtmlStoryPerPage), Settings.HtmlStoryPerPage);
 
             StoryListUserViewData viewData = CreateStoryListViewData<StoryListUserViewData>(page);
 
@@ -926,8 +912,8 @@ namespace Kigg.Web
 
         public ActionResult PostedBy(string name, int? page)
         {
-            IUser user = UserRepository.FindById(name.ToGuid());
-            PagedResult<IStory> pagedResult = _storyRepository.FindPostedByUser(user.Id, PageCalculator.StartIndex(page, Settings.HtmlStoryPerPage), Settings.HtmlStoryPerPage);
+            User user = UserRepository.FindById(name.ToLong());
+            PagedResult<Story> pagedResult = _storyRepository.FindPostedByUser(user.Id, PageCalculator.StartIndex(page, Settings.HtmlStoryPerPage), Settings.HtmlStoryPerPage);
 
             StoryListUserViewData viewData = CreateStoryListViewData<StoryListUserViewData>(page);
 
@@ -944,8 +930,8 @@ namespace Kigg.Web
 
         public ActionResult CommentedBy(string name, int? page)
         {
-            IUser user = UserRepository.FindById(name.ToGuid());
-            PagedResult<IStory> pagedResult = _storyRepository.FindCommentedByUser(user.Id, PageCalculator.StartIndex(page, Settings.HtmlStoryPerPage), Settings.HtmlStoryPerPage);
+            User user = UserRepository.FindById(name.ToLong());
+            PagedResult<Story> pagedResult = _storyRepository.FindCommentedByUser(user.Id, PageCalculator.StartIndex(page, Settings.HtmlStoryPerPage), Settings.HtmlStoryPerPage);
 
             StoryListUserViewData viewData = CreateStoryListViewData<StoryListUserViewData>(page);
 
@@ -982,7 +968,7 @@ namespace Kigg.Web
             return viewData;
         }
 
-        private PagedResult<StorySummary> ConvertToSummary(Func<int, int, PagedResult<IStory>> method, int? start, int? max)
+        private PagedResult<StorySummary> ConvertToSummary(Func<int, int, PagedResult<Story>> method, int? start, int? max)
         {
             Func<int?, string, int?> getValue = (value, key) =>
                                                 {
@@ -1022,7 +1008,7 @@ namespace Kigg.Web
                 max = 50;
             }
 
-            PagedResult<IStory> pagedResult = method(start.Value, max.Value);
+            PagedResult<Story> pagedResult = method(start.Value, max.Value);
             List<StorySummary> summaries = pagedResult.Result.Select(s => new StorySummary { Title = s.Title, ThumbnailUrl = s.MediumThumbnail(), Url = Url.RouteUrl("Detail", new { name = s.UniqueName }), Description = s.StrippedDescription() }).ToList();
 
             return new PagedResult<StorySummary>(summaries, pagedResult.Total);

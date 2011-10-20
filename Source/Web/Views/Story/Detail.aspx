@@ -13,8 +13,8 @@
 </script>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadPlaceHolder" runat="server"/>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
-    <% IStory story = Model.Story; %>
-    <table id="t-<%= Html.AttributeEncode(story.Id.Shrink()) %>" class="story odd">
+    <% Story story = Model.Story; %>
+    <table id="t-<%= Html.AttributeEncode(story.Id) %>" class="story odd">
         <tbody>
             <tr>
                 <% Html.RenderPartial("Story", new StoryItemViewData { Story = story, User = Model.CurrentUser, PromoteText = Model.PromoteText, DemoteText = Model.DemoteText, CountText = Model.CountText, SocialServices = Model.SocialServices, DetailMode = true }); %>
@@ -37,7 +37,7 @@
                             <% Html.RenderPartial("Comments", Model); %>
                         </div>
                         <div id="votes">
-                            <% Html.RenderPartial("Votes", story.Votes); %>
+                            <%--<% Html.RenderPartial("Votes", story.Votes); %>--%>
                         </div>
                     </div>
                 </td>

@@ -1,11 +1,11 @@
-﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<ICollection<ICategory>>"%>
+﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<ICollection<Category>>"%>
 <div class="category">
     <ul>
         <li>
             <strong><a rel="home" href="<%= Url.Content("~") %>">All</a></strong>
         </li>
         <%
-        foreach (ICategory category in Model)
+        foreach (Category category in Model)
         {
         %>
             <li>

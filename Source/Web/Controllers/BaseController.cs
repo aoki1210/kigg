@@ -12,7 +12,7 @@ namespace Kigg.Web
 
     public abstract class BaseController : Controller
     {
-        private static readonly Type CurrentUserKey = typeof(IUser);
+        private static readonly Type CurrentUserKey = typeof(User);
 
         protected BaseController()
         {
@@ -46,13 +46,13 @@ namespace Kigg.Web
             }
         }
 
-        public IUser CurrentUser
+        public User CurrentUser
         {
             get
             {
                 if (!string.IsNullOrEmpty(CurrentUserName))
                 {
-                    IUser user = HttpContext.Items[CurrentUserKey] as IUser;
+                    User user = HttpContext.Items[CurrentUserKey] as User;
 
                     if (user == null)
                     {

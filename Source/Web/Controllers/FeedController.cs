@@ -24,7 +24,7 @@ namespace Kigg.Web
             Check.Argument.IsNotNull(configurationManager, "configurationManager");
             Check.Argument.IsNotNull(categoryRepository, "categoryRepository");
             Check.Argument.IsNotNull(tagRepository, "tagRepository");
-            Check.Argument.IsNotNull(storyRepository, "storyRepository");
+            Check.Argument.IsNotNull(storyRepository, "IStoryRepository");
 
             _configurationManager = configurationManager;
             _categoryRepository = categoryRepository;
@@ -43,7 +43,7 @@ namespace Kigg.Web
 
             try
             {
-                PagedResult<IStory> pagedStories = _storyRepository.FindPublished(start.Value, max.Value);
+                PagedResult<Story> pagedStories = _storyRepository.FindPublished(start.Value, max.Value);
 
                 model.Stories = pagedStories.Result;
                 model.TotalStoryCount = pagedStories.Total;
@@ -70,11 +70,11 @@ namespace Kigg.Web
             {
                 try
                 {
-                    ICategory category = _categoryRepository.FindByUniqueName(name);
+                    Category category = _categoryRepository.FindByUniqueName(name);
 
                     if (category != null)
                     {
-                        PagedResult<IStory> pagedStories = _storyRepository.FindPublishedByCategory(category.Id, start.Value, max.Value);
+                        PagedResult<Story> pagedStories = _storyRepository.FindPublishedByCategory(category.Id, start.Value, max.Value);
 
                         model.Stories = pagedStories.Result;
                         model.TotalStoryCount = pagedStories.Total;
@@ -104,7 +104,7 @@ namespace Kigg.Web
 
             try
             {
-                PagedResult<IStory> pagedStories = _storyRepository.FindUpcoming(start.Value, max.Value);
+                PagedResult<Story> pagedStories = _storyRepository.FindUpcoming(start.Value, max.Value);
 
                 model.Stories = pagedStories.Result;
                 model.TotalStoryCount = pagedStories.Total;
@@ -131,11 +131,11 @@ namespace Kigg.Web
             {
                 try
                 {
-                    ITag tag = _tagRepository.FindByUniqueName(name) ?? _tagRepository.FindByName(name);
+                    Tag tag = _tagRepository.FindByUniqueName(name) ?? _tagRepository.FindByName(name);
 
                     if (tag != null)
                     {
-                        PagedResult<IStory> pagedStories = _storyRepository.FindByTag(tag.Id, start.Value, max.Value);
+                        PagedResult<Story> pagedStories = _storyRepository.FindByTag(tag.Id, start.Value, max.Value);
 
                         model.Stories = pagedStories.Result;
                         model.TotalStoryCount = pagedStories.Total;
@@ -153,26 +153,25 @@ namespace Kigg.Web
             return new FeedResult(model, format);
         }
 
-        public ActionResult PromotedBy(string format, string name, int? start, int? max)
+        public ActionResult PromotedBy(string format, long userId, int? start, int? max)
         {
             EnsureInRange(ref start, ref max);
 
-            Guid userId = name.ToGuid();
             string userName = string.Empty;
 
             FeedViewData model = CreateViewData(start.Value, max.Value);
 
-            if (!userId.IsEmpty())
+            if (userId > 0)
             {
                 try
                 {
-                    IUser user = UserRepository.FindById(userId);
+                    User user = UserRepository.FindById(userId);
 
                     if (user != null)
                     {
                         userName = user.UserName;
 
-                        PagedResult<IStory> pagedStories = _storyRepository.FindPromotedByUser(user.Id, start.Value, max.Value);
+                        PagedResult<Story> pagedStories = _storyRepository.FindPromotedByUser(user.Id, start.Value, max.Value);
 
                         model.Stories = pagedStories.Result;
                         model.TotalStoryCount = pagedStories.Total;
@@ -186,31 +185,30 @@ namespace Kigg.Web
 
             model.Title = "{0} - Stories promoted by {1}".FormatWith(Settings.SiteTitle.HtmlEncode(), userName.HtmlEncode());
             model.Description = model.Title;
-            model.Url = Url.RouteUrl("User", new { name, tab = UserDetailTab.Promoted });
+            model.Url = Url.RouteUrl("User", new { userId, tab = UserDetailTab.Promoted });
 
             return new FeedResult(model, format);
         }
 
-        public ActionResult PostedBy(string format, string name, int? start, int? max)
+        public ActionResult PostedBy(string format, long userId, int? start, int? max)
         {
             EnsureInRange(ref start, ref max);
 
-            Guid userId = name.ToGuid();
             string userName = string.Empty;
 
             FeedViewData model = CreateViewData(start.Value, max.Value);
 
-            if (!userId.IsEmpty())
+            if (userId > 0)
             {
                 try
                 {
-                    IUser user = UserRepository.FindById(userId);
+                    User user = UserRepository.FindById(userId);
 
                     if (user != null)
                     {
                         userName = user.UserName;
 
-                        PagedResult<IStory> pagedStories = _storyRepository.FindPostedByUser(user.Id, start.Value, max.Value);
+                        PagedResult<Story> pagedStories = _storyRepository.FindPostedByUser(user.Id, start.Value, max.Value);
 
                         model.Stories = pagedStories.Result;
                         model.TotalStoryCount = pagedStories.Total;
@@ -225,31 +223,30 @@ namespace Kigg.Web
             model.Title = "{0} - Stories posted by {1}".FormatWith(Settings.SiteTitle.HtmlEncode(), userName.HtmlEncode());
             model.Description = model.Title;
 
-            model.Url = Url.RouteUrl("User", new { name, tab = UserDetailTab.Posted });
+            model.Url = Url.RouteUrl("User", new { userId, tab = UserDetailTab.Posted });
 
             return new FeedResult(model, format);
         }
 
-        public ActionResult CommentedBy(string format, string name, int? start, int? max)
+        public ActionResult CommentedBy(string format, long userId, int? start, int? max)
         {
             EnsureInRange(ref start, ref max);
 
-            Guid userId = name.ToGuid();
             string userName = string.Empty;
 
             FeedViewData model = CreateViewData(start.Value, max.Value);
 
-            if (!userId.IsEmpty())
+            if (userId > 0)
             {
                 try
                 {
-                    IUser user = UserRepository.FindById(userId);
+                    User user = UserRepository.FindById(userId);
 
                     if (user != null)
                     {
                         userName = user.UserName;
 
-                        PagedResult<IStory> pagedStories = _storyRepository.FindCommentedByUser(user.Id, start.Value, max.Value);
+                        PagedResult<Story> pagedStories = _storyRepository.FindCommentedByUser(user.Id, start.Value, max.Value);
 
                         model.Stories = pagedStories.Result;
                         model.TotalStoryCount = pagedStories.Total;
@@ -263,7 +260,7 @@ namespace Kigg.Web
 
             model.Title = "{0} - Stories commented by {1}".FormatWith(Settings.SiteTitle.HtmlEncode(), userName.HtmlEncode());
             model.Description = model.Title;
-            model.Url = Url.RouteUrl("User", new { name, tab = UserDetailTab.Commented });
+            model.Url = Url.RouteUrl("User", new { userId, tab = UserDetailTab.Commented });
 
             return new FeedResult(model, format);
         }
@@ -284,7 +281,8 @@ namespace Kigg.Web
             {
                 try
                 {
-                    PagedResult<IStory> pagedStories = _storyRepository.Search(q, start.Value, max.Value);
+                    PagedResult<Story> pagedStories = new PagedResult<Story>();
+                        //_storyRepository.Search(q, start.Value, max.Value);
 
                     model.Stories = pagedStories.Result;
                     model.TotalStoryCount = pagedStories.Total;

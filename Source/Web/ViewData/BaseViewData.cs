@@ -28,7 +28,7 @@ namespace Kigg.Web
             set;
         }
 
-        public IUser CurrentUser
+        public User CurrentUser
         {
             get;
             set;

@@ -97,6 +97,16 @@ using System.Collections.Generic;
         }
 
         [DebuggerStepThrough]
+        public static long ToLong(this string target)
+        {
+            long result;
+
+            long.TryParse(target, out result);
+            
+            return result;
+        }
+
+        [DebuggerStepThrough]
         public static T ToEnum<T>(this string target, T defaultValue) where T : IComparable, IFormattable
         {
             T convertedValue = defaultValue;

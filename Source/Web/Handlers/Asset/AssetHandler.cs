@@ -28,7 +28,7 @@ namespace Kigg.Web
 
         public static string GetVersion(string name)
         {
-            Check.Argument.IsNotEmpty(name, "name");
+            Check.Argument.IsNotNullOrEmpty(name, "name");
 
             ICache cache = IoC.Resolve<ICache>();
 

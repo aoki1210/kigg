@@ -170,7 +170,7 @@ namespace Kigg.Web
 
                     using (IUnitOfWork unitOfWork = UnitOfWork.Begin())
                     {
-                        IUser user = UserRepository.FindByUserName(userName);
+                        User user = UserRepository.FindByUserName(userName);
 
                         if ((user != null) && user.IsLockedOut)
                         {
@@ -210,7 +210,7 @@ namespace Kigg.Web
                 }
                 else if ((OpenIdRelyingParty.Response.Status == AuthenticationStatus.Failed) || (OpenIdRelyingParty.Response.Status == AuthenticationStatus.Canceled))
                 {
-                    if (OpenIdRelyingParty.Response.Exception!= null)
+                    if (OpenIdRelyingParty.Response.Exception != null)
                     {
                         errorMessage = OpenIdRelyingParty.Response.Exception.Message;
                     }
@@ -259,14 +259,12 @@ namespace Kigg.Web
                 {
                     using (IUnitOfWork unitOfWork = UnitOfWork.Begin())
                     {
-                        IUser user = _factory.CreateUser(userName.Trim(), email.Trim(), password.Trim());
+                        User user = _factory.CreateUser(userName.Trim(), email.Trim(), password.Trim());
                         UserRepository.Add(user);
 
                         unitOfWork.Commit();
 
-                        string userId = user.Id.Shrink();
-
-                        string url = string.Concat(Settings.RootUrl, Url.RouteUrl("Activate", new { id = userId }));
+                        string url = string.Concat(Settings.RootUrl, Url.RouteUrl("Activate", new { id = user.Id }));
 
                         _emailSender.SendRegistrationInfo(email, userName, password, url);
 
@@ -304,7 +302,7 @@ namespace Kigg.Web
                 {
                     using (IUnitOfWork unitOfWork = UnitOfWork.Begin())
                     {
-                        IUser user = UserRepository.FindByUserName(userName.Trim());
+                        User user = UserRepository.FindByUserName(userName.Trim());
 
                         if (user != null)
                         {
@@ -361,7 +359,7 @@ namespace Kigg.Web
 
                         FormsAuthentication.SignOut();
                         Log.Info("User logged out: {0}", CurrentUserName);
-                        viewData = new JsonViewData { isSuccessful = true  };
+                        viewData = new JsonViewData { isSuccessful = true };
                     }
                 }
                 catch (Exception e)
@@ -393,7 +391,7 @@ namespace Kigg.Web
                 {
                     using (IUnitOfWork unitOfWork = UnitOfWork.Begin())
                     {
-                        IUser user = UserRepository.FindByEmail(email.Trim());
+                        User user = UserRepository.FindByEmail(email.Trim());
 
                         if (user == null)
                         {
@@ -434,13 +432,13 @@ namespace Kigg.Web
         [AcceptVerbs(HttpVerbs.Post), Compress]
         public ActionResult ChangePassword(string oldPassword, string newPassword, string confirmPassword)
         {
-             var viewData = Validate<JsonViewData>(
-                                                                new Validation(() => string.IsNullOrEmpty(oldPassword.NullSafe()), "Old password cannot be blank."),
-                                                                new Validation(() => string.IsNullOrEmpty(newPassword.NullSafe()), "New password cannot be blank."),
-                                                                new Validation(() => newPassword.Trim().Length < MinimumLength, "New password cannot be less than {0} character.".FormatWith(MinimumLength)),
-                                                                new Validation(() => string.CompareOrdinal(newPassword.NullSafe(), confirmPassword.NullSafe()) != 0, "Confirm password does not match with the new password."),
-                                                                new Validation(() => !IsCurrentUserAuthenticated, "You are currently not authenticated.")
-                                                          );
+            var viewData = Validate<JsonViewData>(
+                                                               new Validation(() => string.IsNullOrEmpty(oldPassword.NullSafe()), "Old password cannot be blank."),
+                                                               new Validation(() => string.IsNullOrEmpty(newPassword.NullSafe()), "New password cannot be blank."),
+                                                               new Validation(() => newPassword.Trim().Length < MinimumLength, "New password cannot be less than {0} character.".FormatWith(MinimumLength)),
+                                                               new Validation(() => string.CompareOrdinal(newPassword.NullSafe(), confirmPassword.NullSafe()) != 0, "Confirm password does not match with the new password."),
+                                                               new Validation(() => !IsCurrentUserAuthenticated, "You are currently not authenticated.")
+                                                         );
 
             if (viewData == null)
             {
@@ -506,15 +504,15 @@ namespace Kigg.Web
         }
 
         [AcceptVerbs(HttpVerbs.Post), Compress]
-        public ActionResult ChangeRole(string id, string role)
+        public ActionResult ChangeRole(long id, string role)
         {
             var viewData = Validate<JsonViewData>(
-                                                                new Validation(() => string.IsNullOrEmpty(id), "User Id cannot be blank."),
-                                                                new Validation(() => string.IsNullOrEmpty(role), "Role cannot be blank."),
-                                                                new Validation(() => id.ToGuid().IsEmpty(), "Invalid user identifier."),
-                                                                new Validation(() => !IsCurrentUserAuthenticated, "You are currently not authenticated."),
-                                                                new Validation(() => !CurrentUser.IsAdministrator(), "You do not have the privilege to call this method.")
-                                                          );
+                new Validation(() => string.IsNullOrEmpty(role), "Role cannot be blank."),
+                new Validation(() => id <= 0, "Invalid user identifier."),
+                new Validation(() => !IsCurrentUserAuthenticated, "You are currently not authenticated."),
+                new Validation(() => !CurrentUser.IsAdministrator(),
+                               "You do not have the privilege to call this method.")
+                );
 
             if (viewData == null)
             {
@@ -522,7 +520,7 @@ namespace Kigg.Web
                 {
                     using (IUnitOfWork unitOfWork = UnitOfWork.Begin())
                     {
-                        IUser user = UserRepository.FindById(id.ToGuid());
+                        User user = UserRepository.FindById(id);
 
                         if (user == null)
                         {
@@ -549,32 +547,32 @@ namespace Kigg.Web
         }
 
         [AcceptVerbs(HttpVerbs.Post), Compress]
-        public ActionResult Lock(string id)
+        public ActionResult Lock(long id)
         {
             return LockOrUnlock(id, false);
         }
 
         [AcceptVerbs(HttpVerbs.Post), Compress]
-        public ActionResult Unlock(string id)
+        public ActionResult Unlock(long id)
         {
             return LockOrUnlock(id, true);
         }
 
         [AcceptVerbs(HttpVerbs.Post), Compress]
-        public ActionResult AllowIps(string id, ICollection<string> ipAddress)
+        public ActionResult AllowIps(long id, ICollection<string> ipAddress)
         {
             var viewData = Validate<JsonViewData>(
-                                                                new Validation(() => string.IsNullOrEmpty(id), "User Id cannot be blank."),
-                                                                new Validation(() => id.ToGuid().IsEmpty(), "Invalid user identifier."),
-                                                                new Validation(() => !IsCurrentUserAuthenticated, "You are currently not authenticated."),
-                                                                new Validation(() => !CurrentUser.IsAdministrator(), "You do not have the privilege to call this method.")
-                                                          );
+                new Validation(() => id <= 0, "Invalid user identifier."),
+                new Validation(() => !IsCurrentUserAuthenticated, "You are currently not authenticated."),
+                new Validation(() => !CurrentUser.IsAdministrator(),
+                               "You do not have the privilege to call this method.")
+                );
 
             if (viewData == null)
             {
                 try
                 {
-                    IUser user = UserRepository.FindById(id.ToGuid());
+                    User user = UserRepository.FindById(id);
 
                     if (user == null)
                     {
@@ -582,7 +580,7 @@ namespace Kigg.Web
                     }
                     else
                     {
-                        ICollection<string> usedIpAddresses = UserRepository.FindIPAddresses(user.Id);
+                        IEnumerable<string> usedIpAddresses = UserRepository.FindIPAddresses(user.Id);
                         var blockedIps = new List<string>();
 
                         ipAddress = ipAddress ?? new List<string>();
@@ -623,17 +621,15 @@ namespace Kigg.Web
         }
 
         [Compress]
-        public ActionResult Activate(string id)
+        public ActionResult Activate(long id)
         {
-            Guid userId = id.NullSafe().ToGuid();
-
-            if (!userId.IsEmpty())
+            if (id > 0)
             {
                 try
                 {
                     using (IUnitOfWork unitOfWork = UnitOfWork.Begin())
                     {
-                        IUser user = UserRepository.FindById(userId);
+                        User user = UserRepository.FindById(id);
 
                         if ((user != null) && !user.IsActive)
                         {
@@ -669,7 +665,7 @@ namespace Kigg.Web
         {
             var viewData = CreateViewData<UserListViewData>();
 
-            PagedResult<IUser> pagedResult = UserRepository.FindAll(PageCalculator.StartIndex(page, Settings.HtmlUserPerPage), Settings.HtmlUserPerPage);
+            PagedResult<User> pagedResult = UserRepository.FindAll(PageCalculator.StartIndex(page, Settings.HtmlUserPerPage), Settings.HtmlUserPerPage);
 
             viewData.CurrentPage = page ?? 1;
             viewData.UserPerPage = Settings.HtmlUserPerPage;
@@ -684,21 +680,18 @@ namespace Kigg.Web
         }
 
         [Compress]
-        public ActionResult Detail(string name, string tab, int? page)
+        public ActionResult Detail(long? id, string tab, int? page)
         {
-            if (string.IsNullOrEmpty(name))
+            if (id == null || id <= 0)
             {
-                return RedirectToRoute("Users", new { page = 1});
+                return RedirectToRoute("Users", new { page = 1 });
             }
 
-            IUser user = null;
-            Guid userId = name.NullSafe().ToGuid();
+            User user = null;
+            long userId = id.Value;
 
-            if (!userId.IsEmpty())
-            {
-                user = UserRepository.FindById(userId);
-            }
-
+            user = UserRepository.FindById(userId);
+            
             if (user == null)
             {
                 ThrowNotFound("User no longer exists.");
@@ -758,11 +751,11 @@ namespace Kigg.Web
             return View(viewData);
         }
 
-        private ActionResult LockOrUnlock(string id, bool unlock)
+        private ActionResult LockOrUnlock(long id, bool unlock)
         {
             var viewData = Validate<JsonViewData>(
-                new Validation(() => string.IsNullOrEmpty(id), "User Id cannot be blank."),
-                new Validation(() => id.ToGuid().IsEmpty(), "Invalid user identifier."),
+
+                new Validation(() => id <= 0, "Invalid user identifier."),
                 new Validation(() => !IsCurrentUserAuthenticated, "You are currently not authenticated."),
                 new Validation(() => !CurrentUser.IsAdministrator(),
                                "You do not have the privilege to call this method.")
@@ -774,7 +767,7 @@ namespace Kigg.Web
                 {
                     using (IUnitOfWork unitOfWork = UnitOfWork.Begin())
                     {
-                        IUser user = UserRepository.FindById(id.ToGuid());
+                        User user = UserRepository.FindById(id);
 
                         if (user == null)
                         {

@@ -6,7 +6,7 @@ namespace Kigg.Web
 
     public class UserDetailViewData : BaseViewData
     {
-        public IUser TheUser
+        public User TheUser
         {
             get;
             set;

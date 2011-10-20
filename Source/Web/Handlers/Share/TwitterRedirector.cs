@@ -16,7 +16,7 @@ namespace Kigg.Web
             _contentService = contentService;
         }
 
-        public void Redirect(HttpContextBase httpContext, IStory story)
+        public void Redirect(HttpContextBase httpContext, Story story)
         {
             string shortUrl = _contentService.ShortUrl(story.Url);
 

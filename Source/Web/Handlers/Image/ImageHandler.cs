@@ -74,7 +74,7 @@ namespace Kigg.Web
             set;
         }
 
-        public IStoryRepository StoryRepository
+        public IStoryRepository IStoryRepository
         {
             get;
             set;
@@ -161,7 +161,7 @@ namespace Kigg.Web
 
                         if (url.IsWebUrl())
                         {
-                            IStory story = StoryRepository.FindByUrl(url);
+                            Story story = IStoryRepository.FindByUrl(url);
 
                             if (story != null)
                             {

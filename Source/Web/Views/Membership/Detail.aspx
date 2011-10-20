@@ -11,7 +11,7 @@
 
     private void StoryList()
     {
-        string userId = Model.TheUser.Id.Shrink();
+        long userId = Model.TheUser.Id;
         int page = Model.CurrentPage;
 
         switch (Model.SelectedTab)
@@ -42,7 +42,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
     <%= Html.PageHeader(Model.TheUser.UserName)%>
     <div style="clear:left">
-        <% IUser user = Model.TheUser; %>
+        <% User user = Model.TheUser; %>
         <%bool isVisitingOwnPage = ((Model.IsCurrentUserAuthenticated) && (user.Id.Equals(Model.CurrentUser.Id)));%>
         <%bool isAdmin = ((Model.IsCurrentUserAuthenticated) && (Model.CurrentUser.IsAdministrator()));%>
         <table>
@@ -65,8 +65,8 @@
                                         <%= user.UserName%>
                                         <%if (isAdmin)%>
                                         <%{%>
-                                            <a id="lnkLockUser" href="javascript:void(0)" onclick="javascript:Administration.lockUser('<%= user.Id.Shrink() %>')" class="actionLink <%= user.IsLockedOut ? "hide" : string.Empty %>">lock</a>
-                                            <a id="lnkUnlockUser" href="javascript:void(0)" onclick="javascript:Administration.unlockUser('<%= user.Id.Shrink() %>')" class="actionLink <%= user.IsLockedOut ? string.Empty : "hide" %>">unlock</a>
+                                            <a id="lnkLockUser" href="javascript:void(0)" onclick="javascript:Administration.lockUser('<%= user.Id %>')" class="actionLink <%= user.IsLockedOut ? "hide" : string.Empty %>">lock</a>
+                                            <a id="lnkUnlockUser" href="javascript:void(0)" onclick="javascript:Administration.unlockUser('<%= user.Id %>')" class="actionLink <%= user.IsLockedOut ? string.Empty : "hide" %>">unlock</a>
                                         <%}%>
                                     </td>
                                 </tr>
@@ -129,7 +129,7 @@
                                                 <div id="roleEditSection" class="form hide">
                                                     <% using (Html.BeginForm("ChangeRole", "Membership", FormMethod.Post, new { id = "frmChangeRole" }))%>
                                                     <% { %>
-                                                            <%= Html.Hidden("id", user.Id.Shrink()) %>
+                                                            <%= Html.Hidden("id", user.Id) %>
                                                             <select id="ddlRoles" name="role">
                                                                 <%foreach (KeyValuePair<int, string> pair in Html.ToDictionary<Kigg.DomainObjects.Roles>())%>
                                                                 <%{%>
@@ -161,7 +161,7 @@
                                         <td>
                                             <%using (Html.BeginForm("AllowIps", "Membership", FormMethod.Post, new { id = "frmAllowIps", @class = "form" }))%>
                                             <%{%>
-                                                <%= Html.Hidden("id", user.Id.Shrink()) %>
+                                                <%= Html.Hidden("id", user.Id) %>
                                                 <ul style="list-style:none none outside;margin:0px;padding:0px;width:32em">
                                                     <%foreach(KeyValuePair<string, bool> ipAddress in Model.IPAddresses) %>
                                                     <%{%>
@@ -196,7 +196,7 @@
     <div class="divider"></div>
     <div id="userTabs">
         <ul class="ui-tabs-nav">
-            <% string userId = user.Id.Shrink(); %>
+            <% long userId = user.Id; %>
             <% UserDetailTab selectedTab = Model.SelectedTab; %>
             <li class="ui-tabs-nav-item<%= ((selectedTab == UserDetailTab.Promoted) ? " ui-tabs-selected" : string.Empty) %>"><a href="<%= Url.RouteUrl("User", new { name = userId, tab = UserDetailTab.Promoted, page = 1}) %>">Promoted</a></li>
             <li class="ui-tabs-nav-item<%= ((selectedTab == UserDetailTab.Posted) ? " ui-tabs-selected" : string.Empty) %>"><a href="<%= Url.RouteUrl("User", new { name = userId, tab = UserDetailTab.Posted, page = 1 }) %>">Posted</a></li>
