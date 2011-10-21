@@ -141,7 +141,7 @@ namespace Kigg.Infrastructure.HtmlAgilityPack
 
                 if (bodyNode != null)
                 {
-                    using (StringWriter writer = new StringWriter(Constants.CurrentCulture))
+                    using (StringWriter writer = new StringWriter(Culture.Current))
                     {
                         ConvertTo(contentNode, writer);
                         writer.Flush();

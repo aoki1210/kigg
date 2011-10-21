@@ -39,7 +39,7 @@ using System.Collections.Generic;
         {
             Check.Argument.IsNotNullOrEmpty(target, "target");
 
-            return string.Format(Constants.CurrentCulture, target, args);
+            return string.Format(Culture.Current, target, args);
         }
 
         [DebuggerStepThrough]
@@ -139,7 +139,7 @@ using System.Collections.Generic;
             {
                 foreach (char character in IllegalUrlCharacters)
                 {
-                    target = target.Replace(character.ToString(Constants.CurrentCulture), string.Empty);
+                    target = target.Replace(character.ToString(Culture.Current), string.Empty);
                 }
             }
 
