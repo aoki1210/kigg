@@ -299,6 +299,7 @@
     <Content Include="App_GlobalResources\Site.resx">
       <Generator>GlobalResourceProxyGenerator</Generator>
       <LastGenOutput>Site.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
