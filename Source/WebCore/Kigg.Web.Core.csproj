@@ -67,11 +67,23 @@
     <Compile Include="..\SharedFiles\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Controllers\KiggControllerBase.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Extensions\HtmlHelperExtension.cs" />
+    <Compile Include="Extensions\UrlHelperAssetExtensions.cs" />
+    <Compile Include="Helpers\Constants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Kigg.Core.csproj">
+      <Project>{04A61455-9656-4E67-A8D6-9FBA348F0FB3}</Project>
+      <Name>Kigg.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

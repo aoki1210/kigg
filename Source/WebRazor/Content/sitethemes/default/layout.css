@@ -1,0 +1,42 @@
+﻿/*Site layout*/
+#container
+{
+    background: #fff none repeat scroll 0%;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    min-height: 100%;
+    position: relative;
+}
+#header
+{
+    background-color: #EB4C07;
+    color: #FFFFFF;
+    height: 105px;
+    padding: 2px 0 4px;
+    width: 100%;
+}
+#main-menu
+{
+    background-color: #404040;
+    color: #000000;
+    padding: 5px 15px;
+}
+#content
+{
+    clear: both;
+    margin: 0 10px;
+    padding: 10px 0 80px;
+}
+#footer
+{
+    background-color: #404040;
+    border-top: 7px solid #FF6600;
+    bottom: 0;
+    color: #FFFFFF;
+    height: 60px;
+    padding: 5px 0;
+    position: absolute;
+    vertical-align: middle;
+    width: 100%;
+}
