@@ -2,7 +2,6 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-
 [assembly: AssemblyTitle("Kigg.Web.Core")]
 [assembly: AssemblyProduct("Kigg.Web.Core")]
 [assembly: CLSCompliant(true)]
