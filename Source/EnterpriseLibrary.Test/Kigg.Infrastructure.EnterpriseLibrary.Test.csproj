@@ -162,10 +162,6 @@
       <Project>{04A61455-9656-4E67-A8D6-9FBA348F0FB3}</Project>
       <Name>Kigg.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\EnterpriseLibrary\Kigg.Infrastructure.EnterpriseLibrary.csproj">
-      <Project>{115F6494-917B-4E8B-97E4-F671DE3E94F9}</Project>
-      <Name>Kigg.Infrastructure.EnterpriseLibrary</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

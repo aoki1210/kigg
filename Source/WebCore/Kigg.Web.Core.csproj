@@ -12,8 +12,8 @@
     <AssemblyName>Kigg.Web.Core</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\Kigg.snk</AssemblyOriginatorKeyFile>
+    <!--<SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\Kigg.snk</AssemblyOriginatorKeyFile>-->
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -42,11 +42,13 @@
     <Reference Include="DotNetOpenAuth">
       <HintPath>..\packages\DotNetOpenAuth.3.4.7.11121\lib\DotNetOpenAuth.dll</HintPath>
     </Reference>
-    <Reference Include="MvcExtensions">
-      <HintPath>..\packages\MvcExtensions.2.0.0.515\lib\net40\MvcExtensions.dll</HintPath>
+    <Reference Include="MvcExtensions, Version=2.0.0.518, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\MvcExtensions.2.0.0.518\lib\net40\MvcExtensions.dll</HintPath>
     </Reference>
-    <Reference Include="MvcExtensions.Autofac">
-      <HintPath>..\packages\MvcExtensions.Autofac.2.0.0.515\lib\net40\MvcExtensions.Autofac.dll</HintPath>
+    <Reference Include="MvcExtensions.Autofac, Version=2.0.0.518, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\MvcExtensions.Autofac.2.0.0.518\lib\net40\MvcExtensions.Autofac.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -67,11 +69,13 @@
     <Compile Include="..\SharedFiles\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="BoostrapperTasks\NoopTask.cs" />
     <Compile Include="Controllers\KiggControllerBase.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Extensions\HtmlHelperExtension.cs" />
     <Compile Include="Extensions\UrlHelperAssetExtensions.cs" />
     <Compile Include="Helpers\Constants.cs" />
+    <Compile Include="Infrastructure\CacheManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

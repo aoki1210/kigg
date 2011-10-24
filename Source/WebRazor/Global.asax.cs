@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
-
-namespace WebRazor
+﻿namespace Kigg.Web
 {
+    using System.Web.Mvc;
+    using System.Web.Routing;
+
+    using MvcExtensions.Autofac;
+
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
     // visit http://go.microsoft.com/?LinkId=9394801
 
-    public class MvcApplication : System.Web.HttpApplication
+    public class MvcApplication : AutofacMvcApplication
     {
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
@@ -29,12 +27,15 @@ namespace WebRazor
 
         }
 
-        protected void Application_Start()
+        protected override void OnStart()
         {
+            var adapter = base.Adapter;
             AreaRegistration.RegisterAllAreas();
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
+
+            base.OnStart();
         }
     }
 }

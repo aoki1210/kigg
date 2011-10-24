@@ -1,7 +1,7 @@
 ﻿namespace Kigg.Infrastructure
 {
     using System;
-
+    [Obsolete("Use Kigg.Infrastructure.ICacheManager", true)]
     public interface ICache
     {
         int Count

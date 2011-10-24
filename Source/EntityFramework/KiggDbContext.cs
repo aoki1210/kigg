@@ -53,5 +53,10 @@
         {
             entities.ForEach(entity => Set<TEntity>().Remove(entity));
         }
+
+        public virtual void Commit()
+        {
+            SaveChanges();
+        }
     }
 }
