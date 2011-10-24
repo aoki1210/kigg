@@ -143,6 +143,7 @@
     <Compile Include="StoryRepository.cs" />
     <Compile Include="StoryViewRepository.cs" />
     <Compile Include="TagRepository.cs" />
+    <Compile Include="UnitOfWork.cs" />
     <Compile Include="UserRepository.cs" />
     <Compile Include="VoteRepository.cs" />
   </ItemGroup>

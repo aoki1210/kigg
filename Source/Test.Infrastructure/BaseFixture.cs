@@ -9,7 +9,7 @@ namespace Kigg.Test.Infrastructure
     {
         protected readonly Mock<IDependencyResolverFactory> resolverFactory;
         protected readonly Mock<ILog> log;
-        protected readonly Mock<ICache> cache;
+        protected readonly Mock<ICacheManager> cache;
         protected readonly Mock<IUnitOfWork> unitOfWork;
         protected readonly Mock<IFile> file;
         protected readonly Mock<IConfigurationManager> configurationManager;
@@ -24,7 +24,7 @@ namespace Kigg.Test.Infrastructure
             SetupSettingProperties();
 
             log = new Mock<ILog>();
-            cache = new Mock<ICache>();
+            cache = new Mock<ICacheManager>();
             unitOfWork = new Mock<IUnitOfWork>();
             file = new Mock<IFile>();
             configurationManager = new Mock<IConfigurationManager>();
@@ -37,7 +37,7 @@ namespace Kigg.Test.Infrastructure
 
             resolver.Setup(r => r.Resolve<IConfigurationSettings>()).Returns(settings.Object);
             resolver.Setup(r => r.Resolve<ILog>()).Returns(log.Object);
-            resolver.Setup(r => r.Resolve<ICache>()).Returns(cache.Object);
+            resolver.Setup(r => r.Resolve<ICacheManager>()).Returns(cache.Object);
             resolver.Setup(r => r.Resolve<IFile>()).Returns(file.Object);
             resolver.Setup(r => r.Resolve<IConfigurationManager>()).Returns(configurationManager.Object);
             resolver.Setup(r => r.Resolve<IUnitOfWork>()).Returns(unitOfWork.Object);

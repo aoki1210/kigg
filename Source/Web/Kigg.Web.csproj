@@ -245,10 +245,6 @@
       <Project>{04A61455-9656-4E67-A8D6-9FBA348F0FB3}</Project>
       <Name>Kigg.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\EnterpriseLibrary\Kigg.Infrastructure.EnterpriseLibrary.csproj">
-      <Project>{115F6494-917B-4E8B-97E4-F671DE3E94F9}</Project>
-      <Name>Kigg.Infrastructure.EnterpriseLibrary</Name>
-    </ProjectReference>
     <ProjectReference Include="..\HtmlAgilityPack\Kigg.Infrastructure.HtmlAgilityPack.csproj">
       <Project>{564931FC-9E33-4FA4-887D-7E78C2B63873}</Project>
       <Name>Kigg.Infrastructure.HtmlAgilityPack</Name>

@@ -3,6 +3,7 @@
     using System;
     using System.Diagnostics;
 
+    [Obsolete("Use Kigg.Infrastructure.ICacheManager")]
     public static class Cache
     {
         public static int Count

@@ -100,6 +100,7 @@
     <Compile Include="Infrastructure\Bootstrapper\DefaultUser.cs" />
     <Compile Include="Infrastructure\Bootstrapper\IBootstrapperTask.cs" />
     <Compile Include="Infrastructure\Bootstrapper\StartBackgroundTasks.cs" />
+    <Compile Include="Infrastructure\Caching\ICacheManager.cs" />
     <Compile Include="Infrastructure\EventAggregator\BaseEvent.cs" />
     <Compile Include="Infrastructure\EventAggregator\BaseEvent`1.cs" />
     <Compile Include="Infrastructure\EventAggregator\DelegateReference.cs" />
