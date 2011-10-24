@@ -1,5 +1,28 @@
 ﻿<div class="title">
     <h1>
-        <a rel="home" role="logo" title="@Resources.Site.SiteTitle" href="@Url.Content("~/")">&nbsp;</a>
+        <a rel="home" role="logo" title="@Resources.Site.SiteTitle" href="@Url.Content("~/")">
+            &nbsp;</a>
     </h1>
+</div>
+<div class="links">
+    <div class="user-links">
+        @if (User.Identity.IsAuthenticated)
+        {
+            <span>@Resources.Site.SiteMemberWelcome,&nbsp;</span>
+            <a id="profile-link" href="javascript:void(0)">{User Display Name}</a>
+            <span>&nbsp;|&nbsp;</span>
+            <a id="signout-link" href="javascript:void(0)">@Resources.Site.SiteSignout</a>
+        }
+        else
+        {
+            <span>@Resources.Site.SiteGuestWelcome&nbsp;</span>
+            <a id="login-link" href="javascript:void(0)">@Resources.Site.SiteSignin</a>
+            <span>&nbsp;|&nbsp;</span>
+            <a id="signup-link" href="javascript:void(0)">@Resources.Site.SiteSignup</a>
+        }
+    </div>
+    <div class="story-links">
+        <a href="javascript:void(0)">@Resources.Site.StoryUpcoming</a>
+        <a href="javascript:void(0)">@Resources.Site.StorySubmitNew</a>
+    </div>
 </div>
