@@ -1,0 +1,32 @@
+﻿html, body
+{
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+body
+{
+    background: #fff none repeat scroll 0%;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+body, h3, textarea, input, select
+{
+    font-family: Trebuchet MS,Tahoma,Arial,sans-serif;
+    font-size: 14px;
+}
+
+a
+{
+    color: #4b72a9;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+img
+{
+    border: 0;
+}

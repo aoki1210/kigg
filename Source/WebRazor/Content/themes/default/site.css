@@ -1,0 +1,71 @@
+#header a
+{
+    color: #fff;
+}
+
+#header .title
+{
+    float: left;
+    padding: 0 0 0 15px;
+}
+
+#header .title h1
+{
+    margin: 0;
+    padding: 0;
+    font-size: 0;
+}
+
+#header .title a[role='logo']
+{
+    background: transparent url(images/logo.png) no-repeat scroll 0 0;
+    color: #eb4c07;
+    height: 102px;
+    width: 281px;
+    position: absolute;
+}
+
+#header .links
+{
+    float: right;
+    font-weight: bold;
+    margin: 10px 0 0;
+}
+
+
+#header .links div
+{
+    margin: 0;
+    text-align: right;
+}
+
+#header .links div a
+{
+    text-decoration: underline;
+}
+
+#header .links .user-links
+{
+    margin: 0 12px 0 0;
+}
+
+#header .links .story-links
+{
+    margin: 10px 0 0;
+}
+
+#header .links .story-links a
+{
+    background: url("images/bgs/torightbutton.png") repeat-x scroll 0 0 #FFDD00;
+    color: #404040;
+    float: right;
+    font-size: 1.1em;
+    margin: 0 12px 0 0;
+    padding: 6px 12px;
+    text-decoration: none;
+}
+
+#header .links .story-links a:hover
+{
+    text-decoration: underline;
+}
