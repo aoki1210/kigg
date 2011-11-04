@@ -2,7 +2,7 @@ namespace Kigg.Infrastructure
 {
     using System.Collections.Specialized;
 
-    using DomainObjects;
+    using Domain.Entities;
     using Service;
 
     public class PingStory : BaseBackgroundTask

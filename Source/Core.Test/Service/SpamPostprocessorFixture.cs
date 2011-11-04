@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Kigg.Core.Test
 {
-    using DomainObjects;
+    using Domain.Entities;
     using Infrastructure;
     using Repository;
     using Service;

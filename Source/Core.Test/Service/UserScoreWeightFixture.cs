@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Kigg.Core.Test
 {
-    using DomainObjects;
+    using Domain.Entities;
     using Repository;
     using Service;
 
@@ -43,8 +43,8 @@ namespace Kigg.Core.Test
 
             moderator.SetupGet(u => u.Id).Returns(1);
             admin.SetupGet(u => u.Id).Returns(1);
-            moderator.SetupGet(u => u.Role).Returns(Roles.Moderator);
-            admin.SetupGet(u => u.Role).Returns(Roles.Administrator);
+            moderator.SetupGet(u => u.Role).Returns(Role.Moderator);
+            admin.SetupGet(u => u.Role).Returns(Role.Administrator);
 
             var user1Vote = new Mock<Vote>();
             var user2Vote = new Mock<Vote>();

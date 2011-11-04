@@ -3,7 +3,7 @@ namespace Kigg.Repository
     //using System;
     using System.Collections.Generic;
 
-    using DomainObjects;
+    using Domain.Entities;
     using Infrastructure;
 
     public class LoggingTagRepository : DecoratedTagRepository
@@ -93,7 +93,7 @@ namespace Kigg.Repository
         public override IEnumerable<Tag> FindMatching(string name, int max)
         {
             Check.Argument.IsNotNullOrEmpty(name, "name");
-            Check.Argument.IsNotNegativeOrZero(max, "max");
+            Check.Argument.IsNotZeroOrNegative(max, "max");
 
             Log.Info("Retrieving tags by name like : {0}, {1}", name, max);
 
@@ -113,7 +113,7 @@ namespace Kigg.Repository
 
         public override IEnumerable<Tag> FindByUsage(int top)
         {
-            Check.Argument.IsNotNegativeOrZero(top, "top");
+            Check.Argument.IsNotZeroOrNegative(top, "top");
 
             Log.Info("Retrieving tags by usage : {0}", top);
 

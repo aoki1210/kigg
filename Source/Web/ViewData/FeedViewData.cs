@@ -3,7 +3,7 @@ namespace Kigg.Web
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
 
-    using DomainObjects;
+    using Domain.Entities;
 
     public class FeedViewData
     {

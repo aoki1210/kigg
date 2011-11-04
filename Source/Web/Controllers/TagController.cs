@@ -6,7 +6,7 @@ namespace Kigg.Web
     using System.Web.Mvc;
     using System.Web.Script.Serialization;
 
-    using DomainObjects;
+    using Domain.Entities;
     using Infrastructure;
     using Repository;
 

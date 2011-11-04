@@ -5,7 +5,7 @@
     using System.Linq.Expressions;
     using System.Collections.Generic;
 
-    using DomainObjects;
+    using Domain.Entities;
 
     public class DomainObjectFindListQuery<TResult> : OrderedQueryBase<TResult> where TResult:class, IDomainObject
     {
@@ -23,7 +23,7 @@
 
         public override IEnumerable<TResult> Execute()
         {
-            return Query.AsEnumerable();
+            return Query.ToList();
         }
     }
 }

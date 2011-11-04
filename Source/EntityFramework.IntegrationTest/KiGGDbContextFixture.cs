@@ -5,7 +5,7 @@
     using Xunit;
 
     using Kigg.Infrastructure.EntityFramework;
-    using Kigg.DomainObjects;
+    using Kigg.Domain.Entities;
     
     public class KiGGDbContextFixture : IntegrationFixtureBase
     {

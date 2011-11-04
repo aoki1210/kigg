@@ -3,7 +3,7 @@
     using System.Data.Entity.ModelConfiguration;
     using System.ComponentModel.DataAnnotations;
 
-    using DomainObjects;
+    using Domain.Entities;
 
     public class StoryMapping : EntityTypeConfiguration<Story>
     {

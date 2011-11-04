@@ -3,7 +3,7 @@ using Xunit;
 
 namespace Kigg.Core.Test
 {
-    using DomainObjects;
+    using Domain.Entities;
     using Repository;
     using Infrastructure.DomainRepositoryExtensions;
     using Kigg.Test.Infrastructure;
@@ -36,7 +36,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsAdministrator_Should_Be_True_When_Role_Contains_Administrator()
         {
-            _user.SetupGet(u => u.Role).Returns(Roles.Administrator);
+            _user.SetupGet(u => u.Role).Returns(Role.Administrator);
 
             Assert.True(_user.Object.IsAdministrator());
         }
@@ -44,7 +44,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsModerator_Should_Be_True_When_Role_Contains_Modarator()
         {
-            _user.SetupGet(u => u.Role).Returns(Roles.Moderator);
+            _user.SetupGet(u => u.Role).Returns(Role.Moderator);
 
             Assert.True(_user.Object.IsModerator());
         }
@@ -52,7 +52,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsBot_Should_Be_True_When_Role_Contains_Bot()
         {
-            _user.SetupGet(u => u.Role).Returns(Roles.Bot);
+            _user.SetupGet(u => u.Role).Returns(Role.Bot);
 
             Assert.True(_user.Object.IsBot());
         }
@@ -66,7 +66,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void CanModerate_Should_Be_True_When_User_Is_Either_Administrator_Or_Moderator()
         {
-            _user.SetupGet(u => u.Role).Returns(Roles.Administrator | Roles.Moderator);
+            _user.SetupGet(u => u.Role).Returns(Role.Administrator | Role.Moderator);
 
             Assert.True(_user.Object.CanModerate());
         }
@@ -80,7 +80,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void ShouldHideCaptcha_Should_Be_True_When_Use_Is_Not_Public_User()
         {
-            _user.SetupGet(u => u.Role).Returns(Roles.Bot);
+            _user.SetupGet(u => u.Role).Returns(Role.Bot);
 
             Assert.True(_user.Object.ShouldHideCaptcha());
         }

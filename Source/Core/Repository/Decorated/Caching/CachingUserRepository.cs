@@ -2,7 +2,7 @@ namespace Kigg.Repository
 {
     using System;
 
-    using DomainObjects;
+    using Domain.Entities;
     using Infrastructure;
 
     public class CachingUserRepository : DecoratedUserRepository
@@ -13,9 +13,9 @@ namespace Kigg.Repository
 
         public CachingUserRepository(IUserRepository innerRepository, int noOfUsersCacheCount, float usersCacheDurationInMinutes, float userCacheDurationInMinutes) : base(innerRepository)
         {
-            Check.Argument.IsNotNegativeOrZero(noOfUsersCacheCount, "noOfUsersCacheCount");
-            Check.Argument.IsNotNegativeOrZero(usersCacheDurationInMinutes, "usersCacheDurationInMinutes");
-            Check.Argument.IsNotNegativeOrZero(userCacheDurationInMinutes, "userCacheDurationInMinutes");
+            Check.Argument.IsNotZeroOrNegative(noOfUsersCacheCount, "noOfUsersCacheCount");
+            Check.Argument.IsNotZeroOrNegative(usersCacheDurationInMinutes, "usersCacheDurationInMinutes");
+            Check.Argument.IsNotZeroOrNegative(userCacheDurationInMinutes, "userCacheDurationInMinutes");
 
             _noOfUsersCacheCount = noOfUsersCacheCount;
             _usersCacheDurationInMinutes = usersCacheDurationInMinutes;

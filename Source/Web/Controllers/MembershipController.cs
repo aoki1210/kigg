@@ -12,7 +12,7 @@ namespace Kigg.Web
     using DotNetOpenAuth.OpenId.RelyingParty;
     using DotNetOpenAuth.Messaging;
 
-    using DomainObjects;
+    using Domain.Entities;
     using Infrastructure;
     using Service;
 

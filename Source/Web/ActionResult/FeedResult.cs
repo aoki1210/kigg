@@ -9,7 +9,7 @@ namespace Kigg.Web
     using System.Web.Routing;
     using System.Xml.Linq;
 
-    using DomainObjects;
+    using Domain.Entities;
 
     public class FeedResult : ActionResult
     {

@@ -4,7 +4,7 @@
     using System.Diagnostics;
     using System.Collections.Generic;
 
-    using DomainObjects;
+    using Domain.Entities;
 
     public abstract class DecoratedTagRepository : ITagRepository
     {

@@ -10,8 +10,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Kigg.Web</RootNamespace>
     <AssemblyName>Kigg.Web.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
     <!--<SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\Kigg.snk</AssemblyOriginatorKeyFile>-->
   </PropertyGroup>
@@ -42,16 +43,18 @@
     <Reference Include="DotNetOpenAuth">
       <HintPath>..\packages\DotNetOpenAuth.3.4.7.11121\lib\DotNetOpenAuth.dll</HintPath>
     </Reference>
-    <Reference Include="MvcExtensions, Version=2.0.0.518, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="MvcExtensions, Version=2.0.0.519, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\MvcExtensions.2.0.0.518\lib\net40\MvcExtensions.dll</HintPath>
+      <HintPath>..\packages\MvcExtensions.2.0.0.519\lib\net40\MvcExtensions.dll</HintPath>
     </Reference>
-    <Reference Include="MvcExtensions.Autofac, Version=2.0.0.518, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="MvcExtensions.Autofac, Version=2.0.0.519, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\MvcExtensions.Autofac.2.0.0.518\lib\net40\MvcExtensions.Autofac.dll</HintPath>
+      <HintPath>..\packages\MvcExtensions.Autofac.2.0.0.519\lib\net40\MvcExtensions.Autofac.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Extensions" />
@@ -69,14 +72,27 @@
     <Compile Include="..\SharedFiles\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="BoostrapperTasks\NoopTask.cs" />
+    <Compile Include="BoostrapperTasks\AutoMapperBootstrapper.cs" />
+    <Compile Include="BoostrapperTasks\CreateDefaultCategories.cs" />
+    <Compile Include="BoostrapperTasks\CreateDefaultUsers.cs" />
+    <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\KiggControllerBase.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Extensions\HtmlHelperExtension.cs" />
+    <Compile Include="Extensions\HtmlHelperTelerikExtensions.cs" />
     <Compile Include="Extensions\UrlHelperAssetExtensions.cs" />
     <Compile Include="Helpers\Constants.cs" />
     <Compile Include="Infrastructure\CacheManager.cs" />
+    <Compile Include="Infrastructure\FormsAuthentication.cs" />
+    <Compile Include="Infrastructure\IFormsAuthentication.cs" />
+    <Compile Include="Infrastructure\IOpenIdRelyingParty.cs" />
+    <Compile Include="Infrastructure\OpenIdRelyingParty.cs" />
+    <Compile Include="MvcApplication\AutofacMvcApplication.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Infrastructure\ViewEngines\BuildManager.cs" />
+    <Compile Include="Infrastructure\ViewEngines\ThemeableBuildManagerViewEngine.cs" />
+    <Compile Include="Infrastructure\ViewEngines\ThemeableRazorViewEngine.cs" />
+    <Compile Include="Infrastructure\ViewEngines\ThemeableVirtualPathProviderViewEngine.cs" />
+    <Compile Include="ServiceRegistration\AutofacServiceRegistration.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -85,6 +101,18 @@
     <ProjectReference Include="..\Core\Kigg.Core.csproj">
       <Project>{04A61455-9656-4E67-A8D6-9FBA348F0FB3}</Project>
       <Name>Kigg.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DomainModel\Kigg.DomainModel.csproj">
+      <Project>{F54A1E7C-D858-4775-9EC3-A151D542FFAB}</Project>
+      <Name>Kigg.DomainModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EntityFramework\Kigg.Infrastructure.EntityFramework.csproj">
+      <Project>{7AEA11B2-945D-42FB-A9F0-97745DA88393}</Project>
+      <Name>Kigg.Infrastructure.EntityFramework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Services\Kigg.Services.csproj">
+      <Project>{C412D49E-5809-4FB4-9523-90269B5F1F3F}</Project>
+      <Name>Kigg.Services</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

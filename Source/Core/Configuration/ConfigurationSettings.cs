@@ -1,5 +1,8 @@
 namespace Kigg
 {
+    using System;
+
+    [Obsolete("Use configuration element instead", true)]
     public class ConfigurationSettings : IConfigurationSettings
     {
         public string RootUrl

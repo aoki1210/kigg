@@ -69,3 +69,30 @@
 {
     text-decoration: underline;
 }
+
+#main-menu .category-list {
+    float: left;
+}
+
+#main-menu .category-list ul {
+    padding-left: 0;
+}
+
+#main-menu .category-list ul li {
+    list-style: none outside none;
+    display: inline;
+    margin-left: 0;
+    border: medium none;
+    font-weight: bold;
+}
+
+#main-menu .category-list ul li a{
+    color: #FFFFFF;
+    padding: 8px 8px 6px;
+}
+
+#main-menu .category-list ul li a:hover,
+#main-menu .category-list ul li a:focus
+{
+    background-color:#5a5a5a;
+}

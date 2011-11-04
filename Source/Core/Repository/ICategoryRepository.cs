@@ -2,7 +2,7 @@ namespace Kigg.Repository
 {
     using System.Collections.Generic;
 
-    using DomainObjects;
+    using Domain.Entities;
 
     public interface ICategoryRepository : IUniqueNameEntityRepository<Category>
     {

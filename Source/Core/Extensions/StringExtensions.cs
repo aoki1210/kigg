@@ -62,7 +62,7 @@
             const int DotCount = 3;
 
             Check.Argument.IsNotNullOrEmpty(target, "target");
-            Check.Argument.IsNotNegativeOrZero(index, "index");
+            Check.Argument.IsNotZeroOrNegative(index, "index");
 
             return (target.Length <= index) ? target : string.Concat(target.Substring(0, index - DotCount), new string('.', DotCount));
         }

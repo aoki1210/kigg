@@ -1,0 +1,14 @@
+﻿@using Kigg.Services
+@model CategoryListResult
+<div class='category-list'>
+    <ul>
+        <li>
+            @Html.ActionLink("All", "Default", "Home", null, new { rel = "home"})
+        </li>
+        @foreach(var category in Model.Categories)
+        {
+            <li><a href="javascript:void(0)" rel='tag directory'>@category.Name</a></li>
+        }
+    </ul>
+</div>
+<div>&nbsp;</div>

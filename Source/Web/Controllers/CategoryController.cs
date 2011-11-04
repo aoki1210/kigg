@@ -3,7 +3,7 @@ namespace Kigg.Web
     using System.Collections.Generic;
     using System.Web.Mvc;
 
-    using DomainObjects;
+    using Domain.Entities;
     using Repository;
 
     public class CategoryController : BaseController

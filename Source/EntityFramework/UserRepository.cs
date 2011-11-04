@@ -5,7 +5,7 @@
 
     using Query;    
     using Repository;
-    using DomainObjects;
+    using Domain.Entities;
 
     public class UserRepository : EntityRepositoryBase<User>, IUserRepository
     {
@@ -84,7 +84,7 @@
 
         public decimal FindScoreById(long id, DateTime startTimestamp, DateTime endTimestamp)
         {
-            Check.Argument.IsNotNegativeOrZero(id, "id");
+            Check.Argument.IsNotZeroOrNegative(id, "id");
             Check.Argument.IsNotInFuture(startTimestamp, "startTimestamp");
             Check.Argument.IsNotInFuture(endTimestamp, "endTimestamp");
 

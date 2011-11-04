@@ -5,7 +5,7 @@
     using System.Linq.Expressions;
     using System.Collections.Generic;
 
-    using DomainObjects;
+    using Domain.Entities;
 
     public class UserFindTopScoredListQuery : OrderedQueryBase<User>
     {
@@ -29,7 +29,7 @@
 
         public override IEnumerable<User> Execute()
         {
-            return Query.AsEnumerable();
+            return Query.ToList();
         }
 
         public override int Count()

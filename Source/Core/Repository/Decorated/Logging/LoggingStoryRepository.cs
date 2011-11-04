@@ -2,7 +2,7 @@ namespace Kigg.Repository
 {
     using System;
 
-    using DomainObjects;
+    using Domain.Entities;
     using Infrastructure;
 
     public class LoggingStoryRepository : DecoratedStoryRepository

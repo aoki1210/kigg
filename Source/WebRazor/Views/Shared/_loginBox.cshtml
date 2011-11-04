@@ -1,0 +1,15 @@
+﻿@{
+    Html.Telerik().Window()
+        .Name("login-box")
+        .Title(@Resources.Site.SiteSigninWindowTitle)
+        .Content(@<text>Windows content goes here</text>)
+        .Buttons(buttons => buttons.Close())
+        .Height(180)
+        .Width(300)
+        .Draggable(false)
+        .Modal(true)
+        .Visible(false).Render();
+
+    Html.Scripts()
+        .OnDocumentReady("membership.init();").OnWindowUnload("kigg.dispose();");
+}

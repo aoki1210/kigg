@@ -4,7 +4,7 @@ using Moq;
 
 namespace Kigg.Core.Test
 {
-    using DomainObjects;
+    using Domain.Entities;
     using Kigg.Test.Infrastructure;
 
     public abstract class DecoratedRepositoryFixture : BaseFixture

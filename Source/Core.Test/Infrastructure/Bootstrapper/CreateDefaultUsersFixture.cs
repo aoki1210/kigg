@@ -3,7 +3,7 @@ using Xunit;
 
 namespace Kigg.Core.Test
 {
-    using DomainObjects;
+    using Domain.Entities;
     using Infrastructure;
     using Repository;
     using Kigg.Test.Infrastructure;
@@ -22,8 +22,8 @@ namespace Kigg.Core.Test
 
             DefaultUser[] _users = new [] 
                                             {
-                                                new DefaultUser{UserName = "admin", Password = "admin", Email = "admin@dotnetshoutout.com", Role = Roles.Administrator},
-                                                new DefaultUser{UserName = "support", Password = "support", Email = "support@dotnetshoutout.com", Role = Roles.Moderator}
+                                                new DefaultUser{UserName = "admin", Password = "admin", Email = "admin@dotnetshoutout.com", Role = Role.Administrator},
+                                                new DefaultUser{UserName = "support", Password = "support", Email = "support@dotnetshoutout.com", Role = Role.Moderator}
                                             };
 
             _task = new CreateDefaultUsers(_factory.Object, _userRepository.Object, _users);

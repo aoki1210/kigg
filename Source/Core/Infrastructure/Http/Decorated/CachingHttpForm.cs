@@ -9,7 +9,7 @@ namespace Kigg.Infrastructure
 
         public CachingHttpForm(IHttpForm innerHttpForm, float cacheDurationInMinutes) : base(innerHttpForm)
         {
-            Check.Argument.IsNotNegativeOrZero(cacheDurationInMinutes, "cacheDurationInMinutes");
+            Check.Argument.IsNotZeroOrNegative(cacheDurationInMinutes, "cacheDurationInMinutes");
 
             _cacheDurationInMinutes = cacheDurationInMinutes;
         }

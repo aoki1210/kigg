@@ -62,7 +62,7 @@
             }
 
             [DebuggerStepThrough]
-            public static void IsNotNegativeOrZero(int argument, string argumentName)
+            public static void IsNotZeroOrNegative(int argument, string argumentName)
             {
                 if (argument <= 0)
                 {
@@ -80,7 +80,7 @@
             }
 
             [DebuggerStepThrough]
-            public static void IsNotNegativeOrZero(long argument, string argumentName)
+            public static void IsNotZeroOrNegative(long argument, string argumentName)
             {
                 if (argument <= 0)
                 {
@@ -98,7 +98,7 @@
             }
 
             [DebuggerStepThrough]
-            public static void IsNotNegativeOrZero(float argument, string argumentName)
+            public static void IsNotZeroOrNegative(float argument, string argumentName)
             {
                 if (argument <= 0)
                 {
@@ -116,7 +116,7 @@
             }
 
             [DebuggerStepThrough]
-            public static void IsNotNegativeOrZero(decimal argument, string argumentName)
+            public static void IsNotZeroOrNegative(decimal argument, string argumentName)
             {
                 if (argument <= 0)
                 {

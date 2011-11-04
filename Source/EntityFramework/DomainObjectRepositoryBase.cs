@@ -6,7 +6,7 @@ namespace Kigg.Infrastructure.EntityFramework
     using System.Diagnostics;
     
     using Query;
-    using DomainObjects;
+    using Domain.Entities;
     using Repository;
 
     public abstract class DomainObjectRepositoryBase<TDomainObject> : IRepository<TDomainObject>

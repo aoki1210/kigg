@@ -2,7 +2,7 @@ namespace Kigg.Web
 {
     using System.Web;
 
-    using DomainObjects;
+    using Domain.Entities;
     using Infrastructure;
 
     public class TwitterRedirector : ISocialServiceRedirector

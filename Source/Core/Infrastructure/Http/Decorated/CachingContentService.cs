@@ -7,8 +7,8 @@ namespace Kigg.Infrastructure
 
         public CachingContentService(IContentService innerService, float contentCacheDurationInMinutes, float shortUrlCacheDurationInMinutes) : base(innerService)
         {
-            Check.Argument.IsNotNegativeOrZero(contentCacheDurationInMinutes, "contentCacheDurationInMinutes");
-            Check.Argument.IsNotNegativeOrZero(shortUrlCacheDurationInMinutes, "shortUrlCacheDurationInMinutes");
+            Check.Argument.IsNotZeroOrNegative(contentCacheDurationInMinutes, "contentCacheDurationInMinutes");
+            Check.Argument.IsNotZeroOrNegative(shortUrlCacheDurationInMinutes, "shortUrlCacheDurationInMinutes");
 
             _contentCacheDurationInMinutes = contentCacheDurationInMinutes;
             _shortUrlCacheDurationInMinutes = shortUrlCacheDurationInMinutes;

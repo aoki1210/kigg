@@ -5,7 +5,7 @@ namespace Kigg.Web
     using System.Web.Mvc;
     using Repository;
 
-    using DomainObjects;
+    using Domain.Entities;
     using Infrastructure;
 
     public class SupportController : BaseController

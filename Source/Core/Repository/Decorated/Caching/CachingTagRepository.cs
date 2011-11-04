@@ -2,7 +2,7 @@ namespace Kigg.Repository
 {
     using System.Collections.Generic;
 
-    using DomainObjects;
+    using Domain.Entities;
     using Infrastructure;
 
     public class CachingTagRepository : DecoratedTagRepository
@@ -11,14 +11,14 @@ namespace Kigg.Repository
 
         public CachingTagRepository(ITagRepository innerRepository, float cacheDurationInMinutes) : base(innerRepository)
         {
-            Check.Argument.IsNotNegativeOrZero(cacheDurationInMinutes, "cacheDurationInMinutes");
+            Check.Argument.IsNotZeroOrNegative(cacheDurationInMinutes, "cacheDurationInMinutes");
 
             _cacheDurationInMinutes = cacheDurationInMinutes;
         }
 
         public override IEnumerable<Tag> FindByUsage(int top)
         {
-            Check.Argument.IsNotNegativeOrZero(top, "top");
+            Check.Argument.IsNotZeroOrNegative(top, "top");
 
             string cacheKey = "tagsByUsage:{0}".FormatWith(top);
 

@@ -1,6 +1,6 @@
 namespace Kigg.Infrastructure
 {
-    using DomainObjects;
+    using Domain.Entities;
     using Repository;
 
     public class CategoryMatchSpamWeightCalculator : ISpamWeightCalculator

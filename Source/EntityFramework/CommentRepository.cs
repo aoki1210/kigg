@@ -5,7 +5,7 @@
 
     using Query;
     using Repository;
-    using DomainObjects;
+    using Domain.Entities;
 
     public class CommentRepository : EntityRepositoryBase<Comment>, ICommentRepository
     {
@@ -16,7 +16,7 @@
 
         public int CountByStory(long storyId)
         {
-            Check.Argument.IsNotNegativeOrZero(storyId, "storyId");
+            Check.Argument.IsNotZeroOrNegative(storyId, "storyId");
 
             var query = QueryFactory.CreateCountCommentsByStory(storyId);
 
@@ -25,7 +25,7 @@
 
         public PagedResult<Comment> FindAfter(long storyId, DateTime timestamp, int? start, int? max)
         {
-            Check.Argument.IsNotNegativeOrZero(storyId, "storyId");
+            Check.Argument.IsNotZeroOrNegative(storyId, "storyId");
             Check.Argument.IsNotInvalidDate(timestamp, "timestamp");
 
             var query = QueryFactory.CreateFindCommentsForStoryAfterDate(storyId, timestamp, start, max);

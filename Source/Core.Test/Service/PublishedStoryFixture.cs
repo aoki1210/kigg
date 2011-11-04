@@ -3,7 +3,7 @@ using Xunit;
 
 namespace Kigg.Core.Test
 {
-    using DomainObjects;
+    using Domain.Entities;
     using Service;
 
     public class PublishedStoryFixture

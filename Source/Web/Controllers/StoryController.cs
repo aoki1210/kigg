@@ -5,7 +5,7 @@ namespace Kigg.Web
     using System.Linq;
     using System.Web.Mvc;
 
-    using DomainObjects;
+    using Domain.Entities;
     using Infrastructure;
     using Repository;
     using Service;

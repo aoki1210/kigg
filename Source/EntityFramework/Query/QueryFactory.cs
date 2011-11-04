@@ -5,7 +5,7 @@
     using System.Linq;
     using System.Linq.Expressions;
 
-    using DomainObjects;
+    using Domain.Entities;
 
     public class QueryFactory : IQueryFactory
     {
@@ -33,7 +33,7 @@
 
         public IQuery<int> CreateCountVotesByStory(long id)
         {
-            Check.Argument.IsNotNegativeOrZero(id, "id");
+            Check.Argument.IsNotZeroOrNegative(id, "id");
 
             var query = new CountVotesQuery(DbContext, v => v.StoryId == id);
 
@@ -42,7 +42,7 @@
 
         public IQuery<int> CreateCountSpamVotesByStory(long id)
         {
-            Check.Argument.IsNotNegativeOrZero(id, "id");
+            Check.Argument.IsNotZeroOrNegative(id, "id");
 
             var query = new CountSpamVotesQuery(DbContext, s => s.StoryId == id);
 
@@ -51,7 +51,7 @@
 
         public IQuery<int> CreateCountViewsByStory(long id)
         {
-            Check.Argument.IsNotNegativeOrZero(id, "id");
+            Check.Argument.IsNotZeroOrNegative(id, "id");
 
             var query = new CountStoryViewsQuery(DbContext, v => v.ForStory.Id == id);
 
@@ -60,7 +60,7 @@
 
         public IQuery<int> CreateCountCommentsByStory(long id)
         {
-            Check.Argument.IsNotNegativeOrZero(id, "id");
+            Check.Argument.IsNotZeroOrNegative(id, "id");
 
             var query = new CountCommentsQuery(DbContext, c => c.ForStory.Id == id);
 
@@ -166,7 +166,7 @@
 
         public IQuery<decimal> CreateCalculateUserScoreById(long id, DateTime startDate, DateTime endDate)
         {
-            Check.Argument.IsNotNegativeOrZero(id, "id");
+            Check.Argument.IsNotZeroOrNegative(id, "id");
             Check.Argument.IsNotInvalidDate(startDate, "startDate");
             Check.Argument.IsNotInFuture(startDate, "startDate");
             Check.Argument.IsNotInvalidDate(endDate, "endDate");
@@ -291,7 +291,7 @@
             Check.Argument.IsNotNegative(start, "start");
             Check.Argument.IsNotNegative(max, "max");
 
-            var query = new UserFindTopScoredListQuery(DbContext, us => (us.ScoredBy.Role == Roles.User) && (!us.ScoredBy.IsLockedOut) && (us.CreatedAt >= startDate && us.CreatedAt <= endDate));
+            var query = new UserFindTopScoredListQuery(DbContext, us => (us.ScoredBy.Role == Role.User) && (!us.ScoredBy.IsLockedOut) && (us.CreatedAt >= startDate && us.CreatedAt <= endDate));
             return query.Page(start, max);
         }
 
@@ -307,7 +307,7 @@
 
         public IOrderedQuery<Vote> CreateFindVotesAfterDate(long storyId, DateTime date)
         {
-            Check.Argument.IsNotNegativeOrZero(storyId, "storyId");
+            Check.Argument.IsNotZeroOrNegative(storyId, "storyId");
             Check.Argument.IsNotInFuture(date, "date");
             Check.Argument.IsNotInvalidDate(date, "date");
 
@@ -318,8 +318,8 @@
 
         public IQuery<Vote> CreateFindVoteById(long userId, long storyId)
         {
-            Check.Argument.IsNotNegativeOrZero(userId, "userId");
-            Check.Argument.IsNotNegativeOrZero(storyId, "storyId");
+            Check.Argument.IsNotZeroOrNegative(userId, "userId");
+            Check.Argument.IsNotZeroOrNegative(storyId, "storyId");
 
             var query = CreateFindUniqueDomainObjectQuery<Vote>(v => v.UserId == userId && v.StoryId == storyId);
 
@@ -328,8 +328,8 @@
 
         public IQuery<SpamVote> CreateFindSpamVoteById(long userId, long storyId)
         {
-            Check.Argument.IsNotNegativeOrZero(userId, "userId");
-            Check.Argument.IsNotNegativeOrZero(storyId, "storyId");
+            Check.Argument.IsNotZeroOrNegative(userId, "userId");
+            Check.Argument.IsNotZeroOrNegative(storyId, "storyId");
 
             var query = CreateFindUniqueDomainObjectQuery<SpamVote>(s => s.UserId == userId && s.StoryId == storyId);
 
@@ -338,7 +338,7 @@
 
         public IOrderedQuery<SpamVote> CreateFindSpamVotesAfterDate(long storyId, DateTime date)
         {
-            Check.Argument.IsNotNegativeOrZero(storyId, "storyId");
+            Check.Argument.IsNotZeroOrNegative(storyId, "storyId");
             Check.Argument.IsNotInFuture(date, "date");
             Check.Argument.IsNotInvalidDate(date, "date");
 
@@ -349,7 +349,7 @@
 
         public IOrderedQuery<StoryView> CreateFindStoryViewsAfterDate(long storyId, DateTime date)
         {
-            Check.Argument.IsNotNegativeOrZero(storyId, "storyId");
+            Check.Argument.IsNotZeroOrNegative(storyId, "storyId");
             Check.Argument.IsNotInFuture(date, "date");
             Check.Argument.IsNotInvalidDate(date, "date");
 
@@ -360,7 +360,7 @@
 
         public IOrderedQuery<Comment> CreateFindCommentsForStoryAfterDate(long storyId, DateTime date, int? start = null, int? max = null)
         {
-            Check.Argument.IsNotNegativeOrZero(storyId, "storyId");
+            Check.Argument.IsNotZeroOrNegative(storyId, "storyId");
             Check.Argument.IsNotInvalidDate(date, "date");
 
             IOrderedQuery<Comment> query = CreateFindDomainObjectListQuery<Comment>(c => c.ForStory.Id == storyId && c.CreatedAt >= date);
@@ -377,7 +377,7 @@
 
         public IQuery<Comment> CreateFindCommentById(long id)
         {
-            Check.Argument.IsNotNegativeOrZero(id, "id");
+            Check.Argument.IsNotZeroOrNegative(id, "id");
 
             var query = CreateFindUniqueDomainObjectQuery<Comment>(c => c.Id == id);
 

@@ -1,6 +1,6 @@
 namespace Kigg.Infrastructure
 {
-    using DomainObjects;
+    using Domain.Entities;
     using Repository;
 
     public class TagMatchSpamWeightCalculator : ISpamWeightCalculator
@@ -12,7 +12,7 @@ namespace Kigg.Infrastructure
 
         public TagMatchSpamWeightCalculator(int matchValue, int topTags, ITagRepository tagRepository)
         {
-            Check.Argument.IsNotNegativeOrZero(topTags, "topTags");
+            Check.Argument.IsNotZeroOrNegative(topTags, "topTags");
             Check.Argument.IsNotNull(tagRepository, "tagRepository");
 
             _matchValue = matchValue;

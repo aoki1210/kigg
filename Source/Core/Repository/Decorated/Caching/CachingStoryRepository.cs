@@ -1,6 +1,6 @@
 namespace Kigg.Repository
 {
-    using DomainObjects;
+    using Domain.Entities;
     using Infrastructure;
 
     public class CachingStoryRepository : DecoratedStoryRepository
@@ -12,11 +12,11 @@ namespace Kigg.Repository
 
         public CachingStoryRepository(IStoryRepository innerRepository, int noOfPublishedStoriesCacheCount, float publishedStoriesCacheDurationInMinutes, int noOfUpcomingStoriesCacheCount, float upcomingStoriesCacheDurationInMinutes) : base(innerRepository)
         {
-            Check.Argument.IsNotNegativeOrZero(noOfPublishedStoriesCacheCount, "noOfPublishedStoriesCacheCount");
-            Check.Argument.IsNotNegativeOrZero(publishedStoriesCacheDurationInMinutes, "publishedStoriesCacheDurationInMinutes");
+            Check.Argument.IsNotZeroOrNegative(noOfPublishedStoriesCacheCount, "noOfPublishedStoriesCacheCount");
+            Check.Argument.IsNotZeroOrNegative(publishedStoriesCacheDurationInMinutes, "publishedStoriesCacheDurationInMinutes");
 
-            Check.Argument.IsNotNegativeOrZero(noOfUpcomingStoriesCacheCount, "noOfUpcomingStoriesCacheCount");
-            Check.Argument.IsNotNegativeOrZero(upcomingStoriesCacheDurationInMinutes, "upcomingStoriesCacheDurationInMinutes");
+            Check.Argument.IsNotZeroOrNegative(noOfUpcomingStoriesCacheCount, "noOfUpcomingStoriesCacheCount");
+            Check.Argument.IsNotZeroOrNegative(upcomingStoriesCacheDurationInMinutes, "upcomingStoriesCacheDurationInMinutes");
 
             _noOfPublishedStoryCacheCount = noOfPublishedStoriesCacheCount;
             _publishedStoryCacheDurationInMinutes = publishedStoriesCacheDurationInMinutes;

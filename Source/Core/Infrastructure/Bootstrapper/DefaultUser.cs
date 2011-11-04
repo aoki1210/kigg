@@ -1,6 +1,6 @@
 namespace Kigg.Infrastructure
 {
-    using DomainObjects;
+    using Domain.Entities;
 
     public class DefaultUser
     {
@@ -22,7 +22,7 @@ namespace Kigg.Infrastructure
             set;
         }
 
-        public Roles Role
+        public Role Role
         {
             get;
             set;

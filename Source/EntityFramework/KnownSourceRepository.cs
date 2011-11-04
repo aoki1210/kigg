@@ -4,7 +4,7 @@
 
     using Query;
     using Repository;
-    using DomainObjects;
+    using Domain.Entities;
 
     public class KnownSourceRepository : EntityRepositoryBase<KnownSource>, IKnownSourceRepository
     {

@@ -6,7 +6,7 @@ namespace Kigg.Infrastructure
     using System.Linq;
     using System.Text;
 
-    using DomainObjects;
+    using Domain.Entities;
     using Service;
 
     public class SendTwitterMessage : BaseBackgroundTask

@@ -12,8 +12,8 @@
     <AssemblyName>Kigg.Core</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\Kigg.snk</AssemblyOriginatorKeyFile>
+    <!--<SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\Kigg.snk</AssemblyOriginatorKeyFile>-->
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
@@ -71,14 +71,8 @@
     <Compile Include="..\SharedFiles\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="DomainObjects\CommentSubscribtion.cs" />
-    <Compile Include="DomainObjects\Interfaces\IDomainObject.cs" />
-    <Compile Include="DomainObjects\KnownSource.cs" />
-    <Compile Include="DomainObjects\Interfaces\ITagContainer.cs" />
-    <Compile Include="DomainObjects\KnownSourceGrade.cs" />
-    <Compile Include="DomainObjects\Roles.cs" />
-    <Compile Include="DomainObjects\UserAction.cs" />
-    <Compile Include="DomainObjects\UserScore.cs" />
+    <Compile Include="Configuration\DefaultCategoryConfigurationElementCollection.cs" />
+    <Compile Include="Configuration\DefaultCategoryConfigurationElement.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Extensions\DomainObjectsExplicitExtension\StoryExtension.cs" />
@@ -101,6 +95,14 @@
     <Compile Include="Infrastructure\Bootstrapper\IBootstrapperTask.cs" />
     <Compile Include="Infrastructure\Bootstrapper\StartBackgroundTasks.cs" />
     <Compile Include="Infrastructure\Caching\ICacheManager.cs" />
+    <Compile Include="Configuration\DefaultUserConfigurationElement.cs" />
+    <Compile Include="Configuration\DefaultUserConfigurationElementCollection.cs" />
+    <Compile Include="Configuration\KiggConfigurationSection.cs" />
+    <Compile Include="Configuration\ThumbnailConfigurationElement.cs" />
+    <Compile Include="Configuration\TwitterConfigurationElement.cs" />
+    <Compile Include="Infrastructure\ConfigurationSettings\Settings.cs" />
+    <Compile Include="Infrastructure\ConfigurationSettings\ThumbnailSettings.cs" />
+    <Compile Include="Infrastructure\ConfigurationSettings\TwitterSettings.cs" />
     <Compile Include="Infrastructure\EventAggregator\BaseEvent.cs" />
     <Compile Include="Infrastructure\EventAggregator\BaseEvent`1.cs" />
     <Compile Include="Infrastructure\EventAggregator\DelegateReference.cs" />
@@ -128,8 +130,8 @@
     <Compile Include="Infrastructure\Spam\GenericExternalSpamProtection.cs" />
     <Compile Include="Infrastructure\BackgroundTask\PingStory.cs" />
     <Compile Include="Repository\ICountByStoryRepository.cs" />
-    <Compile Include="Service\ISpamPostprocessor.cs" />
-    <Compile Include="Service\SpamPostprocessor.cs" />
+    <Compile Include="Services\ISpamPostprocessor.cs" />
+    <Compile Include="Services\SpamPostprocessor.cs" />
     <Compile Include="Repository\Decorated\Caching\CachingUserRepository.cs" />
     <Compile Include="Repository\Decorated\DecoratedUserRepository.cs" />
     <Compile Include="Repository\Decorated\Logging\LoggingUserRepository.cs" />
@@ -138,42 +140,36 @@
     <Compile Include="Repository\ISpamVoteRepository.cs" />
     <Compile Include="Repository\IStoryViewRepository.cs" />
     <Compile Include="Repository\IVoteRepository.cs" />
-    <Compile Include="Service\StoryWeightCalculator\CommentWeight.cs" />
-    <Compile Include="Service\StoryWeightCalculator\FreshnessWeight.cs" />
-    <Compile Include="Service\StoryWeightCalculator\IStoryWeightCalculator.cs" />
-    <Compile Include="Service\IUserScoreTable.cs" />
-    <Compile Include="DomainObjects\SpamVote.cs" />
-    <Compile Include="DomainObjects\Interfaces\IUniqueNameEntity.cs" />
-    <Compile Include="DomainObjects\StoryView.cs" />
-    <Compile Include="DomainObjects\Vote.cs" />
-    <Compile Include="Service\PublishedStory.cs" />
-    <Compile Include="Service\StoryWeightCalculator\KnownSourceWeight.cs" />
-    <Compile Include="Service\StoryWeightCalculator\StoryWeightBaseCalculator.cs" />
-    <Compile Include="Service\StoryWeightCalculator\UserScoreWeight.cs" />
-    <Compile Include="Service\StoryWeightCalculator\ViewWeight.cs" />
-    <Compile Include="Service\StoryWeightCalculator\VoteWeight.cs" />
-    <Compile Include="Service\SystemEvents\CommentMarkAsOffendedEvent.cs" />
-    <Compile Include="Service\SystemEvents\CommentSpamEvent.cs" />
-    <Compile Include="Service\SystemEvents\CommentSubmitEvent.cs" />
-    <Compile Include="Service\SystemEvents\PossibleSpamCommentEvent.cs" />
-    <Compile Include="Service\SystemEvents\PossibleSpamStoryEvent.cs" />
-    <Compile Include="Service\SystemEvents\StoryApproveEvent.cs" />
-    <Compile Include="Service\SystemEvents\StoryDeleteEvent.cs" />
-    <Compile Include="Service\SystemEvents\StoryDemoteEvent.cs" />
-    <Compile Include="Service\SystemEvents\StoryIncorrectlyMarkedAsSpamEvent.cs" />
-    <Compile Include="Service\SystemEvents\StoryMarkAsSpamEvent.cs" />
-    <Compile Include="Service\SystemEvents\StoryPromoteEvent.cs" />
-    <Compile Include="Service\SystemEvents\StoryPublishEvent.cs" />
-    <Compile Include="Service\SystemEvents\StorySpamEvent.cs" />
-    <Compile Include="Service\SystemEvents\StorySubmitEvent.cs" />
-    <Compile Include="Service\SystemEvents\StoryUnmarkAsSpamEvent.cs" />
-    <Compile Include="Service\SystemEvents\StoryViewEvent.cs" />
-    <Compile Include="Service\SystemEvents\UserActivateEvent.cs" />
-    <Compile Include="Service\UserScoreTable.cs" />
+    <Compile Include="Services\StoryWeightCalculator\CommentWeight.cs" />
+    <Compile Include="Services\StoryWeightCalculator\FreshnessWeight.cs" />
+    <Compile Include="Services\StoryWeightCalculator\IStoryWeightCalculator.cs" />
+    <Compile Include="Services\IUserScoreTable.cs" />
+    <Compile Include="Services\PublishedStory.cs" />
+    <Compile Include="Services\StoryWeightCalculator\KnownSourceWeight.cs" />
+    <Compile Include="Services\StoryWeightCalculator\StoryWeightBaseCalculator.cs" />
+    <Compile Include="Services\StoryWeightCalculator\UserScoreWeight.cs" />
+    <Compile Include="Services\StoryWeightCalculator\ViewWeight.cs" />
+    <Compile Include="Services\StoryWeightCalculator\VoteWeight.cs" />
+    <Compile Include="Services\SystemEvents\CommentMarkAsOffendedEvent.cs" />
+    <Compile Include="Services\SystemEvents\CommentSpamEvent.cs" />
+    <Compile Include="Services\SystemEvents\CommentSubmitEvent.cs" />
+    <Compile Include="Services\SystemEvents\PossibleSpamCommentEvent.cs" />
+    <Compile Include="Services\SystemEvents\PossibleSpamStoryEvent.cs" />
+    <Compile Include="Services\SystemEvents\StoryApproveEvent.cs" />
+    <Compile Include="Services\SystemEvents\StoryDeleteEvent.cs" />
+    <Compile Include="Services\SystemEvents\StoryDemoteEvent.cs" />
+    <Compile Include="Services\SystemEvents\StoryIncorrectlyMarkedAsSpamEvent.cs" />
+    <Compile Include="Services\SystemEvents\StoryMarkAsSpamEvent.cs" />
+    <Compile Include="Services\SystemEvents\StoryPromoteEvent.cs" />
+    <Compile Include="Services\SystemEvents\StoryPublishEvent.cs" />
+    <Compile Include="Services\SystemEvents\StorySpamEvent.cs" />
+    <Compile Include="Services\SystemEvents\StorySubmitEvent.cs" />
+    <Compile Include="Services\SystemEvents\StoryUnmarkAsSpamEvent.cs" />
+    <Compile Include="Services\SystemEvents\StoryViewEvent.cs" />
+    <Compile Include="Services\SystemEvents\UserActivateEvent.cs" />
+    <Compile Include="Services\UserScoreTable.cs" />
     <Compile Include="Infrastructure\Http\StoryContent.cs" />
-    <Compile Include="DomainObjects\Extension\StoryExtension.cs" />
     <Compile Include="Extensions\GuidExtensions.cs" />
-    <Compile Include="DomainObjects\Extension\UserExtension.cs" />
     <Compile Include="Infrastructure\Configuration\ConfigurationManagerWrapper.cs" />
     <Compile Include="Infrastructure\Configuration\IConfigurationManager.cs" />
     <Compile Include="Infrastructure\File\FileWrapper.cs" />
@@ -200,16 +196,9 @@
     <Compile Include="Repository\Decorated\DecoratedCategoryRepository.cs" />
     <Compile Include="Repository\Decorated\DecoratedStoryRepository.cs" />
     <Compile Include="Repository\Decorated\DecoratedTagRepository.cs" />
-    <Compile Include="DomainObjects\Interfaces\IDomainObjectFactory.cs" />
     <Compile Include="Helper\PagedResult.cs" />
     <Compile Include="Configuration\ConfigurationSettings.cs" />
     <Compile Include="Configuration\IConfigurationSettings.cs" />
-    <Compile Include="DomainObjects\Comment.cs" />
-    <Compile Include="DomainObjects\Story.cs" />
-    <Compile Include="DomainObjects\User.cs" />
-    <Compile Include="DomainObjects\Tag.cs" />
-    <Compile Include="DomainObjects\Category.cs" />
-    <Compile Include="DomainObjects\Interfaces\IEntity.cs" />
     <Compile Include="Helper\CheckArgument.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Infrastructure\Caching\Cache.cs" />
@@ -233,12 +222,12 @@
     <Compile Include="Infrastructure\Mail\EmailSender.cs" />
     <Compile Include="Infrastructure\Mail\IEmailSender.cs" />
     <Compile Include="Repository\IUserRepository.cs" />
-    <Compile Include="Service\BaseServiceResult.cs" />
-    <Compile Include="Service\CommentCreateResult.cs" />
-    <Compile Include="Service\IStoryService.cs" />
-    <Compile Include="Service\StoryService.cs" />
-    <Compile Include="Service\StoryCreateResult.cs" />
-    <Compile Include="Service\UserScoreService.cs" />
+    <Compile Include="Services\BaseServiceResult.cs" />
+    <Compile Include="Services\CommentCreateResult.cs" />
+    <Compile Include="Services\IStoryService.cs" />
+    <Compile Include="Services\StoryService.cs" />
+    <Compile Include="Services\StoryCreateResult.cs" />
+    <Compile Include="Services\UserScoreService.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -256,6 +245,15 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DomainModel\Kigg.DomainModel.csproj">
+      <Project>{F54A1E7C-D858-4775-9EC3-A151D542FFAB}</Project>
+      <Name>Kigg.DomainModel</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

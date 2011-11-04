@@ -131,9 +131,9 @@
                                                     <% { %>
                                                             <%= Html.Hidden("id", user.Id) %>
                                                             <select id="ddlRoles" name="role">
-                                                                <%foreach (KeyValuePair<int, string> pair in Html.ToDictionary<Kigg.DomainObjects.Roles>())%>
+                                                                <%foreach (KeyValuePair<int, string> pair in Html.ToDictionary<Kigg.Domain.Entities.Roles>())%>
                                                                 <%{%>
-                                                                    <%bool select = (user.Role == (Kigg.DomainObjects.Roles) pair.Key); %>
+                                                                    <%bool select = (user.Role == (Kigg.Domain.Entities.Roles) pair.Key); %>
                                                                     <%if (select) %>
                                                                     <%{%>
                                                                         <option value="<%= pair.Value %>" selected="selected"><%= pair.Value %></option>

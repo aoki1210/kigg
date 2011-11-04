@@ -4,7 +4,7 @@
     StorageEntityContainer="KiggStorageEntityContainer"
     CdmEntityContainer="KiggEntityContainer">
     <EntitySetMapping Name="Category">
-      <EntityTypeMapping TypeName="IsTypeOf(Kigg.EF.DomainObjects.Category)">
+      <EntityTypeMapping TypeName="IsTypeOf(Kigg.EF.Domain.Entities.Category)">
         <MappingFragment StoreEntitySet="Category">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="UniqueName" ColumnName="UniqueName" />
@@ -14,7 +14,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="KnownSource">
-      <EntityTypeMapping TypeName="IsTypeOf(Kigg.EF.DomainObjects.KnownSource)">
+      <EntityTypeMapping TypeName="IsTypeOf(Kigg.EF.Domain.Entities.KnownSource)">
         <MappingFragment StoreEntitySet="KnownSource">
           <ScalarProperty Name="Url" ColumnName="Url" />
           <ScalarProperty Name="SourceGrade" ColumnName="Grade" />
@@ -22,7 +22,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="Story">
-      <EntityTypeMapping TypeName="IsTypeOf(Kigg.EF.DomainObjects.Story)">
+      <EntityTypeMapping TypeName="IsTypeOf(Kigg.EF.Domain.Entities.Story)">
         <MappingFragment StoreEntitySet="Story">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="UniqueName" ColumnName="UniqueName" />
@@ -42,7 +42,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="StoryComment">
-      <EntityTypeMapping TypeName="IsTypeOf(Kigg.EF.DomainObjects.StoryComment)">
+      <EntityTypeMapping TypeName="IsTypeOf(Kigg.EF.Domain.Entities.StoryComment)">
         <MappingFragment StoreEntitySet="StoryComment">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="HtmlBody" ColumnName="HtmlBody" />
@@ -54,7 +54,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="StoryMarkAsSpam">
-      <EntityTypeMapping TypeName="IsTypeOf(Kigg.EF.DomainObjects.StoryMarkAsSpam)">
+      <EntityTypeMapping TypeName="IsTypeOf(Kigg.EF.Domain.Entities.StoryMarkAsSpam)">
         <MappingFragment StoreEntitySet="StoryMarkAsSpam">
           <ScalarProperty Name="StoryId" ColumnName="StoryId" />
           <ScalarProperty Name="UserId" ColumnName="UserId" />
@@ -64,7 +64,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="StoryView">
-      <EntityTypeMapping TypeName="IsTypeOf(Kigg.EF.DomainObjects.StoryView)">
+      <EntityTypeMapping TypeName="IsTypeOf(Kigg.EF.Domain.Entities.StoryView)">
         <MappingFragment StoreEntitySet="StoryView">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Timestamp" ColumnName="Timestamp" />
@@ -73,7 +73,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="StoryVote">
-      <EntityTypeMapping TypeName="IsTypeOf(Kigg.EF.DomainObjects.StoryVote)">
+      <EntityTypeMapping TypeName="IsTypeOf(Kigg.EF.Domain.Entities.StoryVote)">
         <MappingFragment StoreEntitySet="StoryVote">
           <ScalarProperty Name="StoryId" ColumnName="StoryId" />
           <ScalarProperty Name="UserId" ColumnName="UserId" />
@@ -83,7 +83,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="Tag">
-      <EntityTypeMapping TypeName="IsTypeOf(Kigg.EF.DomainObjects.Tag)">
+      <EntityTypeMapping TypeName="IsTypeOf(Kigg.EF.Domain.Entities.Tag)">
         <MappingFragment StoreEntitySet="Tag">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="UniqueName" ColumnName="UniqueName" />
@@ -93,7 +93,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="UserDataSource">
-      <EntityTypeMapping TypeName="IsTypeOf(Kigg.EF.DomainObjects.User)">
+      <EntityTypeMapping TypeName="IsTypeOf(Kigg.EF.Domain.Entities.User)">
         <MappingFragment StoreEntitySet="User">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="UserName" ColumnName="UserName" />
@@ -108,7 +108,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="UserScore">
-      <EntityTypeMapping TypeName="IsTypeOf(Kigg.EF.DomainObjects.UserScore)">
+      <EntityTypeMapping TypeName="IsTypeOf(Kigg.EF.Domain.Entities.UserScore)">
         <MappingFragment StoreEntitySet="UserScore">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Timestamp" ColumnName="Timestamp" />
@@ -118,20 +118,20 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <!--<EntitySetMapping Name="StorySearchResult">
-      <EntityTypeMapping TypeName="IsTypeOf(Kigg.EF.DomainObjects.StorySearchResult)">
+      <EntityTypeMapping TypeName="IsTypeOf(Kigg.EF.Domain.Entities.StorySearchResult)">
         <MappingFragment StoreEntitySet="StorySearchResult">
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="CommentSearchResult">
-      <EntityTypeMapping TypeName="IsTypeOf(Kigg.EF.DomainObjects.CommentSearchResult)">
+      <EntityTypeMapping TypeName="IsTypeOf(Kigg.EF.Domain.Entities.CommentSearchResult)">
         <MappingFragment StoreEntitySet="CommentSearchResult">
           <ScalarProperty Name="StoryId" ColumnName="StoryId" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>-->
-    <AssociationSetMapping Name="FK_Story_Category" TypeName="Kigg.EF.DomainObjects.FK_Story_Category" StoreEntitySet="Story">
+    <AssociationSetMapping Name="FK_Story_Category" TypeName="Kigg.EF.Domain.Entities.FK_Story_Category" StoreEntitySet="Story">
       <EndProperty Name="Category">
         <ScalarProperty Name="Id" ColumnName="CategoryId" />
       </EndProperty>
@@ -139,7 +139,7 @@
         <ScalarProperty Name="Id" ColumnName="Id" />
       </EndProperty>
     </AssociationSetMapping>
-    <AssociationSetMapping Name="FK_Story_User" TypeName="Kigg.EF.DomainObjects.FK_Story_User" StoreEntitySet="Story">
+    <AssociationSetMapping Name="FK_Story_User" TypeName="Kigg.EF.Domain.Entities.FK_Story_User" StoreEntitySet="Story">
       <EndProperty Name="User">
         <ScalarProperty Name="Id" ColumnName="UserId" />
       </EndProperty>
@@ -147,7 +147,7 @@
         <ScalarProperty Name="Id" ColumnName="Id" />
       </EndProperty>
     </AssociationSetMapping>
-    <AssociationSetMapping Name="FK_StoryComment_Story" TypeName="Kigg.EF.DomainObjects.FK_StoryComment_Story" StoreEntitySet="StoryComment">
+    <AssociationSetMapping Name="FK_StoryComment_Story" TypeName="Kigg.EF.Domain.Entities.FK_StoryComment_Story" StoreEntitySet="StoryComment">
       <EndProperty Name="Story">
         <ScalarProperty Name="Id" ColumnName="StoryId" />
       </EndProperty>
@@ -155,7 +155,7 @@
         <ScalarProperty Name="Id" ColumnName="Id" />
       </EndProperty>
     </AssociationSetMapping>
-    <AssociationSetMapping Name="FK_StoryMarkAsSpam_Story" TypeName="Kigg.EF.DomainObjects.FK_StoryMarkAsSpam_Story" StoreEntitySet="StoryMarkAsSpam">
+    <AssociationSetMapping Name="FK_StoryMarkAsSpam_Story" TypeName="Kigg.EF.Domain.Entities.FK_StoryMarkAsSpam_Story" StoreEntitySet="StoryMarkAsSpam">
       <EndProperty Name="Story">
         <ScalarProperty Name="Id" ColumnName="StoryId" />
       </EndProperty>
@@ -164,7 +164,7 @@
         <ScalarProperty Name="UserId" ColumnName="UserId" />
       </EndProperty>
     </AssociationSetMapping>
-    <AssociationSetMapping Name="FK_StoryView_Story" TypeName="Kigg.EF.DomainObjects.FK_StoryView_Story" StoreEntitySet="StoryView">
+    <AssociationSetMapping Name="FK_StoryView_Story" TypeName="Kigg.EF.Domain.Entities.FK_StoryView_Story" StoreEntitySet="StoryView">
       <EndProperty Name="Story">
         <ScalarProperty Name="Id" ColumnName="StoryId" />
       </EndProperty>
@@ -172,7 +172,7 @@
         <ScalarProperty Name="Id" ColumnName="Id" />
       </EndProperty>
     </AssociationSetMapping>
-    <AssociationSetMapping Name="FK_StoryVote_Story" TypeName="Kigg.EF.DomainObjects.FK_StoryVote_Story" StoreEntitySet="StoryVote">
+    <AssociationSetMapping Name="FK_StoryVote_Story" TypeName="Kigg.EF.Domain.Entities.FK_StoryVote_Story" StoreEntitySet="StoryVote">
       <EndProperty Name="Story">
         <ScalarProperty Name="Id" ColumnName="StoryId" />
       </EndProperty>
@@ -181,7 +181,7 @@
         <ScalarProperty Name="UserId" ColumnName="UserId" />
       </EndProperty>
     </AssociationSetMapping>
-    <AssociationSetMapping Name="FK_StoryComment_User" TypeName="Kigg.EF.DomainObjects.FK_StoryComment_User" StoreEntitySet="StoryComment">
+    <AssociationSetMapping Name="FK_StoryComment_User" TypeName="Kigg.EF.Domain.Entities.FK_StoryComment_User" StoreEntitySet="StoryComment">
       <EndProperty Name="User">
         <ScalarProperty Name="Id" ColumnName="UserId" />
       </EndProperty>
@@ -189,7 +189,7 @@
         <ScalarProperty Name="Id" ColumnName="Id" />
       </EndProperty>
     </AssociationSetMapping>
-    <AssociationSetMapping Name="FK_StoryMarkAsSpam_User" TypeName="Kigg.EF.DomainObjects.FK_StoryMarkAsSpam_User" StoreEntitySet="StoryMarkAsSpam">
+    <AssociationSetMapping Name="FK_StoryMarkAsSpam_User" TypeName="Kigg.EF.Domain.Entities.FK_StoryMarkAsSpam_User" StoreEntitySet="StoryMarkAsSpam">
       <EndProperty Name="User">
         <ScalarProperty Name="Id" ColumnName="UserId" />
       </EndProperty>
@@ -198,7 +198,7 @@
         <ScalarProperty Name="UserId" ColumnName="UserId" />
       </EndProperty>
     </AssociationSetMapping>
-    <AssociationSetMapping Name="FK_StoryVote_User" TypeName="Kigg.EF.DomainObjects.FK_StoryVote_User" StoreEntitySet="StoryVote">
+    <AssociationSetMapping Name="FK_StoryVote_User" TypeName="Kigg.EF.Domain.Entities.FK_StoryVote_User" StoreEntitySet="StoryVote">
       <EndProperty Name="User">
         <ScalarProperty Name="Id" ColumnName="UserId" />
       </EndProperty>
@@ -207,7 +207,7 @@
         <ScalarProperty Name="UserId" ColumnName="UserId" />
       </EndProperty>
     </AssociationSetMapping>
-    <AssociationSetMapping Name="FK_UserScore_User" TypeName="Kigg.EF.DomainObjects.FK_UserScore_User" StoreEntitySet="UserScore">
+    <AssociationSetMapping Name="FK_UserScore_User" TypeName="Kigg.EF.Domain.Entities.FK_UserScore_User" StoreEntitySet="UserScore">
       <EndProperty Name="User">
         <ScalarProperty Name="Id" ColumnName="UserId" />
       </EndProperty>
@@ -215,7 +215,7 @@
         <ScalarProperty Name="Id" ColumnName="Id" />
       </EndProperty>
     </AssociationSetMapping>
-    <AssociationSetMapping Name="CommentSubscribtion" TypeName="Kigg.EF.DomainObjects.CommentSubscribtion" StoreEntitySet="CommentSubscribtion">
+    <AssociationSetMapping Name="CommentSubscribtion" TypeName="Kigg.EF.Domain.Entities.CommentSubscribtion" StoreEntitySet="CommentSubscribtion">
       <EndProperty Name="Story">
         <ScalarProperty Name="Id" ColumnName="StoryId" />
       </EndProperty>
@@ -223,7 +223,7 @@
         <ScalarProperty Name="Id" ColumnName="UserId" />
       </EndProperty>
     </AssociationSetMapping>
-    <AssociationSetMapping Name="StoryTag" TypeName="Kigg.EF.DomainObjects.StoryTag" StoreEntitySet="StoryTag">
+    <AssociationSetMapping Name="StoryTag" TypeName="Kigg.EF.Domain.Entities.StoryTag" StoreEntitySet="StoryTag">
       <EndProperty Name="Story">
         <ScalarProperty Name="Id" ColumnName="StoryId" />
       </EndProperty>
@@ -231,7 +231,7 @@
         <ScalarProperty Name="Id" ColumnName="TagId" />
       </EndProperty>
     </AssociationSetMapping>
-    <AssociationSetMapping Name="UserTag" TypeName="Kigg.EF.DomainObjects.UserTag" StoreEntitySet="UserTag">
+    <AssociationSetMapping Name="UserTag" TypeName="Kigg.EF.Domain.Entities.UserTag" StoreEntitySet="UserTag">
       <EndProperty Name="Tag">
         <ScalarProperty Name="Id" ColumnName="TagId" />
       </EndProperty>
@@ -240,8 +240,8 @@
       </EndProperty>
     </AssociationSetMapping>
     <!--<FunctionImportMapping FunctionImportName="StorySearch"
-                           FunctionName="Kigg.EF.DomainObjects.Store.StorySearchProc"/>
+                           FunctionName="Kigg.EF.Domain.Entities.Store.StorySearchProc"/>
     <FunctionImportMapping FunctionImportName="CommentSearch"
-                           FunctionName="Kigg.EF.DomainObjects.Store.CommentSearchProc"/>-->
+                           FunctionName="Kigg.EF.Domain.Entities.Store.CommentSearchProc"/>-->
   </EntityContainerMapping>
 </Mapping>
