@@ -3,7 +3,7 @@
     using System.Linq;
     
     using Query;
-    using DomainObjects;
+    using Domain.Entities;
     using Repository;
 
     public abstract class EntityRepositoryBase<TEntity> : DomainObjectRepositoryBase<TEntity>, IEntityRepository<TEntity> 
@@ -16,7 +16,7 @@
 
         public virtual TEntity FindById(long id)
         {
-            Check.Argument.IsNotNegativeOrZero(id, "id");
+            Check.Argument.IsNotZeroOrNegative(id, "id");
             return DbContext.Set<TEntity>().SingleOrDefault(entity => entity.Id == id);
         }
         

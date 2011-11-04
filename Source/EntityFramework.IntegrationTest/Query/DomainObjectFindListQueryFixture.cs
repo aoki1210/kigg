@@ -6,7 +6,7 @@
     using Xunit;
     using Xunit.Extensions;
     
-    using DomainObjects;
+    using Domain.Entities;
     using EntityFramework.Query;
 
     public class DomainObjectFindListQueryFixture : IntegrationFixtureBase

@@ -4,7 +4,7 @@ namespace Kigg.Web
     using System.Security.Cryptography;
     using System.Text;
 
-    using DomainObjects;
+    using Domain.Entities;
 
     public static class UserExtension
     {

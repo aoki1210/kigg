@@ -5,7 +5,7 @@
 
     using Query;
     using Repository;
-    using DomainObjects;
+    using Domain.Entities;
 
     public class SpamVoteRepository : DomainObjectRepositoryBase<SpamVote>, ISpamVoteRepository
     {
@@ -16,7 +16,7 @@
 
         public int CountByStory(long storyId)
         {
-            Check.Argument.IsNotNegativeOrZero(storyId, "storyId");
+            Check.Argument.IsNotZeroOrNegative(storyId, "storyId");
 
             var query = QueryFactory.CreateCountSpamVotesByStory(storyId);
 
@@ -26,8 +26,8 @@
 
         public SpamVote FindById(long storyId, long userId)
         {
-            Check.Argument.IsNotNegativeOrZero(storyId, "storyId");
-            Check.Argument.IsNotNegativeOrZero(userId, "userId");
+            Check.Argument.IsNotZeroOrNegative(storyId, "storyId");
+            Check.Argument.IsNotZeroOrNegative(userId, "userId");
 
             var query = QueryFactory.CreateFindSpamVoteById(storyId, userId);
 
@@ -36,7 +36,7 @@
 
         public IEnumerable<SpamVote> FindAfter(long storyId, DateTime timestamp)
         {
-            Check.Argument.IsNotNegativeOrZero(storyId, "storyId");
+            Check.Argument.IsNotZeroOrNegative(storyId, "storyId");
             Check.Argument.IsNotInvalidDate(timestamp, "timestamp");
 
             var query = QueryFactory.CreateFindSpamVotesAfterDate(storyId, timestamp);

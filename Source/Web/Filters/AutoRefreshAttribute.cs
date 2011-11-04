@@ -21,7 +21,7 @@ namespace Kigg.Web
 
         public AutoRefreshAttribute(string actionName, string controllerName, RouteValueDictionary values, int durationInSecond)
         {
-            Check.Argument.IsNotNegativeOrZero(durationInSecond, "durationInSecond");
+            Check.Argument.IsNotZeroOrNegative(durationInSecond, "durationInSecond");
             Check.Argument.IsNotNullOrEmpty(actionName, "actionName");
             Check.Argument.IsNotNullOrEmpty(controllerName, "controllerName");
             Check.Argument.IsNotNull(values, "values");
@@ -38,7 +38,7 @@ namespace Kigg.Web
 
         public AutoRefreshAttribute(string actionName, string controllerName, object values, int durationInSeconds)
         {
-            Check.Argument.IsNotNegativeOrZero(durationInSeconds, "durationInSeconds");
+            Check.Argument.IsNotZeroOrNegative(durationInSeconds, "durationInSeconds");
             Check.Argument.IsNotNullOrEmpty(actionName, "actionName");
             Check.Argument.IsNotNullOrEmpty(controllerName, "controllerName");
             Check.Argument.IsNotNull(values, "values");
@@ -55,7 +55,7 @@ namespace Kigg.Web
 
         public AutoRefreshAttribute(string actionName, RouteValueDictionary values, int durationInSeconds)
         {
-            Check.Argument.IsNotNegativeOrZero(durationInSeconds, "durationInSeconds");
+            Check.Argument.IsNotZeroOrNegative(durationInSeconds, "durationInSeconds");
             Check.Argument.IsNotNullOrEmpty(actionName, "actionName");
             Check.Argument.IsNotNull(values, "values");
 
@@ -70,7 +70,7 @@ namespace Kigg.Web
 
         public AutoRefreshAttribute(string actionName, object values, int durationInSeconds)
         {
-            Check.Argument.IsNotNegativeOrZero(durationInSeconds, "durationInSeconds");
+            Check.Argument.IsNotZeroOrNegative(durationInSeconds, "durationInSeconds");
             Check.Argument.IsNotNullOrEmpty(actionName, "actionName");
             Check.Argument.IsNotNull(values, "values");
 
@@ -85,7 +85,7 @@ namespace Kigg.Web
 
         public AutoRefreshAttribute(string actionName, string controllerName, int durationInSeconds)
         {
-            Check.Argument.IsNotNegativeOrZero(durationInSeconds, "durationInSeconds");
+            Check.Argument.IsNotZeroOrNegative(durationInSeconds, "durationInSeconds");
             Check.Argument.IsNotNullOrEmpty(actionName, "actionName");
             Check.Argument.IsNotNullOrEmpty(controllerName, "controllerName");
 
@@ -100,7 +100,7 @@ namespace Kigg.Web
 
         public AutoRefreshAttribute(string actionName, int durationInSeconds)
         {
-            Check.Argument.IsNotNegativeOrZero(durationInSeconds, "durationInSeconds");
+            Check.Argument.IsNotZeroOrNegative(durationInSeconds, "durationInSeconds");
             Check.Argument.IsNotNullOrEmpty(actionName, "actionName");
 
             _durationInSeconds = durationInSeconds;
@@ -113,7 +113,7 @@ namespace Kigg.Web
 
         public AutoRefreshAttribute(int durationInSeconds)
         {
-            Check.Argument.IsNotNegativeOrZero(durationInSeconds, "durationInSeconds");
+            Check.Argument.IsNotZeroOrNegative(durationInSeconds, "durationInSeconds");
 
             _durationInSeconds = durationInSeconds;
         }

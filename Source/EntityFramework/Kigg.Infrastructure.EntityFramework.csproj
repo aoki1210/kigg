@@ -12,8 +12,8 @@
     <AssemblyName>Kigg.Infrastructure.EntityFramework</AssemblyName>
     <TargetFrameworkVersion>v4.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\Kigg.snk</AssemblyOriginatorKeyFile>
+    <!--<SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\Kigg.snk</AssemblyOriginatorKeyFile>-->
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
@@ -151,6 +151,10 @@
     <ProjectReference Include="..\Core\Kigg.Core.csproj">
       <Project>{04A61455-9656-4E67-A8D6-9FBA348F0FB3}</Project>
       <Name>Kigg.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DomainModel\Kigg.DomainModel.csproj">
+      <Project>{F54A1E7C-D858-4775-9EC3-A151D542FFAB}</Project>
+      <Name>Kigg.DomainModel</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

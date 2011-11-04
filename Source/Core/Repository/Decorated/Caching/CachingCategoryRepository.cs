@@ -2,7 +2,7 @@ namespace Kigg.Repository
 {
     using System.Collections.Generic;
 
-    using DomainObjects;
+    using Domain.Entities;
     using Infrastructure;
 
     public class CachingCategoryRepository : DecoratedCategoryRepository
@@ -11,7 +11,7 @@ namespace Kigg.Repository
 
         public CachingCategoryRepository(ICategoryRepository innerRepository, float cacheDurationInMinutes) : base(innerRepository)
         {
-            Check.Argument.IsNotNegativeOrZero(cacheDurationInMinutes, "cacheDurationInMinutes");
+            Check.Argument.IsNotZeroOrNegative(cacheDurationInMinutes, "cacheDurationInMinutes");
 
             _cacheDurationInMinutes = cacheDurationInMinutes;
         }

@@ -4,7 +4,7 @@
     using System.Linq;
     using System.Linq.Expressions;
 
-    using DomainObjects;
+    using Domain.Entities;
 
     public class DomainObjectFindUniqueQuery<TResult> : QueryBase<TResult>
         where TResult: class, IDomainObject
@@ -21,7 +21,7 @@
 
         public override TResult Execute()
         {
-            return context.Set<TResult>().Single(predicate);
+            return context.Set<TResult>().SingleOrDefault(predicate);
         }
     }
 }

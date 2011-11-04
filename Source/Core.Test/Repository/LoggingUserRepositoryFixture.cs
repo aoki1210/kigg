@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Kigg.Core.Test
 {
-    using DomainObjects;
+    using Domain.Entities;
     using Repository;
 
     public class LoggingUserRepositoryFixture : DecoratedRepositoryFixture

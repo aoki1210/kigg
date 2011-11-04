@@ -3,7 +3,7 @@
     using System.ComponentModel.DataAnnotations;
     using System.Data.Entity.ModelConfiguration;
 
-    using DomainObjects;
+    using Domain.Entities;
 
     public class UserMapping : EntityTypeConfiguration<User>
     {

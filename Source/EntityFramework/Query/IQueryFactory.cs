@@ -3,7 +3,7 @@
     using System;
     using System.Linq.Expressions;
 
-    using DomainObjects;
+    using Domain.Entities;
 
     public interface IQueryFactory
     {

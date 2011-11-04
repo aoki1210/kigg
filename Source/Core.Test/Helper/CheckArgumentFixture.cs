@@ -76,13 +76,13 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsNotNegativeOrZero_With_Integer_Zero_Should_Throw_Exception()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => Check.Argument.IsNotNegativeOrZero(0, "Zero"));
+            Assert.Throws<ArgumentOutOfRangeException>(() => Check.Argument.IsNotZeroOrNegative(0, "Zero"));
         }
 
         [Fact]
         public void IsNotNegativeOrZero_With_Positive_Integer_Should_Not_Throw_Exception()
         {
-            Assert.DoesNotThrow(() => Check.Argument.IsNotNegativeOrZero(int.MaxValue, "positive"));
+            Assert.DoesNotThrow(() => Check.Argument.IsNotZeroOrNegative(int.MaxValue, "positive"));
         }
 
         [Fact]
@@ -100,13 +100,13 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsNotNegativeOrZero_With_Long_Zero_Should_Throw_Exception()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => Check.Argument.IsNotNegativeOrZero(0L, "Zero"));
+            Assert.Throws<ArgumentOutOfRangeException>(() => Check.Argument.IsNotZeroOrNegative(0L, "Zero"));
         }
 
         [Fact]
         public void IsNotNegativeOrZero_With_Positive_Long_Should_Not_Throw_Exception()
         {
-            Assert.DoesNotThrow(() => Check.Argument.IsNotNegativeOrZero(long.MaxValue, "positive"));
+            Assert.DoesNotThrow(() => Check.Argument.IsNotZeroOrNegative(long.MaxValue, "positive"));
         }
 
         [Fact]
@@ -124,13 +124,13 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsNotNegativeOrZero_With_Float_Zero_Should_Throw_Exception()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => Check.Argument.IsNotNegativeOrZero(0f, "Zero"));
+            Assert.Throws<ArgumentOutOfRangeException>(() => Check.Argument.IsNotZeroOrNegative(0f, "Zero"));
         }
 
         [Fact]
         public void IsNotNegativeOrZero_Positive_Float_Should_Not_Throw_Exception()
         {
-            Assert.DoesNotThrow(() => Check.Argument.IsNotNegativeOrZero(float.MaxValue, "positive"));
+            Assert.DoesNotThrow(() => Check.Argument.IsNotZeroOrNegative(float.MaxValue, "positive"));
         }
 
         [Fact]
@@ -148,13 +148,13 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsNotNegativeOrZero_With_Decimal_Zero_Should_Throw_Exception()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => Check.Argument.IsNotNegativeOrZero(0M, "Zero"));
+            Assert.Throws<ArgumentOutOfRangeException>(() => Check.Argument.IsNotZeroOrNegative(0M, "Zero"));
         }
 
         [Fact]
         public void IsNotNegativeOrZero_With_Positive_Decimal_Should_Not_Throw_Exception()
         {
-            Assert.DoesNotThrow(() => Check.Argument.IsNotNegativeOrZero(decimal.MaxValue, "positive"));
+            Assert.DoesNotThrow(() => Check.Argument.IsNotZeroOrNegative(decimal.MaxValue, "positive"));
         }
 
         [Fact]

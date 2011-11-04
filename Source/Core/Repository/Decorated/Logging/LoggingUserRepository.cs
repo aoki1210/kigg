@@ -3,7 +3,7 @@ namespace Kigg.Repository
     using System;
     using System.Collections.Generic;
 
-    using DomainObjects;
+    using Domain.Entities;
     using Infrastructure;
 
     public class LoggingUserRepository : DecoratedUserRepository

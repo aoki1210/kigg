@@ -5,7 +5,7 @@
     
     using Query;
     using Repository;
-    using DomainObjects;
+    using Domain.Entities;
 
     public class StoryViewRepository : DomainObjectRepositoryBase<StoryView>, IStoryViewRepository
     {
@@ -16,7 +16,7 @@
 
         public int CountByStory(long storyId)
         {
-            Check.Argument.IsNotNegativeOrZero(storyId, "storyId");
+            Check.Argument.IsNotZeroOrNegative(storyId, "storyId");
             
             var query = QueryFactory.CreateCountViewsByStory(storyId);
 
@@ -26,7 +26,7 @@
         public IEnumerable<StoryView> FindAfter(long storyId, DateTime timestamp)
 
         {
-            Check.Argument.IsNotNegativeOrZero(storyId, "storyId");
+            Check.Argument.IsNotZeroOrNegative(storyId, "storyId");
             Check.Argument.IsNotInvalidDate(timestamp, "timestamp");
 
             var query = QueryFactory.CreateFindStoryViewsAfterDate(storyId, timestamp);

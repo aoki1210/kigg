@@ -8,7 +8,7 @@ namespace Kigg.Infrastructure
     using System.Text;
     using System.Threading;
 
-    using DomainObjects;
+    using Domain.Entities;
     using Service;
 
     public class EmailSender : IEmailSender

@@ -2,7 +2,7 @@ namespace Kigg.Web
 {
     using System.Collections.Generic;
 
-    using DomainObjects;
+    using Domain.Entities;
 
     public class TagTabsViewData
     {

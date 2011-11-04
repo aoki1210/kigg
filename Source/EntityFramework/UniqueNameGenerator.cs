@@ -3,7 +3,7 @@
     using System;
     using System.Linq;
 
-    using DomainObjects;
+    using Domain.Entities;
    
     internal class UniqueNameGenerator
     {

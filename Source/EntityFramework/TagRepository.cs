@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
 
-    using DomainObjects;
+    using Domain.Entities;
     using Repository;
     using Query;
     
@@ -46,7 +46,7 @@
 
         public IEnumerable<Tag> FindByUsage(int max)
         {
-            Check.Argument.IsNotNegativeOrZero(max, "max");
+            Check.Argument.IsNotZeroOrNegative(max, "max");
 
             var query = QueryFactory.CreateFindTagsByUsage(max);
 
@@ -56,7 +56,7 @@
         public IEnumerable<Tag> FindMatching(string name, int max)
         {
             Check.Argument.IsNotNullOrEmpty(name, "name");
-            Check.Argument.IsNotNegativeOrZero(max, "max");
+            Check.Argument.IsNotZeroOrNegative(max, "max");
 
             var query = QueryFactory.CreateFindTagsByMatchingName(name, max);
 

@@ -8,7 +8,7 @@
     using Xunit;
     using Xunit.Extensions;
 
-    using DomainObjects;
+    using Domain.Entities;
 
     using EntityFramework.Query;
 

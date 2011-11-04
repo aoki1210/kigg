@@ -6,7 +6,7 @@ namespace Kigg.Infrastructure.EntityFramework.Query
     using System.Linq.Expressions;
     using System.Collections.Generic;
     
-    using DomainObjects;
+    using Domain.Entities;
 
     public abstract class OrderedQueryBase<TResult> : QueryBase<IEnumerable<TResult>>, IOrderedQuery<TResult>
         where TResult : class, IDomainObject
@@ -61,14 +61,14 @@ namespace Kigg.Infrastructure.EntityFramework.Query
         public virtual IOrderedQuery<TResult> Page(int pageIndex, int pageSize)
         {
             Check.Argument.IsNotNegative(pageIndex, "pageIndex");
-            Check.Argument.IsNotNegativeOrZero(pageSize, "pageSize");
+            Check.Argument.IsNotZeroOrNegative(pageSize, "pageSize");
 
             Query = Query.Skip(pageIndex).Take(pageSize);
             return this;
         }
         public virtual IOrderedQuery<TResult> Limit(int max)
         {
-            Check.Argument.IsNotNegativeOrZero(max, "max");
+            Check.Argument.IsNotZeroOrNegative(max, "max");
 
             Query = Query.Take(max);
             return this;

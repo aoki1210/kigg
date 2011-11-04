@@ -2,7 +2,7 @@ namespace Kigg.Repository
 {
     using System;
 
-    using DomainObjects;
+    using Domain.Entities;
 
     public interface IStoryRepository : IUniqueNameEntityRepository<Story>
     {

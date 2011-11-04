@@ -1,6 +1,6 @@
 namespace Kigg.Web
 {
-    using DomainObjects;
+    using Domain.Entities;
 
     public static class StoryExtension
     {

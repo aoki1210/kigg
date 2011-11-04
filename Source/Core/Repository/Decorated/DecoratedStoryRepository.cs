@@ -3,7 +3,7 @@
     using System;
     using System.Diagnostics;
 
-    using DomainObjects;
+    using Domain.Entities;
 
     public abstract class DecoratedStoryRepository : IStoryRepository
     {

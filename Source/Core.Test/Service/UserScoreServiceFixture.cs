@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Kigg.Core.Test
 {
-    using DomainObjects;
+    using Domain.Entities;
     using Infrastructure;
     using Service;
 
@@ -37,7 +37,7 @@ namespace Kigg.Core.Test
             _user = new Mock<User>();
 
             _user.SetupGet(u => u.Id).Returns(1);
-            _user.SetupGet(u => u.Role).Returns(Roles.User);
+            _user.SetupGet(u => u.Role).Returns(Role.User);
 
             _eventAggregator = new Mock<IEventAggregator>();
 

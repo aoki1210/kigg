@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
 
-    using DomainObjects;
+    using Domain.Entities;
     using Repository;
     using Query;
 

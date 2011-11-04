@@ -9,7 +9,7 @@
 
     using FizzWare.NBuilder;
 
-    using DomainObjects;
+    using Domain.Entities;
 
     public abstract class IntegrationFixtureBase : Disposable
     {
@@ -59,7 +59,7 @@
                            {
                                UserName = "mosessaur",
                                Email = "mosessaur@twitter.com",
-                               Role = Roles.User,
+                               Role = Role.User,
                                CreatedAt = SystemTime.Now(),
                                LastActivityAt = SystemTime.Now(),
                                IsLockedOut = false,

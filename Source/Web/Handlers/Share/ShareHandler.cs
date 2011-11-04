@@ -3,7 +3,7 @@ namespace Kigg.Web
     using System;
     using System.Web;
 
-    using DomainObjects;
+    using Domain.Entities;
     using Infrastructure;
     using Repository;
 

@@ -1,7 +1,7 @@
 namespace Kigg.Web
 {
     using System.Web;
-    using DomainObjects;
+    using Domain.Entities;
 
     public class MsdnRedirector : ISocialServiceRedirector
     {

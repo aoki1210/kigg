@@ -4,7 +4,7 @@ namespace Kigg.Repository
     using System.Collections.Generic;
     using System.Diagnostics;
 
-    using DomainObjects;
+    using Domain.Entities;
 
     public abstract class DecoratedUserRepository : IUserRepository
     {

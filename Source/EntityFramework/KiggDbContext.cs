@@ -5,7 +5,7 @@
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
 
-    using DomainObjects;
+    using Domain.Entities;
 
     public class KiggDbContext : DbContext
     {

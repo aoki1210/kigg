@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Kigg.Core.Test
 {
-    using DomainObjects;
+    using Domain.Entities;
     using Infrastructure;
     using Repository;
     using Service;
@@ -174,7 +174,7 @@ namespace Kigg.Core.Test
 
             var user = new Mock<User>();
 
-            user.SetupGet(u => u.Role).Returns(Roles.Moderator);
+            user.SetupGet(u => u.Role).Returns(Role.Moderator);
 
             var story = new Mock<Story>();
 
@@ -190,7 +190,7 @@ namespace Kigg.Core.Test
         {
             var user = new Mock<User>();
 
-            user.SetupGet(u => u.Role).Returns(Roles.Moderator);
+            user.SetupGet(u => u.Role).Returns(Role.Moderator);
 
             var story = new Mock<Story>();
 

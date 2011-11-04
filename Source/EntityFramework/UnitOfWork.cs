@@ -16,7 +16,7 @@
             this.dbFactory = dbFactory;
         }
 
-        protected KiggDbContext Database
+        protected KiggDbContext Context
         {
             [DebuggerStepThrough]
             get
@@ -27,7 +27,7 @@
 
         public void Commit()
         {
-            context.Commit();
+            Context.Commit();
         }
 
         protected override void DisposeCore()

@@ -4,7 +4,7 @@ namespace Kigg.Web
     using System.Collections.ObjectModel;
     using System.Diagnostics;
 
-    using DomainObjects;
+    using Domain.Entities;
 
     public class UserListViewData : BaseViewData
     {

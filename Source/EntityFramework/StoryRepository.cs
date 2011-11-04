@@ -3,7 +3,7 @@
     using System;
     using System.Linq;
    
-    using DomainObjects;
+    using Domain.Entities;
     using Query;
     using Repository;
     
@@ -76,9 +76,9 @@
 
         public PagedResult<Story> FindPublishedByCategory(long categoryId, int start, int max)
         {
-            Check.Argument.IsNotNegativeOrZero(categoryId, "categoryId");
+            Check.Argument.IsNotZeroOrNegative(categoryId, "categoryId");
             Check.Argument.IsNotNegative(start, "start");
-            Check.Argument.IsNotNegativeOrZero(max, "max");
+            Check.Argument.IsNotZeroOrNegative(max, "max");
 
             var query = QueryFactory.CreateFindPublishedStoriesByCategory(categoryId, start, max);
 
@@ -89,7 +89,7 @@
         {
             Check.Argument.IsNotNullOrEmpty(category, "category");
             Check.Argument.IsNotNegative(start, "start");
-            Check.Argument.IsNotNegativeOrZero(max, "max");
+            Check.Argument.IsNotZeroOrNegative(max, "max");
 
             var query = QueryFactory.CreateFindPublishedStoriesByCategory(category, start, max);
 
@@ -99,7 +99,7 @@
         public PagedResult<Story> FindUpcoming(int start, int max)
         {
             Check.Argument.IsNotNegative(start, "start");
-            Check.Argument.IsNotNegativeOrZero(max, "max");
+            Check.Argument.IsNotZeroOrNegative(max, "max");
             
             var query = QueryFactory.CreateFindUpcomingStories(start, max);
 
@@ -109,7 +109,7 @@
         public PagedResult<Story> FindNew(int start, int max)
         {
             Check.Argument.IsNotNegative(start, "start");
-            Check.Argument.IsNotNegativeOrZero(max, "max");
+            Check.Argument.IsNotZeroOrNegative(max, "max");
 
             var query = QueryFactory.CreateFindNewStories(start, max);
 
@@ -119,7 +119,7 @@
         public PagedResult<Story> FindUnapproved(int start, int max)
         {
             Check.Argument.IsNotNegative(start, "start");
-            Check.Argument.IsNotNegativeOrZero(max, "max");
+            Check.Argument.IsNotZeroOrNegative(max, "max");
 
             var query = QueryFactory.CreateFindUnapprovedStories(start, max);
 
@@ -131,7 +131,7 @@
             Check.Argument.IsNotInFuture(minimumDate, "minimumDate");
             Check.Argument.IsNotInFuture(maximumDate, "maximumDate");
             Check.Argument.IsNotNegative(start, "start");
-            Check.Argument.IsNotNegativeOrZero(max, "max");
+            Check.Argument.IsNotZeroOrNegative(max, "max");
 
             var query = QueryFactory.CreateFindPublishableStories(minimumDate, maximumDate, start, max);
 
@@ -140,9 +140,9 @@
 
         public PagedResult<Story> FindByTag(long tagId, int start, int max)
         {
-            Check.Argument.IsNotNegativeOrZero(tagId, "tagId");
+            Check.Argument.IsNotZeroOrNegative(tagId, "tagId");
             Check.Argument.IsNotNegative(start, "start");
-            Check.Argument.IsNotNegativeOrZero(max, "max");
+            Check.Argument.IsNotZeroOrNegative(max, "max");
 
             var query = QueryFactory.CreateFindStoriesByTag(tagId, start, max);
 
@@ -153,7 +153,7 @@
         {
             Check.Argument.IsNotNullOrEmpty(tagName, "tagName");
             Check.Argument.IsNotNegative(start, "start");
-            Check.Argument.IsNotNegativeOrZero(max, "max");
+            Check.Argument.IsNotZeroOrNegative(max, "max");
 
             var query = QueryFactory.CreateFindStoriesByTag(tagName, start, max);
 
@@ -162,9 +162,9 @@
 
         public PagedResult<Story> FindPostedByUser(long userId, int start, int max)
         {
-            Check.Argument.IsNotNegativeOrZero(userId, "userId");
+            Check.Argument.IsNotZeroOrNegative(userId, "userId");
             Check.Argument.IsNotNegative(start, "start");
-            Check.Argument.IsNotNegativeOrZero(max, "max");
+            Check.Argument.IsNotZeroOrNegative(max, "max");
 
             var query = QueryFactory.CreateFindPostedStoriesByUser(userId, start, max);
 
@@ -175,7 +175,7 @@
         {
             Check.Argument.IsNotNullOrEmpty(userName, "userName");
             Check.Argument.IsNotNegative(start, "start");
-            Check.Argument.IsNotNegativeOrZero(max, "max");
+            Check.Argument.IsNotZeroOrNegative(max, "max");
 
             var query = QueryFactory.CreateFindPostedStoriesByUser(userName, start, max);
 
@@ -184,9 +184,9 @@
 
         public PagedResult<Story> FindPromotedByUser(long userId, int start, int max)
         {
-            Check.Argument.IsNotNegativeOrZero(userId, "userId");
+            Check.Argument.IsNotZeroOrNegative(userId, "userId");
             Check.Argument.IsNotNegative(start, "start");
-            Check.Argument.IsNotNegativeOrZero(max, "max");
+            Check.Argument.IsNotZeroOrNegative(max, "max");
 
             var query = QueryFactory.CreateFindPromotedStoriesByUser(userId, start, max);
 
@@ -197,7 +197,7 @@
         {
             Check.Argument.IsNotNullOrEmpty(userName, "userName");
             Check.Argument.IsNotNegative(start, "start");
-            Check.Argument.IsNotNegativeOrZero(max, "max");
+            Check.Argument.IsNotZeroOrNegative(max, "max");
 
             var query = QueryFactory.CreateFindPromotedStoriesByUser(userName, start, max);
 
@@ -206,9 +206,9 @@
 
         public PagedResult<Story> FindCommentedByUser(long userId, int start, int max)
         {
-            Check.Argument.IsNotNegativeOrZero(userId, "userId");
+            Check.Argument.IsNotZeroOrNegative(userId, "userId");
             Check.Argument.IsNotNegative(start, "start");
-            Check.Argument.IsNotNegativeOrZero(max, "max");
+            Check.Argument.IsNotZeroOrNegative(max, "max");
 
             var query = QueryFactory.CreateFindCommentedStoriesByUser(userId, start, max);
 
@@ -231,7 +231,7 @@
 
         public int CountByCategory(long categoryId)
         {
-            Check.Argument.IsNotNegativeOrZero(categoryId, "categoryId");
+            Check.Argument.IsNotZeroOrNegative(categoryId, "categoryId");
 
             var query = QueryFactory.CreateCountPublishedStoriesByCategory(categoryId);
 
@@ -249,7 +249,7 @@
 
         public int CountByTag(long tagId)
         {
-            Check.Argument.IsNotNegativeOrZero(tagId, "tagId");
+            Check.Argument.IsNotZeroOrNegative(tagId, "tagId");
 
             var query = QueryFactory.CreateCountStoriesByTag(tagId);
 
@@ -291,7 +291,7 @@
 
         public int CountPostedByUser(long userId)
         {
-            Check.Argument.IsNotNegativeOrZero(userId, "userId");
+            Check.Argument.IsNotZeroOrNegative(userId, "userId");
 
             var query = QueryFactory.CreateCountPostedStoriesByUser(userId);
 

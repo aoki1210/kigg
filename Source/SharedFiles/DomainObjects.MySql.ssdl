@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Schema Namespace="Kigg.EF.DomainObjects.Store"
+<Schema Namespace="Kigg.EF.Domain.Entities.Store"
         Alias="Self"
         xmlns="http://schemas.microsoft.com/ado/2006/04/edm/ssdl"
         xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator"
@@ -10,82 +10,82 @@
         Provider="Devart.Data.MySql" ProviderManifestToken="MySQL51"
         -->
   <EntityContainer Name="KiggStorageEntityContainer" >
-    <EntitySet Name="Category" EntityType="Kigg.EF.DomainObjects.Store.Category" store:Type="Tables" Schema="kigg" />
-    <EntitySet Name="CommentSubscribtion" EntityType="Kigg.EF.DomainObjects.Store.CommentSubscribtion" store:Type="Tables" Schema="kigg" />
-    <EntitySet Name="KnownSource" EntityType="Kigg.EF.DomainObjects.Store.KnownSource" store:Type="Tables" Schema="kigg" />
-    <EntitySet Name="Story" EntityType="Kigg.EF.DomainObjects.Store.Story" store:Type="Tables" Schema="kigg" />
-    <EntitySet Name="StoryComment" EntityType="Kigg.EF.DomainObjects.Store.StoryComment" store:Type="Tables" Schema="kigg" />
-    <EntitySet Name="StoryMarkAsSpam" EntityType="Kigg.EF.DomainObjects.Store.StoryMarkAsSpam" store:Type="Tables" Schema="kigg" />
-    <EntitySet Name="StoryTag" EntityType="Kigg.EF.DomainObjects.Store.StoryTag" store:Type="Tables" Schema="kigg" />
-    <EntitySet Name="StoryView" EntityType="Kigg.EF.DomainObjects.Store.StoryView" store:Type="Tables" Schema="kigg" />
-    <EntitySet Name="StoryVote" EntityType="Kigg.EF.DomainObjects.Store.StoryVote" store:Type="Tables" Schema="kigg" />
-    <EntitySet Name="Tag" EntityType="Kigg.EF.DomainObjects.Store.Tag" store:Type="Tables" Schema="kigg" />
-    <EntitySet Name="User" EntityType="Kigg.EF.DomainObjects.Store.User" store:Type="Tables" Schema="kigg" />
-    <EntitySet Name="UserScore" EntityType="Kigg.EF.DomainObjects.Store.UserScore" store:Type="Tables" Schema="kigg" />
-    <EntitySet Name="UserTag" EntityType="Kigg.EF.DomainObjects.Store.UserTag" store:Type="Tables" Schema="kigg" />
-    <EntitySet Name="StorySearchResult" EntityType="Kigg.EF.DomainObjects.Store.StorySearchResult" Schema="kigg" />
-    <EntitySet Name="CommentSearchResult" EntityType="Kigg.EF.DomainObjects.Store.CommentSearchResult" Schema="kigg" />
-    <AssociationSet Name="FK_CommentSubscribtion_Story" Association="Kigg.EF.DomainObjects.Store.FK_CommentSubscribtion_Story">
+    <EntitySet Name="Category" EntityType="Kigg.EF.Domain.Entities.Store.Category" store:Type="Tables" Schema="kigg" />
+    <EntitySet Name="CommentSubscribtion" EntityType="Kigg.EF.Domain.Entities.Store.CommentSubscribtion" store:Type="Tables" Schema="kigg" />
+    <EntitySet Name="KnownSource" EntityType="Kigg.EF.Domain.Entities.Store.KnownSource" store:Type="Tables" Schema="kigg" />
+    <EntitySet Name="Story" EntityType="Kigg.EF.Domain.Entities.Store.Story" store:Type="Tables" Schema="kigg" />
+    <EntitySet Name="StoryComment" EntityType="Kigg.EF.Domain.Entities.Store.StoryComment" store:Type="Tables" Schema="kigg" />
+    <EntitySet Name="StoryMarkAsSpam" EntityType="Kigg.EF.Domain.Entities.Store.StoryMarkAsSpam" store:Type="Tables" Schema="kigg" />
+    <EntitySet Name="StoryTag" EntityType="Kigg.EF.Domain.Entities.Store.StoryTag" store:Type="Tables" Schema="kigg" />
+    <EntitySet Name="StoryView" EntityType="Kigg.EF.Domain.Entities.Store.StoryView" store:Type="Tables" Schema="kigg" />
+    <EntitySet Name="StoryVote" EntityType="Kigg.EF.Domain.Entities.Store.StoryVote" store:Type="Tables" Schema="kigg" />
+    <EntitySet Name="Tag" EntityType="Kigg.EF.Domain.Entities.Store.Tag" store:Type="Tables" Schema="kigg" />
+    <EntitySet Name="User" EntityType="Kigg.EF.Domain.Entities.Store.User" store:Type="Tables" Schema="kigg" />
+    <EntitySet Name="UserScore" EntityType="Kigg.EF.Domain.Entities.Store.UserScore" store:Type="Tables" Schema="kigg" />
+    <EntitySet Name="UserTag" EntityType="Kigg.EF.Domain.Entities.Store.UserTag" store:Type="Tables" Schema="kigg" />
+    <EntitySet Name="StorySearchResult" EntityType="Kigg.EF.Domain.Entities.Store.StorySearchResult" Schema="kigg" />
+    <EntitySet Name="CommentSearchResult" EntityType="Kigg.EF.Domain.Entities.Store.CommentSearchResult" Schema="kigg" />
+    <AssociationSet Name="FK_CommentSubscribtion_Story" Association="Kigg.EF.Domain.Entities.Store.FK_CommentSubscribtion_Story">
       <End Role="Story" EntitySet="Story" />
       <End Role="CommentSubscribtion" EntitySet="CommentSubscribtion" />
     </AssociationSet>
-    <AssociationSet Name="FK_CommentSubscribtion_User" Association="Kigg.EF.DomainObjects.Store.FK_CommentSubscribtion_User">
+    <AssociationSet Name="FK_CommentSubscribtion_User" Association="Kigg.EF.Domain.Entities.Store.FK_CommentSubscribtion_User">
       <End Role="User" EntitySet="User" />
       <End Role="CommentSubscribtion" EntitySet="CommentSubscribtion" />
     </AssociationSet>
-    <AssociationSet Name="FK_Story_Category" Association="Kigg.EF.DomainObjects.Store.FK_Story_Category">
+    <AssociationSet Name="FK_Story_Category" Association="Kigg.EF.Domain.Entities.Store.FK_Story_Category">
       <End Role="Category" EntitySet="Category" />
       <End Role="Story" EntitySet="Story" />
     </AssociationSet>
-    <AssociationSet Name="FK_Story_User" Association="Kigg.EF.DomainObjects.Store.FK_Story_User">
+    <AssociationSet Name="FK_Story_User" Association="Kigg.EF.Domain.Entities.Store.FK_Story_User">
       <End Role="User" EntitySet="User" />
       <End Role="Story" EntitySet="Story" />
     </AssociationSet>
-    <AssociationSet Name="FK_StoryComment_Story" Association="Kigg.EF.DomainObjects.Store.FK_StoryComment_Story">
+    <AssociationSet Name="FK_StoryComment_Story" Association="Kigg.EF.Domain.Entities.Store.FK_StoryComment_Story">
       <End Role="Story" EntitySet="Story" />
       <End Role="StoryComment" EntitySet="StoryComment" />
     </AssociationSet>
-    <AssociationSet Name="FK_StoryComment_User" Association="Kigg.EF.DomainObjects.Store.FK_StoryComment_User">
+    <AssociationSet Name="FK_StoryComment_User" Association="Kigg.EF.Domain.Entities.Store.FK_StoryComment_User">
       <End Role="User" EntitySet="User" />
       <End Role="StoryComment" EntitySet="StoryComment" />
     </AssociationSet>
-    <AssociationSet Name="FK_StoryMarkAsSpam_Story" Association="Kigg.EF.DomainObjects.Store.FK_StoryMarkAsSpam_Story">
+    <AssociationSet Name="FK_StoryMarkAsSpam_Story" Association="Kigg.EF.Domain.Entities.Store.FK_StoryMarkAsSpam_Story">
       <End Role="Story" EntitySet="Story" />
       <End Role="StoryMarkAsSpam" EntitySet="StoryMarkAsSpam" />
     </AssociationSet>
-    <AssociationSet Name="FK_StoryMarkAsSpam_User" Association="Kigg.EF.DomainObjects.Store.FK_StoryMarkAsSpam_User">
+    <AssociationSet Name="FK_StoryMarkAsSpam_User" Association="Kigg.EF.Domain.Entities.Store.FK_StoryMarkAsSpam_User">
       <End Role="User" EntitySet="User" />
       <End Role="StoryMarkAsSpam" EntitySet="StoryMarkAsSpam" />
     </AssociationSet>
-    <AssociationSet Name="FK_StoryTag_Story" Association="Kigg.EF.DomainObjects.Store.FK_StoryTag_Story">
+    <AssociationSet Name="FK_StoryTag_Story" Association="Kigg.EF.Domain.Entities.Store.FK_StoryTag_Story">
       <End Role="Story" EntitySet="Story" />
       <End Role="StoryTag" EntitySet="StoryTag" />
     </AssociationSet>
-    <AssociationSet Name="FK_StoryTag_Tag" Association="Kigg.EF.DomainObjects.Store.FK_StoryTag_Tag">
+    <AssociationSet Name="FK_StoryTag_Tag" Association="Kigg.EF.Domain.Entities.Store.FK_StoryTag_Tag">
       <End Role="Tag" EntitySet="Tag" />
       <End Role="StoryTag" EntitySet="StoryTag" />
     </AssociationSet>
-    <AssociationSet Name="FK_StoryView_Story" Association="Kigg.EF.DomainObjects.Store.FK_StoryView_Story">
+    <AssociationSet Name="FK_StoryView_Story" Association="Kigg.EF.Domain.Entities.Store.FK_StoryView_Story">
       <End Role="Story" EntitySet="Story" />
       <End Role="StoryView" EntitySet="StoryView" />
     </AssociationSet>
-    <AssociationSet Name="FK_StoryVote_Story" Association="Kigg.EF.DomainObjects.Store.FK_StoryVote_Story">
+    <AssociationSet Name="FK_StoryVote_Story" Association="Kigg.EF.Domain.Entities.Store.FK_StoryVote_Story">
       <End Role="Story" EntitySet="Story" />
       <End Role="StoryVote" EntitySet="StoryVote" />
     </AssociationSet>
-    <AssociationSet Name="FK_StoryVote_User" Association="Kigg.EF.DomainObjects.Store.FK_StoryVote_User">
+    <AssociationSet Name="FK_StoryVote_User" Association="Kigg.EF.Domain.Entities.Store.FK_StoryVote_User">
       <End Role="User" EntitySet="User" />
       <End Role="StoryVote" EntitySet="StoryVote" />
     </AssociationSet>
-    <AssociationSet Name="FK_UserScore_User" Association="Kigg.EF.DomainObjects.Store.FK_UserScore_User">
+    <AssociationSet Name="FK_UserScore_User" Association="Kigg.EF.Domain.Entities.Store.FK_UserScore_User">
       <End Role="User" EntitySet="User" />
       <End Role="UserScore" EntitySet="UserScore" />
     </AssociationSet>
-    <AssociationSet Name="FK_UserTag_Tag" Association="Kigg.EF.DomainObjects.Store.FK_UserTag_Tag">
+    <AssociationSet Name="FK_UserTag_Tag" Association="Kigg.EF.Domain.Entities.Store.FK_UserTag_Tag">
       <End Role="Tag" EntitySet="Tag" />
       <End Role="UserTag" EntitySet="UserTag" />
     </AssociationSet>
-    <AssociationSet Name="FK_UserTag_User" Association="Kigg.EF.DomainObjects.Store.FK_UserTag_User">
+    <AssociationSet Name="FK_UserTag_User" Association="Kigg.EF.Domain.Entities.Store.FK_UserTag_User">
       <End Role="User" EntitySet="User" />
       <End Role="UserTag" EntitySet="UserTag" />
     </AssociationSet>
@@ -239,8 +239,8 @@
     <Property Name="StoryId" Type="guid" Nullable="false" />
   </EntityType>
   <Association Name="FK_CommentSubscribtion_Story">
-    <End Role="Story" Type="Kigg.EF.DomainObjects.Store.Story" Multiplicity="1" />
-    <End Role="CommentSubscribtion" Type="Kigg.EF.DomainObjects.Store.CommentSubscribtion" Multiplicity="*" />
+    <End Role="Story" Type="Kigg.EF.Domain.Entities.Store.Story" Multiplicity="1" />
+    <End Role="CommentSubscribtion" Type="Kigg.EF.Domain.Entities.Store.CommentSubscribtion" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Story">
         <PropertyRef Name="Id" />
@@ -251,8 +251,8 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_CommentSubscribtion_User">
-    <End Role="User" Type="Kigg.EF.DomainObjects.Store.User" Multiplicity="1" />
-    <End Role="CommentSubscribtion" Type="Kigg.EF.DomainObjects.Store.CommentSubscribtion" Multiplicity="*" />
+    <End Role="User" Type="Kigg.EF.Domain.Entities.Store.User" Multiplicity="1" />
+    <End Role="CommentSubscribtion" Type="Kigg.EF.Domain.Entities.Store.CommentSubscribtion" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="User">
         <PropertyRef Name="Id" />
@@ -263,8 +263,8 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_Story_Category">
-    <End Role="Category" Type="Kigg.EF.DomainObjects.Store.Category" Multiplicity="1" />
-    <End Role="Story" Type="Kigg.EF.DomainObjects.Store.Story" Multiplicity="*" />
+    <End Role="Category" Type="Kigg.EF.Domain.Entities.Store.Category" Multiplicity="1" />
+    <End Role="Story" Type="Kigg.EF.Domain.Entities.Store.Story" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Category">
         <PropertyRef Name="Id" />
@@ -275,8 +275,8 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_Story_User">
-    <End Role="User" Type="Kigg.EF.DomainObjects.Store.User" Multiplicity="1" />
-    <End Role="Story" Type="Kigg.EF.DomainObjects.Store.Story" Multiplicity="*" />
+    <End Role="User" Type="Kigg.EF.Domain.Entities.Store.User" Multiplicity="1" />
+    <End Role="Story" Type="Kigg.EF.Domain.Entities.Store.Story" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="User">
         <PropertyRef Name="Id" />
@@ -287,8 +287,8 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_StoryComment_Story">
-    <End Role="Story" Type="Kigg.EF.DomainObjects.Store.Story" Multiplicity="1" />
-    <End Role="StoryComment" Type="Kigg.EF.DomainObjects.Store.StoryComment" Multiplicity="*" />
+    <End Role="Story" Type="Kigg.EF.Domain.Entities.Store.Story" Multiplicity="1" />
+    <End Role="StoryComment" Type="Kigg.EF.Domain.Entities.Store.StoryComment" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Story">
         <PropertyRef Name="Id" />
@@ -299,8 +299,8 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_StoryComment_User">
-    <End Role="User" Type="Kigg.EF.DomainObjects.Store.User" Multiplicity="1" />
-    <End Role="StoryComment" Type="Kigg.EF.DomainObjects.Store.StoryComment" Multiplicity="*" />
+    <End Role="User" Type="Kigg.EF.Domain.Entities.Store.User" Multiplicity="1" />
+    <End Role="StoryComment" Type="Kigg.EF.Domain.Entities.Store.StoryComment" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="User">
         <PropertyRef Name="Id" />
@@ -311,8 +311,8 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_StoryMarkAsSpam_Story">
-    <End Role="Story" Type="Kigg.EF.DomainObjects.Store.Story" Multiplicity="1" />
-    <End Role="StoryMarkAsSpam" Type="Kigg.EF.DomainObjects.Store.StoryMarkAsSpam" Multiplicity="*" />
+    <End Role="Story" Type="Kigg.EF.Domain.Entities.Store.Story" Multiplicity="1" />
+    <End Role="StoryMarkAsSpam" Type="Kigg.EF.Domain.Entities.Store.StoryMarkAsSpam" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Story">
         <PropertyRef Name="Id" />
@@ -323,8 +323,8 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_StoryMarkAsSpam_User">
-    <End Role="User" Type="Kigg.EF.DomainObjects.Store.User" Multiplicity="1" />
-    <End Role="StoryMarkAsSpam" Type="Kigg.EF.DomainObjects.Store.StoryMarkAsSpam" Multiplicity="*" />
+    <End Role="User" Type="Kigg.EF.Domain.Entities.Store.User" Multiplicity="1" />
+    <End Role="StoryMarkAsSpam" Type="Kigg.EF.Domain.Entities.Store.StoryMarkAsSpam" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="User">
         <PropertyRef Name="Id" />
@@ -335,8 +335,8 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_StoryTag_Story">
-    <End Role="Story" Type="Kigg.EF.DomainObjects.Store.Story" Multiplicity="1" />
-    <End Role="StoryTag" Type="Kigg.EF.DomainObjects.Store.StoryTag" Multiplicity="*" />
+    <End Role="Story" Type="Kigg.EF.Domain.Entities.Store.Story" Multiplicity="1" />
+    <End Role="StoryTag" Type="Kigg.EF.Domain.Entities.Store.StoryTag" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Story">
         <PropertyRef Name="Id" />
@@ -347,8 +347,8 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_StoryTag_Tag">
-    <End Role="Tag" Type="Kigg.EF.DomainObjects.Store.Tag" Multiplicity="1" />
-    <End Role="StoryTag" Type="Kigg.EF.DomainObjects.Store.StoryTag" Multiplicity="*" />
+    <End Role="Tag" Type="Kigg.EF.Domain.Entities.Store.Tag" Multiplicity="1" />
+    <End Role="StoryTag" Type="Kigg.EF.Domain.Entities.Store.StoryTag" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Tag">
         <PropertyRef Name="Id" />
@@ -359,8 +359,8 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_StoryView_Story">
-    <End Role="Story" Type="Kigg.EF.DomainObjects.Store.Story" Multiplicity="1" />
-    <End Role="StoryView" Type="Kigg.EF.DomainObjects.Store.StoryView" Multiplicity="*" />
+    <End Role="Story" Type="Kigg.EF.Domain.Entities.Store.Story" Multiplicity="1" />
+    <End Role="StoryView" Type="Kigg.EF.Domain.Entities.Store.StoryView" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Story">
         <PropertyRef Name="Id" />
@@ -371,8 +371,8 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_StoryVote_Story">
-    <End Role="Story" Type="Kigg.EF.DomainObjects.Store.Story" Multiplicity="1" />
-    <End Role="StoryVote" Type="Kigg.EF.DomainObjects.Store.StoryVote" Multiplicity="*" />
+    <End Role="Story" Type="Kigg.EF.Domain.Entities.Store.Story" Multiplicity="1" />
+    <End Role="StoryVote" Type="Kigg.EF.Domain.Entities.Store.StoryVote" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Story">
         <PropertyRef Name="Id" />
@@ -383,8 +383,8 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_StoryVote_User">
-    <End Role="User" Type="Kigg.EF.DomainObjects.Store.User" Multiplicity="1" />
-    <End Role="StoryVote" Type="Kigg.EF.DomainObjects.Store.StoryVote" Multiplicity="*" />
+    <End Role="User" Type="Kigg.EF.Domain.Entities.Store.User" Multiplicity="1" />
+    <End Role="StoryVote" Type="Kigg.EF.Domain.Entities.Store.StoryVote" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="User">
         <PropertyRef Name="Id" />
@@ -395,8 +395,8 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_UserScore_User">
-    <End Role="User" Type="Kigg.EF.DomainObjects.Store.User" Multiplicity="1" />
-    <End Role="UserScore" Type="Kigg.EF.DomainObjects.Store.UserScore" Multiplicity="*" />
+    <End Role="User" Type="Kigg.EF.Domain.Entities.Store.User" Multiplicity="1" />
+    <End Role="UserScore" Type="Kigg.EF.Domain.Entities.Store.UserScore" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="User">
         <PropertyRef Name="Id" />
@@ -407,8 +407,8 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_UserTag_Tag">
-    <End Role="Tag" Type="Kigg.EF.DomainObjects.Store.Tag" Multiplicity="1" />
-    <End Role="UserTag" Type="Kigg.EF.DomainObjects.Store.UserTag" Multiplicity="*" />
+    <End Role="Tag" Type="Kigg.EF.Domain.Entities.Store.Tag" Multiplicity="1" />
+    <End Role="UserTag" Type="Kigg.EF.Domain.Entities.Store.UserTag" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Tag">
         <PropertyRef Name="Id" />
@@ -419,8 +419,8 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_UserTag_User">
-    <End Role="User" Type="Kigg.EF.DomainObjects.Store.User" Multiplicity="1" />
-    <End Role="UserTag" Type="Kigg.EF.DomainObjects.Store.UserTag" Multiplicity="*" />
+    <End Role="User" Type="Kigg.EF.Domain.Entities.Store.User" Multiplicity="1" />
+    <End Role="UserTag" Type="Kigg.EF.Domain.Entities.Store.UserTag" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="User">
         <PropertyRef Name="Id" />

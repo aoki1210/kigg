@@ -1,6 +1,6 @@
 namespace Kigg.Repository
 {
-    using DomainObjects;
+    using Domain.Entities;
 
     public interface IUniqueNameEntityRepository<TEntity> : IEntityRepository<TEntity> 
         where TEntity : class, IUniqueNameEntity

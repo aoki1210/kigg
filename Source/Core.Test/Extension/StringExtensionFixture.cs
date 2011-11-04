@@ -5,7 +5,7 @@ using Xunit.Extensions;
 
 namespace Kigg.Core.Test
 {
-    using DomainObjects;
+    using Domain.Entities;
 
     public class StringExtensionFixture
     {
@@ -97,9 +97,9 @@ namespace Kigg.Core.Test
         }
 
         [Theory]
-        [InlineData("Administrator", Roles.Administrator)]
-        [InlineData("foo", Roles.User)]
-        public void ToEnum_Should_Be_Able_To_Convert_From_String(string input, Roles output)
+        [InlineData("Administrator", Role.Administrator)]
+        [InlineData("foo", Role.User)]
+        public void ToEnum_Should_Be_Able_To_Convert_From_String(string input, Role output)
         {
             Assert.Equal(output, input.ToEnum(output));
         }
