@@ -72,17 +72,35 @@
     <Compile Include="..\SharedFiles\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\WebRazor\App_GlobalResources\TextMessages.designer.cs">
+      <Link>Resx\TextMessages.designer.cs</Link>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TextMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ActionFilters\AppendOpenIdXrdsLocationAttribute.cs" />
+    <Compile Include="ActionFilters\KiggAuthorizeAttribute.cs" />
     <Compile Include="BoostrapperTasks\AutoMapperBootstrapper.cs" />
+    <Compile Include="BoostrapperTasks\ConfigureFilters.cs" />
     <Compile Include="BoostrapperTasks\CreateDefaultCategories.cs" />
     <Compile Include="BoostrapperTasks\CreateDefaultUsers.cs" />
+    <Compile Include="BoostrapperTasks\RegisterRoutes.cs" />
+    <Compile Include="Commands\OpenIdCommand.cs" />
+    <Compile Include="Commands\OpenIdCommandBinder.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\KiggControllerBase.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MembershipController.cs" />
     <Compile Include="Extensions\HtmlHelperTelerikExtensions.cs" />
+    <Compile Include="Extensions\HttpContextBaseExtensions.cs" />
+    <Compile Include="Extensions\RequestContextExtensions.cs" />
     <Compile Include="Extensions\UrlHelperAssetExtensions.cs" />
+    <Compile Include="Extensions\UrlHelperNavigationExtensions.cs" />
     <Compile Include="Helpers\Constants.cs" />
     <Compile Include="Infrastructure\CacheManager.cs" />
+    <Compile Include="Infrastructure\Cookie.cs" />
     <Compile Include="Infrastructure\FormsAuthentication.cs" />
+    <Compile Include="Infrastructure\ICookie.cs" />
     <Compile Include="Infrastructure\IFormsAuthentication.cs" />
     <Compile Include="Infrastructure\IOpenIdRelyingParty.cs" />
     <Compile Include="Infrastructure\OpenIdRelyingParty.cs" />
@@ -115,7 +133,14 @@
       <Name>Kigg.Services</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="..\WebRazor\App_GlobalResources\TextMessages.resx">
+      <Link>Resx\TextMessages.resx</Link>
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>TextMessages.designer.cs</LastGenOutput>
+      <CustomToolNamespace>Kigg.Web.Resources</CustomToolNamespace>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -61,6 +61,60 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to OpenID.
+        /// </summary>
+        internal static string OpenId {
+            get {
+                return ResourceManager.GetString("OpenId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AOL.
+        /// </summary>
+        internal static string OpenIdAOL {
+            get {
+                return ResourceManager.GetString("OpenIdAOL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter your.
+        /// </summary>
+        internal static string OpenIdEnterYourXxx {
+            get {
+                return ResourceManager.GetString("OpenIdEnterYourXxx", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Google.
+        /// </summary>
+        internal static string OpenIdGoogle {
+            get {
+                return ResourceManager.GetString("OpenIdGoogle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AOL screen name.
+        /// </summary>
+        internal static string OpenIdUsernameAOL {
+            get {
+                return ResourceManager.GetString("OpenIdUsernameAOL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Yahoo!.
+        /// </summary>
+        internal static string OpenIdYahoo {
+            get {
+                return ResourceManager.GetString("OpenIdYahoo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Welcome Guest!.
         /// </summary>
         internal static string SiteGuestWelcome {
@@ -106,7 +160,16 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Login.
+        ///   Looks up a localized string similar to Keep me logged in on this computer.
+        /// </summary>
+        internal static string SiteSigninRememberMe {
+            get {
+                return ResourceManager.GetString("SiteSigninRememberMe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to KiGG: Login.
         /// </summary>
         internal static string SiteSigninWindowTitle {
             get {

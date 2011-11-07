@@ -117,61 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="OpenId" xml:space="preserve">
-    <value>OpenID</value>
+  <data name="InvalidOpenIDUserName" xml:space="preserve">
+    <value>Invalid OpenID user name.</value>
   </data>
-  <data name="OpenIdAOL" xml:space="preserve">
-    <value>AOL</value>
+  <data name="OpenIDUserNameCannotBeBlank" xml:space="preserve">
+    <value>OpenID user name cannot be blank.</value>
   </data>
-  <data name="OpenIdEnterYourXxx" xml:space="preserve">
-    <value>Enter your</value>
-  </data>
-  <data name="OpenIdGoogle" xml:space="preserve">
-    <value>Google</value>
-  </data>
-  <data name="OpenIdUsernameAOL" xml:space="preserve">
-    <value>AOL screen name</value>
-  </data>
-  <data name="OpenIdYahoo" xml:space="preserve">
-    <value>Yahoo!</value>
-  </data>
-  <data name="SiteGuestWelcome" xml:space="preserve">
-    <value>Welcome Guest!</value>
-  </data>
-  <data name="SiteMemberWelcome" xml:space="preserve">
-    <value>Welcome back</value>
-  </data>
-  <data name="SiteMetaDescription" xml:space="preserve">
-    <value>DotNetShoutout is a place where you can find latest Microsoft .NET stories to increase your skills and share your opinions.</value>
-  </data>
-  <data name="SiteMetaKeywords" xml:space="preserve">
-    <value>dotnetshoutout, .net, dotnet, asp.net, asp.net mvc, aspnetmvc, mvc, c#, vb.net, sql, ajax, silverlight, wpf, wcf, wf, linq, windows forms, web service, visual studio, tdd, azure, css, css3, html, html5, javascript, jquery, microsoft, programming, development, dotnet latest news, dotnet latest stoy, .net latest stoy, .net latest news</value>
-  </data>
-  <data name="SiteSignin" xml:space="preserve">
-    <value>Login</value>
-  </data>
-  <data name="SiteSigninRememberMe" xml:space="preserve">
-    <value>Keep me logged in on this computer</value>
-  </data>
-  <data name="SiteSigninWindowTitle" xml:space="preserve">
-    <value>KiGG: Login</value>
-  </data>
-  <data name="SiteSignout" xml:space="preserve">
-    <value>Logout</value>
-  </data>
-  <data name="SiteSignup" xml:space="preserve">
-    <value>Signup</value>
-  </data>
-  <data name="SiteTitle" xml:space="preserve">
-    <value>KiGG</value>
-  </data>
-  <data name="SiteTitlePrefix" xml:space="preserve">
-    <value>KiGG</value>
-  </data>
-  <data name="StorySubmitNew" xml:space="preserve">
-    <value>Submit new story</value>
-  </data>
-  <data name="StoryUpcoming" xml:space="preserve">
-    <value>Upcoming stories</value>
+  <data name="UnableToLoginWithYourPreferredOpenIDProvider" xml:space="preserve">
+    <value>Unable to login with your preferred OpenID provider.</value>
   </data>
 </root>

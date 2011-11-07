@@ -1,0 +1,53 @@
+﻿form.openid fieldset div {
+    background: none;
+    border: 0;
+    border-radius: 0;
+    display: block;
+    padding: 0;
+}
+
+.form h3
+{
+    padding-bottom: 5px;
+    margin: 0px;
+    font-size: 14px;
+}
+
+.form p
+{
+    margin: 5px 0px;
+}
+
+.form label
+{
+    font-size: 18px;
+}
+
+.form .label
+{
+    padding-bottom: 2px;
+    display: block;
+}
+
+.form .small-label
+{
+    padding: 2px 0px;
+    font-size: 14px;
+}
+
+.form input.textbox
+{
+    border: 1px solid #E2C822;
+    font-size: 11px;
+    padding: 3px;
+    /*width: 280px;*/
+    width: 29em;
+}
+
+
+.form .button
+{
+    background: url("images/bgs/button.png") repeat-x scroll 0 50% #F2F2F2;
+    border: 1px solid #999999;
+    padding: 2px 4px;
+}

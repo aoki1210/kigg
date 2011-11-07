@@ -2,13 +2,14 @@
     Html.Telerik().Window()
         .Name("login-box")
         .Title(@Resources.Site.SiteSigninWindowTitle)
-        .Content(@<text>Windows content goes here</text>)
+        .Content(() => Html.RenderPartial("membership/_login"))
         .Buttons(buttons => buttons.Close())
-        .Height(180)
-        .Width(300)
+        .Height(500)
+        .Width(440)
         .Draggable(false)
         .Modal(true)
-        .Visible(false).Render();
+        .Visible(false)
+        .Render();
 
     Html.Scripts()
         .OnDocumentReady("membership.init();").OnWindowUnload("kigg.dispose();");

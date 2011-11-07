@@ -15,13 +15,13 @@ kigg.ui.membership = (function () {
     var self = {
         init: function () {
             bindHandlers();
+            $('form.openid').openid();
         },
         showLogin: function () {
             $('#login-box').data('tWindow').center().open();
         },
         dispose: function () {
             $loginLink.unbind();
-            console.log('membership dispose');
         }
     };
     return self;

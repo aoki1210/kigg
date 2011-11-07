@@ -2,3 +2,17 @@
 {
     display:none;
 }
+
+.clear
+{
+    clear:both;
+    padding:0;
+    margin:0;
+}
+
+.clear-left
+{
+    clear:left;
+    padding:0;
+    margin:0;
+}
