@@ -10,6 +10,7 @@
 
     using Configuration;
     using Caching;
+    using Security;
     using Domain.Entities;
     using Infrastructure;
     using Infrastructure.EntityFramework;
@@ -25,6 +26,9 @@
             builder.Register(c => new CacheManager(HttpRuntime.Cache)).As<ICacheManager>().SingleInstance();
             builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().InstancePerLifetimeScope();
             builder.RegisterType<CategoryService>().As<ICategoryService>().InstancePerLifetimeScope();
+            builder.RegisterType<OpenIdRelyingParty>().As<IOpenIdRelyingParty>().InstancePerDependency();
+            builder.RegisterType<FormsAuthentication>().As<IFormsAuthentication>().SingleInstance();
+            builder.RegisterType<Cookie>().As<ICookie>().SingleInstance();
 
             Settings settings = CreateSettings();
             builder.RegisterInstance(settings).As<Settings>().SingleInstance();

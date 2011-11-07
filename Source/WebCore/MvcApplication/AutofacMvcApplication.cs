@@ -15,8 +15,10 @@
             Bootstrapper.BootstrapperTasks
                 .Include<RegisterViewEngines>()
                 .Include<RegisterControllers>()
+                .Include<RegisterModelBinders>()
+                .Include<RegisterRoutes>()
                 .Include<AutoMapperBootstrapper>()
-                //.Include<ConfigureAssets>()
+                .Include<ConfigureFilters>()
                 .Include<CreateDefaultUsers>()
                 .Include<CreateDefaultCategories>();
         }
@@ -26,24 +28,13 @@
             filters.Add(new HandleErrorAttribute());
         }
 
-        public static void RegisterRoutes(RouteCollection routes)
-        {
-            routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-
-            routes.MapRoute(
-                "Default", // Route name
-                "{controller}/{action}/{id}", // URL with parameters
-                new { controller = "Home", action = "Default", id = UrlParameter.Optional } // Parameter defaults
-            );
-
-        }
-
+        
         protected override void OnStart()
         {
             AreaRegistration.RegisterAllAreas();
 
             RegisterGlobalFilters(GlobalFilters.Filters);
-            RegisterRoutes(RouteTable.Routes);
+            
 
             base.OnStart();
         }

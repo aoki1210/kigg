@@ -3,6 +3,7 @@
     using System.Web.Mvc;
 
     using Telerik.Web.Mvc.UI;
+
     public static class HtmlHelperExtensions
     {
         public static ScriptRegistrarBuilder Scripts(this HtmlHelper htmlHelper, string[] sharedGroups = null, bool enablejQuery = false)

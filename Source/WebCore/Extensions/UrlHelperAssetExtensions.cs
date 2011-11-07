@@ -4,6 +4,7 @@ namespace Kigg.Web
 
     public static class UrlHelperAssetExtensions
     {
+        private const string CommonImagesPath = "~/content/images";
         /// <summary>
         /// Builds fav icon URL and returns valid one.
         /// </summary>
@@ -16,9 +17,17 @@ namespace Kigg.Web
             Check.Argument.IsNotNull(instance, "helper");
             Check.Argument.IsNotNullOrEmpty(icon, "icon");
 
-            return instance.Content("~/Content/images/fav/{0}".FormatWith(icon));
+            return instance.Content("{0}/fav/{1}".FormatWith(CommonImagesPath, icon));
         }
-        
+
+        public static string OpenIdIcon(this UrlHelper instance, string icon)
+        {
+            Check.Argument.IsNotNull(instance, "helper");
+            Check.Argument.IsNotNullOrEmpty(icon, "icon");
+
+            return instance.Content("{0}/openid/{1}.png".FormatWith(CommonImagesPath, icon));
+        }
+
         /// <summary>
         /// Builds image URL and returns valid one.
         /// </summary>
@@ -28,7 +37,7 @@ namespace Kigg.Web
         /// <returns>Returns relative image url</returns>
         public static string Image(this UrlHelper instance, string image)
         {
-            return instance.Content("~/Content/images/{0}".FormatWith(image));
+            return instance.Content("{0}/{1}".FormatWith(CommonImagesPath,image));
         }
 
         public static string Logo(this UrlHelper instance, string theme = Constants.DefaultTheme, string logo = Constants.DefaultLogo)
@@ -37,7 +46,7 @@ namespace Kigg.Web
             Check.Argument.IsNotNullOrEmpty(theme, "theme");
             Check.Argument.IsNotNullOrEmpty(logo, "logo");
 
-            return instance.Content("~/Content/sitethemes/{0}/{1}".FormatWith(theme, logo));
+            return instance.Content("~/Content/themes/{0}/{1}".FormatWith(theme, logo));
         }
     }
 }
