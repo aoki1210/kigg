@@ -205,7 +205,7 @@ namespace Kigg.Web
                         }
                 }
 
-                x.Add(new XElement(_ns + "lastmod", lastModified.ToString("yyyy-MM-dd", Constants.CurrentCulture)), new XElement(_ns + "changefreq", frequency.ToString().ToLowerInvariant()), new XElement(_ns + "priority", priorityString));
+                x.Add(new XElement(_ns + "lastmod", lastModified.ToString("yyyy-MM-dd", GlobalConstants.CurrentCulture)), new XElement(_ns + "changefreq", frequency.ToString().ToLowerInvariant()), new XElement(_ns + "priority", priorityString));
             }
 
             return x;
@@ -266,7 +266,7 @@ namespace Kigg.Web
                 keyWords += ", " + string.Join(", ", story.Tags.Select(t => t.Name).ToArray());
             }
 
-            url.Add(new XElement(_googleNews + "news", new XElement(_googleNews + "publication_date", story.PublishedAt.Value.ToString(dateFormat, Constants.CurrentCulture)), new XElement(_googleNews + "keywords", keyWords)));
+            url.Add(new XElement(_googleNews + "news", new XElement(_googleNews + "publication_date", story.PublishedAt.Value.ToString(dateFormat, GlobalConstants.CurrentCulture)), new XElement(_googleNews + "keywords", keyWords)));
 
             target.Add(url);
         }

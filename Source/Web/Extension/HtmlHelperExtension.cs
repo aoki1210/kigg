@@ -77,7 +77,7 @@ namespace Kigg.Web
 
             for (int i = 0; i < names.Length; i++)
             {
-                int value = Convert.ToInt32((TEnum)Enum.Parse(enumType, names[i]), Constants.CurrentCulture);
+                int value = Convert.ToInt32((TEnum)Enum.Parse(enumType, names[i]), GlobalConstants.CurrentCulture);
 
                 dictionary.Add(value, names[i]);
             }
@@ -185,7 +185,7 @@ namespace Kigg.Web
                     {
                         int pageNo = (i + 1);
 
-                        pagerHtml.Append(getPageLink(pageNo.ToString(Constants.CurrentCulture), pageNo));
+                        pagerHtml.Append(getPageLink(pageNo.ToString(GlobalConstants.CurrentCulture), pageNo));
                     }
 
                     if (noOfPageInEdge < start)
@@ -204,7 +204,7 @@ namespace Kigg.Web
                     }
                     else
                     {
-                        pagerHtml.Append(getPageLink(pageNo.ToString(Constants.CurrentCulture), pageNo));
+                        pagerHtml.Append(getPageLink(pageNo.ToString(GlobalConstants.CurrentCulture), pageNo));
                     }
                 }
 
@@ -220,7 +220,7 @@ namespace Kigg.Web
                     for (int i = endingStart; i < pageCount; i++)
                     {
                         int pageNo = (i + 1);
-                        pagerHtml.Append(getPageLink(pageNo.ToString(Constants.CurrentCulture), pageNo));
+                        pagerHtml.Append(getPageLink(pageNo.ToString(GlobalConstants.CurrentCulture), pageNo));
                     }
                 }
 

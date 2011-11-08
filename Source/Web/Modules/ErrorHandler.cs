@@ -40,7 +40,7 @@ namespace Kigg.Web
                     {
                         if (section.Errors.Count > 0)
                         {
-                            CustomError item = section.Errors[statusCode.ToString(Constants.CurrentCulture)];
+                            CustomError item = section.Errors[statusCode.ToString(GlobalConstants.CurrentCulture)];
 
                             if (item != null)
                             {

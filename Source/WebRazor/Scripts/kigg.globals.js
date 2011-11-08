@@ -3,6 +3,8 @@
 /// <reference path="kigg.jquery.extensions.js" />
 /// <reference path="kigg.ui.membership.js" />
 /// <reference path="kigg.ui.smoothImage.js" />
+/// <reference path="kigg.ui.messageBox.js" />
+
 kigg.dispose = (function () {
     return function () {
         for (var prop in kigg.ui) {
@@ -16,6 +18,7 @@ kigg.dispose = (function () {
     };
 } ());
 //Globals declaration
+var messageBox = kigg.ui.messageBox;
 var membership = kigg.ui.membership;
 var smoothImage = kigg.ui.membership;
 

@@ -1,0 +1,24 @@
+﻿@{
+    if (!(ViewData[Constants.CookieNames.Msg] as string).IsNullOrEmpty())
+    {
+        string title = ((bool)ViewData[Constants.CookieNames.Err])
+            ? Resources.Site.MessageBoxTitleError
+            : Resources.Site.MessageBoxTitleInformation;
+        Html.Telerik().Window()
+            .Name("notification-box")
+            .Title(title)
+            .Content(@<text><div style='text-align: center'>
+                @ViewData[Constants.CookieNames.Msg].ToString()</div>
+    </text>)
+            .Buttons(buttons => buttons.Close())
+            .Height(150)
+            .Width(440)
+            .Draggable(false)
+            .Modal(true)
+            .Visible(false)
+            .Render();
+
+        Html.Scripts()
+            .OnDocumentReady("messageBox.show();");
+    }
+}

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.Specialized;
     using System.Diagnostics;
 
     public class Check
@@ -22,6 +23,24 @@
                 if (argument == Guid.Empty)
                 {
                     throw new ArgumentException("\"{0}\" cannot be empty Guid.".FormatWith(argumentName), argumentName);
+                }
+            }
+
+            [DebuggerStepThrough]
+            public static void IsNotNullOrEmpty<T>(IEnumerable<T> argument, string argumentName)
+            {
+                if (argument.IsNullOrEmpty())
+                {
+                    throw new ArgumentException("\"{0}\" cannot be null or empty.".FormatWith(argumentName), argumentName);
+                }
+            }
+
+            [DebuggerStepThrough]
+            public static void IsNotNullOrEmpty(NameValueCollection argument, string argumentName)
+            {
+                if (argument == null || !argument.HasKeys())
+                {
+                    throw new ArgumentException("\"{0}\" cannot be null or empty.".FormatWith(argumentName), argumentName);
                 }
             }
 

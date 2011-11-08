@@ -61,6 +61,24 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        internal static string MessageBoxTitleError {
+            get {
+                return ResourceManager.GetString("MessageBoxTitleError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Information.
+        /// </summary>
+        internal static string MessageBoxTitleInformation {
+            get {
+                return ResourceManager.GetString("MessageBoxTitleInformation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to OpenID.
         /// </summary>
         internal static string OpenId {
@@ -79,11 +97,38 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to blogger.
+        /// </summary>
+        internal static string OpenIdBlogger {
+            get {
+                return ResourceManager.GetString("OpenIdBlogger", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to claimid.
+        /// </summary>
+        internal static string OpenIdClaimID {
+            get {
+                return ResourceManager.GetString("OpenIdClaimID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enter your.
         /// </summary>
         internal static string OpenIdEnterYourXxx {
             get {
                 return ResourceManager.GetString("OpenIdEnterYourXxx", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to flickr.
+        /// </summary>
+        internal static string OpenIdFlickr {
+            get {
+                return ResourceManager.GetString("OpenIdFlickr", resourceCulture);
             }
         }
         
@@ -97,11 +142,155 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to livejournal.
+        /// </summary>
+        internal static string OpenIdLiveJournal {
+            get {
+                return ResourceManager.GetString("OpenIdLiveJournal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MyOpenID.
+        /// </summary>
+        internal static string OpenIdMyOpenId {
+            get {
+                return ResourceManager.GetString("OpenIdMyOpenId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to technorati.
+        /// </summary>
+        internal static string OpenIdTechnorati {
+            get {
+                return ResourceManager.GetString("OpenIdTechnorati", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to AOL screen name.
         /// </summary>
-        internal static string OpenIdUsernameAOL {
+        internal static string OpenIdUserNameAOL {
             get {
-                return ResourceManager.GetString("OpenIdUsernameAOL", resourceCulture);
+                return ResourceManager.GetString("OpenIdUserNameAOL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Blogger blog name.
+        /// </summary>
+        internal static string OpenIdUserNameBlogger {
+            get {
+                return ResourceManager.GetString("OpenIdUserNameBlogger", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ClaimID user name.
+        /// </summary>
+        internal static string OpenIdUserNameClaimID {
+            get {
+                return ResourceManager.GetString("OpenIdUserNameClaimID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Flickr user name.
+        /// </summary>
+        internal static string OpenIdUserNameFlickr {
+            get {
+                return ResourceManager.GetString("OpenIdUserNameFlickr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to LiveJournal blog name.
+        /// </summary>
+        internal static string OpenIdUserNameLiveJournal {
+            get {
+                return ResourceManager.GetString("OpenIdUserNameLiveJournal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MyOpenID user name.
+        /// </summary>
+        internal static string OpenIdUserNameMyOpenId {
+            get {
+                return ResourceManager.GetString("OpenIdUserNameMyOpenId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Technorati user name.
+        /// </summary>
+        internal static string OpenIdUserNameTechnorati {
+            get {
+                return ResourceManager.GetString("OpenIdUserNameTechnorati", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Verisign user name.
+        /// </summary>
+        internal static string OpenIdUserNameVerisign {
+            get {
+                return ResourceManager.GetString("OpenIdUserNameVerisign", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vidoop user name.
+        /// </summary>
+        internal static string OpenIdUserNameVidoop {
+            get {
+                return ResourceManager.GetString("OpenIdUserNameVidoop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wordpress blog name.
+        /// </summary>
+        internal static string OpenIdUserNameWordPress {
+            get {
+                return ResourceManager.GetString("OpenIdUserNameWordPress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to verisign.
+        /// </summary>
+        internal static string OpenIdVerisign {
+            get {
+                return ResourceManager.GetString("OpenIdVerisign", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to verisign.
+        /// </summary>
+        internal static string OpenIdVerising {
+            get {
+                return ResourceManager.GetString("OpenIdVerising", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to vidoop.
+        /// </summary>
+        internal static string OpenIdVidoop {
+            get {
+                return ResourceManager.GetString("OpenIdVidoop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to wordpress.
+        /// </summary>
+        internal static string OpenIdWordPress {
+            get {
+                return ResourceManager.GetString("OpenIdWordPress", resourceCulture);
             }
         }
         

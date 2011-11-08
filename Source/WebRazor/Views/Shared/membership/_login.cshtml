@@ -12,9 +12,41 @@
                 <li class="direct" title="@Resources.Site.OpenIdYahoo">
                     <img src="@Url.OpenIdIcon("yahooW")" alt="@Resources.Site.OpenIdYahoo" /><span>http://yahoo.com/</span>
                 </li>
-                <li class="username" title="@Resources.Site.OpenIdUsernameAOL">
+                <li class="username" title="@Resources.Site.OpenIdUserNameAOL">
                     <img src="@Url.OpenIdIcon("aolW")" alt="@Resources.Site.OpenIdAOL" /><span>http://openid.aol.com/<strong>username</strong></span>
                 </li>
+            </ul>
+            <br class="clear" />
+        </div>
+        <div>
+            <ul>
+                <li class="username" title="@Resources.Site.OpenIdUserNameMyOpenId">
+                    <img src="@Url.OpenIdIcon("myopenid")" alt="@Resources.Site.OpenIdMyOpenId" /><span>http://<strong>username</strong>.myopenid.com/</span>
+                </li>
+                <li class="username" title="@Resources.Site.OpenIdUserNameFlickr">
+                    <img src="@Url.OpenIdIcon("flickr")" alt="@Resources.Site.OpenIdFlickr" /><span>http://flickr.com/<strong>username</strong>/</span>
+                </li>
+                @*<li class="username" title="@Resources.Site.OpenIdUserNameTechnorati">
+                    <img src="@Url.OpenIdIcon("technorati")" alt="@Resources.Site.OpenIdTechnorati" /><span>http://technorati.com/people/technorati/<strong>username</strong>/</span>
+                </li>*@
+                <li class="username" title="@Resources.Site.OpenIdUserNameWordPress">
+                    <img src="@Url.OpenIdIcon("wordpress")" alt="@Resources.Site.OpenIdWordPress" /><span>http://<strong>username</strong>.wordpress.com</span>
+                </li>
+                <li class="username" title="@Resources.Site.OpenIdUserNameBlogger">
+                    <img src="@Url.OpenIdIcon("blogger")" alt="@Resources.Site.OpenIdBlogger" /><span>http://<strong>username</strong>.blogspot.com/</span>
+                </li>
+                <li class="username" title="@Resources.Site.OpenIdUserNameLiveJournal">
+                    <img src="@Url.OpenIdIcon("livejournal")" alt="@Resources.Site.OpenIdLiveJournal" /><span>http://<strong>username</strong>.livejournal.com</span>
+                </li>
+                <li class="username" title="@Resources.Site.OpenIdUserNameClaimID">
+                    <img src="@Url.OpenIdIcon("claimid")" alt="@Resources.Site.OpenIdClaimID" /><span>http://claimid.com/<strong>username</strong></span>
+                </li>
+                <li class="username" title="@Resources.Site.OpenIdUserNameVidoop">
+                    <img src="@Url.OpenIdIcon("vidoop")" alt="@Resources.Site.OpenIdVidoop" /><span>http://<strong>username</strong>.myvidoop.com/</span>
+                </li>
+                @*<li class="username" title="@Resources.Site.OpenIdUserNameVerisign">
+                    <img src="@Url.OpenIdIcon("verisign")" alt="@Resources.Site.OpenIdVerisign" /><span>http://<strong>username</strong>.pip.verisignlabs.com/</span>
+                </li>*@
             </ul>
             <br class="clear" />
         </div>
@@ -23,13 +55,14 @@
             <label for="openid_username">
                 @Resources.Site.OpenIdEnterYourXxx <span>Xxx</span>
             </label>
-            <span></span>
-            <input type="text" id="openid_username" name="openid_username" class="textbox" /><span></span>
-            @*@Html.CustomValidationMessage("userName")*@
-            <input type="submit" value="@Resources.Site.SiteSignin" class="button" />
-            <label>
-                <input id="openid_username_remember" name="openid_username_remember" type="checkbox"
-                    value="true" />@Resources.Site.SiteSigninRememberMe</label>
+            <div>
+                <span></span>
+                <input type="text" id="openid_username" name="openid_username" class="openid-username-textbox" /><span></span>
+                <input type="submit" value="@Resources.Site.SiteSignin" class="button" />
+                <label>
+                    <input id="openid_username_remember" name="openid_username_remember" type="checkbox"
+                        value="true" />@Resources.Site.SiteSigninRememberMe</label>
+            </div>
         </fieldset>
         <fieldset>
             <legend></legend>
@@ -45,7 +78,6 @@
                         value="true" />@Resources.Site.SiteSigninRememberMe</label>
             </div>
         </fieldset>
-        @*@Html.ValidationMessage("userName", new { style = "padding:0 10px" })*@
         </form>
     </div>
     <div class="divider">

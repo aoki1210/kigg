@@ -117,20 +117,83 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="MessageBoxTitleError" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="MessageBoxTitleInformation" xml:space="preserve">
+    <value>Information</value>
+  </data>
   <data name="OpenId" xml:space="preserve">
     <value>OpenID</value>
   </data>
   <data name="OpenIdAOL" xml:space="preserve">
     <value>AOL</value>
   </data>
+  <data name="OpenIdBlogger" xml:space="preserve">
+    <value>blogger</value>
+  </data>
+  <data name="OpenIdClaimID" xml:space="preserve">
+    <value>claimid</value>
+  </data>
   <data name="OpenIdEnterYourXxx" xml:space="preserve">
     <value>Enter your</value>
+  </data>
+  <data name="OpenIdFlickr" xml:space="preserve">
+    <value>flickr</value>
   </data>
   <data name="OpenIdGoogle" xml:space="preserve">
     <value>Google</value>
   </data>
-  <data name="OpenIdUsernameAOL" xml:space="preserve">
+  <data name="OpenIdLiveJournal" xml:space="preserve">
+    <value>livejournal</value>
+  </data>
+  <data name="OpenIdMyOpenId" xml:space="preserve">
+    <value>MyOpenID</value>
+  </data>
+  <data name="OpenIdTechnorati" xml:space="preserve">
+    <value>technorati</value>
+  </data>
+  <data name="OpenIdUserNameAOL" xml:space="preserve">
     <value>AOL screen name</value>
+  </data>
+  <data name="OpenIdUserNameBlogger" xml:space="preserve">
+    <value>Blogger blog name</value>
+  </data>
+  <data name="OpenIdUserNameClaimID" xml:space="preserve">
+    <value>ClaimID user name</value>
+  </data>
+  <data name="OpenIdUserNameFlickr" xml:space="preserve">
+    <value>Flickr user name</value>
+  </data>
+  <data name="OpenIdUserNameLiveJournal" xml:space="preserve">
+    <value>LiveJournal blog name</value>
+  </data>
+  <data name="OpenIdUserNameMyOpenId" xml:space="preserve">
+    <value>MyOpenID user name</value>
+  </data>
+  <data name="OpenIdUserNameTechnorati" xml:space="preserve">
+    <value>Technorati user name</value>
+  </data>
+  <data name="OpenIdUserNameVerisign" xml:space="preserve">
+    <value>Verisign user name</value>
+  </data>
+  <data name="OpenIdUserNameVidoop" xml:space="preserve">
+    <value>Vidoop user name</value>
+  </data>
+  <data name="OpenIdUserNameWordPress" xml:space="preserve">
+    <value>Wordpress blog name</value>
+  </data>
+  <data name="OpenIdVerisign" xml:space="preserve">
+    <value>verisign</value>
+  </data>
+  <data name="OpenIdVerising" xml:space="preserve">
+    <value>verisign</value>
+  </data>
+  <data name="OpenIdVidoop" xml:space="preserve">
+    <value>vidoop</value>
+  </data>
+  <data name="OpenIdWordPress" xml:space="preserve">
+    <value>wordpress</value>
   </data>
   <data name="OpenIdYahoo" xml:space="preserve">
     <value>Yahoo!</value>

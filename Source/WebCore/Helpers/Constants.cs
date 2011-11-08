@@ -13,5 +13,12 @@
             public const string OpenId = "OpenId";
             public const string Xdrs = "Xdrs";
         }
+
+        public static class CookieNames
+        {
+            public const string Notification = "notification";
+            public const string Msg = "msg";
+            public const string Err = "err";
+        }
     }
 }

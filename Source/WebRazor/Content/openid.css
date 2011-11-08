@@ -9,7 +9,7 @@ input[name=openid_username] {width:8em}
 input[name=openid_identifier] {width:18em}
 form.openid ul li.highlight { -moz-border-radius:4px; -webkit-border-radius:4px; background-color: #fd6}
 form.openid fieldset div {-moz-border-radius:4px; -webkit-border-radius:4px; background: #dcdcdc url(images/openid/fadegrey.png); padding:10px;display:inline-table}
-form.openid input[type='submit'] {margin-left:1em;}
+form.openid input[type='submit'] {margin-left:0.2em;}
 .openid_logo{color:#f7931e;padding:6px 0px 8px 28px; background: url(images/openid/openidico.png) no-repeat}
 #openid_login{float:left; font-size:larger; width:30%; margin:2em 1em; text-align:center}
 #openid_login div{margin-top:0.5em}

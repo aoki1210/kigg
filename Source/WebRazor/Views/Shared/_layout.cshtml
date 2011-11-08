@@ -29,9 +29,11 @@
         <div id="footer">
         </div>
     </div>
-        @{
-            //Render script files
-            Html.Scripts(new[] { "cdn", "telerikScripts", "appEverywhereScripts" }).Render();
-        }    
+    @{
+        Html.RenderAction("ShowQueuedMessage", "Home");
+        //Render script files
+        Html.Scripts(new[] { "cdn", "telerikScripts", "appEverywhereScripts" }).Render();
+        Html.Scripts().OnWindowUnload("kigg.dispose();");
+    }
 </body>
 </html>

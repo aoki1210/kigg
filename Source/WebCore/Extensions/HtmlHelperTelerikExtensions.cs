@@ -29,5 +29,6 @@
                        ? jsBuilder.StyleSheets(styles => sharedGroups.ForEach(g => styles.AddSharedGroup(g)))
                        : jsBuilder;
         }
+
     }
 }

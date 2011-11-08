@@ -705,7 +705,7 @@ namespace Kigg.Web
                                         {
                                             id = story.Id,
                                             name = story.UniqueName,
-                                            createdAt = story.CreatedAt.ToString("G", Constants.CurrentCulture),
+                                            createdAt = story.CreatedAt.ToString("G", GlobalConstants.CurrentCulture),
                                             title = story.Title,
                                             description = story.HtmlDescription,
                                             category = story.BelongsTo.UniqueName,
