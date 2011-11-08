@@ -122,7 +122,7 @@ namespace Kigg.Web
                                                     new XAttribute("title", _model.SiteTitle)),
                                                     new XElement("description", _model.Description),
                                                     new XElement("webMaster", "{0} ({1} webmaster)".FormatWith(_model.Email, _model.SiteTitle)),
-                                                    new XElement("lastBuildDate", SystemTime.Now().ToString(dateFormat, Constants.CurrentCulture)),
+                                                    new XElement("lastBuildDate", SystemTime.Now().ToString(dateFormat, GlobalConstants.CurrentCulture)),
                                                     new XElement("language", "en-US"),
                                                     new XElement("copyright", "Copyright (c) {0}".FormatWith(_model.SiteTitle)),
                                                     new XElement("generator", "{0} RSS Generator({1})".FormatWith(_model.SiteTitle, Assembly.GetExecutingAssembly().GetName().Version)
@@ -149,7 +149,7 @@ namespace Kigg.Web
 
             if (story.IsPublished())
             {
-                item.Add(new XElement("pubDate", story.PublishedAt.Value.ToString(dateFormat, Constants.CurrentCulture)));
+                item.Add(new XElement("pubDate", story.PublishedAt.Value.ToString(dateFormat, GlobalConstants.CurrentCulture)));
             }
 
             if (story.HasTags())
@@ -222,7 +222,7 @@ namespace Kigg.Web
                                             atom + "entry",
                                             new XElement(atom + "id", detailUrl),
                                             new XElement(atom + "title", story.Title),
-                                            new XElement(atom + "updated", story.CreatedAt.ToString(dateFormat, Constants.CurrentCulture)),
+                                            new XElement(atom + "updated", story.CreatedAt.ToString(dateFormat, GlobalConstants.CurrentCulture)),
                                             new XElement(atom + "content", new XAttribute("type", "html"), storyDescription),
                                             new XElement(atom + "link", new XAttribute("rel", "alternate"), new XAttribute("href", story.Url)),
                                             new XElement(atom + "contributor", new XElement(atom + "name", story.PostedBy.UserName), new XElement(atom + "uri", userUrl))
@@ -230,7 +230,7 @@ namespace Kigg.Web
 
             if (story.IsPublished())
             {
-                entry.Add(new XElement(atom + "published", story.PublishedAt.Value.ToString(dateFormat, Constants.CurrentCulture)));
+                entry.Add(new XElement(atom + "published", story.PublishedAt.Value.ToString(dateFormat, GlobalConstants.CurrentCulture)));
             }
 
             if (story.HasTags())
@@ -263,7 +263,7 @@ namespace Kigg.Web
                                     new XElement(atom + "link", new XAttribute("href", context.HttpContext.Request.Url), new XAttribute("rel", "self")),
                                     new XElement(atom + "link", new XAttribute("href", string.Concat(_model.RootUrl, _model.Url)), new XAttribute("rel", "alternate")),
                                     new XElement(atom + "link", new XAttribute("rel", "search"), new XAttribute("href", urlHelper.Content("~/opensearch.axd")), new XAttribute("type", "application/opensearchdescription+xml"), new XAttribute("title", _model.SiteTitle)),
-                                    new XElement(atom + "updated", SystemTime.Now().ToString(dateFormat, Constants.CurrentCulture)),
+                                    new XElement(atom + "updated", SystemTime.Now().ToString(dateFormat, GlobalConstants.CurrentCulture)),
                                     new XElement(atom + "id", string.Concat(_model.RootUrl, _model.Url)),
                                     new XElement(atom + "rights", "Copyright (c) {0}".FormatWith(_model.SiteTitle)),
                                     new XElement(atom + "generator", new XAttribute("uri", _model.RootUrl), new XAttribute("version", Assembly.GetExecutingAssembly().GetName().Version), "{0} Atom Generator".FormatWith(_model.SiteTitle)),

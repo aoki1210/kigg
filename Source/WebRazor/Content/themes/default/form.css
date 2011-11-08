@@ -35,6 +35,7 @@
     font-size: 14px;
 }
 
+
 .form input.textbox
 {
     border: 1px solid #E2C822;
@@ -43,7 +44,14 @@
     /*width: 280px;*/
     width: 29em;
 }
-
+.form input.openid-username-textbox
+{
+    border: 1px solid #E2C822;
+    font-size: 11px;
+    padding: 3px;
+    /*width: 280px;*/
+    width: 18em;
+}
 
 .form .button
 {

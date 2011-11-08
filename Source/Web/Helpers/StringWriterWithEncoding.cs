@@ -11,7 +11,7 @@ namespace Kigg.Web
         {
         }
 
-        public StringWriterWithEncoding(StringBuilder sb, Encoding encoding) : base(sb, Constants.CurrentCulture)
+        public StringWriterWithEncoding(StringBuilder sb, Encoding encoding) : base(sb, GlobalConstants.CurrentCulture)
         {
             Check.Argument.IsNotNull(encoding, "encoding");
 

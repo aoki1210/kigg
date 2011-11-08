@@ -3,7 +3,7 @@ namespace Kigg
     using System;
     using System.Globalization;
 
-    public static class Constants
+    public static class GlobalConstants
     {
         public static readonly DateTime ProductionDate = new DateTime(2008, 1, 11);
 

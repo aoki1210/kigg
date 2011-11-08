@@ -329,6 +329,7 @@
     <Content Include="Scripts\kigg.jquery.extensions.js" />
     <Content Include="Scripts\kigg.ui.membership.js" />
     <None Include="Scripts\kigg.ui.smoothImage.js" />
+    <Content Include="Scripts\kigg.ui.messageBox.js" />
     <Content Include="Scripts\modernizr-2.0.6-development-only.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -348,6 +349,7 @@
     </Content>
     <Content Include="Views\Shared\membership\_loginBox.cshtml" />
     <Content Include="Views\Shared\membership\_login.cshtml" />
+    <Content Include="Views\Shared\_queuedmessagebox.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

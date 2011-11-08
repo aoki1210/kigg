@@ -172,7 +172,7 @@ namespace Kigg.Web
 
                         using (Font font = new Font(fontName, fontSize, FontStyle.Bold, GraphicsUnit.Pixel))
                         {
-                            SizeF countSize = gdi.MeasureString(count.ToString(Constants.CurrentCulture), font);
+                            SizeF countSize = gdi.MeasureString(count.ToString(GlobalConstants.CurrentCulture), font);
 
                             float textWidth = (image.Width - (countSize.Width + CountWidthBuffer + (borderWidth * 2)));
 
@@ -196,7 +196,7 @@ namespace Kigg.Web
                                 float x = ((((countSize.Width + CountWidthBuffer) - countSize.Width) / 2) + borderWidth + textWidth);
                                 float y = ((image.Height - countSize.Height) / 2);
 
-                                gdi.DrawString(count.ToString(Constants.CurrentCulture), font, countForegroundBrush, x, y);
+                                gdi.DrawString(count.ToString(GlobalConstants.CurrentCulture), font, countForegroundBrush, x, y);
                             }
                         }
                     }

@@ -730,7 +730,7 @@ namespace Kigg.Web
         {
             DateTime maxTimestamp = SystemTime.Now();
 
-            ICollection<UserWithScore> topLeaders = UserRepository.FindTop(Constants.ProductionDate, maxTimestamp, 0, Settings.TopUsers)
+            ICollection<UserWithScore> topLeaders = UserRepository.FindTop(GlobalConstants.ProductionDate, maxTimestamp, 0, Settings.TopUsers)
                                                                   .Result.Select(u => new UserWithScore { User = u, Score = u.CurrentScore })
                                                                   .ToList()
                                                                   .AsReadOnly();
