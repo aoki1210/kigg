@@ -106,6 +106,13 @@
     padding: 10px;
 }
 
+.login-container
+{
+    width: 440px; 
+    margin-left:auto;
+    margin-right: auto;
+}
+
 .box {
     background: none no-repeat scroll 0 50% #FFF9D7;
     border: 1px solid #E2C822;

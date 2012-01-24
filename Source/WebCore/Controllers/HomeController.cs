@@ -16,6 +16,11 @@
             return View();
         }
 
+        public ActionResult Login()
+        {
+            return View();
+        }
+
         [ChildActionOnly]
         public ActionResult ShowQueuedMessage()
         {

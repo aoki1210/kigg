@@ -349,6 +349,15 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Login.
+        /// </summary>
+        internal static string SiteSigninPageTitle {
+            get {
+                return ResourceManager.GetString("SiteSigninPageTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Keep me logged in on this computer.
         /// </summary>
         internal static string SiteSigninRememberMe {
