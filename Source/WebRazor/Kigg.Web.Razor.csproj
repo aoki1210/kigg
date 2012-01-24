@@ -52,13 +52,13 @@
     <Reference Include="Elmah">
       <HintPath>..\packages\elmah.corelibrary.1.2\lib\Elmah.dll</HintPath>
     </Reference>
-    <Reference Include="MvcExtensions, Version=2.0.0.519, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="MvcExtensions, Version=2.0.4.529, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\MvcExtensions.2.0.0.519\lib\net40\MvcExtensions.dll</HintPath>
+      <HintPath>..\packages\MvcExtensions.2.0.4.529\lib\net40\MvcExtensions.dll</HintPath>
     </Reference>
-    <Reference Include="MvcExtensions.Autofac, Version=2.0.0.519, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="MvcExtensions.Autofac, Version=2.0.4.529, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\MvcExtensions.Autofac.2.0.0.519\lib\net40\MvcExtensions.Autofac.dll</HintPath>
+      <HintPath>..\packages\MvcExtensions.Autofac.2.0.4.529\lib\net40\MvcExtensions.Autofac.dll</HintPath>
     </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data.Entity" />
@@ -81,8 +81,9 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="Telerik.Web.Mvc">
-      <HintPath>..\packages\TelerikMvcExtensions.2011.2.712\lib\net40\Telerik.Web.Mvc.dll</HintPath>
+    <Reference Include="Telerik.Web.Mvc, Version=2011.3.1115.340, Culture=neutral, PublicKeyToken=29ac1a93ec063d92, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\TelerikMvcExtensions.2011.3.1115\lib\net40\Telerik.Web.Mvc.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -105,96 +106,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_GlobalResources\EditorLocalization.en-US.resx">
-      <LastGenOutput>EditorLocalization.en-US.designer.cs</LastGenOutput>
-    </Content>
-    <Content Include="App_GlobalResources\EditorLocalization.resx" />
-    <Content Include="App_GlobalResources\GridLocalization.en-US.resx" />
-    <Content Include="App_GlobalResources\GridLocalization.resx" />
-    <Content Include="Content\2011.2.712\Black\editor.png" />
-    <Content Include="Content\2011.2.712\Black\imagebrowser.png" />
-    <Content Include="Content\2011.2.712\Black\loading.gif" />
-    <Content Include="Content\2011.2.712\Black\slider-h.gif" />
-    <Content Include="Content\2011.2.712\Black\slider-v.gif" />
-    <Content Include="Content\2011.2.712\Black\sprite-vertical.png" />
-    <Content Include="Content\2011.2.712\Black\sprite.png" />
-    <Content Include="Content\2011.2.712\Black\treeview-line.png" />
-    <Content Include="Content\2011.2.712\Black\treeview-nodes-rtl.png" />
-    <Content Include="Content\2011.2.712\Black\treeview-nodes.png" />
-    <Content Include="Content\2011.2.712\Default\editor.png" />
-    <Content Include="Content\2011.2.712\Default\imagebrowser.png" />
-    <Content Include="Content\2011.2.712\Default\loading.gif" />
-    <Content Include="Content\2011.2.712\Default\slider-h.gif" />
-    <Content Include="Content\2011.2.712\Default\slider-v.gif" />
-    <Content Include="Content\2011.2.712\Default\sprite-vertical.png" />
-    <Content Include="Content\2011.2.712\Default\sprite.png" />
-    <Content Include="Content\2011.2.712\Default\treeview-line.png" />
-    <Content Include="Content\2011.2.712\Default\treeview-nodes-rtl.png" />
-    <Content Include="Content\2011.2.712\Default\treeview-nodes.png" />
-    <Content Include="Content\2011.2.712\Forest\editor.png" />
-    <Content Include="Content\2011.2.712\Forest\imagebrowser.png" />
-    <Content Include="Content\2011.2.712\Forest\loading.gif" />
-    <Content Include="Content\2011.2.712\Forest\slider-h.gif" />
-    <Content Include="Content\2011.2.712\Forest\slider-v.gif" />
-    <Content Include="Content\2011.2.712\Forest\sprite-vertical.png" />
-    <Content Include="Content\2011.2.712\Forest\sprite.png" />
-    <Content Include="Content\2011.2.712\Forest\treeview-line.png" />
-    <Content Include="Content\2011.2.712\Forest\treeview-nodes-rtl.png" />
-    <Content Include="Content\2011.2.712\Forest\treeview-nodes.png" />
-    <Content Include="Content\2011.2.712\Hay\editor.png" />
-    <Content Include="Content\2011.2.712\Hay\imagebrowser.png" />
-    <Content Include="Content\2011.2.712\Hay\loading.gif" />
-    <Content Include="Content\2011.2.712\Hay\slider-h.gif" />
-    <Content Include="Content\2011.2.712\Hay\slider-v.gif" />
-    <Content Include="Content\2011.2.712\Hay\sprite-vertical.png" />
-    <Content Include="Content\2011.2.712\Hay\sprite.png" />
-    <Content Include="Content\2011.2.712\Hay\treeview-line.png" />
-    <Content Include="Content\2011.2.712\Hay\treeview-nodes-rtl.png" />
-    <Content Include="Content\2011.2.712\Hay\treeview-nodes.png" />
-    <Content Include="Content\2011.2.712\Simple\editor.png" />
-    <Content Include="Content\2011.2.712\Simple\imagebrowser.png" />
-    <Content Include="Content\2011.2.712\Simple\loading.gif" />
-    <Content Include="Content\2011.2.712\Simple\slider-h.gif" />
-    <Content Include="Content\2011.2.712\Simple\slider-v.gif" />
-    <Content Include="Content\2011.2.712\Simple\sprite-vertical.png" />
-    <Content Include="Content\2011.2.712\Simple\sprite.png" />
-    <Content Include="Content\2011.2.712\Simple\treeview-line.png" />
-    <Content Include="Content\2011.2.712\Simple\treeview-nodes-rtl.png" />
-    <Content Include="Content\2011.2.712\Simple\treeview-nodes.png" />
-    <Content Include="Content\2011.2.712\telerik.black.min.css" />
-    <Content Include="Content\2011.2.712\telerik.common.min.css" />
-    <Content Include="Content\2011.2.712\telerik.default.min.css" />
-    <Content Include="Content\2011.2.712\telerik.forest.min.css" />
-    <Content Include="Content\2011.2.712\telerik.hay.min.css" />
-    <Content Include="Content\2011.2.712\telerik.rtl.min.css" />
-    <Content Include="Content\2011.2.712\telerik.simple.min.css" />
-    <Content Include="Content\2011.2.712\telerik.telerik.min.css" />
-    <Content Include="Content\2011.2.712\telerik.transparent.min.css" />
-    <Content Include="Content\2011.2.712\telerik.web20.min.css" />
-    <Content Include="Content\2011.2.712\Transparent\active.png" />
-    <Content Include="Content\2011.2.712\Transparent\editor.png" />
-    <Content Include="Content\2011.2.712\Transparent\gradient.png" />
-    <Content Include="Content\2011.2.712\Transparent\group.png" />
-    <Content Include="Content\2011.2.712\Transparent\hover.png" />
-    <Content Include="Content\2011.2.712\Transparent\imagebrowser.png" />
-    <Content Include="Content\2011.2.712\Transparent\loading.gif" />
-    <Content Include="Content\2011.2.712\Transparent\selected.png" />
-    <Content Include="Content\2011.2.712\Transparent\slider-h.gif" />
-    <Content Include="Content\2011.2.712\Transparent\slider-v.gif" />
-    <Content Include="Content\2011.2.712\Transparent\sprite-vertical.png" />
-    <Content Include="Content\2011.2.712\Transparent\sprite.png" />
-    <Content Include="Content\2011.2.712\Transparent\toolbar.png" />
-    <Content Include="Content\2011.2.712\Transparent\widget.png" />
-    <Content Include="Content\2011.2.712\Web20\editor.png" />
-    <Content Include="Content\2011.2.712\Web20\imagebrowser.png" />
-    <Content Include="Content\2011.2.712\Web20\loading.gif" />
-    <Content Include="Content\2011.2.712\Web20\slider-h.gif" />
-    <Content Include="Content\2011.2.712\Web20\slider-v.gif" />
-    <Content Include="Content\2011.2.712\Web20\sprite-vertical.png" />
-    <Content Include="Content\2011.2.712\Web20\sprite.png" />
-    <Content Include="Content\2011.2.712\Web20\treeview-line.png" />
-    <Content Include="Content\2011.2.712\Web20\treeview-nodes-rtl.png" />
-    <Content Include="Content\2011.2.712\Web20\treeview-nodes.png" />
     <Content Include="Content\common.css" />
     <Content Include="Content\images\fav\fav-all.ico" />
     <Content Include="Content\images\fav\fav.ico" />
@@ -285,38 +196,9 @@
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="Global.asax" />
     <Content Include="Content\themes\default\site.css" />
-    <Content Include="Scripts\2011.2.712\jquery-1.5.1.min.js" />
-    <Content Include="Scripts\2011.2.712\jquery.validate.min.js" />
-    <Content Include="Scripts\2011.2.712\telerik.autocomplete.min.js" />
-    <Content Include="Scripts\2011.2.712\telerik.calendar.min.js" />
-    <Content Include="Scripts\2011.2.712\telerik.chart.min.js" />
-    <Content Include="Scripts\2011.2.712\telerik.combobox.min.js" />
-    <Content Include="Scripts\2011.2.712\telerik.common.min.js" />
-    <Content Include="Scripts\2011.2.712\telerik.datepicker.min.js" />
-    <Content Include="Scripts\2011.2.712\telerik.datetimepicker.min.js" />
-    <Content Include="Scripts\2011.2.712\telerik.draganddrop.min.js" />
-    <Content Include="Scripts\2011.2.712\telerik.editor.min.js" />
-    <Content Include="Scripts\2011.2.712\telerik.grid.editing.min.js" />
-    <Content Include="Scripts\2011.2.712\telerik.grid.filtering.min.js" />
-    <Content Include="Scripts\2011.2.712\telerik.grid.grouping.min.js" />
-    <Content Include="Scripts\2011.2.712\telerik.grid.min.js" />
-    <Content Include="Scripts\2011.2.712\telerik.grid.reordering.min.js" />
-    <Content Include="Scripts\2011.2.712\telerik.grid.resizing.min.js" />
-    <Content Include="Scripts\2011.2.712\telerik.imagebrowser.min.js" />
-    <Content Include="Scripts\2011.2.712\telerik.list.min.js" />
-    <Content Include="Scripts\2011.2.712\telerik.menu.min.js" />
-    <Content Include="Scripts\2011.2.712\telerik.panelbar.min.js" />
-    <Content Include="Scripts\2011.2.712\telerik.slider.min.js" />
-    <Content Include="Scripts\2011.2.712\telerik.splitter.min.js" />
-    <Content Include="Scripts\2011.2.712\telerik.tabstrip.min.js" />
-    <Content Include="Scripts\2011.2.712\telerik.textbox.min.js" />
-    <Content Include="Scripts\2011.2.712\telerik.timepicker.min.js" />
-    <Content Include="Scripts\2011.2.712\telerik.treeview.min.js" />
-    <Content Include="Scripts\2011.2.712\telerik.upload.min.js" />
-    <Content Include="Scripts\2011.2.712\telerik.window.min.js" />
-    <Content Include="Scripts\jquery-1.7-vsdoc.js" />
-    <Content Include="Scripts\jquery-1.7.js" />
-    <Content Include="Scripts\jquery-1.7.min.js" />
+    <Content Include="Scripts\jquery-1.7.1-vsdoc.js" />
+    <Content Include="Scripts\jquery-1.7.1.js" />
+    <Content Include="Scripts\jquery-1.7.1.min.js" />
     <Content Include="Scripts\jquery-ui-1.8.16.js" />
     <Content Include="Scripts\jquery-ui-1.8.16.min.js" />
     <Content Include="Scripts\jquery.openid.js" />
@@ -324,6 +206,7 @@
     <Content Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\kigg.globals.js" />
     <Content Include="Scripts\kigg.namespace.js" />
     <Content Include="Scripts\kigg.jquery.extensions.js" />
@@ -350,6 +233,7 @@
     <Content Include="Views\Shared\membership\_loginBox.cshtml" />
     <Content Include="Views\Shared\membership\_login.cshtml" />
     <Content Include="Views\Shared\_queuedmessagebox.cshtml" />
+    <Content Include="Views\Home\login.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

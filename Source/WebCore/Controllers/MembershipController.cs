@@ -14,11 +14,8 @@
 
     public class MembershipController : KiggControllerBase
     {
-        internal const string ModelStateUserNameKey = "userName";
-
-        internal const string CookieRememberMe = "authr";
-        internal const string CookieReturnUrl = "authu";
-
+        private const string CookieRememberMe = Constants.CookieNames.AuthRememberMe;
+        private const string CookieReturnUrl = Constants.CookieNames.AuthReturnUrl;
         private const int SevenDays = 60 * 60 * 24 * 7;
 
         private readonly IOpenIdRelyingParty openId;
@@ -95,7 +92,7 @@
             return RedirectToRoute(Constants.RouteNames.Published);
         }
 
-        [AcceptVerbs(HttpVerbs.Post)]
+        [HttpPost]
         public ActionResult OpenId(OpenIdCommand command)
         {
             Check.Argument.IsNotNull(command, "command");
@@ -134,6 +131,14 @@
             return !failed
                        ? new EmptyResult()
                        : (ActionResult)RedirectToRoute(Constants.RouteNames.Default);
+        }
+
+        [HttpPost]
+        public ActionResult Logout(string returnUrl)
+        {
+            formsAuthentication.Logout();
+
+            return Redirect(string.IsNullOrWhiteSpace(returnUrl) ? Url.Home() : returnUrl);
         }
 
         private void SetErrorCookie(string message)

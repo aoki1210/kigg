@@ -5,7 +5,7 @@ namespace Kigg.Web.Security
 
     public class FormsAuthentication : IFormsAuthentication
     {
-        public string LogOnUrl
+        public string LoginUrl
         {
             [DebuggerStepThrough]
             get
@@ -21,7 +21,7 @@ namespace Kigg.Web.Security
         }
 
         [DebuggerStepThrough]
-        public void LogOff()
+        public void Logout()
         {
             Authentication.SignOut();
         }

@@ -27,7 +27,12 @@ namespace Kigg.Web
         {
             return RouteUrl(instance, Constants.RouteNames.OpenId, null);
         }
-        
+
+        public static string Logout(this UrlHelper instance)
+        {
+            return RouteUrl(instance, Constants.RouteNames.Logout, new { returnUrl = instance.Home() });
+        }
+
         public static string ToAbsolute(this UrlHelper instance, string relativeUrl)
         {
             Check.Argument.IsNotNull(instance, "instance");
