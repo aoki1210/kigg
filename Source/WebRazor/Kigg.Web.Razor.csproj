@@ -52,9 +52,9 @@
     <Reference Include="Elmah">
       <HintPath>..\packages\elmah.corelibrary.1.2\lib\Elmah.dll</HintPath>
     </Reference>
-    <Reference Include="MvcExtensions, Version=2.0.4.529, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="MvcExtensions, Version=2.0.4.534, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\MvcExtensions.2.0.4.529\lib\net40\MvcExtensions.dll</HintPath>
+      <HintPath>..\packages\MvcExtensions.2.0.4.534\lib\net40\MvcExtensions.dll</HintPath>
     </Reference>
     <Reference Include="MvcExtensions.Autofac, Version=2.0.4.529, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -83,7 +83,7 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Telerik.Web.Mvc, Version=2011.3.1115.340, Culture=neutral, PublicKeyToken=29ac1a93ec063d92, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\TelerikMvcExtensions.2011.3.1115\lib\net40\Telerik.Web.Mvc.dll</HintPath>
+      <HintPath>..\packages\TelerikMvcExtensions.2012.1.214\lib\net40\Telerik.Web.Mvc.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
