@@ -8,9 +8,10 @@
 
 .form h3
 {
-    padding-bottom: 5px;
-    margin: 0px;
-    font-size: 14px;
+    border-bottom: 1px solid #E2C822;
+    font-size: larger;
+    font-weight: bold;
+    margin-top: 5px;
 }
 
 .form p

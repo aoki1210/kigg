@@ -4,7 +4,8 @@ form.openid ul li {float:left; padding:4px}
 form.openid ul li span {padding:0 1em 0 3px}
 form.openid fieldset {clear:both; padding:1em 0}
 form.openid div+fieldset {display:none}
-form.openid label {display:block; font-weight:bold; font-size:larger; margin-bottom:.5em}
+/*form.openid label {display:block; font-weight:bold; font-size:larger; margin-bottom:.5em}*/
+form.openid label {display:block; margin-bottom:.5em}
 input[name=openid_username] {width:8em}
 input[name=openid_identifier] {width:18em}
 form.openid ul li.highlight { -moz-border-radius:4px; -webkit-border-radius:4px; background-color: #fd6}
