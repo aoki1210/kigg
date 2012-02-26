@@ -1,0 +1,30 @@
+﻿<div class="modal-box-content">
+    <div class="box">
+        <form class="form" action="/" method="post">
+        <div>
+            <label for="txtSignupUserName" class="label">
+                @Resources.Site.SiteSignupUserName:</label>
+            <input id="txtSignupUserName" name="userName" type="text" class="textbox" />
+            <span class="error"></span>
+        </div>
+        <div>
+            <label for="txtSignupPassword" class="label">
+                @Resources.Site.SiteSignupPassword:</label>
+            <input id="txtSignupPassword" name="password" type="password" class="textbox" />
+            <span class="error"></span>
+        </div>
+        <div>
+            <label for="txtSignupEmail" class="label">
+                @Resources.Site.SiteSignupEmail:</label>
+            <input id="txtSignupEmail" name="email" type="text" class="textbox" />
+            <span class="error"></span><span class="info">(Please use a valid email, you have to
+                verify it later)</span>
+        </div>
+        <div>
+            <label class="label">
+            </label>
+            <input type="submit" value="@Resources.Site.SiteSignup" class="button" onclick="return false;" />
+        </div>
+        </form>
+    </div>
+</div>

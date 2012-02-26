@@ -234,6 +234,8 @@
     <Content Include="Views\Shared\membership\_login.cshtml" />
     <Content Include="Views\Shared\_queuedmessagebox.cshtml" />
     <Content Include="Views\Home\login.cshtml" />
+    <Content Include="Views\Shared\membership\_signupBox.cshtml" />
+    <Content Include="Views\Shared\membership\_signup.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
