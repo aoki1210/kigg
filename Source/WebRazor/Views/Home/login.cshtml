@@ -1,0 +1,13 @@
+@{
+
+    ViewBag.Title = @Resources.Site.SiteSigninPageTitle;
+
+    Layout = "~/Views/Shared/_layout.cshtml";
+
+}
+
+<div class="login-container">
+
+    @{Html.RenderPartial("~/Views/Shared/Membership/_login.cshtml");}
+
+</div>
