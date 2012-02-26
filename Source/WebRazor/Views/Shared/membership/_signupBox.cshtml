@@ -1,0 +1,16 @@
+﻿@{
+    Html.Telerik().Window()
+        .Name("signup-box")
+        .Title(@Resources.Site.SiteSignupWindowTitle)
+        .Content(() => Html.RenderPartial("membership/_signup"))
+        .Buttons(buttons => buttons.Close())
+        .Height(175)
+        .Width(440)
+        .Draggable(false)
+        .Modal(true)
+        .Visible(false)
+        .Render();
+
+    Html.Scripts()
+        .OnDocumentReady("membership.init();");
+}

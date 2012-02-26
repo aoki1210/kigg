@@ -228,6 +228,18 @@
   <data name="SiteSignup" xml:space="preserve">
     <value>Signup</value>
   </data>
+  <data name="SiteSignupEmail" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="SiteSignupPassword" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="SiteSignupUserName" xml:space="preserve">
+    <value>User Name</value>
+  </data>
+  <data name="SiteSignupWindowTitle" xml:space="preserve">
+    <value>KiGG: Signup</value>
+  </data>
   <data name="SiteTitle" xml:space="preserve">
     <value>KiGG</value>
   </data>
