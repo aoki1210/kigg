@@ -349,6 +349,24 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Forgot Password?.
+        /// </summary>
+        internal static string SiteSignInForgotPassword {
+            get {
+                return ResourceManager.GetString("SiteSignInForgotPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open ID Login.
+        /// </summary>
+        internal static string SiteSignInOpenIdLogin {
+            get {
+                return ResourceManager.GetString("SiteSignInOpenIdLogin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Login.
         /// </summary>
         internal static string SiteSigninPageTitle {
@@ -363,6 +381,24 @@ namespace Resources {
         internal static string SiteSigninRememberMe {
             get {
                 return ResourceManager.GetString("SiteSigninRememberMe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Send Password.
+        /// </summary>
+        internal static string SiteSignInSendPassword {
+            get {
+                return ResourceManager.GetString("SiteSignInSendPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Standard Login.
+        /// </summary>
+        internal static string SiteSignInStandardLogin {
+            get {
+                return ResourceManager.GetString("SiteSignInStandardLogin", resourceCulture);
             }
         }
         

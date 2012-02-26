@@ -1,6 +1,8 @@
 ﻿<div class="modal-box-content">
     <div class="box">
         <form class="openid form" action="@Url.OpenId()" method="post">
+        <h3>
+           @Resources.Site.SiteSignInOpenIdLogin</h3>
         <div>
             <ul>
                 <li class="openid" title="@Resources.Site.OpenId">
@@ -82,9 +84,51 @@
     <div class="divider">
     </div>
     <div class="box">
+        <form class="form" action="/" method="post">
+        <h3>
+            @Resources.Site.SiteSignInStandardLogin</h3>
+        <div>
+            <label for="login-username" class="label">
+                @Resources.Site.SiteSignupUserName:</label>
+            <input id="login-username" name="userName" type="text" class="textbox" />
+            <span class="error"></span>
+        </div>
+        <div>
+            <label for="login-password" class="label">
+                @Resources.Site.SiteSignupPassword:</label>
+            <input id="login-password" name="password" type="password" class="textbox" />
+            <span class="error"></span>
+        </div>
+        <div>
+            <label class="label">
+            </label>
+            <label>
+                <input id="login-remember" name="remember" type="checkbox" value="true" />@Resources.Site.SiteSigninRememberMe</label>
+        </div>
+        <div>
+            <label class="label">
+            </label>
+            <input type="submit" value="@Resources.Site.SiteSignin" class="button" onclick="return false;" />
+        </div>
+        </form>
     </div>
     <div class="divider">
     </div>
     <div class="box">
+        <form class="form" action="/" method="post">
+        <h3>
+            @Resources.Site.SiteSignInForgotPassword</h3>
+        <div>
+            <label for="forgot-password-email" class="label">
+                @Resources.Site.SiteSignupEmail:</label>
+            <input id="forgot-password-email" name="email" type="text" class="textbox" />
+            <span class="error"></span><span class="info">(only works for signed up users)</span>
+        </div>
+        <div>
+            <label class="label">
+            </label>
+            <input type="submit" value="@Resources.Site.SiteSignInSendPassword" class="button" onclick="return false;" />
+        </div>
+        </form>
     </div>
 </div>
