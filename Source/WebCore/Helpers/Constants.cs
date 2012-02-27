@@ -13,6 +13,7 @@
             public const string OpenId = "OpenId";
             public const string Login = "Login";
             public const string Logout = "Logout";
+            public const string Signup = "Signup";
             public const string Xdrs = "Xdrs";
             public const string JsonConstants = "JsonConstants";
         }

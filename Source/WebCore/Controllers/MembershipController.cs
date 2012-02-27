@@ -1,4 +1,8 @@
-﻿namespace Kigg.Web.Controllers
+﻿
+
+using System.Globalization;
+
+namespace Kigg.Web.Controllers
 {
     using System;
     using System.Web.Mvc;
@@ -11,6 +15,7 @@
 
     using Security;
     using Resources;
+    using Domain.ViewModels;
 
     public class MembershipController : KiggControllerBase
     {
@@ -36,7 +41,7 @@
         [OutputCache(Duration = SevenDays, VaryByParam = "none")]
         public ActionResult Xrds()
         {
-            const string Xrds = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+            const string xrds = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                                 "<xrds:XRDS xmlns:xrds=\"xri://$xrds\" xmlns:openid=\"http://openid.net/xmlns/1.0\" xmlns=\"xri://$xrd*($v*2.0)\">" +
                                     "<XRD>" +
                                         "<Service priority=\"1\">" +
@@ -48,7 +53,7 @@
 
             string url = Url.ToAbsolute(Url.OpenId());
 
-            string xml = Xrds.FormatWith(url);
+            string xml = xrds.FormatWith(url);
 
             return Content(xml, "application/xrds+xml");
         }
@@ -141,12 +146,19 @@
             return Redirect(string.IsNullOrWhiteSpace(returnUrl) ? Url.Home() : returnUrl);
         }
 
+        [HttpPost]
+        public ActionResult Signup(UserRegistrationViewModel userRegistration)
+        {
+            //TODO: Perform Signup
+            return Redirect(Url.Home());
+        }
+
         private void SetErrorCookie(string message)
         {
             var values = new NameValueCollection
                                      {
                                          {Constants.CookieNames.Msg, message},
-                                         {Constants.CookieNames.Err, true.ToString()},
+                                         {Constants.CookieNames.Err, true.ToString(CultureInfo.InvariantCulture)},
                                      };
             cookie.SetValue(Constants.CookieNames.Notification, values, 2, false);
         }

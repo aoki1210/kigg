@@ -1,4 +1,6 @@
-﻿namespace Kigg.DomainModel.Tests
+﻿using Kigg.Domain.ViewModels;
+
+namespace Kigg.Domain.Tests
 {
     using Xunit;
 

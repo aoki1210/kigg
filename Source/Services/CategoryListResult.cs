@@ -1,6 +1,4 @@
-﻿
-
-namespace Kigg.Services
+﻿namespace Kigg.Services
 {
     using System.Linq;
     using System.Collections.Generic;

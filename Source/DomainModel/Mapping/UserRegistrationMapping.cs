@@ -4,11 +4,11 @@
     using Domain.Entities;
     using ViewModels;
 
-    public class CategoryMapping
+    public class UserRegistrationMapping
     {
-        public CategoryMapping()
+        public UserRegistrationMapping()
         {
-            Mapper.CreateMap<Category, CategoryViewModel>();
+            Mapper.CreateMap<User, UserRegistrationViewModel>();
         }
     }
 }
