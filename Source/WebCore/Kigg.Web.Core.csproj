@@ -94,6 +94,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MembershipController.cs" />
     <Compile Include="Extensions\HtmlHelperTelerikExtensions.cs" />
+    <Compile Include="Extensions\HtmlHelperValidation.cs" />
     <Compile Include="Extensions\HttpContextBaseExtensions.cs" />
     <Compile Include="Extensions\RequestContextExtensions.cs" />
     <Compile Include="Extensions\UrlHelperAssetExtensions.cs" />

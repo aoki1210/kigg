@@ -33,6 +33,11 @@ namespace Kigg.Web
             return RouteUrl(instance, Constants.RouteNames.Logout, new { returnUrl = instance.Home() });
         }
 
+        public static string Signup(this UrlHelper instance)
+        {
+            return RouteUrl(instance, Constants.RouteNames.Signup, null);
+        }
+
         public static string ToAbsolute(this UrlHelper instance, string relativeUrl)
         {
             Check.Argument.IsNotNull(instance, "instance");

@@ -37,6 +37,7 @@
             Routes.MapRoute(Constants.RouteNames.Xdrs, "Xrds", new { controller = "Membership", action = "Xrds" });
             Routes.MapRoute(Constants.RouteNames.OpenId, "OpenId", new { controller = "Membership", action = "OpenId" });
             Routes.MapRoute(Constants.RouteNames.Logout, "Logout", new { controller = "Membership", action = "Logout" });
+            Routes.MapRoute(Constants.RouteNames.Signup, "Signup", new { controller = "Membership", action = "Signup" });
 
             Routes.MapRoute(Constants.RouteNames.Login, "Login", new { controller = "Home", action = "Login" });
             Routes.MapRoute(Constants.RouteNames.Published, "{page}", new { controller = "Home", action = "Default", page = 1 }, new { page = @"^\d+$" });

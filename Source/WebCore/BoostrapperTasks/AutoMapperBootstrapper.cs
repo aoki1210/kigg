@@ -12,7 +12,7 @@
     {
         public override TaskContinuation Execute()
         {
-            const string mappingNamespace = "Kigg.DomainModel.Mapping";
+            const string mappingNamespace = "Kigg.Domain.Mapping";
 
             IEnumerable<Type> mappingTypes = typeof(IDomainObject).Assembly
                 .GetTypes()
