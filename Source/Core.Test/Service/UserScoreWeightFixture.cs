@@ -72,7 +72,7 @@ namespace Kigg.Core.Test
                                 ((Convert.ToDouble(user3.Object.CurrentScore) * ScorePercent) * ModaratorMultiply) +
                                 ((Convert.ToDouble(user3.Object.CurrentScore) * ScorePercent) * AdminMultiply)
                             ), 
-                            _strategy.Calculate(SystemTime.Now(), story.Object)
+                            _strategy.Calculate(SystemTime.Now, story.Object)
                         );
 
             _repository.Verify();

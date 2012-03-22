@@ -59,7 +59,7 @@ namespace Kigg.Core.Test
 
             _innerRepository.Setup(r => r.FindScoreById(It.IsAny<long>(), It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(5).Verifiable();
 
-            _repository.FindScoreById(1, SystemTime.Now().AddHours(-4), SystemTime.Now());
+            _repository.FindScoreById(1, SystemTime.Now.AddHours(-4), SystemTime.Now);
         }
 
         private void FindTop()
@@ -68,7 +68,7 @@ namespace Kigg.Core.Test
 
             _innerRepository.Setup(r => r.FindTop(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<int>(), It.IsAny<int>())).Returns(new PagedResult<User>(new List<User> { CreateStubUser() }, 1)).Verifiable();
 
-            _repository.FindTop(SystemTime.Now().AddHours(-4), SystemTime.Now(), 0, 10);
+            _repository.FindTop(SystemTime.Now.AddHours(-4), SystemTime.Now, 0, 10);
         }
     }
 }

@@ -122,7 +122,7 @@ namespace Kigg.Web
                                                     new XAttribute("title", _model.SiteTitle)),
                                                     new XElement("description", _model.Description),
                                                     new XElement("webMaster", "{0} ({1} webmaster)".FormatWith(_model.Email, _model.SiteTitle)),
-                                                    new XElement("lastBuildDate", SystemTime.Now().ToString(dateFormat, GlobalConstants.CurrentCulture)),
+                                                    new XElement("lastBuildDate", SystemTime.Now.ToString(dateFormat, GlobalConstants.CurrentCulture)),
                                                     new XElement("language", "en-US"),
                                                     new XElement("copyright", "Copyright (c) {0}".FormatWith(_model.SiteTitle)),
                                                     new XElement("generator", "{0} RSS Generator({1})".FormatWith(_model.SiteTitle, Assembly.GetExecutingAssembly().GetName().Version)
@@ -263,7 +263,7 @@ namespace Kigg.Web
                                     new XElement(atom + "link", new XAttribute("href", context.HttpContext.Request.Url), new XAttribute("rel", "self")),
                                     new XElement(atom + "link", new XAttribute("href", string.Concat(_model.RootUrl, _model.Url)), new XAttribute("rel", "alternate")),
                                     new XElement(atom + "link", new XAttribute("rel", "search"), new XAttribute("href", urlHelper.Content("~/opensearch.axd")), new XAttribute("type", "application/opensearchdescription+xml"), new XAttribute("title", _model.SiteTitle)),
-                                    new XElement(atom + "updated", SystemTime.Now().ToString(dateFormat, GlobalConstants.CurrentCulture)),
+                                    new XElement(atom + "updated", SystemTime.Now.ToString(dateFormat, GlobalConstants.CurrentCulture)),
                                     new XElement(atom + "id", string.Concat(_model.RootUrl, _model.Url)),
                                     new XElement(atom + "rights", "Copyright (c) {0}".FormatWith(_model.SiteTitle)),
                                     new XElement(atom + "generator", new XAttribute("uri", _model.RootUrl), new XAttribute("version", Assembly.GetExecutingAssembly().GetName().Version), "{0} Atom Generator".FormatWith(_model.SiteTitle)),

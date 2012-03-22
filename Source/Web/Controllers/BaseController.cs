@@ -66,7 +66,7 @@ namespace Kigg.Web
                                 {
                                     if (!user.IsLockedOut)
                                     {
-                                        user.LastActivityAt = SystemTime.Now();
+                                        user.LastActivityAt = SystemTime.Now;
                                         unitOfWork.Commit();
                                     }
                                 }

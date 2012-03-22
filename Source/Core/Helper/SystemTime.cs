@@ -7,18 +7,18 @@ namespace Kigg
     {
         private static Func<DateTime> now = () => DateTime.UtcNow;
 
-        public static Func<DateTime> Now
+        public static DateTime Now
         {
             [DebuggerStepThrough]
             get
             {
-                return now;
+                return now();
             }
 
             [DebuggerStepThrough]
             set
             {
-                now = value;
+                now = () => value;
             }
         }
     }

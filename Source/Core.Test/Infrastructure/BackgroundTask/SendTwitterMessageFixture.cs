@@ -70,7 +70,7 @@ namespace Kigg.Core.Test
             _contentService.Setup(cs => cs.ShortUrl(It.IsAny<string>())).Returns("http://shorturl.com/axs").Verifiable();
             _httpForm.Setup(h => h.PostAsync(It.IsAny<HttpFormPostRequest>())).Verifiable();
 
-            _sendTwitterMessage.StoryPublished(new StoryPublishEventArgs(stories, SystemTime.Now()));
+            _sendTwitterMessage.StoryPublished(new StoryPublishEventArgs(stories, SystemTime.Now));
 
             _contentService.Verify();
             _httpForm.Verify();

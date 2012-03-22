@@ -124,7 +124,7 @@ namespace Kigg.Web
 
                 if ((CacheDurationInDays > 0) && !Cache.Contains(CacheKey))
                 {
-                    Cache.Set(CacheKey, cacheItem, SystemTime.Now().AddDays(CacheDurationInDays));
+                    Cache.Set(CacheKey, cacheItem, SystemTime.Now.AddDays(CacheDurationInDays));
                 }
             }
 

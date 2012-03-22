@@ -130,7 +130,7 @@ namespace Kigg.Service
                     }
                     else
                     {
-                        story.Approve(SystemTime.Now());
+                        story.Approve(SystemTime.Now);
                         _eventAggregator.GetEvent<StorySubmitEvent>().Publish(new StorySubmitEventArgs(story, detailUrl));
                         unitOfWork.Commit();
                     }
@@ -208,7 +208,7 @@ namespace Kigg.Service
 
             using(IUnitOfWork unitOfWork = UnitOfWork.Begin())
             {
-                theStory.View(SystemTime.Now(), fromIPAddress);
+                theStory.View(SystemTime.Now, fromIPAddress);
 
                 _eventAggregator.GetEvent<StoryViewEvent>().Publish(new StoryViewEventArgs(theStory, byUser));
 
@@ -224,7 +224,7 @@ namespace Kigg.Service
 
             using(IUnitOfWork unitOfWork = UnitOfWork.Begin())
             {
-                if (theStory.Promote(SystemTime.Now(), byUser, fromIPAddress))
+                if (theStory.Promote(SystemTime.Now, byUser, fromIPAddress))
                 {
                     _eventAggregator.GetEvent<StoryPromoteEvent>().Publish(new StoryPromoteEventArgs(theStory, byUser));
 
@@ -240,7 +240,7 @@ namespace Kigg.Service
 
             using(IUnitOfWork unitOfWork = UnitOfWork.Begin())
             {
-                if (theStory.Demote(SystemTime.Now(), byUser))
+                if (theStory.Demote(SystemTime.Now, byUser))
                 {
                     _eventAggregator.GetEvent<StoryDemoteEvent>().Publish(new StoryDemoteEventArgs(theStory, byUser));
 
@@ -258,7 +258,7 @@ namespace Kigg.Service
 
             using(IUnitOfWork unitOfWork = UnitOfWork.Begin())
             {
-                if (theStory.MarkAsSpam(SystemTime.Now(), byUser, fromIPAddress))
+                if (theStory.MarkAsSpam(SystemTime.Now, byUser, fromIPAddress))
                 {
                     _eventAggregator.GetEvent<StoryMarkAsSpamEvent>().Publish(new StoryMarkAsSpamEventArgs(theStory, byUser, storyUrl));
 
@@ -274,7 +274,7 @@ namespace Kigg.Service
 
             using(IUnitOfWork unitOfWork = UnitOfWork.Begin())
             {
-                if (theStory.UnmarkAsSpam(SystemTime.Now(), byUser))
+                if (theStory.UnmarkAsSpam(SystemTime.Now, byUser))
                 {
                     _eventAggregator.GetEvent<StoryUnmarkAsSpamEvent>().Publish(new StoryUnmarkAsSpamEventArgs(theStory, byUser));
 
@@ -303,7 +303,7 @@ namespace Kigg.Service
 
                 using(IUnitOfWork unitOfWork = UnitOfWork.Begin())
                 {
-                    Comment comment = forStory.PostComment(content, SystemTime.Now(), byUser, userIPAddress);
+                    Comment comment = forStory.PostComment(content, SystemTime.Now, byUser, userIPAddress);
 
                     if (subscribe)
                     {
@@ -394,7 +394,7 @@ namespace Kigg.Service
         {
             using(IUnitOfWork unitOfWork = UnitOfWork.Begin())
             {
-                DateTime currentTime = SystemTime.Now();
+                DateTime currentTime = SystemTime.Now;
 
                 IList<PublishedStory> publishableStories = GetPublishableStories(currentTime);
 
@@ -423,7 +423,7 @@ namespace Kigg.Service
             {
                 using (IUnitOfWork unitOfWork = UnitOfWork.Begin())
                 {
-                    theStory.Approve(SystemTime.Now());
+                    theStory.Approve(SystemTime.Now);
 
                     _eventAggregator.GetEvent<StoryApproveEvent>().Publish(new StoryApproveEventArgs(theStory, byUser, storyUrl));
 

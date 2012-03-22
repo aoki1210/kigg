@@ -47,7 +47,7 @@ namespace Kigg.Web
 
                 if ((setting.CacheDurationInDays > 0) && (!cache.Contains(cacheKey)))
                 {
-                    cache.Set(cacheKey, version, SystemTime.Now().AddDays(setting.CacheDurationInDays));
+                    cache.Set(cacheKey, version, SystemTime.Now.AddDays(setting.CacheDurationInDays));
                 }
             }
 
@@ -192,7 +192,7 @@ namespace Kigg.Web
 
                         if ((setting.CacheDurationInDays > 0) && (!Cache.Contains(key)))
                         {
-                            Cache.Set(key, asset, SystemTime.Now().AddDays(setting.CacheDurationInDays));
+                            Cache.Set(key, asset, SystemTime.Now.AddDays(setting.CacheDurationInDays));
                         }
                     }
                 }

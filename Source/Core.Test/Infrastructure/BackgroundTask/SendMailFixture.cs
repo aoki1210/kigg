@@ -108,7 +108,7 @@ namespace Kigg.Core.Test
         {
             _emailSender.Setup(es => es.NotifyPublishedStories(It.IsAny<DateTime>(), It.IsAny<IEnumerable<PublishedStory>>())).Verifiable();
 
-            _sendMail.StoryPublished(new StoryPublishEventArgs(new List<PublishedStory>(), SystemTime.Now()));
+            _sendMail.StoryPublished(new StoryPublishEventArgs(new List<PublishedStory>(), SystemTime.Now));
 
             _emailSender.Verify();
         }

@@ -30,7 +30,7 @@ namespace Kigg.Repository
 
                 if ((!result.IsNullOrEmpty()) && (!Cache.Contains(CacheKey)))
                 {
-                    Cache.Set(CacheKey, result, SystemTime.Now().AddMinutes(_cacheDurationInMinutes));
+                    Cache.Set(CacheKey, result, SystemTime.Now.AddMinutes(_cacheDurationInMinutes));
                 }
             }
 

@@ -2,13 +2,13 @@
 {
     using AutoMapper;
     using Domain.Entities;
-    using ViewModels;
+    using Domain.ViewModels;
 
     public class UserRegistrationMapping
     {
         public UserRegistrationMapping()
         {
-            Mapper.CreateMap<User, UserRegistrationViewModel>();
+            Mapper.CreateMap<UserRegistrationModel, User>();
         }
     }
 }

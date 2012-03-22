@@ -31,7 +31,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsPublished_Should_Be_True_When_PublishedAt_Is_Not_Null()
         {
-            _story.SetupGet(s => s.PublishedAt).Returns(SystemTime.Now());
+            _story.SetupGet(s => s.PublishedAt).Returns(SystemTime.Now);
 
             Assert.True(_story.Object.IsPublished());
         }
@@ -39,7 +39,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void HasExpired_Should_Be_True_When_CreatedAt_Is_Greater_Than_MaximumAgeToPublish()
         {
-            var date = SystemTime.Now().AddHours(-(settings.Object.MaximumAgeOfStoryInHoursToPublish + 1));
+            var date = SystemTime.Now.AddHours(-(settings.Object.MaximumAgeOfStoryInHoursToPublish + 1));
 
             _story.SetupGet(s => s.CreatedAt).Returns(date);
 
@@ -49,7 +49,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsApproved_Should_Be_True_When_Aapproved_Is_Not_Null()
         {
-            _story.SetupGet(s => s.ApprovedAt).Returns(SystemTime.Now());
+            _story.SetupGet(s => s.ApprovedAt).Returns(SystemTime.Now);
 
             Assert.True(_story.Object.IsApproved());
         }
@@ -161,7 +161,7 @@ namespace Kigg.Core.Test
             var repository = SetupResolve<IStoryViewRepository>();
             var domFactory = SetupResolve<IDomainObjectFactory>();
             
-            var now = SystemTime.Now();
+            var now = SystemTime.Now;
 
             domFactory.Setup(f => f.CreateStoryView(_story.Object, now, "127.0.0.1")).Returns(
                 It.IsAny<StoryView>()).Verifiable();
@@ -179,7 +179,7 @@ namespace Kigg.Core.Test
             var repository = SetupResolve<IVoteRepository>();
             var domFactory = SetupResolve<IDomainObjectFactory>();
 
-            var now = SystemTime.Now();
+            var now = SystemTime.Now;
 
             domFactory.Setup(f => f.CreateStoryVote(_story.Object, now, It.IsAny<User>(), "127.0.0.1")).Returns(
                 It.IsAny<Vote>()).Verifiable();
@@ -220,7 +220,7 @@ namespace Kigg.Core.Test
             var repository = SetupResolve<IMarkAsSpamRepository>();
             var domFactory = SetupResolve<IDomainObjectFactory>();
 
-            var now = SystemTime.Now();
+            var now = SystemTime.Now;
 
             domFactory.Setup(f => f.CreateMarkAsSpam(_story.Object, now, It.IsAny<User>(), "127.0.0.1")).Returns(It.IsAny<SpamVote>()).Verifiable();
 
@@ -260,7 +260,7 @@ namespace Kigg.Core.Test
             var repository = SetupResolve<ICommentRepository>();
             var domFactory = SetupResolve<IDomainObjectFactory>();
 
-            var now = SystemTime.Now();
+            var now = SystemTime.Now;
 
             domFactory.Setup(f => f.CreateComment(_story.Object, "dummy content", now, It.IsAny<User>(), "127.0.0.1")).Returns(
                 It.IsAny<Comment>()).Verifiable();

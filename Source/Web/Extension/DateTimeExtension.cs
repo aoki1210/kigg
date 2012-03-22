@@ -10,7 +10,7 @@ namespace Kigg.Web
             Check.Argument.IsNotInFuture(target, "target");
 
             StringBuilder result = new StringBuilder();
-            TimeSpan diff = (SystemTime.Now() - target);
+            TimeSpan diff = (SystemTime.Now - target);
 
             Action<int, string> format = (v, u) =>
                                                     {

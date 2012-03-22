@@ -21,7 +21,7 @@
             var users = NewDomainObjectList<User>();
             var user1 = users.First();
             var user2 = users.Last();
-            DateTime now = SystemTime.Now();
+            DateTime now = SystemTime.Now;
 
             //Generates 5 score entries each equal to 10pts for the last 5 days
             NewDomainObjectList<UserScore>(5, c =>

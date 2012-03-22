@@ -104,7 +104,6 @@
 
             return CreatePagedResult(query);
         }
-
      
         public PagedResult<User> FindAll(int start, int max)
         {

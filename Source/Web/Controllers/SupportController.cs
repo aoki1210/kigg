@@ -75,7 +75,7 @@ namespace Kigg.Web
                 viewData.NewCount = _storyRepository.CountNew();
                 viewData.UnapprovedCount = _storyRepository.CountUnapproved();
 
-                DateTime currentTime = SystemTime.Now();
+                DateTime currentTime = SystemTime.Now;
                 DateTime minimumDate = currentTime.AddHours(-Settings.MaximumAgeOfStoryInHoursToPublish);
                 DateTime maximumDate = currentTime.AddHours(-Settings.MinimumAgeOfStoryInHoursToPublish);
 

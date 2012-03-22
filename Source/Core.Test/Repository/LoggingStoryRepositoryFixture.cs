@@ -661,7 +661,7 @@ namespace Kigg.Core.Test
                 log.Setup(l => l.Warning(It.IsAny<string>())).Verifiable();
             }
 
-            _loggingRepository.FindPublishable(SystemTime.Now().AddDays(-7), SystemTime.Now().AddHours(-4), 0, 10);
+            _loggingRepository.FindPublishable(SystemTime.Now.AddDays(-7), SystemTime.Now.AddHours(-4), 0, 10);
         }
 
         private void FindByTag(ICollection<Story> result)
@@ -782,7 +782,7 @@ namespace Kigg.Core.Test
             _innerRepository.Setup(r => r.CountPublishable(It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(0).Verifiable();
             log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
-            _loggingRepository.CountPublishable(SystemTime.Now().AddDays(-7), SystemTime.Now().AddHours(-4));
+            _loggingRepository.CountPublishable(SystemTime.Now.AddDays(-7), SystemTime.Now.AddHours(-4));
         }
 
         private void CountPostedByUser()

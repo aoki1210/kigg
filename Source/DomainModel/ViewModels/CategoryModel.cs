@@ -4,14 +4,14 @@
 
     using Domain.Entities;
 
-    public class CategoryViewModel
+    public class CategoryModel
     {
-        public CategoryViewModel()
+        public CategoryModel()
         {
             
         }
         
-        public CategoryViewModel(Category category)
+        public CategoryModel(Category category)
         {
             Id = category.Id;
             Name = category.Name;

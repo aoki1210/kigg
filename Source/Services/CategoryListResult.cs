@@ -8,17 +8,17 @@
     public class CategoryListResult
     {
         public CategoryListResult(IEnumerable<Category> categories)
-            : this(categories.Map<CategoryViewModel>())
+            : this(categories.Map<CategoryModel>())
         {
         }
 
-        public CategoryListResult(IEnumerable<CategoryViewModel> categories)
+        public CategoryListResult(IEnumerable<CategoryModel> categories)
         {
             Categories = categories;
             Count = categories.Count();
         }
 
-        public IEnumerable<CategoryViewModel> Categories
+        public IEnumerable<CategoryModel> Categories
         {
             get;
             private set;

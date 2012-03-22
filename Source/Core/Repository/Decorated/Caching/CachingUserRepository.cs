@@ -39,7 +39,7 @@ namespace Kigg.Repository
 
                 if ((score != 0) && (!Cache.Contains(cacheKey)))
                 {
-                    Cache.Set(cacheKey, score, SystemTime.Now().AddMinutes(_userCacheDurationInMinutes));
+                    Cache.Set(cacheKey, score, SystemTime.Now.AddMinutes(_userCacheDurationInMinutes));
                 }
             }
 
@@ -71,7 +71,7 @@ namespace Kigg.Repository
 
                 if (!result.IsEmpty && useCache && !Cache.Contains(cacheKey))
                 {
-                    Cache.Set(cacheKey, result, SystemTime.Now().AddMinutes(_usersCacheDurationInMinutes));
+                    Cache.Set(cacheKey, result, SystemTime.Now.AddMinutes(_usersCacheDurationInMinutes));
                 }
             }
 

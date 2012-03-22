@@ -34,6 +34,12 @@
             builder.RegisterInstance(settings).As<Settings>().SingleInstance();
 
             RegisterRepositories(builder);
+            RegisterServices(builder);
+        }
+
+        private static void RegisterServices(ContainerBuilder builder)
+        {
+            builder.RegisterType<MembershipService>().As<IMembershipService>().InstancePerLifetimeScope();
         }
 
         private static void RegisterRepositories(ContainerBuilder builder)
@@ -104,8 +110,8 @@
                                          Email = configuration.Email,
                                          Role = configuration.Role,
                                          IsActive = true,
-                                         CreatedAt = SystemTime.Now(),
-                                         LastActivityAt = SystemTime.Now(),
+                                         CreatedAt = SystemTime.Now,
+                                         LastActivityAt = SystemTime.Now,
                                      });
             }
 
@@ -118,7 +124,7 @@
                                           {
                                               Name = configuration.Name,
                                               UniqueName = configuration.UniqueName,
-                                              CreatedAt = SystemTime.Now()
+                                              CreatedAt = SystemTime.Now
                                           });
             }
             var settings = new Settings(thumbnailSettings, /*assetSettings,*/ twitterSettings, defaultUsers, defaultCategories);

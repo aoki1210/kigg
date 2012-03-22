@@ -81,7 +81,7 @@ namespace Kigg.Core.Test
         {
             var story = MockStory();
 
-            story.SetupGet(s => s.PublishedAt).Returns(SystemTime.Now().AddHours(-4));
+            story.SetupGet(s => s.PublishedAt).Returns(SystemTime.Now.AddHours(-4));
             _user.Setup(u => u.IncreaseScoreBy(It.IsAny<decimal>(), UserAction.PublishedStoryPromoted)).Verifiable();
 
             _userScoreService.StoryPromoted(new StoryPromoteEventArgs(story.Object, _user.Object));
@@ -103,7 +103,7 @@ namespace Kigg.Core.Test
         {
             var story = MockStory();
 
-            story.SetupGet(s => s.PublishedAt).Returns(SystemTime.Now().AddHours(-4));
+            story.SetupGet(s => s.PublishedAt).Returns(SystemTime.Now.AddHours(-4));
             _user.Setup(u => u.DecreaseScoreBy(It.IsAny<decimal>(), UserAction.PublishedStoryDemoted)).Verifiable();
 
             _userScoreService.StoryDemoted(new StoryDemoteEventArgs(story.Object, _user.Object));
@@ -177,7 +177,7 @@ namespace Kigg.Core.Test
             }
 
             _user.Setup(u => u.IncreaseScoreBy(It.IsAny<decimal>(), UserAction.StoryPublished)).Verifiable();
-            _userScoreService.StoryPublished(new StoryPublishEventArgs(stories, SystemTime.Now()));
+            _userScoreService.StoryPublished(new StoryPublishEventArgs(stories, SystemTime.Now));
         }
 
         [Fact]
@@ -445,7 +445,7 @@ namespace Kigg.Core.Test
         private static Mock<Story> MockStory()
         {
             var story = new Mock<Story>();
-            story.SetupGet(s => s.CreatedAt).Returns(SystemTime.Now().AddHours(-1));
+            story.SetupGet(s => s.CreatedAt).Returns(SystemTime.Now.AddHours(-1));
 
             return story;
         }
@@ -454,7 +454,7 @@ namespace Kigg.Core.Test
         {
             const int counter = 5;
 
-            DateTime fakeDate = SystemTime.Now().AddDays(-1);
+            DateTime fakeDate = SystemTime.Now.AddDays(-1);
 
             List<SpamVote> markAsSpams = new List<SpamVote>();
 

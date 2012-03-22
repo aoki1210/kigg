@@ -130,6 +130,7 @@
     <Compile Include="Infrastructure\Spam\GenericExternalSpamProtection.cs" />
     <Compile Include="Infrastructure\BackgroundTask\PingStory.cs" />
     <Compile Include="Repository\ICountByStoryRepository.cs" />
+    <Compile Include="Services\CreateUserResult.cs" />
     <Compile Include="Services\ISpamPostprocessor.cs" />
     <Compile Include="Services\SpamPostprocessor.cs" />
     <Compile Include="Repository\Decorated\Caching\CachingUserRepository.cs" />

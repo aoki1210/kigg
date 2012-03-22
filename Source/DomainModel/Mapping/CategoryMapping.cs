@@ -8,7 +8,7 @@
     {
         public CategoryMapping()
         {
-            Mapper.CreateMap<Category, CategoryViewModel>();
+            Mapper.CreateMap<Category, CategoryModel>();
         }
     }
 }

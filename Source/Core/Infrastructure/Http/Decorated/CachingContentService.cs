@@ -30,7 +30,7 @@ namespace Kigg.Infrastructure
 
                 if ((result != StoryContent.Empty) && !Cache.Contains(cacheKey))
                 {
-                    Cache.Set(cacheKey, result, SystemTime.Now().AddMinutes(_contentCacheDurationInMinutes));
+                    Cache.Set(cacheKey, result, SystemTime.Now.AddMinutes(_contentCacheDurationInMinutes));
                 }
             }
 
@@ -53,7 +53,7 @@ namespace Kigg.Infrastructure
 
                 if ((!string.IsNullOrEmpty(shortUrl)) && (!Cache.Contains(cacheKey)))
                 {
-                    Cache.Set(cacheKey, shortUrl, SystemTime.Now().AddMinutes(_shortUrlCacheDurationInMinutes));
+                    Cache.Set(cacheKey, shortUrl, SystemTime.Now.AddMinutes(_shortUrlCacheDurationInMinutes));
                 }
             }
 

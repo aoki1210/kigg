@@ -1,38 +1,36 @@
-﻿
-
-using System.Globalization;
-
-namespace Kigg.Web.Controllers
+﻿namespace Kigg.Web.Controllers
 {
     using System;
-    using System.Web.Mvc;
     using System.Collections.Specialized;
-
+    using System.Globalization;
+    using System.Web.Mvc;
     using DotNetOpenAuth.Messaging;
     using DotNetOpenAuth.OpenId;
     using DotNetOpenAuth.OpenId.Extensions.SimpleRegistration;
     using DotNetOpenAuth.OpenId.RelyingParty;
-
-    using Security;
+    using Kigg.Domain.ViewModels;
+    using Kigg.Services;
     using Resources;
-    using Domain.ViewModels;
-
+    using Security;
     public class MembershipController : KiggControllerBase
     {
         private const string CookieRememberMe = Constants.CookieNames.AuthRememberMe;
         private const string CookieReturnUrl = Constants.CookieNames.AuthReturnUrl;
         private const int SevenDays = 60 * 60 * 24 * 7;
 
+        private readonly IMembershipService membershipService;
         private readonly IOpenIdRelyingParty openId;
         private readonly IFormsAuthentication formsAuthentication;
         private readonly ICookie cookie;
 
-        public MembershipController(IOpenIdRelyingParty openId, IFormsAuthentication formsAuthentication, ICookie cookie)
+        public MembershipController(IMembershipService membershipService ,IOpenIdRelyingParty openId, IFormsAuthentication formsAuthentication, ICookie cookie)
         {
+            Check.Argument.IsNotNull(membershipService, "openId");
             Check.Argument.IsNotNull(openId, "openId");
             Check.Argument.IsNotNull(formsAuthentication, "formsAuthentication");
             Check.Argument.IsNotNull(cookie, "cookie");
 
+            this.membershipService = membershipService;
             this.openId = openId;
             this.formsAuthentication = formsAuthentication;
             this.cookie = cookie;
@@ -147,8 +145,9 @@ namespace Kigg.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult Signup(UserRegistrationViewModel userRegistration)
+        public ActionResult Signup(UserRegistrationModel userRegistration)
         {
+            membershipService.CreateUser(userRegistration);
             //TODO: Perform Signup
             return Redirect(Url.Home());
         }
