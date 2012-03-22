@@ -4,6 +4,46 @@
         <name>Autofac</name>
     </assembly>
     <members>
+        <member name="T:Autofac.Features.GeneratedFactories.FactoryGenerator">
+            <summary>
+            Generates context-bound closures that represent factories from
+            a set of heuristics based on delegate type signatures.
+            </summary>
+        </member>
+        <member name="M:Autofac.Features.GeneratedFactories.FactoryGenerator.#ctor(System.Type,Autofac.Core.Service,Autofac.Features.GeneratedFactories.ParameterMapping)">
+            <summary>
+            Create a factory generator.
+            </summary>
+            <param name="service">The service that will be activated in
+            order to create the products of the factory.</param>
+            <param name="delegateType">The delegate to provide as a factory.</param>
+            <param name="parameterMapping">The parameter mapping mode to use.</param>
+        </member>
+        <member name="M:Autofac.Features.GeneratedFactories.FactoryGenerator.#ctor(System.Type,Autofac.Core.IComponentRegistration,Autofac.Features.GeneratedFactories.ParameterMapping)">
+            <summary>
+            Create a factory generator.
+            </summary>
+            <param name="productRegistration">The component that will be activated in
+            order to create the products of the factory.</param>
+            <param name="delegateType">The delegate to provide as a factory.</param>
+            <param name="parameterMapping">The parameter mapping mode to use.</param>
+        </member>
+        <member name="M:Autofac.Features.GeneratedFactories.FactoryGenerator.GenerateFactory(Autofac.IComponentContext,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
+            <summary>
+            Generates a factory delegate that closes over the provided context.
+            </summary>
+            <param name="context">The context in which the factory will be used.</param>
+            <param name="parameters">Parameters provided to the resolve call for the factory itself.</param>
+            <returns>A factory delegate that will work within the context.</returns>
+        </member>
+        <member name="M:Autofac.Features.GeneratedFactories.FactoryGenerator.GenerateFactory``1(Autofac.IComponentContext,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
+            <summary>
+            Generates a factory delegate that closes over the provided context.
+            </summary>
+            <param name="context">The context in which the factory will be used.</param>
+            <param name="parameters">Parameters provided to the resolve call for the factory itself.</param>
+            <returns>A factory delegate that will work within the context.</returns>
+        </member>
         <member name="T:Autofac.Builder.ConcreteReflectionActivatorData">
             <summary>
             Reflection activator data for concrete types.
@@ -146,6 +186,52 @@
             hierarchy an <see cref="T:Autofac.Core.DependencyResolutionException"/> is thrown.
             </summary>
             <param name="lifetimeScopeTag">Tag applied to matching lifetime scopes.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Builder.IRegistrationBuilder`3.InstancePerOwned``1">
+            <summary>
+            Configure the component so that every dependent component or call to Resolve()
+            within a ILifetimeScope created by an owned instance gets the same, shared instance.
+            Dependent components in lifetime scopes that are children of the owned instance scope will
+            share the parent's instance. If no appropriate owned instance scope can be found in the
+            hierarchy an <see cref="T:Autofac.Core.DependencyResolutionException"/> is thrown.
+            </summary>
+            <typeparam name="TService">Service type.</typeparam>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Builder.IRegistrationBuilder`3.InstancePerOwned(System.Type)">
+            <summary>
+            Configure the component so that every dependent component or call to Resolve()
+            within a ILifetimeScope created by an owned instance gets the same, shared instance.
+            Dependent components in lifetime scopes that are children of the owned instance scope will
+            share the parent's instance. If no appropriate owned instance scope can be found in the
+            hierarchy an <see cref="T:Autofac.Core.DependencyResolutionException"/> is thrown.
+            </summary>
+            <param name="serviceType">Service type.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Builder.IRegistrationBuilder`3.InstancePerOwned``1(System.Object)">
+            <summary>
+            Configure the component so that every dependent component or call to Resolve()
+            within a ILifetimeScope created by an owned instance gets the same, shared instance.
+            Dependent components in lifetime scopes that are children of the owned instance scope will
+            share the parent's instance. If no appropriate owned instance scope can be found in the
+            hierarchy an <see cref="T:Autofac.Core.DependencyResolutionException"/> is thrown.
+            </summary>
+            <typeparam name="TService">The service type provided by the component.</typeparam>
+            <param name="serviceKey">Key to associate with the component.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Builder.IRegistrationBuilder`3.InstancePerOwned(System.Object,System.Type)">
+            <summary>
+            Configure the component so that every dependent component or call to Resolve()
+            within a ILifetimeScope created by an owned instance gets the same, shared instance.
+            Dependent components in lifetime scopes that are children of the owned instance scope will
+            share the parent's instance. If no appropriate owned instance scope can be found in the
+            hierarchy an <see cref="T:Autofac.Core.DependencyResolutionException"/> is thrown.
+            </summary>
+            <param name="serviceKey">Key to associate with the component.</param>
+            <param name="serviceType">The service type provided by the component.</param>
             <returns>A registration builder allowing further configuration of the component.</returns>
         </member>
         <member name="M:Autofac.Builder.IRegistrationBuilder`3.As``1">
@@ -1917,9 +2003,6 @@
             <param name="key">The value to retrieve.</param>
             <returns>The associated value.</returns>
         </member>
-        <member name="T:Autofac.Features.Indexed.KeyedServiceIndex`2">
-            <summary>Internal implementation</summary>
-        </member>
         <member name="M:Autofac.Features.Indexed.KeyedServiceIndex`2.#ctor(Autofac.IComponentContext)">
             <summary></summary>
         </member>
@@ -2999,6 +3082,15 @@
             <param name="message">The message.</param>
             <param name="innerException">The inner exception.</param>
         </member>
+        <member name="M:Autofac.Core.DependencyResolutionException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/> class.
+            </summary>
+            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
+            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="info"/> parameter is null. </exception>
+            <exception cref="T:System.Runtime.Serialization.SerializationException">The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0). </exception>
+        </member>
         <member name="T:Autofac.Core.Disposer">
             <summary>
             Maintains a set of objects to dispose, and disposes them in the reverse order
@@ -3304,7 +3396,7 @@
             Attaches the component's lifetime to scopes matching a supplied expression.
             </summary>
         </member>
-        <member name="M:Autofac.Core.Lifetime.MatchingScopeLifetime.#ctor(System.Func{Autofac.ILifetimeScope,System.Boolean})">
+        <member name="M:Autofac.Core.Lifetime.MatchingScopeLifetime.#ctor(System.Linq.Expressions.Expression{System.Func{Autofac.ILifetimeScope,System.Boolean}})">
             <summary>
             Match scopes based on the provided expression.
             </summary>
@@ -3425,6 +3517,15 @@
             </summary>
             <param name="service">The service.</param>
             <param name="innerException">The inner exception.</param>
+        </member>
+        <member name="M:Autofac.Core.Registration.ComponentNotRegisteredException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/> class.
+            </summary>
+            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
+            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="info"/> parameter is null. </exception>
+            <exception cref="T:System.Runtime.Serialization.SerializationException">The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0). </exception>
         </member>
         <member name="T:Autofac.Core.Registration.ComponentNotRegisteredExceptionResources">
             <summary>
@@ -4067,6 +4168,52 @@
             hierarchy an <see cref="T:Autofac.Core.DependencyResolutionException"/> is thrown.
             </summary>
             <param name="lifetimeScopeTag">Tag applied to matching lifetime scopes.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Builder.RegistrationBuilder`3.InstancePerOwned``1">
+            <summary>
+            Configure the component so that every dependent component or call to Resolve()
+            within a ILifetimeScope created by an owned instance gets the same, shared instance.
+            Dependent components in lifetime scopes that are children of the owned instance scope will
+            share the parent's instance. If no appropriate owned instance scope can be found in the
+            hierarchy an <see cref="T:Autofac.Core.DependencyResolutionException"/> is thrown.
+            </summary>
+            <typeparam name="TService">The service type provided by the component.</typeparam>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Builder.RegistrationBuilder`3.InstancePerOwned(System.Type)">
+            <summary>
+            Configure the component so that every dependent component or call to Resolve()
+            within a ILifetimeScope created by an owned instance gets the same, shared instance.
+            Dependent components in lifetime scopes that are children of the owned instance scope will
+            share the parent's instance. If no appropriate owned instance scope can be found in the
+            hierarchy an <see cref="T:Autofac.Core.DependencyResolutionException"/> is thrown.
+            </summary>
+            <param name="serviceType">The service type provided by the component.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Builder.RegistrationBuilder`3.InstancePerOwned``1(System.Object)">
+            <summary>
+            Configure the component so that every dependent component or call to Resolve()
+            within a ILifetimeScope created by an owned instance gets the same, shared instance.
+            Dependent components in lifetime scopes that are children of the owned instance scope will
+            share the parent's instance. If no appropriate owned instance scope can be found in the
+            hierarchy an <see cref="T:Autofac.Core.DependencyResolutionException"/> is thrown.
+            </summary>
+            <typeparam name="TService">The service type provided by the component.</typeparam>
+            <param name="serviceKey">Key to associate with the component.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Builder.RegistrationBuilder`3.InstancePerOwned(System.Object,System.Type)">
+            <summary>
+            Configure the component so that every dependent component or call to Resolve()
+            within a ILifetimeScope created by an owned instance gets the same, shared instance.
+            Dependent components in lifetime scopes that are children of the owned instance scope will
+            share the parent's instance. If no appropriate owned instance scope can be found in the
+            hierarchy an <see cref="T:Autofac.Core.DependencyResolutionException"/> is thrown.
+            </summary>
+            <param name="serviceKey">Key to associate with the component.</param>
+            <param name="serviceType">The service type provided by the component.</param>
             <returns>A registration builder allowing further configuration of the component.</returns>
         </member>
         <member name="M:Autofac.Builder.RegistrationBuilder`3.As``1">
@@ -6109,16 +6256,6 @@
             <param name="sequence">The sequence.</param>
             <param name="leadingItem">The leading item.</param>
             <returns></returns>
-        </member>
-        <member name="T:System.Security.AllowPartiallyTrustedCallersAttribute">
-            <summary>
-            Attribute marker to make code compatible with Silverlight
-            </summary>
-        </member>
-        <member name="T:System.SerializableAttribute">
-            <summary>
-            Attribute marker to make code compatible with Silverlight
-            </summary>
         </member>
         <member name="M:Autofac.Util.TypeExtensions.GetTypesThatClose(System.Type,System.Type)">
             <summary>Returns the first concrete interface supported by the candidate type that
