@@ -322,7 +322,7 @@ namespace Kigg.Core.Test
 
             _file.Setup(f => f.ReadAllText(It.IsAny<string>())).Returns(mailTemplate).Verifiable();
 
-            _emailSender.NotifyPublishedStories(SystemTime.Now(), new[] { publishedStory });
+            _emailSender.NotifyPublishedStories(SystemTime.Now, new[] { publishedStory });
 
             Sleep();
         }

@@ -273,7 +273,7 @@ namespace Kigg.Core.Test
             _innerRepository.Setup(r => r.FindScoreById(It.IsAny<long>(), It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(100).Verifiable();
             log.Setup(l => l.Info(It.IsAny<string>())).Verifiable();
 
-            _loggingRepository.FindScoreById(1, SystemTime.Now().AddHours(-4), SystemTime.Now());
+            _loggingRepository.FindScoreById(1, SystemTime.Now.AddHours(-4), SystemTime.Now);
         }
 
         private void FindTop(ICollection<User> result)
@@ -286,7 +286,7 @@ namespace Kigg.Core.Test
                 log.Setup(l => l.Warning(It.IsAny<string>())).Verifiable();
             }
 
-            _loggingRepository.FindTop(SystemTime.Now().AddHours(-4), SystemTime.Now(), 0, 10);
+            _loggingRepository.FindTop(SystemTime.Now.AddHours(-4), SystemTime.Now, 0, 10);
         }
 
         private void FindAll(ICollection<User> result)

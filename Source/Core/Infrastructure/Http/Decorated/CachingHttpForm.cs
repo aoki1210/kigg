@@ -30,7 +30,7 @@ namespace Kigg.Infrastructure
 
                 if ((response != null) && !Cache.Contains(cacheKey))
                 {
-                    Cache.Set(cacheKey, response, SystemTime.Now().AddMinutes(_cacheDurationInMinutes));
+                    Cache.Set(cacheKey, response, SystemTime.Now.AddMinutes(_cacheDurationInMinutes));
                 }
             }
 
@@ -60,7 +60,7 @@ namespace Kigg.Infrastructure
                                 {
                                     if ((r!= null) && !Cache.Contains(cacheKey))
                                     {
-                                        Cache.Set(cacheKey, r, SystemTime.Now().AddMinutes(_cacheDurationInMinutes));
+                                        Cache.Set(cacheKey, r, SystemTime.Now.AddMinutes(_cacheDurationInMinutes));
                                     }
 
                                     onComplete(r);

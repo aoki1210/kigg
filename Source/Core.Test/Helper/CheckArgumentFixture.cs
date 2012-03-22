@@ -172,7 +172,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsNotInvalidDate_With_Current_Date_Should_Not_Throw_Exception()
         {
-            Assert.DoesNotThrow(() => Check.Argument.IsNotInvalidDate(SystemTime.Now(), "Now"));
+            Assert.DoesNotThrow(() => Check.Argument.IsNotInvalidDate(SystemTime.Now, "Now"));
         }
 
         [Fact]
@@ -208,25 +208,25 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsNotInPast_With_One_Second_Ago_Should_Throw_Exception()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => Check.Argument.IsNotInPast(SystemTime.Now().AddSeconds(-1), "OneSecondAgo"));
+            Assert.Throws<ArgumentOutOfRangeException>(() => Check.Argument.IsNotInPast(SystemTime.Now.AddSeconds(-1), "OneSecondAgo"));
         }
 
         [Fact]
         public void IsNotInPast_With_OneSecond_After_Should_Not_Throw_Exception()
         {
-            Assert.DoesNotThrow(() => Check.Argument.IsNotInPast(SystemTime.Now().AddSeconds(1), "OneSecondAfter"));
+            Assert.DoesNotThrow(() => Check.Argument.IsNotInPast(SystemTime.Now.AddSeconds(1), "OneSecondAfter"));
         }
 
         [Fact]
         public void IsNotInFuture_With_One_Second_After_Should_Throw_Exception()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => Check.Argument.IsNotInFuture(SystemTime.Now().AddSeconds(1), "OneSecondAfter"));
+            Assert.Throws<ArgumentOutOfRangeException>(() => Check.Argument.IsNotInFuture(SystemTime.Now.AddSeconds(1), "OneSecondAfter"));
         }
 
         [Fact]
         public void IsNotInFuture_With_OneSecond_Ago_Should_Not_Throw_Exception()
         {
-            Assert.DoesNotThrow(() => Check.Argument.IsNotInFuture(SystemTime.Now().AddSeconds(-1), "OneSecondAgo"));
+            Assert.DoesNotThrow(() => Check.Argument.IsNotInFuture(SystemTime.Now.AddSeconds(-1), "OneSecondAgo"));
         }
 
         [Fact]

@@ -77,7 +77,7 @@ namespace Kigg.Core.Test
         {
             cache.Setup(c => c.Set(It.IsAny<string>(), It.IsAny<object>(), It.IsAny<DateTime>())).Verifiable();
 
-            Cache.Set(Key, new object(), SystemTime.Now().AddMinutes(5));
+            Cache.Set(Key, new object(), SystemTime.Now.AddMinutes(5));
         }
 
         [Fact]

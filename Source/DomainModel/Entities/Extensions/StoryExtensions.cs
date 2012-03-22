@@ -23,7 +23,7 @@
             throw new NotImplementedException();
             /*IConfigurationSettings settings = IoC.Resolve<IConfigurationSettings>();
 
-            DateTime max = SystemTime.Now().AddHours(-settings.MaximumAgeOfStoryInHoursToPublish);
+            DateTime max = SystemTime.Now.AddHours(-settings.MaximumAgeOfStoryInHoursToPublish);
 
             return story.CreatedAt <= max;*/
         }

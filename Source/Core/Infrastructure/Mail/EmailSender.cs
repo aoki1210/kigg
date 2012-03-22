@@ -79,7 +79,7 @@ namespace Kigg.Infrastructure
 
             string body = PrepareMailBodyWith("SpamStory", "title", story.Title, "siteUrl", url, "originalUrl", story.Url, "userName", story.PostedBy.UserName, "protection", source);
 
-            SendMailAsync(_settings.WebmasterEmail, _settings.SupportEmail, "Spam Story Submitted - {0}".FormatWith(SystemTime.Now().ToLongDateString()), body);
+            SendMailAsync(_settings.WebmasterEmail, _settings.SupportEmail, "Spam Story Submitted - {0}".FormatWith(SystemTime.Now.ToLongDateString()), body);
         }
 
         public void NotifyStoryMarkedAsSpam(string url, Story story, User byUser)
@@ -90,7 +90,7 @@ namespace Kigg.Infrastructure
 
             string body = PrepareMailBodyWith("MarkAsSpamStory", "markedByUserName", byUser.UserName, "title", story.Title, "siteUrl", url, "originalUrl", story.Url, "postedByUserName", story.PostedBy.UserName);
 
-            SendMailAsync(_settings.WebmasterEmail, _settings.SupportEmail, "Story Marked As Spam - {0}".FormatWith(SystemTime.Now().ToLongDateString()), body);
+            SendMailAsync(_settings.WebmasterEmail, _settings.SupportEmail, "Story Marked As Spam - {0}".FormatWith(SystemTime.Now.ToLongDateString()), body);
         }
 
         public void NotifySpamComment(string url, Comment comment, string source)
@@ -101,7 +101,7 @@ namespace Kigg.Infrastructure
 
             string body = PrepareMailBodyWith("SpamComment", "siteUrl", url, "userName", comment.ByUser.UserName, "comment", comment.HtmlBody, "protection", source);
 
-            SendMailAsync(_settings.WebmasterEmail, _settings.SupportEmail, "Spam Comment Submitted - {0}".FormatWith(SystemTime.Now().ToLongDateString()), body);
+            SendMailAsync(_settings.WebmasterEmail, _settings.SupportEmail, "Spam Comment Submitted - {0}".FormatWith(SystemTime.Now.ToLongDateString()), body);
         }
 
         public void NotifyStoryApprove(string url, Story story, User byUser)
@@ -112,7 +112,7 @@ namespace Kigg.Infrastructure
 
             string body = PrepareMailBodyWith("ApproveStory", "approvedByUserName", byUser.UserName, "title", story.Title, "siteUrl", url, "originalUrl", story.Url, "postedByUserName", story.PostedBy.UserName);
 
-            SendMailAsync(_settings.WebmasterEmail, _settings.SupportEmail, "Story Approved - {0}".FormatWith(SystemTime.Now().ToLongDateString()), body);
+            SendMailAsync(_settings.WebmasterEmail, _settings.SupportEmail, "Story Approved - {0}".FormatWith(SystemTime.Now.ToLongDateString()), body);
         }
 
         public void NotifyConfirmSpamStory(string url, Story story, User byUser)
@@ -125,7 +125,7 @@ namespace Kigg.Infrastructure
 
             string body = PrepareMailBodyWith("ConfirmSpamStory", "confirmedByUserName", byUser.UserName, "title", story.Title, "siteUrl", url, "originalUrl", story.Url, "postedByUserName", postedBy);
 
-            SendMailAsync(_settings.WebmasterEmail, _settings.SupportEmail, "Story Confirmed As Spam - {0}".FormatWith(SystemTime.Now().ToLongDateString()), body);
+            SendMailAsync(_settings.WebmasterEmail, _settings.SupportEmail, "Story Confirmed As Spam - {0}".FormatWith(SystemTime.Now.ToLongDateString()), body);
         }
 
         public void NotifyConfirmSpamComment(string url, Comment comment, User byUser)
@@ -136,7 +136,7 @@ namespace Kigg.Infrastructure
 
             string body = PrepareMailBodyWith("ConfirmSpamComment", "confirmedByUserName", byUser.UserName, "siteUrl", url, "postedByUserName", comment.ByUser.UserName, "comment", comment.HtmlBody);
 
-            SendMailAsync(_settings.WebmasterEmail, _settings.SupportEmail, "Comment Confirmed As Spam - {0}".FormatWith(SystemTime.Now().ToLongDateString()), body);
+            SendMailAsync(_settings.WebmasterEmail, _settings.SupportEmail, "Comment Confirmed As Spam - {0}".FormatWith(SystemTime.Now.ToLongDateString()), body);
         }
 
         public void NotifyCommentAsOffended(string url, Comment comment, User byUser)
@@ -147,7 +147,7 @@ namespace Kigg.Infrastructure
 
             string body = PrepareMailBodyWith("OffendedComment", "offendedByUserName", byUser.UserName, "siteUrl", url, "postedByUserName", comment.ByUser.UserName, "comment", comment.HtmlBody);
 
-            SendMailAsync(_settings.WebmasterEmail, _settings.SupportEmail, "Comment Marked As Offended - {0}".FormatWith(SystemTime.Now().ToLongDateString()), body);
+            SendMailAsync(_settings.WebmasterEmail, _settings.SupportEmail, "Comment Marked As Offended - {0}".FormatWith(SystemTime.Now.ToLongDateString()), body);
         }
 
         public void NotifyStoryDelete(Story story, User byUser)
@@ -159,7 +159,7 @@ namespace Kigg.Infrastructure
 
             string body = PrepareMailBodyWith("StoryDeleted", "deletedByUserName", byUser.UserName, "title", story.Title, "url", story.Url, "postedByUserName", postedBy);
 
-            SendMailAsync(_settings.WebmasterEmail, _settings.SupportEmail, "Story Deleted - {0}".FormatWith(SystemTime.Now().ToLongDateString()), body);
+            SendMailAsync(_settings.WebmasterEmail, _settings.SupportEmail, "Story Deleted - {0}".FormatWith(SystemTime.Now.ToLongDateString()), body);
         }
 
         public void NotifyPublishedStories(DateTime timestamp, IEnumerable<PublishedStory> stories)

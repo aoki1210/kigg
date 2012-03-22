@@ -30,7 +30,7 @@ namespace Kigg.Core.Test
 
             Setup("192.168.0.1", "192.168.0.1", "192.168.0.1");
 
-            Assert.Equal(WeightMultiply, _strategy.Calculate(SystemTime.Now(), story.Object));
+            Assert.Equal(WeightMultiply, _strategy.Calculate(SystemTime.Now, story.Object));
         }
 
         [Fact]
@@ -40,7 +40,7 @@ namespace Kigg.Core.Test
 
             Setup("192.168.0.1", "192.168.0.2", "192.168.0.3");
 
-            Assert.Equal(WeightMultiply * 3, _strategy.Calculate(SystemTime.Now(), story.Object));
+            Assert.Equal(WeightMultiply * 3, _strategy.Calculate(SystemTime.Now, story.Object));
         }
 
         [Fact]
@@ -50,7 +50,7 @@ namespace Kigg.Core.Test
 
             Setup("192.168.0.1", "192.168.0.2", "192.168.0.3");
 
-            _strategy.Calculate(SystemTime.Now(), story.Object);
+            _strategy.Calculate(SystemTime.Now, story.Object);
 
             _repository.Verify();
         }

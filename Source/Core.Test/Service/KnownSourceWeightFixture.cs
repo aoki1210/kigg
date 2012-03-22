@@ -29,7 +29,7 @@ namespace Kigg.Core.Test
 
             _repository.Setup(r => r.FindMatching(It.IsAny<string>())).Returns(knownSource.Object);
 
-            var weight = _strategy.Calculate(SystemTime.Now(), story.Object);
+            var weight = _strategy.Calculate(SystemTime.Now, story.Object);
 
             Assert.Equal((int) KnownSourceGrade.A, weight);
         }
@@ -42,7 +42,7 @@ namespace Kigg.Core.Test
 
             _repository.Setup(r => r.FindMatching(It.IsAny<string>())).Returns((KnownSource) null);
 
-            var weight = _strategy.Calculate(SystemTime.Now(), story.Object);
+            var weight = _strategy.Calculate(SystemTime.Now, story.Object);
 
             Assert.Equal(0, weight);
         }

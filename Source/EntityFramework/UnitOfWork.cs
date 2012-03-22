@@ -32,7 +32,7 @@
 
         protected override void DisposeCore()
         {
-            context.Dispose();
+            //dbFactory.Dispose();
         }
     }
 }

@@ -29,7 +29,7 @@
 
         protected Category NewCategory(bool persist)
         {
-            var category = new Category { Name = "C#", UniqueName = "C-Sharp", CreatedAt = SystemTime.Now() };
+            var category = new Category { Name = "C#", UniqueName = "C-Sharp", CreatedAt = SystemTime.Now };
 
             if (persist)
             {
@@ -42,7 +42,7 @@
         }
         protected Tag NewTag(bool persist)
         {
-            var tag = new Tag { Name = "C#", UniqueName = "C-Sharp", CreatedAt = SystemTime.Now() };
+            var tag = new Tag { Name = "C#", UniqueName = "C-Sharp", CreatedAt = SystemTime.Now };
 
             if (persist)
             {
@@ -60,8 +60,8 @@
                                UserName = "mosessaur",
                                Email = "mosessaur@twitter.com",
                                Role = Role.User,
-                               CreatedAt = SystemTime.Now(),
-                               LastActivityAt = SystemTime.Now(),
+                               CreatedAt = SystemTime.Now,
+                               LastActivityAt = SystemTime.Now,
                                IsLockedOut = false,
                                IsActive = true,
                            };

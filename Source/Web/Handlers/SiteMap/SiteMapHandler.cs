@@ -246,7 +246,7 @@ namespace Kigg.Web
 
                 if ((CacheDurationInMinutes > 0) && (!Cache.Contains(CacheKey)))
                 {
-                    Cache.Set(CacheKey, cacheItem, SystemTime.Now().AddMinutes(CacheDurationInMinutes));
+                    Cache.Set(CacheKey, cacheItem, SystemTime.Now.AddMinutes(CacheDurationInMinutes));
                 }
             }
 
@@ -292,7 +292,7 @@ namespace Kigg.Web
                     urlSet.Add(new XAttribute(XNamespace.Xmlns + "mobile", _googleMobile.ToString()));
                 }
 
-                DateTime currentDate = SystemTime.Now();
+                DateTime currentDate = SystemTime.Now;
                 string rootUrl = Settings.RootUrl;
 
                 AddStoriesInRegularSiteMap(context, forMobile, urlSet);
@@ -314,7 +314,7 @@ namespace Kigg.Web
 
                 if ((CacheDurationInMinutes > 0) && !Cache.Contains(cacheKey))
                 {
-                    Cache.Set(cacheKey, cacheItem, SystemTime.Now().AddMinutes(CacheDurationInMinutes));
+                    Cache.Set(cacheKey, cacheItem, SystemTime.Now.AddMinutes(CacheDurationInMinutes));
                 }
             }
 

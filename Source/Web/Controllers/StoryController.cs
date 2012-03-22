@@ -228,7 +228,7 @@ namespace Kigg.Web
             }
             else
             {
-                DateTime currentTime = SystemTime.Now();
+                DateTime currentTime = SystemTime.Now;
                 DateTime minimumDate = currentTime.AddHours(-Settings.MaximumAgeOfStoryInHoursToPublish);
                 DateTime maximumDate = currentTime.AddHours(-Settings.MinimumAgeOfStoryInHoursToPublish);
 

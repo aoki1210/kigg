@@ -126,4 +126,16 @@
   <data name="UnableToLoginWithYourPreferredOpenIDProvider" xml:space="preserve">
     <value>Unable to login with your preferred OpenID provider.</value>
   </data>
+  <data name="Validation_EmailInvalidFormat" xml:space="preserve">
+    <value>Invalid Email format.</value>
+  </data>
+  <data name="Validation_EmailRequired" xml:space="preserve">
+    <value>Email required.</value>
+  </data>
+  <data name="Validation_PasswordRequired" xml:space="preserve">
+    <value>Password required.</value>
+  </data>
+  <data name="Validation_UserNameRequired" xml:space="preserve">
+    <value>User Name required.</value>
+  </data>
 </root>

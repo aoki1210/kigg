@@ -28,7 +28,7 @@ namespace Kigg.Domain.Tests
             
             var domainObject = Builder<Category>.CreateNew().Build();
 
-            var viewModel = Mapper.Map<CategoryViewModel>(domainObject);
+            var viewModel = Mapper.Map<CategoryModel>(domainObject);
 
             Assert.Equal(domainObject.Id, viewModel.Id);
             Assert.Equal(domainObject.CreatedAt, viewModel.CreatedAt);
@@ -43,7 +43,7 @@ namespace Kigg.Domain.Tests
 
             var domainObjects = Builder<Category>.CreateListOfSize(5).Build();
 
-            var viewModels = domainObjects.Map<CategoryViewModel>();
+            var viewModels = domainObjects.Map<CategoryModel>();
 
             Assert.NotEmpty(viewModels);
         }

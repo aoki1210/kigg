@@ -30,7 +30,7 @@ namespace Kigg.Core.Test
         {
             var story = Setup("192.168.0.1", "192.168.0.1", "192.168.0.1");
 
-            Assert.Equal((SameIpWeight * 2), _strategy.Calculate(SystemTime.Now(), story.Object));
+            Assert.Equal((SameIpWeight * 2), _strategy.Calculate(SystemTime.Now, story.Object));
         }
 
         [Fact]
@@ -38,7 +38,7 @@ namespace Kigg.Core.Test
         {
             var story = Setup("192.168.0.1", "192.168.0.2", "192.168.0.3");
 
-            Assert.Equal((DifferentIpWeight * 2), _strategy.Calculate(SystemTime.Now(), story.Object));
+            Assert.Equal((DifferentIpWeight * 2), _strategy.Calculate(SystemTime.Now, story.Object));
         }
 
         [Fact]
@@ -46,7 +46,7 @@ namespace Kigg.Core.Test
         {
             var story = Setup("192.168.0.1", "192.168.0.1", "192.168.0.2");
 
-            Assert.Equal((SameIpWeight + DifferentIpWeight), _strategy.Calculate(SystemTime.Now(), story.Object));
+            Assert.Equal((SameIpWeight + DifferentIpWeight), _strategy.Calculate(SystemTime.Now, story.Object));
         }
 
         [Fact]
@@ -54,7 +54,7 @@ namespace Kigg.Core.Test
         {
             var story = Setup("192.168.0.1", "192.168.0.1", "192.168.0.2");
 
-            _strategy.Calculate(SystemTime.Now(), story.Object);
+            _strategy.Calculate(SystemTime.Now, story.Object);
 
             _repository.Verify();
         }

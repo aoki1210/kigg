@@ -201,7 +201,7 @@ namespace Kigg.Web
                                 }
                             }
 
-                            user.LastActivityAt = SystemTime.Now();
+                            user.LastActivityAt = SystemTime.Now;
 
                             unitOfWork.Commit();
                             FormsAuthentication.SetAuthCookie(userName, OpenIdRememberMe);
@@ -316,7 +316,7 @@ namespace Kigg.Web
                             {
                                 if (string.Compare(user.Password, password.Trim().Hash(), StringComparison.OrdinalIgnoreCase) == 0)
                                 {
-                                    user.LastActivityAt = SystemTime.Now();
+                                    user.LastActivityAt = SystemTime.Now;
                                     unitOfWork.Commit();
 
                                     FormsAuthentication.SetAuthCookie(userName, rememberMe ?? false);
@@ -354,7 +354,7 @@ namespace Kigg.Web
                 {
                     using (IUnitOfWork unitOfWork = UnitOfWork.Begin())
                     {
-                        CurrentUser.LastActivityAt = SystemTime.Now();
+                        CurrentUser.LastActivityAt = SystemTime.Now;
                         unitOfWork.Commit();
 
                         FormsAuthentication.SignOut();
@@ -634,7 +634,7 @@ namespace Kigg.Web
                         if ((user != null) && !user.IsActive)
                         {
                             user.IsActive = true;
-                            user.LastActivityAt = SystemTime.Now();
+                            user.LastActivityAt = SystemTime.Now;
 
                             _eventAggregator.GetEvent<UserActivateEvent>().Publish(new UserActivateEventArgs(user));
 
@@ -728,7 +728,7 @@ namespace Kigg.Web
         [ChildActionOnly]
         public ActionResult TopTabs()
         {
-            DateTime maxTimestamp = SystemTime.Now();
+            DateTime maxTimestamp = SystemTime.Now;
 
             ICollection<UserWithScore> topLeaders = UserRepository.FindTop(GlobalConstants.ProductionDate, maxTimestamp, 0, Settings.TopUsers)
                                                                   .Result.Select(u => new UserWithScore { User = u, Score = u.CurrentScore })

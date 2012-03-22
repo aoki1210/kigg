@@ -1,8 +1,10 @@
 namespace Kigg.Infrastructure
 {
+    using System;
     using Domain.Entities;
     using Repository;
 
+    [Obsolete]
     public class CreateDefaultUsers : IBootstrapperTask
     {
         private readonly IDomainObjectFactory _factory;
@@ -21,28 +23,29 @@ namespace Kigg.Infrastructure
 
         public void Execute()
         {
-            if (!_users.IsNullOrEmpty())
-            {
-                using (IUnitOfWork unitOfWork = UnitOfWork.Begin())
-                {
-                    _users.ForEach(CreateUserIfNotExists);
+            //if (!_users.IsNullOrEmpty())
+            //{
+            //    using (IUnitOfWork unitOfWork = UnitOfWork.Begin())
+            //    {
+            //        _users.ForEach(CreateUserIfNotExists);
 
-                    unitOfWork.Commit();
-                }
-            }
+            //        unitOfWork.Commit();
+            //    }
+            //}
         }
 
         private void CreateUserIfNotExists(DefaultUser defaultUser)
         {
-            if (_userRepository.FindByUserName(defaultUser.UserName) == null)
-            {
-                User user = _factory.CreateUser(defaultUser.UserName, defaultUser.Email, defaultUser.Password);
+            //if (_userRepository.FindByUserName(defaultUser.UserName) == null)
+            //{
+            //    User user = _factory.CreateUser(defaultUser.UserName, defaultUser.Email, defaultUser.Password);
 
-                user.Role = defaultUser.Role;
-                user.IsActive = true;
+            //    user.Role = defaultUser.Role;
+            //    user.IsActive = true;
 
-                _userRepository.Add(user);
-            }
+            //    _userRepository.Add(user);
+            //}
         }
     }
+
 }

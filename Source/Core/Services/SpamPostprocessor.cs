@@ -36,7 +36,7 @@ namespace Kigg.Service
             }
             else
             {
-                story.Approve(SystemTime.Now());
+                story.Approve(SystemTime.Now);
 
                 _eventAggregator.GetEvent<StorySubmitEvent>().Publish(new StorySubmitEventArgs(story, detailUrl));
 

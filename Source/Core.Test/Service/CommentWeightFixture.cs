@@ -30,7 +30,7 @@ namespace Kigg.Core.Test
         {
             var story = Setup("192.168.0.1");
 
-            Assert.Equal(OwnerScore, _strategy.Calculate(SystemTime.Now(), story.Object));
+            Assert.Equal(OwnerScore, _strategy.Calculate(SystemTime.Now, story.Object));
         }
 
         [Fact]
@@ -38,7 +38,7 @@ namespace Kigg.Core.Test
         {
             var story = Setup("192.168.0.1", "192.168.0.1" , "192.168.0.1");
 
-            Assert.Equal(OwnerScore + (SameIpScore * 2), _strategy.Calculate(SystemTime.Now(), story.Object));
+            Assert.Equal(OwnerScore + (SameIpScore * 2), _strategy.Calculate(SystemTime.Now, story.Object));
         }
 
         [Fact]
@@ -46,7 +46,7 @@ namespace Kigg.Core.Test
         {
             var story = Setup("192.168.0.1", "192.168.0.2" , "192.168.0.3");
 
-            Assert.Equal(OwnerScore + (DifferentIpScore * 2), _strategy.Calculate(SystemTime.Now(), story.Object));
+            Assert.Equal(OwnerScore + (DifferentIpScore * 2), _strategy.Calculate(SystemTime.Now, story.Object));
         }
 
         [Fact]
@@ -54,7 +54,7 @@ namespace Kigg.Core.Test
         {
             var story = Setup("192.168.0.1", "192.168.0.1", "192.168.0.2");
 
-            Assert.Equal((OwnerScore + SameIpScore + DifferentIpScore), _strategy.Calculate(SystemTime.Now(), story.Object));
+            Assert.Equal((OwnerScore + SameIpScore + DifferentIpScore), _strategy.Calculate(SystemTime.Now, story.Object));
         }
 
         private Mock<Story> Setup(string ownerIp, params string[] ipAddresses)

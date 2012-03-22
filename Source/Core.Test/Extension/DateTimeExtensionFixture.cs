@@ -21,7 +21,7 @@ namespace Kigg.Core.Test
         [Fact]
         public void IsValid_Should_Return_True_When_Specified_Date_Is_Between_MinDate_And_MaxDate()
         {
-            Assert.True(SystemTime.Now().IsValid());
+            Assert.True(SystemTime.Now.IsValid());
         }
     }
 }

@@ -137,8 +137,8 @@ namespace Kigg.Core.Test
         {
             var userRepository = SetupResolve<IUserRepository>();
             var id = 1;
-            var start = SystemTime.Now().AddHours(-6);
-            var end = SystemTime.Now();
+            var start = SystemTime.Now.AddHours(-6);
+            var end = SystemTime.Now;
             _user.SetupGet(u => u.Id).Returns(id);
             _user.Object.GetScoreBetween(start, end);
 

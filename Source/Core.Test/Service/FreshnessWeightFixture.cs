@@ -21,7 +21,7 @@ namespace Kigg.Core.Test
         {
             var story1 = new Mock<Story>();
             var story2 = new Mock<Story>();
-            var now = SystemTime.Now();
+            var now = SystemTime.Now;
 
             story1.SetupGet(s => s.CreatedAt).Returns(now.AddDays(-FreshNessThresholdInDays).AddHours(-6));
             story2.SetupGet(s => s.CreatedAt).Returns(now.AddDays(-FreshNessThresholdInDays).AddHours(-12));
@@ -34,7 +34,7 @@ namespace Kigg.Core.Test
         {
             var story1 = new Mock<Story>();
             var story2 = new Mock<Story>();
-            var now = SystemTime.Now();
+            var now = SystemTime.Now;
 
             story1.SetupGet(s => s.CreatedAt).Returns(now.AddDays(-FreshNessThresholdInDays).AddHours(-6));
             story2.SetupGet(s => s.CreatedAt).Returns(now.AddDays(-FreshNessThresholdInDays).AddHours(12));

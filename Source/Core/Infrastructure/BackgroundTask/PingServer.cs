@@ -80,7 +80,7 @@ namespace Kigg.Infrastructure
                                             ContentType = "text/xml",
                                             Data = RequestXml.FormatWith(_settings.SiteTitle, _settings.RootUrl)
                                         },
-                                        r => _lastPingedAt = SystemTime.Now(),
+                                        r => _lastPingedAt = SystemTime.Now,
                                         e => { }
                                     );
             }
@@ -88,7 +88,7 @@ namespace Kigg.Infrastructure
 
         private bool ShouldPing()
         {
-            return (SystemTime.Now() - _lastPingedAt).TotalMinutes >= _intervalInMinutes;
+            return (SystemTime.Now - _lastPingedAt).TotalMinutes >= _intervalInMinutes;
         }
     }
 }

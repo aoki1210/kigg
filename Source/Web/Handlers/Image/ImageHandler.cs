@@ -134,7 +134,7 @@ namespace Kigg.Web
             int fontSize = GetInteger(request.QueryString, "fontSize", FontSize);
 
             HttpResponseBase response = context.Response;
-            DateTime storyLastActivityAt = SystemTime.Now();
+            DateTime storyLastActivityAt = SystemTime.Now;
 
             using (MemoryStream ms = new MemoryStream())
             {
@@ -221,7 +221,7 @@ namespace Kigg.Web
             }
             else
             {
-                float durationInMinutes = ((SystemTime.Now() - storyLastActivityAt).TotalDays > Settings.MaximumAgeOfStoryInHoursToPublish) ? ExpiredStoryCacheDurationInMinutes : NewStoryCacheDurationInMinutes;
+                float durationInMinutes = ((SystemTime.Now - storyLastActivityAt).TotalDays > Settings.MaximumAgeOfStoryInHoursToPublish) ? ExpiredStoryCacheDurationInMinutes : NewStoryCacheDurationInMinutes;
 
                 if (durationInMinutes > 0)
                 {

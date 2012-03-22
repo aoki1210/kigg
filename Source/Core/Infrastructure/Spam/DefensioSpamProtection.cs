@@ -120,7 +120,7 @@ namespace Kigg.Infrastructure
 
             addIfSpecified("owner-url", _settings.RootUrl);
             addIfSpecified("user-ip", spamCheckContent.UserIPAddress);
-            addIfSpecified("article-date", SystemTime .Now().ToString("yyyy/MM/dd", Culture.Current));
+            addIfSpecified("article-date", SystemTime .Now.ToString("yyyy/MM/dd", Culture.Current));
             addIfSpecified("comment-author", spamCheckContent.UserName);
             addIfSpecified("comment-type", (string.Compare(spamCheckContent.ContentType, "comment", StringComparison.OrdinalIgnoreCase) == 0) ? "comment" : "other");
             addIfSpecified("comment-spamCheckContent", spamCheckContent.Content);
